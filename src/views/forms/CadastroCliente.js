@@ -43,11 +43,9 @@ export default function CadastroCliente() {
     tipo_comiss,
     EmpresaId,
   }) {
-    console.log("asdas");
     dispatch(
       ClienteRequest(CNPJ, nome_abv, representante, tipo_comiss, EmpresaId)
     );
-    console.log(CNPJ, nome_abv, representante, tipo_comiss, EmpresaId);
   }
   return (
     <>

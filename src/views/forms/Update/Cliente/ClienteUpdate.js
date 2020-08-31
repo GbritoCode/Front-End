@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -33,19 +33,20 @@ import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import { Form, Input } from "@rocketseat/unform";
 import { useParams, Link } from "react-router-dom";
 
-function ClienteUpdatee(match) {
+function ClienteUpdatee() {
   const { id } = useParams();
 
-  /*async function loadCliente(id) {
-    const res = await fetc(`http://localhost:3001/cliente`);
-    res.json().then((res) => setData(res));
-  }
+  const [data, setData] = useState();
 
   useEffect(() => {
-    loadCliente(id);
+    fetch(`http://localhost:3001/cliente/${id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        setData(response);
+      });
   });
-*/
-
   const dispatch = useDispatch();
 
   function handleSubmit({
@@ -97,7 +98,11 @@ function ClienteUpdatee(match) {
                 </Link>
               </CardHeader>
               <CardBody>
-                <Form className="cadastro" onSubmit={handleSubmit}>
+                <Form
+                  className="cadastro"
+                  onSubmit={handleSubmit}
+                  initialData={data}
+                >
                   <label>Cnpj </label>
                   <FormGroup>
                     <Input
