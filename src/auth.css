@@ -9,13 +9,12 @@ input.auth {
   border-left: 0px;
   border-width: 1px;
   color: rebeccapurple;
-  border-top-color: rgba(255, 255, 255, 10);
-  width: 85%;
+  width: 20%;
   padding-left: 15px;
   font: "arial";
 }
 input:focus.auth {
-  border: 1px solid rgba(230, 98, 222, 1);
+  border: 1px solid rgb(129, 126, 129);
   border-left: 0;
 }
 

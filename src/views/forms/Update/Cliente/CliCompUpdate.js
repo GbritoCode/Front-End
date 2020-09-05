@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // reactstrap components
 import {
@@ -33,53 +33,66 @@ import { CliCompUpdate } from "~/store/modules/Cliente/actions";
 import { Form, Input } from "@rocketseat/unform";
 
 import * as yup from "yup";
+import { useParams } from "react-router-dom";
 
 const schema = yup.object().shape({
   ClienteId: yup.string().required(),
-  RZ_SOCIAL: yup.string().required(),
-  COND_PGTO: yup.number().required(),
-  NOME_ABV: yup.string().required(),
-  CEP: yup.string().required(),
-  RUA: yup.string().required(),
-  NUMERO: yup.number().required(),
-  BAIRRO: yup.string().required(),
-  CIDADE: yup.string().required(),
-  UF: yup.string().required(),
-  INSC_MUN: yup.number().required(),
-  INSC_UF: yup.number().required(),
+  rz_social: yup.string().required(),
+  cond_pgmto: yup.number().required(),
+  nome_abv: yup.string().required(),
+  cep: yup.string().required(),
+  rua: yup.string().required(),
+  numero: yup.number().required(),
+  bairro: yup.string().required(),
+  cidade: yup.string().required(),
+  uf: yup.string().required(),
+  insc_mun: yup.number().required(),
+  insc_uf: yup.number().required(),
 });
 
 export default function CliCompUpdatee() {
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/cliente/complem/${id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        setData(response[0]);
+      });
+  }, []);
 
   function handleSubmit({
     ClienteId,
-    RZ_SOCIAL,
-    COND_PGTO,
-    NOME_ABV,
-    CEP,
-    RUA,
-    NUMERO,
-    BAIRRO,
-    CIDADE,
-    UF,
-    INSC_MUN,
-    INSC_UF,
+    rz_social,
+    cond_pgmto,
+    nome_abv,
+    cep,
+    rua,
+    numero,
+    bairro,
+    cidade,
+    uf,
+    insc_mun,
+    insc_uf,
   }) {
     dispatch(
       CliCompUpdate(
         ClienteId,
-        RZ_SOCIAL,
-        COND_PGTO,
-        NOME_ABV,
-        CEP,
-        RUA,
-        NUMERO,
-        BAIRRO,
-        CIDADE,
-        UF,
-        INSC_MUN,
-        INSC_UF
+        rz_social,
+        cond_pgmto,
+        nome_abv,
+        cep,
+        rua,
+        numero,
+        bairro,
+        cidade,
+        uf,
+        insc_mun,
+        insc_uf
       )
     );
   }
@@ -97,73 +110,74 @@ export default function CliCompUpdatee() {
                   className="cadastro"
                   onSubmit={handleSubmit}
                   schema={schema}
+                  initialData={data}
                 >
                   <label>ClienteId</label>
                   <FormGroup>
                     <Input className="cadastro" name="ClienteId" type="text" />
                   </FormGroup>
 
-                  <label>RZ_SOCIAL</label>
+                  <label>rz_social</label>
                   <FormGroup>
-                    <Input className="cadastro" name="RZ_SOCIAL" type="text" />
+                    <Input className="cadastro" name="rz_social" type="text" />
                   </FormGroup>
 
-                  <label>COND_PGTO</label>
+                  <label>cond_pgmto</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="COND_PGTO"
+                      name="cond_pgmto"
                       type="numeric"
                     />
                   </FormGroup>
 
-                  <label>NOME_ABV</label>
+                  <label>nome_abv</label>
                   <FormGroup>
-                    <Input className="cadastro" name="NOME_ABV" type="text" />
+                    <Input className="cadastro" name="nome_abv" type="text" />
                   </FormGroup>
 
-                  <label>CEP</label>
+                  <label>cep</label>
                   <FormGroup>
-                    <Input className="cadastro" name="CEP" type="text" />
+                    <Input className="cadastro" name="cep" type="text" />
                   </FormGroup>
 
-                  <label>RUA</label>
+                  <label>rua</label>
                   <FormGroup>
-                    <Input className="cadastro" name="RUA" type="text" />
+                    <Input className="cadastro" name="rua" type="text" />
                   </FormGroup>
 
-                  <label>NUMERO</label>
+                  <label>numero</label>
                   <FormGroup>
-                    <Input className="cadastro" name="NUMERO" type="numeric" />
+                    <Input className="cadastro" name="numero" type="numeric" />
                   </FormGroup>
 
-                  <label>BAIRRO</label>
+                  <label>bairro</label>
                   <FormGroup>
-                    <Input className="cadastro" name="BAIRRO" type="text" />
+                    <Input className="cadastro" name="bairro" type="text" />
                   </FormGroup>
 
-                  <label>CIDADE</label>
+                  <label>cidade</label>
                   <FormGroup>
-                    <Input className="cadastro" name="CIDADE" type="text" />
+                    <Input className="cadastro" name="cidade" type="text" />
                   </FormGroup>
 
-                  <label>UF</label>
+                  <label>uf</label>
                   <FormGroup>
-                    <Input className="cadastro" name="UF" type="text" />
+                    <Input className="cadastro" name="uf" type="text" />
                   </FormGroup>
 
-                  <label>INSC_MUN</label>
+                  <label>insc_mun</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="INSC_MUN"
+                      name="insc_mun"
                       type="numeric"
                     />
                   </FormGroup>
 
-                  <label>INSC_UF</label>
+                  <label>insc_uf</label>
                   <FormGroup>
-                    <Input className="cadastro" name="INSC_UF" type="numeric" />
+                    <Input className="cadastro" name="insc_uf" type="numeric" />
                   </FormGroup>
 
                   <Button

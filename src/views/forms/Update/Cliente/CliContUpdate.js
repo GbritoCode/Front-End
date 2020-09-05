@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -36,32 +36,42 @@ import { useParams } from "react-router-dom";
 export default function CliContUpdatee() {
   const { id } = useParams();
 
-  /*async function loadCliente(id) {
-    const res = await fetc(`http://localhost:3001/cliente`);
-    res.json().then((res) => setData(res));
-  }
+  const [data, setData] = useState();
 
   useEffect(() => {
-    loadCliente(id);
-  });
-*/
-
+    fetch(`http://localhost:3001/cliente/cont/${id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        setData(response[0]);
+        console.log(response);
+      });
+  }, []);
   const dispatch = useDispatch();
 
   function handleSubmit({
     ClienteId,
-    NOME,
-    CEL,
-    FONE,
-    SKYPE,
-    EMAIL,
-    ANIVER,
-    TIPO_CONT,
+    nome,
+    cel,
+    fone,
+    skype,
+    email,
+    aniver,
+    tipo_conta,
   }) {
     dispatch(
-      CliContUpdate(ClienteId, NOME, CEL, FONE, SKYPE, EMAIL, ANIVER, TIPO_CONT)
+      CliContUpdate(
+        ClienteId,
+        nome,
+        cel,
+        fone,
+        skype,
+        email,
+        aniver,
+        tipo_conta
+      )
     );
-    console.log("sadasd");
   }
   return (
     <>
@@ -73,47 +83,51 @@ export default function CliContUpdatee() {
                 <CardTitle tag="h4">Atualização de cliente</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form className="cadastro" onSubmit={handleSubmit}>
+                <Form
+                  className="cadastro"
+                  onSubmit={handleSubmit}
+                  initialData={data}
+                >
                   <label>Nome </label>
                   <FormGroup>
                     <Input
                       disabled={true}
                       value={id}
                       className="cadastro"
-                      name="NOME"
+                      name="nome"
                       type="text"
                     />
                   </FormGroup>
-                  <label>CEL</label>
+                  <label>cel</label>
                   <FormGroup>
-                    <Input className="cadastro" name="CEL" type="numeric" />
+                    <Input className="cadastro" name="cel" type="numeric" />
                   </FormGroup>
-                  <label>FONE</label>
+                  <label>fone</label>
                   <FormGroup>
-                    <Input className="cadastro" name="FONE" type="numeric" />
+                    <Input className="cadastro" name="fone" type="numeric" />
                   </FormGroup>
-                  <label>SKYPE</label>
+                  <label>skype</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="SKYPE"
+                      name="skype"
                       type="text"
                       autoComplete="off"
                     />
                   </FormGroup>
-                  <label>EMAIL</label>
+                  <label>email</label>
                   <FormGroup>
-                    <Input className="cadastro" name="EMAIL" type="email" />
+                    <Input className="cadastro" name="email" type="email" />
                   </FormGroup>
-                  <label>ANIVER</label>
+                  <label>aniver</label>
                   <FormGroup>
-                    <Input className="cadastro" name="ANIVER" type="date" />
+                    <Input className="cadastro" name="aniver" type="date" />
                   </FormGroup>{" "}
-                  <label>TIPO_CONT</label>
+                  <label>tipo_conta</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="TIPO_CONT"
+                      name="tipo_conta"
                       type="numeric"
                     />
                   </FormGroup>

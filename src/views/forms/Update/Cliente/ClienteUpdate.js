@@ -46,7 +46,7 @@ function ClienteUpdatee() {
       .then((response) => {
         setData(response);
       });
-  });
+  }, []);
   const dispatch = useDispatch();
 
   function handleSubmit({

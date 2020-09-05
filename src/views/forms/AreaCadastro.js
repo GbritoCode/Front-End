@@ -36,7 +36,9 @@ import { areaRequest } from "~/store/modules/general/actions";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
-  EmpresaId: yup.string().required(),
+  EmpresaId: yup
+    .number("precisa ser um número")
+    .required("empresaId é necesário"),
   desc_area: yup.string().required(),
 });
 export default function CadastroCliente() {
