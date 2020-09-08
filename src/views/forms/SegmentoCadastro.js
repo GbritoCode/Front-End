@@ -24,17 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
+  Form,
+  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-
-import { Form, Input } from "@rocketseat/unform";
-
 import { segmentoRequest } from "~/store/modules/general/actions";
-
 import * as yup from "yup";
+import { store } from "~/store";
+import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   EmpresaId: yup.string().required(),
@@ -46,19 +46,21 @@ const schema = yup.object().shape({
 
 export default function SegmentoCadastro() {
   const dispatch = useDispatch();
+  const empresa = store.getState().auth.empresa;
 
-  function handleSubmit({
-    EmpresaId,
-    Und_negId,
-    ProdutoId,
-    AreaId,
-    desc_segmt,
-  }) {
-    console.log("asdas");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: Und_negId, bind: bindUnd_negId } = useInput("");
+  const { value: ProdutoId, bind: bindProdutoId } = useInput("");
+  const { value: AreaId, bind: bindAreaId } = useInput("");
+  const { value: desc_segmt, bind: bindDesc_segmt } = useInput("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
     dispatch(
       segmentoRequest(EmpresaId, Und_negId, ProdutoId, AreaId, desc_segmt)
     );
-  }
+  };
   return (
     <>
       <div className="content">
@@ -74,50 +76,56 @@ export default function SegmentoCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>EmpresaId</label>
+                  <label>Empresa</label>
                   <FormGroup>
-                    <Input className="cadastro" name="EmpresaId" type="text" />
+                    <Input
+                      disabled={true}
+                      className="cadastro"
+                      name="EmpresaId"
+                      type="text"
+                      {...bindEmpresaId}
+                    />
                   </FormGroup>
-                  <label>Und_negId</label>
+                  <label>Unidade de Negócio</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="Und_negId"
                       type="numeric"
+                      {...bindUnd_negId}
                     />
                   </FormGroup>
-                  <label>ProdutoId</label>
+                  <label>Produto</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="ProdutoId"
                       type="numeric"
+                      {...bindProdutoId}
                     />
                   </FormGroup>
-                  <label>AreaId</label>
+                  <label>Área</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="AreaId"
                       type="numeric"
-                      autoComplete="off"
+                      {...bindAreaId}
                     />
                   </FormGroup>
-                  <label>desc_segmt</label>
+                  <label>Descrição do Segmento</label>
                   <FormGroup>
-                    <Input className="cadastro" name="desc_segmt" type="text" />
-                  </FormGroup>
-                  <FormGroup check className="mt-3">
-                    <Label check>
-                      <Input name="check" type="checkbox" />
-                      <span className="form-check-sign" />
-                      Subscribe to newsletter
-                    </Label>
+                    <Input
+                      className="cadastro"
+                      name="desc_segmt"
+                      type="text"
+                      {...bindDesc_segmt}
+                    />
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

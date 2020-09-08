@@ -24,16 +24,20 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Form,
+  Input,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 
-import { Form, Input } from "@rocketseat/unform";
-
 import { areaRequest } from "~/store/modules/general/actions";
 
 import * as yup from "yup";
+
+import { useInput } from "hooks.js";
+
+import { store } from "~/store";
 
 const schema = yup.object().shape({
   EmpresaId: yup
@@ -44,9 +48,15 @@ const schema = yup.object().shape({
 export default function CadastroCliente() {
   const dispatch = useDispatch();
 
-  function handleSubmit({ EmpresaId, desc_area }) {
+  const empresa = store.getState().auth.empresa;
+
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: desc_area, bind: bindDesc_area } = useInput("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     dispatch(areaRequest(EmpresaId, desc_area));
-  }
+  };
   return (
     <>
       <div className="content">
@@ -62,20 +72,30 @@ export default function CadastroCliente() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>EmpresaId</label>
+                  <label>Empresa</label>
                   <FormGroup>
-                    <Input className="cadastro" name="EmpresaId" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="EmpresaId"
+                      type="text"
+                      {...bindEmpresaId}
+                    />
                   </FormGroup>
 
-                  <label>desc_area</label>
+                  <label>Descrição Área</label>
                   <FormGroup>
-                    <Input className="cadastro" name="desc_area" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="desc_area"
+                      type="text"
+                      {...bindDesc_area}
+                    />
                   </FormGroup>
 
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

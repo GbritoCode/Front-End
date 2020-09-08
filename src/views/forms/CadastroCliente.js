@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -32,11 +32,30 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
+import { store } from "~/store";
 import { useInput } from "~/hooks.js";
 
 export default function CadastroCliente() {
   const dispatch = useDispatch();
+  const empresa = store.getState().auth.empresa;
+  /*
+  const [data, setData] = useState();
 
+  useEffect(() => {
+    const empresa = store.getState().auth.empresa;
+
+    fetch(`http://localhost:3001/empresa/${empresa}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        setData(response.id);
+      });
+  }, []);
+
+  const aa = data;
+  console.log(aa);
+  */
   const { value: CNPJ, bind: bindCNPJ, reset: resetCNPJ } = useInput("");
   const {
     value: nome_abv,
@@ -57,7 +76,7 @@ export default function CadastroCliente() {
     value: EmpresaId,
     bind: bindEmpresaId,
     reset: resetEmpresaId,
-  } = useInput("");
+  } = useInput(empresa);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -73,7 +92,7 @@ export default function CadastroCliente() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Pré-Cadastro de Cliente</CardTitle>
+                <CardTitle tag="h4">Cliente</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form className="cadastro" onSubmit={handleSubmit}>
@@ -86,16 +105,16 @@ export default function CadastroCliente() {
                       {...bindCNPJ}
                     />
                   </FormGroup>
-                  <label>nome_abv</label>
+                  <label>Nome Abreviado</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="nome_abv"
+                      name="name_abv"
                       type="text"
                       {...bindNome_abv}
                     />
                   </FormGroup>
-                  <label>representante</label>
+                  <label>Representante</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
@@ -104,7 +123,7 @@ export default function CadastroCliente() {
                       {...bindRepresentante}
                     />
                   </FormGroup>
-                  <label>tipo_comiss</label>
+                  <label>Tipo Comissão</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
@@ -114,27 +133,19 @@ export default function CadastroCliente() {
                       {...bindTipo_comiss}
                     />
                   </FormGroup>
-                  <label>EmpresaId</label>
+                  <label>Empresa</label>
                   <FormGroup>
                     <Input
+                      disabled={true}
                       className="cadastro"
                       name="EmpresaId"
-                      type="numeric"
                       {...bindEmpresaId}
-                      maxLength={30}
                     />
-                  </FormGroup>
-                  <FormGroup check className="mt-3">
-                    <Label check>
-                      <Input name="check" type="checkbox" />
-                      <span className="form-check-sign" />
-                      Subscribe to newsletter
-                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

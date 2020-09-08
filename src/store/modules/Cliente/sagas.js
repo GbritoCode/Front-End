@@ -16,7 +16,7 @@ export function* clienteCadastro({ payload }) {
       tipo_comiss,
       EmpresaId,
     });
-    history.push("/table/cliente");
+    history.push("/tabela_cliente");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());

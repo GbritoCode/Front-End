@@ -24,14 +24,17 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Form,
+  Input,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
 
-import { Form, Input } from "@rocketseat/unform";
 import { useParams } from "react-router-dom";
+
+import { useInput } from 'hooks.js'
 
 export default function CliContUpdatee() {
   const { id } = useParams();
@@ -50,16 +53,18 @@ export default function CliContUpdatee() {
   }, []);
   const dispatch = useDispatch();
 
-  function handleSubmit({
-    ClienteId,
-    nome,
-    cel,
-    fone,
-    skype,
-    email,
-    aniver,
-    tipo_conta,
-  }) {
+  const { value: ClienteId, bind: bindClienteId } = useInput("");
+  const { value: nome, bind: bindNome } = useInput("");
+  const { value: cel, bind: bindCel } = useInput("");
+  const { value: fone, bind: bindFone } = useInput("");
+  const { value: skype, bind: bindSkype } = useInput("");
+  const { value: email, bind: bindEmail } = useInput("");
+  const { value: aniver, bind: bindAniver } = useInput("");
+  const { value: tipo_conta, bind: bindTipo_conta } = useInput("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
     dispatch(
       CliContUpdate(
         ClienteId,
@@ -91,50 +96,50 @@ export default function CliContUpdatee() {
                   <label>Nome </label>
                   <FormGroup>
                     <Input
-                      disabled={true}
-                      value={id}
                       className="cadastro"
                       name="nome"
                       type="text"
+                      {...bindNome}
                     />
                   </FormGroup>
-                  <label>cel</label>
+                  <label>Celular</label>
                   <FormGroup>
-                    <Input className="cadastro" name="cel" type="numeric" />
+                    <Input className="cadastro" name="cel" type="numeric" {...bindCel} />
                   </FormGroup>
-                  <label>fone</label>
+                  <label>Telefone</label>
                   <FormGroup>
-                    <Input className="cadastro" name="fone" type="numeric" />
+                    <Input className="cadastro" name="fone" type="numeric" {...bindFone} />
                   </FormGroup>
-                  <label>skype</label>
+                  <label>Skype</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="skype"
                       type="text"
-                      autoComplete="off"
+                      {...bindSkype}
                     />
                   </FormGroup>
-                  <label>email</label>
+                  <label>Email</label>
                   <FormGroup>
-                    <Input className="cadastro" name="email" type="email" />
+                    <Input className="cadastro" name="email" type="email" {...bindEmail} />
                   </FormGroup>
-                  <label>aniver</label>
+                  <label>Aniversário</label>
                   <FormGroup>
-                    <Input className="cadastro" name="aniver" type="date" />
+                    <Input className="cadastro" name="aniver" type="date" {...bindAniver} />
                   </FormGroup>{" "}
-                  <label>tipo_conta</label>
+                  <label>Tipo de Conta</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_conta"
                       type="numeric"
+                      {...bindTipo_conta}
                     />
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

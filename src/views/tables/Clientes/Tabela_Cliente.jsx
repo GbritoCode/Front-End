@@ -29,73 +29,50 @@ class Tabela_Cliente extends Component {
   state = {
     data: [],
   };
+
   componentDidMount() {
-    this.loadClients();
+    this.loadCliente();
   }
-  loadClients = async () => {
-    const response = await api.get("/representante");
+  loadCliente = async () => {
+    const response = await api.get("/cliente");
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          EmpresaID: client.EmpresaID,
-          nome: client.nome,
-          percnt_comiss: client.percnt_comiss,
-          vlr_fix_mens: client.vlr_fix_mens,
+          idd: key,
+          id: client.id,
+          CNPJ: client.CNPJ,
+          nome_abv: client.nome_abv,
+          representante: client.representante,
+          tipo_comiss: client.tipo_comiss,
+          EmpresaId: client.EmpresaId,
+          prospect: client.prospect,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_EMP +
-                      ", \nemail: " +
-                      obj.NOME +
-                      ", \nidade: " +
-                      obj.PERCNT_COMISSAO +
-                      ", \nsalario: " +
-                      obj.VLR_FIX_MENS +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
-              {/* use this button to add a edit kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked EDIT button on \n{ \nName: " +
-                      obj.COD_EMP +
-                      ", \nemail: " +
-                      obj.NOME +
-                      ", \nidade: " +
-                      obj.PERCNT_COMISSAO +
-                      ", \nsalario: " +
-                      obj.VLR_FIX_MENS +
-                      "\n}."
-                  );
-                }}
+              <Link
+                to={`/cliente_update/${client.id}/false`}
                 color="warning"
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
                 <i className="tim-icons icon-pencil" />
-              </Button>{" "}
+              </Link>{" "}
+              {/* use this button to add a edit kind of action */}
+              <Link
+                to={`/cliente_update/${client.id}/true`}
+                color="warning"
+                size="sm"
+                className={classNames("btn-icon btn-link like")}
+              >
+                <i className="tim-icons icon-pencil" />
+              </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
                   var data = this.state.data;
                   data.find((o, i) => {
-                    if (o.id === key) {
+                    if (o.idd === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
@@ -117,8 +94,8 @@ class Tabela_Cliente extends Component {
         };
       }),
     });
+    console.log(this.state.data);
   };
-
   render() {
     return (
       <>
@@ -127,26 +104,16 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/geral/represent">
+                  Clientes
+                  <Link to="/cliente_cadastro">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
                       size="small"
-                      className="text-left"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      <i tim-icons icon-simple-add />
+                      Adicionar cliente
                     </Button>
                   </Link>
                 </CardTitle>
@@ -158,16 +125,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Nome",
-                      accessor: "nome",
+                      Header: "CNPJ",
+                      accessor: "CNPJ",
                     },
                     {
-                      Header: "Valor Fixo Mensal",
-                      accessor: "vlr_fix_mens",
+                      Header: "Nome Abreviado",
+                      accessor: "nome_abv",
                     },
                     {
-                      Header: "Comissão (%)",
-                      accessor: "percnt_comiss",
+                      Header: "Representante",
+                      accessor: "representante",
+                    },
+                    {
+                      Header: "Tipo de comissão",
+                      accessor: "tipo_comiss",
                     },
                     {
                       Header: "Ações",

@@ -24,17 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
+  Form,
+  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-
-import { Form, Input } from "@rocketseat/unform";
-
 import { recDespRequest } from "~/store/modules/general/actions";
-
 import * as yup from "yup";
+import { store } from "~/store";
+import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   EmpresaId: yup.string().required(),
@@ -44,11 +44,16 @@ const schema = yup.object().shape({
 
 export default function RecDespCadastro() {
   const dispatch = useDispatch();
+  const empresa = store.getState().auth.empresa;
 
-  function handleSubmit({ EmpresaId, nome, license }) {
-    console.log("asdas");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: nome, bind: bindNome } = useInput("");
+  const { value: license, bind: bindLicense } = useInput("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     dispatch(recDespRequest(EmpresaId, nome, license));
-  }
+  };
   return (
     <>
       <div className="content">
@@ -64,29 +69,38 @@ export default function RecDespCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>EmpresaId</label>
+                  <label>Empresa</label>
                   <FormGroup>
-                    <Input className="cadastro" name="EmpresaId" type="text" />
+                    <Input
+                      disabled={true}
+                      className="cadastro"
+                      name="EmpresaId"
+                      type="text"
+                      {...bindEmpresaId}
+                    />
                   </FormGroup>
-                  <label>nome</label>
+                  <label>Nome</label>
                   <FormGroup>
-                    <Input className="cadastro" name="nome" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="nome"
+                      type="text"
+                      {...bindNome}
+                    />
                   </FormGroup>
-                  <label>license</label>
+                  <label>License</label>
                   <FormGroup>
-                    <Input className="cadastro" name="license" type="text" />
-                  </FormGroup>
-                  <FormGroup check className="mt-3">
-                    <Label check>
-                      <Input name="check" type="checkbox" />
-                      <span className="form-check-sign" />
-                      Subscribe to newsletter
-                    </Label>
+                    <Input
+                      className="cadastro"
+                      name="license"
+                      type="text"
+                      {...bindLicense}
+                    />
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

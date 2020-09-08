@@ -24,19 +24,23 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Form,
+  Input,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
-
-import { Form, Input } from "@rocketseat/unform";
 import { useParams, Link } from "react-router-dom";
+import { store } from "~/store";
+import { useInput } from "hooks.js";
 
 function ClienteUpdatee() {
   const { id } = useParams();
 
-  const [data, setData] = useState();
+  const [data = {}, setData] = useState();
+
+  const empresa = store.getState().auth.empresa;
 
   useEffect(() => {
     fetch(`http://localhost:3001/cliente/${id}`, {
@@ -49,15 +53,19 @@ function ClienteUpdatee() {
   }, []);
   const dispatch = useDispatch();
 
-  function handleSubmit({
-    id,
-    nome_abv,
-    representante,
-    tipo_comiss,
-    prospect,
-  }) {
-    dispatch(ClienteUpdate(id, nome_abv, representante, tipo_comiss, prospect));
-  }
+  const { value: CNPJ, bind: bindCNPJ } = useInput(data.id);
+  const { value: nome_abv, bind: bindNome_abv } = useInput("");
+  const { value: representante, bind: bindRepresentante } = useInput("");
+  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput("");
+  const { value: prospect, bind: bindProspect } = useInput("");
+
+  console.log(data);
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    dispatch(
+      ClienteUpdate(CNPJ, nome_abv, representante, tipo_comiss, prospect)
+    );
+  };
   return (
     <>
       <div className="content">
@@ -98,40 +106,41 @@ function ClienteUpdatee() {
                 </Link>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  initialData={data}
-                >
-                  <label>Cnpj </label>
+                <Form className="cadastro" onSubmit={handleSubmit}>
+                  <label>CNPJ </label>
                   <FormGroup>
                     <Input
-                      disabled={true}
-                      value={id}
                       className="cadastro"
-                      name="id"
+                      name="CNPJ"
                       type="text"
+                      {...bindCNPJ}
                     />
                   </FormGroup>
-                  <label>nome_abv</label>
+                  <label>Nome Abreviado</label>
                   <FormGroup>
-                    <Input className="cadastro" name="nome_abv" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="nome_abv"
+                      type="text"
+                      {...bindNome_abv}
+                    />
                   </FormGroup>
-                  <label>representante</label>
+                  <label>Representante</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="representante"
                       type="text"
+                      {...bindRepresentante}
                     />
                   </FormGroup>
-                  <label>tipo_comiss</label>
+                  <label>Tipo de Comissão</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_comiss"
                       type="numeric"
-                      autoComplete="off"
+                      {...bindTipo_comiss}
                     />
                   </FormGroup>
                   <label>EmpresaId</label>
@@ -143,22 +152,11 @@ function ClienteUpdatee() {
                       type="numeric"
                     />
                   </FormGroup>
-                  {/*
-                  <FormGroup className="mt-3">
-                    <Label for="options">
-                      {" "}
-                      propspect
-                      <select id="options" name="options">
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
-                      </select>
-                    </Label>
-                  </FormGroup>
-*/}
+
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

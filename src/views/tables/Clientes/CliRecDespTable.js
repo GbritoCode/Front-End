@@ -37,10 +37,11 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          COD_REC_DESP: key,
-          COD_CLI: client.COD_CLI,
-          TIPO_REC_DESP: client.TIPO_REC_DESP,
-          NOME_REC_DESP: client.NOME_REC_DESP,
+          id: key,
+          idd: client.id,
+          ClienteId: client.ClienteId,
+          tipo_rec_desp: client.tipo_rec_desp,
+          nome_rec_desp: client.nome_rec_desp,
 
           actions: (
             // we've added some custom button actions
@@ -126,15 +127,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Receitas e Despesas de Clientes Cadastrados
                   <Link to="/cadastro/cliente/comp">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar receita e despesa de cliente
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -146,20 +158,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Name",
-                      accessor: "COD_REC_DESP",
+                      Header: "Cliente",
+                      accessor: "ClienteId",
                     },
                     {
-                      Header: "Email",
-                      accessor: "COD_CLI",
+                      Header: "Nome",
+                      accessor: "nome_rec_desp",
                     },
                     {
-                      Header: "Idade",
-                      accessor: "TIPO_REC_DESP",
-                    },
-                    {
-                      Header: "Salário",
-                      accessor: "NOME_REC_DESP",
+                      Header: "Tipo",
+                      accessor: "tipo_rec_desp",
                     },
                     {
                       Header: "Ações",

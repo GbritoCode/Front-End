@@ -37,14 +37,15 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          CODIGO_PARAM: key,
-          COD_EMP: client.COD_EMP,
-          IMPOSTOS: client.IMPOSTOS,
-          VLR_MIN_HR: client.VLR_MIN_HR,
-          VLR_BS_HR: client.VLR_BS_HR,
-          VLR_BS_DESP: client.VLR_BS_DESP,
-          ADIANTA_PGMTO: client.ADIANTA_PGMTO,
-          PERC_ADIANTA_PGMTO: client.PERC_ADIANTA_PGMTO,
+          id: key,
+          idd: client.id,
+          EmpresaId: client.EmpresaId,
+          impostos: client.impostos,
+          vlr_min_hr: client.vlr_min_hr,
+          vlr_bs_desp: client.vlr_bs_desp,
+          vlr_bs_hr: client.vlr_bs_hr,
+          adianta_pgmto: client.adianta_pgmto,
+          perc_adianta_pgmto: client.perc_adianta_pgmto,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -129,15 +130,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Parametros Cadastrados
                   <Link to="/cadastro/geral/parametros">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar parametro
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -149,20 +161,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Name",
-                      accessor: "IMPOSTOS",
+                      Header: "Id",
+                      accessor: "idd",
                     },
                     {
-                      Header: "Email",
-                      accessor: "VLR_BS_DESP",
+                      Header: "Valor Base Hora",
+                      accessor: "vlr_bs_hr",
                     },
                     {
-                      Header: "Idade",
-                      accessor: "ADIANTA_PGMTO",
+                      Header: "Valor Mínimo da Hora",
+                      accessor: "vlr_min_hr",
                     },
                     {
-                      Header: "Salário",
-                      accessor: "PERC_ADIANTA_PGMTO",
+                      Header: "Valor Base da Despesa",
+                      accessor: "vlr_bs_desp",
                     },
                     {
                       Header: "Ações",

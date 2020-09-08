@@ -24,17 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
+  Form,
+  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-
-import { Form, Input } from "@rocketseat/unform";
-
 import { parametrosRequest } from "~/store/modules/general/actions";
-
 import * as yup from "yup";
+import { store } from "~/store";
+import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   EmpresaId: yup.number().required(),
@@ -48,17 +48,21 @@ const schema = yup.object().shape({
 
 export default function ParametrosCadastro() {
   const dispatch = useDispatch();
+  const empresa = store.getState().auth.empresa;
 
-  function handleSubmit({
-    EmpresaId,
-    impostos,
-    vlr_min_hr,
-    vlr_bs_hr,
-    vlr_bs_desp,
-    adianta_pgmto,
-    perc_adianta_pgmto,
-  }) {
-    console.log("asdas");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: impostos, bind: bindImpostos } = useInput("");
+  const { value: vlr_min_hr, bind: bindVlr_min_hr } = useInput("");
+  const { value: vlr_bs_hr, bind: bindVlr_bs_hr } = useInput("");
+  const { value: vlr_bs_desp, bind: bindVlr_bs_desp } = useInput("");
+  const { value: adianta_pgmto, bind: bindAdianta_pgmto } = useInput("");
+  const { value: perc_adianta_pgmto, bind: bindPerc_adianta_pgmto } = useInput(
+    ""
+  );
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
     dispatch(
       parametrosRequest(
         EmpresaId,
@@ -70,7 +74,7 @@ export default function ParametrosCadastro() {
         perc_adianta_pgmto
       )
     );
-  }
+  };
   return (
     <>
       <div className="content">
@@ -86,80 +90,79 @@ export default function ParametrosCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>EmpresaId</label>
+                  <label>Empresa</label>
                   <FormGroup>
                     <Input
+                      disabled={true}
                       className="cadastro"
                       name="EmpresaId"
                       type="numeric"
+                      {...bindEmpresaId}
                     />
                   </FormGroup>
 
-                  <label>impostos</label>
+                  <label>Impostos</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="impostos"
                       type="numeric"
+                      {...bindImpostos}
                     />
                   </FormGroup>
 
-                  <label>vlr_min_hr</label>
+                  <label>Valor Mínimo da Hora</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="vlr_min_hr"
                       type="numeric"
+                      {...bindVlr_min_hr}
                     />
                   </FormGroup>
 
-                  <label>vlr_bs_hr</label>
+                  <label>Valor Base Da Hora</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="vlr_bs_hr"
                       type="numeric"
-                      autoComplete="off"
+                      {...bindVlr_bs_hr}
                     />
                   </FormGroup>
-                  <label>vlr_bs_desp</label>
+                  <label>Valor Base da Despesa</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="vlr_bs_desp"
                       type="numeric"
+                      {...bindVlr_bs_desp}
                     />
                   </FormGroup>
 
-                  <label>adianta_pgmto</label>
+                  <label>Adianta Pagamento</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="adianta_pgmto"
                       type="text"
+                      {...bindAdianta_pgmto}
                     />
                   </FormGroup>
 
-                  <label>perc_adianta_pgmto</label>
+                  <label>Percentual do Adiantamento</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="perc_adianta_pgmto"
                       type="numeric"
+                      {...bindPerc_adianta_pgmto}
                     />
-                  </FormGroup>
-
-                  <FormGroup check className="mt-3">
-                    <Label check>
-                      <Input name="check" type="checkbox" />
-                      <span className="form-check-sign" />
-                      Subscribe to newsletter
-                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

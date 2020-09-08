@@ -24,23 +24,23 @@ import {
   CardBody,
   CardTitle,
   Label,
+  Form,
+  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-
-import { Form, Input } from "@rocketseat/unform";
-
 import { colabRequest } from "~/store/modules/Colab/actions";
-
 import * as yup from "yup";
+import { store } from "~/store";
+import { useInput } from "~/hooks.js";
 
 const schema = yup.object().shape({
   CPF: yup.number().required(),
   FornecId: yup.number().required(),
   log_usr: yup.number().required(),
-  EmpresaId: yup.number().required(),
+  EmpresaId: yup.string().required(),
   nome: yup.string().required(),
   dt_admiss: yup.date().required(),
   cel: yup.number().required(),
@@ -55,18 +55,21 @@ const schema = yup.object().shape({
 export default function ColabCadastro() {
   const dispatch = useDispatch();
 
-  function handleSubmit({
-    CPF,
-    FornecId,
-    log_usr,
-    EmpresaId,
-    nome,
-    dt_admiss,
-    cel,
-    skype,
-    email,
-    espec,
-  }) {
+  const empresa = store.getState().auth.empresa;
+
+  const { value: CPF, bind: bindCPF } = useInput("");
+  const { value: FornecId, bind: bindFornecId } = useInput("");
+  const { value: log_usr, bind: bindLog_usr } = useInput("");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput("");
+  const { value: nome, bind: bindNome } = useInput("");
+  const { value: dt_admiss, bind: bindDt_admiss } = useInput("");
+  const { value: cel, bind: bindCel } = useInput("");
+  const { value: skype, bind: bindSkype } = useInput("");
+  const { value: email, bind: bindEmail } = useInput("");
+  const { value: espec, bind: bindEspec } = useInput("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     dispatch(
       colabRequest(
         CPF,
@@ -81,7 +84,7 @@ export default function ColabCadastro() {
         espec
       )
     );
-  }
+  };
   return (
     <>
       <div className="content">
@@ -95,7 +98,12 @@ export default function ColabCadastro() {
                 <Form className="cadastro" onSubmit={handleSubmit}>
                   <label>CPF</label>
                   <FormGroup>
-                    <Input className="cadastro" name="CPF" type="numeric" />
+                    <Input
+                      className="cadastro"
+                      name="CPF"
+                      type="numeric"
+                      {...bindCPF}
+                    />
                   </FormGroup>
                   <label>FornecId</label>
                   <FormGroup>
@@ -103,11 +111,17 @@ export default function ColabCadastro() {
                       className="cadastro"
                       name="FornecId"
                       type="numeric"
+                      {...bindFornecId}
                     />
                   </FormGroup>
                   <label>log_usr</label>
                   <FormGroup>
-                    <Input className="cadastro" name="log_usr" type="numeric" />
+                    <Input
+                      className="cadastro"
+                      name="log_usr"
+                      type="numeric"
+                      {...bindLog_usr}
+                    />
                   </FormGroup>
                   <label>EmpresaId</label>
                   <FormGroup>
@@ -115,46 +129,67 @@ export default function ColabCadastro() {
                       className="cadastro"
                       name="EmpresaId"
                       type="numeric"
+                      {...bindEmpresaId}
                     />
                   </FormGroup>
                   <label>nome</label>
                   <FormGroup>
-                    <Input className="cadastro" name="nome" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="nome"
+                      type="text"
+                      {...bindNome}
+                    />
                   </FormGroup>
                   <label>dt_admiss</label>
                   <FormGroup>
-                    <Input className="cadastro" name="dt_admiss" type="date" />
+                    <Input
+                      className="cadastro"
+                      name="dt_admiss"
+                      type="date"
+                      {...bindDt_admiss}
+                    />
                   </FormGroup>
                   <label>cel</label>
                   <FormGroup>
-                    <Input className="cadastro" name="cel" type="numeric" />
+                    <Input
+                      className="cadastro"
+                      name="cel"
+                      type="numeric"
+                      {...bindCel}
+                    />
                   </FormGroup>
                   <label>skype</label>
                   <FormGroup>
-                    <Input className="cadastro" name="skype" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="skype"
+                      type="text"
+                      {...bindSkype}
+                    />
                   </FormGroup>
-
                   <label>email</label>
                   <FormGroup>
-                    <Input className="cadastro" name="email" type="text" />
+                    <Input
+                      className="cadastro"
+                      name="email"
+                      type="text"
+                      {...bindEmail}
+                    />
                   </FormGroup>
-
                   <label>espec</label>
                   <FormGroup>
-                    <Input className="cadastro" name="espec" type="text" />
-                  </FormGroup>
-
-                  <FormGroup check className="mt-3">
-                    <Label check>
-                      <Input name="check" type="checkbox" />
-                      <span className="form-check-sign" />
-                      Subscribe to newsletter
-                    </Label>
+                    <Input
+                      className="cadastro"
+                      name="espec"
+                      type="text"
+                      {...bindEspec}
+                    />
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

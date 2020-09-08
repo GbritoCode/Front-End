@@ -37,22 +37,24 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          CNPJ: key,
-          COD_EMP: client.COD_EMP,
-          NOME: client.NOME,
-          COND_PGMTO: client.COND_PGMTO,
-          NOME_CONT: client.NOME_CONT,
-          FONE: client.FONE,
-          CEP: client.CEP,
-          RUA: client.RUA,
-          NUMERO: client.NUMERO,
-          COMPLEMENTO: client.COMPLEMENTO,
-          BAIRRO: client.BAIRRO,
-          CIDADE: client.CIDADE,
-          UF: client.UF,
-          BANCO: client.BANCO,
-          AGENCIA: client.AGENCIA,
-          CONTA: client.CONTA,
+          id: key,
+          idd: client.id,
+          cnpj: client.CNPJ,
+          EmpresaId: client.EmpresaId,
+          nome: client.nome,
+          cond_pgmto: client.cond_pgmto,
+          nome_conta: client.nome_conta,
+          fone: client.fone,
+          cep: client.cep,
+          rua: client.rua,
+          numero: client.numero,
+          complemento: client.complemento,
+          bairro: client.bairro,
+          cidade: client.cidade,
+          uf: client.uf,
+          banco: client.banco,
+          agencia: client.agencia,
+          conta: client.conta,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -137,15 +139,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Fornecedores Cadastrados
                   <Link to="/cadastro/geral/fornec">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar Fornecedor
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -157,20 +170,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Name",
-                      accessor: "UF",
+                      Header: "cnpj",
+                      accessor: "cnpj",
                     },
                     {
-                      Header: "Email",
-                      accessor: "BANCO",
+                      Header: "nome",
+                      accessor: "nome",
                     },
                     {
-                      Header: "Idade",
-                      accessor: "AGENCIA",
-                    },
-                    {
-                      Header: "Salário",
-                      accessor: "CONTA",
+                      Header: "telefone",
+                      accessor: "fone",
                     },
                     {
                       Header: "Ações",
