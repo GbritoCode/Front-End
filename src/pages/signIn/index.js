@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Form, Input } from "@rocketseat/unform";
 import * as yup from "yup";
 
 import {
@@ -9,8 +10,6 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
-  Form,
-  Input,
   InputGroupAddon,
   InputGroupText,
   InputGroup,
@@ -19,7 +18,8 @@ import {
 } from "reactstrap";
 
 import { signInRequest } from "~/store/modules/auth/actions";
-import { useInput } from "~/hooks.js";
+
+import "~/auth.css";
 
 // reactstrap components
 
@@ -33,21 +33,24 @@ const Schema = yup.object().shape({
 
 export default function SignIn() {
   const dispatch = useDispatch();
-
-  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
-  const {
-    value: password,
-    bind: bindPassword,
-    reset: resetPassoword,
-  } = useInput("");
-
   const loading = useSelector((state) => state.auth.loading);
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({ email, password }) {
     dispatch(signInRequest(email, password));
-  };
+  }
 
+  /*return 
+    <>
+      <img alt="GoBarber" />
+      <Form schema={Schema} onSubmit={handleSubmit}>
+        <Input name="email" type="email" placeholder="E-mail" />
+        <Input name="password" type="password" placeholder="Senha" />
+
+        <button type="submit">{loading ? "Carregando..." : "Acessar"}</button>
+        <Link to="/register">Criar conta</Link>
+      </Form>
+    </>
+  );*/
   return (
     <>
       <div className="content">
@@ -71,7 +74,6 @@ export default function SignIn() {
                       name="email"
                       type="email"
                       placeholder="E-mail"
-                      {...bindEmail}
                     />
                   </InputGroup>
                   <InputGroup>
@@ -85,7 +87,6 @@ export default function SignIn() {
                       name="password"
                       type="password"
                       placeholder="Senha"
-                      {...bindPassword}
                     />
                   </InputGroup>
                 </CardBody>

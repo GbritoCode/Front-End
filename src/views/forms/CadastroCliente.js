@@ -24,16 +24,19 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
+<<<<<<< HEAD
 import { store } from "~/store";
 import { useInput } from "~/hooks.js";
+=======
+
+import { Form, Input } from "@rocketseat/unform";
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
 
 export default function CadastroCliente() {
   const dispatch = useDispatch();
@@ -41,6 +44,7 @@ export default function CadastroCliente() {
   /*
   const [data, setData] = useState();
 
+<<<<<<< HEAD
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
 
@@ -81,10 +85,19 @@ export default function CadastroCliente() {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
+=======
+  function handleSubmit({
+    CNPJ,
+    nome_abv,
+    representante,
+    tipo_comiss,
+    EmpresaId,
+  }) {
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
     dispatch(
       ClienteRequest(CNPJ, nome_abv, representante, tipo_comiss, EmpresaId)
     );
-  };
+  }
   return (
     <>
       <div className="content">
@@ -98,21 +111,20 @@ export default function CadastroCliente() {
                 <Form className="cadastro" onSubmit={handleSubmit}>
                   <label>CNPJ</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="CNPJ"
-                      type="text"
-                      {...bindCNPJ}
-                    />
+                    <Input className="cadastro" name="CNPJ" type="text" />
                   </FormGroup>
                   <label>Nome Abreviado</label>
                   <FormGroup>
+<<<<<<< HEAD
                     <Input
                       className="cadastro"
                       name="name_abv"
                       type="text"
                       {...bindNome_abv}
                     />
+=======
+                    <Input className="cadastro" name="nome_abv" type="text" />
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                   </FormGroup>
                   <label>Representante</label>
                   <FormGroup>
@@ -120,7 +132,6 @@ export default function CadastroCliente() {
                       className="cadastro"
                       name="representante"
                       type="text"
-                      {...bindRepresentante}
                     />
                   </FormGroup>
                   <label>Tipo Comissão</label>
@@ -130,7 +141,6 @@ export default function CadastroCliente() {
                       name="tipo_comiss"
                       type="numeric"
                       autoComplete="off"
-                      {...bindTipo_comiss}
                     />
                   </FormGroup>
                   <label>Empresa</label>
@@ -139,7 +149,11 @@ export default function CadastroCliente() {
                       disabled={true}
                       className="cadastro"
                       name="EmpresaId"
+<<<<<<< HEAD
                       {...bindEmpresaId}
+=======
+                      type="numeric"
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                     />
                   </FormGroup>
                   <Button

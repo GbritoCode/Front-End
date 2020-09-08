@@ -40,9 +40,7 @@ import { useInput } from "hooks.js";
 import { store } from "~/store";
 
 const schema = yup.object().shape({
-  EmpresaId: yup
-    .number("precisa ser um número")
-    .required("empresaId é necesário"),
+  EmpresaId: yup.string().required(),
   desc_area: yup.string().required(),
 });
 export default function CadastroCliente() {

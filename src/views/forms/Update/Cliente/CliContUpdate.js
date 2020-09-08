@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 // reactstrap components
 import {
@@ -34,23 +34,21 @@ import { CliContUpdate } from "~/store/modules/Cliente/actions";
 
 import { useParams } from "react-router-dom";
 
-import { useInput } from 'hooks.js'
+import { useInput } from "hooks.js";
 
 export default function CliContUpdatee() {
   const { id } = useParams();
 
-  const [data, setData] = useState();
+  /*async function loadCliente(id) {
+    const res = await fetc(`http://localhost:3001/cliente`);
+    res.json().then((res) => setData(res));
+  }
 
   useEffect(() => {
-    fetch(`http://localhost:3001/cliente/cont/${id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        setData(response[0]);
-        console.log(response);
-      });
-  }, []);
+    loadCliente(id);
+  });
+*/
+
   const dispatch = useDispatch();
 
   const { value: ClienteId, bind: bindClienteId } = useInput("");
@@ -66,18 +64,10 @@ export default function CliContUpdatee() {
     evt.preventDefault();
 
     dispatch(
-      CliContUpdate(
-        ClienteId,
-        nome,
-        cel,
-        fone,
-        skype,
-        email,
-        aniver,
-        tipo_conta
-      )
+      CliContUpdate(ClienteId, NOME, CEL, FONE, SKYPE, EMAIL, ANIVER, TIPO_CONT)
     );
-  }
+    console.log("sadasd");
+  };
   return (
     <>
       <div className="content">
@@ -88,50 +78,66 @@ export default function CliContUpdatee() {
                 <CardTitle tag="h4">Atualização de cliente</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  initialData={data}
-                >
+                <Form className="cadastro" onSubmit={handleSubmit}>
                   <label>Nome </label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="nome"
+                      name="NOME"
                       type="text"
                       {...bindNome}
                     />
                   </FormGroup>
                   <label>Celular</label>
                   <FormGroup>
-                    <Input className="cadastro" name="cel" type="numeric" {...bindCel} />
+                    <Input
+                      className="cadastro"
+                      name="cel"
+                      type="numeric"
+                      {...bindCel}
+                    />
                   </FormGroup>
                   <label>Telefone</label>
                   <FormGroup>
-                    <Input className="cadastro" name="fone" type="numeric" {...bindFone} />
+                    <Input
+                      className="cadastro"
+                      name="fone"
+                      type="numeric"
+                      {...bindFone}
+                    />
                   </FormGroup>
                   <label>Skype</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="skype"
+                      name="SKYPE"
                       type="text"
                       {...bindSkype}
                     />
                   </FormGroup>
                   <label>Email</label>
                   <FormGroup>
-                    <Input className="cadastro" name="email" type="email" {...bindEmail} />
+                    <Input
+                      className="cadastro"
+                      name="email"
+                      type="email"
+                      {...bindEmail}
+                    />
                   </FormGroup>
                   <label>Aniversário</label>
                   <FormGroup>
-                    <Input className="cadastro" name="aniver" type="date" {...bindAniver} />
+                    <Input
+                      className="cadastro"
+                      name="aniver"
+                      type="date"
+                      {...bindAniver}
+                    />
                   </FormGroup>{" "}
                   <label>Tipo de Conta</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="tipo_conta"
+                      name="TIPO_CONT"
                       type="numeric"
                       {...bindTipo_conta}
                     />

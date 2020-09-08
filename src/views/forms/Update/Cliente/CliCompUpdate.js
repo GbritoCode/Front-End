@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 // reactstrap components
 import {
@@ -33,40 +33,32 @@ import { useDispatch } from "react-redux";
 import { CliCompUpdate } from "~/store/modules/Cliente/actions";
 
 import * as yup from "yup";
+<<<<<<< HEAD
 import { useParams } from "react-router-dom";
 import { useInput } from 'hooks.js'
 
+=======
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
 
 const schema = yup.object().shape({
   ClienteId: yup.string().required(),
-  rz_social: yup.string().required(),
-  cond_pgmto: yup.number().required(),
-  nome_abv: yup.string().required(),
-  cep: yup.string().required(),
-  rua: yup.string().required(),
-  numero: yup.number().required(),
-  bairro: yup.string().required(),
-  cidade: yup.string().required(),
-  uf: yup.string().required(),
-  insc_mun: yup.number().required(),
-  insc_uf: yup.number().required(),
+  RZ_SOCIAL: yup.string().required(),
+  COND_PGTO: yup.number().required(),
+  NOME_ABV: yup.string().required(),
+  CEP: yup.string().required(),
+  RUA: yup.string().required(),
+  NUMERO: yup.number().required(),
+  BAIRRO: yup.string().required(),
+  CIDADE: yup.string().required(),
+  UF: yup.string().required(),
+  INSC_MUN: yup.number().required(),
+  INSC_UF: yup.number().required(),
 });
 
 export default function CliCompUpdatee() {
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const [data, setData] = useState();
 
-  useEffect(() => {
-    fetch(`http://localhost:3001/cliente/complem/${id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        setData(response[0]);
-      });
-  }, []);
-
+<<<<<<< HEAD
   const { value: ClienteId, bind: bindClienteId } = useInput("");
   const { value: rz_social, bind: bindRz_social } = useInput("");
   const { value: cond_pgmto, bind: bindCond_pgmto } = useInput("");
@@ -83,20 +75,36 @@ export default function CliCompUpdatee() {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
+=======
+  function handleSubmit({
+    ClienteId,
+    RZ_SOCIAL,
+    COND_PGTO,
+    NOME_ABV,
+    CEP,
+    RUA,
+    NUMERO,
+    BAIRRO,
+    CIDADE,
+    UF,
+    INSC_MUN,
+    INSC_UF,
+  }) {
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
     dispatch(
       CliCompUpdate(
         ClienteId,
-        rz_social,
-        cond_pgmto,
-        nome_abv,
-        cep,
-        rua,
-        numero,
-        bairro,
-        cidade,
-        uf,
-        insc_mun,
-        insc_uf
+        RZ_SOCIAL,
+        COND_PGTO,
+        NOME_ABV,
+        CEP,
+        RUA,
+        NUMERO,
+        BAIRRO,
+        CIDADE,
+        UF,
+        INSC_MUN,
+        INSC_UF
       )
     );
   }
@@ -114,35 +122,50 @@ export default function CliCompUpdatee() {
                   className="cadastro"
                   onSubmit={handleSubmit}
                   schema={schema}
-                  initialData={data}
                 >
                   <label>Cliente</label>
                   <FormGroup>
                     <Input className="cadastro" name="ClienteId" type="text" {...bindClienteId} />
                   </FormGroup>
 
+<<<<<<< HEAD
                   <label>Razão Social</label>
                   <FormGroup>
                     <Input className="cadastro" name="rz_social" type="text" {...bindRz_social} />
                   </FormGroup>
 
                   <label>Condição de Pagamento</label>
+=======
+                  <label>RZ_SOCIAL</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="RZ_SOCIAL" type="text" />
+                  </FormGroup>
+
+                  <label>COND_PGTO</label>
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="cond_pgmto"
+                      name="COND_PGTO"
                       type="numeric"
                       {...bindCond_pgmto}
                     />
                   </FormGroup>
 
+<<<<<<< HEAD
                   <label>Nome Abreviado</label>
                   <FormGroup>
                     <Input className="cadastro" name="Nome Abreviado" type="text" {...bindNome_abv} />
+=======
+                  <label>NOME_ABV</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="NOME_ABV" type="text" />
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                   </FormGroup>
 
                   <label>CEP</label>
                   <FormGroup>
+<<<<<<< HEAD
                     <Input className="cadastro" name="cep" type="text" {...bindCep} />
                   </FormGroup>
 
@@ -172,18 +195,55 @@ export default function CliCompUpdatee() {
                   </FormGroup>
 
                   <label>Inscrição Municipal</label>
+=======
+                    <Input className="cadastro" name="CEP" type="text" />
+                  </FormGroup>
+
+                  <label>RUA</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="RUA" type="text" />
+                  </FormGroup>
+
+                  <label>NUMERO</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="NUMERO" type="numeric" />
+                  </FormGroup>
+
+                  <label>BAIRRO</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="BAIRRO" type="text" />
+                  </FormGroup>
+
+                  <label>CIDADE</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="CIDADE" type="text" />
+                  </FormGroup>
+
+                  <label>UF</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="UF" type="text" />
+                  </FormGroup>
+
+                  <label>INSC_MUN</label>
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                   <FormGroup>
                     <Input
                       className="cadastro"
-                      name="insc_mun"
+                      name="INSC_MUN"
                       type="numeric"
                       {...bindInsc_mun}
                     />
                   </FormGroup>
 
+<<<<<<< HEAD
                   <label>Inscrição Federal</label>
                   <FormGroup>
                     <Input className="cadastro" name="insc_uf" type="numeric" {...bindInsc_uf} />
+=======
+                  <label>INSC_UF</label>
+                  <FormGroup>
+                    <Input className="cadastro" name="INSC_UF" type="numeric" />
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                   </FormGroup>
 
                   <Button

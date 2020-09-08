@@ -50,7 +50,7 @@ function ClienteUpdatee() {
       .then((response) => {
         setData(response);
       });
-  }, []);
+  });
   const dispatch = useDispatch();
 
   const { value: CNPJ, bind: bindCNPJ } = useInput(data.id);

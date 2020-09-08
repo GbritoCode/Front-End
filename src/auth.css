@@ -1,0 +1,41 @@
+<<<<<<< HEAD
+=======
+form.auth {
+  text-align: left;
+}
+input.auth {
+  border-color: #d3d6d4;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  height: 44px;
+  border-left: 0px;
+  border-width: 1px;
+  color: rebeccapurple;
+  border-top-color: rgba(255, 255, 255, 10);
+  width: 85%;
+  padding-left: 15px;
+  font: "arial";
+}
+input:focus.auth {
+  border: 1px solid rgba(230, 98, 222, 1);
+  border-left: 0;
+}
+
+form.cadastro {
+  text-align: left;
+}
+input.cadastro {
+  background: rgba(0, 0, 0, 0.1);
+  border: 0;
+  border-radius: 4px;
+  height: 44px;
+  padding: 0 15px;
+  color: #fff;
+  margin: 0 0 10px;
+  width: 100%;
+}
+
+input:focus.cadastro {
+  border: 1px solid rgba(32, 30, 120, 7);
+}
+>>>>>>> parent of a3593f1...  dados recebidos em paginass de update
