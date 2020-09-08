@@ -32,7 +32,6 @@ import { useDispatch } from "react-redux";
 import { Form, Input } from "@rocketseat/unform";
 import { colabCompRequest } from "~/store/modules/Colab/actions";
 import * as yup from "yup";
-import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   ColabId: yup.number().required(),
@@ -47,16 +46,16 @@ const schema = yup.object().shape({
 export default function ColabCompCadastro() {
   const dispatch = useDispatch();
 
-  const { value: ColabId, bind: bindColabId } = useInput("");
-  const { value: nivel, bind: bindNivel } = useInput("");
-  const { value: tipo_valor, bind: bindTipo_valor } = useInput("");
-  const { value: valor, bind: bindValor } = useInput("");
-  const { value: data_inic, bind: bindData_inic } = useInput("");
-  const { value: data_fim, bind: bindData_fim } = useInput("");
-  const { value: tipo_atend, bind: bindTipo_atend } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({
+    ColabId,
+    nivel,
+    tipo_valor,
+    valor,
+    data_inic,
+    data_fim,
+    tipo_atend,
+  }) {
+    console.log("asdas");
     dispatch(
       colabCompRequest(
         ColabId,
@@ -68,7 +67,7 @@ export default function ColabCompCadastro() {
         tipo_atend
       )
     );
-  };
+  }
   return (
     <>
       <div className="content">
@@ -76,7 +75,9 @@ export default function ColabCompCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Complemento do Colaborador</CardTitle>
+                <CardTitle tag="h4">
+                  Cadastro de Complemento do Colaborador
+                </CardTitle>
               </CardHeader>
               <CardBody>
                 <Form
@@ -84,80 +85,60 @@ export default function ColabCompCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Colaborador</label>
+                  <label>ColabId</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ColabId"
-                      type="numeric"
-                      {...bindColabId}
-                    />
+                    <Input className="cadastro" name="ColabId" type="numeric" />
                   </FormGroup>
 
-                  <label>Nível</label>
+                  <label>nivel</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nivel"
-                      type="numeric"
-                      {...bindNivel}
-                    />
+                    <Input className="cadastro" name="nivel" type="numeric" />
                   </FormGroup>
 
-                  <label>Tipo de valor</label>
+                  <label>tipo_valor</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_valor"
                       type="numeric"
-                      {...bindTipo_valor}
                     />
                   </FormGroup>
 
-                  <label>Valor</label>
+                  <label>valor</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="valor"
-                      type="numeric"
-                      {...bindValor}
-                    />
+                    <Input className="cadastro" name="valor" type="numeric" />
                   </FormGroup>
 
-                  <label>Data Inicial</label>
+                  <label>data_inic</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="data_inic"
-                      type="date"
-                      {...bindData_inic}
-                    />
+                    <Input className="cadastro" name="data_inic" type="date" />
                   </FormGroup>
 
-                  <label>Data Final</label>
+                  <label>data_fim</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="data_fim"
-                      type="date"
-                      {...bindData_fim}
-                    />
+                    <Input className="cadastro" name="data_fim" type="date" />
                   </FormGroup>
 
-                  <label>Tipo de Atendimento</label>
+                  <label>tipo_atend</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_atend"
                       type="numeric"
-                      {...bindTipo_atend}
                     />
                   </FormGroup>
 
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
+                  </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

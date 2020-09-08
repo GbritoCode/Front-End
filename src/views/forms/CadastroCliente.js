@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 // reactstrap components
 import {
@@ -31,7 +31,10 @@ import {
 import { useDispatch } from "react-redux";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { store } from "~/store";
+=======
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
 import { useInput } from "~/hooks.js";
 =======
 
@@ -40,10 +43,8 @@ import { Form, Input } from "@rocketseat/unform";
 
 export default function CadastroCliente() {
   const dispatch = useDispatch();
-  const empresa = store.getState().auth.empresa;
-  /*
-  const [data, setData] = useState();
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
@@ -60,6 +61,8 @@ export default function CadastroCliente() {
   const aa = data;
   console.log(aa);
   */
+=======
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
   const { value: CNPJ, bind: bindCNPJ, reset: resetCNPJ } = useInput("");
   const {
     value: nome_abv,
@@ -80,7 +83,7 @@ export default function CadastroCliente() {
     value: EmpresaId,
     bind: bindEmpresaId,
     reset: resetEmpresaId,
-  } = useInput(empresa);
+  } = useInput("");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -105,7 +108,7 @@ export default function CadastroCliente() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cliente</CardTitle>
+                <CardTitle tag="h4">Pré-Cadastro de Cliente</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form className="cadastro" onSubmit={handleSubmit}>
@@ -113,12 +116,12 @@ export default function CadastroCliente() {
                   <FormGroup>
                     <Input className="cadastro" name="CNPJ" type="text" />
                   </FormGroup>
-                  <label>Nome Abreviado</label>
+                  <label>nome_abv</label>
                   <FormGroup>
 <<<<<<< HEAD
                     <Input
                       className="cadastro"
-                      name="name_abv"
+                      name="nome_abv"
                       type="text"
                       {...bindNome_abv}
                     />
@@ -126,7 +129,7 @@ export default function CadastroCliente() {
                     <Input className="cadastro" name="nome_abv" type="text" />
 >>>>>>> parent of a3593f1...  dados recebidos em paginass de update
                   </FormGroup>
-                  <label>Representante</label>
+                  <label>representante</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
@@ -134,7 +137,7 @@ export default function CadastroCliente() {
                       type="text"
                     />
                   </FormGroup>
-                  <label>Tipo Comissão</label>
+                  <label>tipo_comiss</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
@@ -143,23 +146,35 @@ export default function CadastroCliente() {
                       autoComplete="off"
                     />
                   </FormGroup>
-                  <label>Empresa</label>
+                  <label>EmpresaId</label>
                   <FormGroup>
                     <Input
-                      disabled={true}
                       className="cadastro"
                       name="EmpresaId"
+<<<<<<< HEAD
 <<<<<<< HEAD
                       {...bindEmpresaId}
 =======
                       type="numeric"
 >>>>>>> parent of a3593f1...  dados recebidos em paginass de update
+=======
+                      type="numeric"
+                      {...bindEmpresaId}
+                      maxLength={30}
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
                     />
+                  </FormGroup>
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

@@ -121,26 +121,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Continuação de Clientes Cadastrados
                   <Link to="/cadastro/cliente/cont">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar continuação de cliente
                     </Button>
                   </Link>
                 </CardTitle>

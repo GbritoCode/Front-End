@@ -43,7 +43,6 @@ class Sidebar extends React.Component {
           ...initialState,
         };
       }
-
       return null;
     });
     return initialState;
@@ -68,7 +67,6 @@ class Sidebar extends React.Component {
       if (prop.redirect) {
         return null;
       }
-      if (prop.invisible) return null;
       if (prop.collapse) {
         var st = {};
         st[prop["state"]] = !this.state[prop.state];

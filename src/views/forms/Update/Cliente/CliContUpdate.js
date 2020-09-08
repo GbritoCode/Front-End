@@ -24,18 +24,20 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
-  Form,
-  Input,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
 
+import { Form, Input } from "@rocketseat/unform";
 import { useParams } from "react-router-dom";
 
+<<<<<<< HEAD
 import { useInput } from "hooks.js";
 
+=======
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
 export default function CliContUpdatee() {
   const { id } = useParams();
 
@@ -51,18 +53,16 @@ export default function CliContUpdatee() {
 
   const dispatch = useDispatch();
 
-  const { value: ClienteId, bind: bindClienteId } = useInput("");
-  const { value: nome, bind: bindNome } = useInput("");
-  const { value: cel, bind: bindCel } = useInput("");
-  const { value: fone, bind: bindFone } = useInput("");
-  const { value: skype, bind: bindSkype } = useInput("");
-  const { value: email, bind: bindEmail } = useInput("");
-  const { value: aniver, bind: bindAniver } = useInput("");
-  const { value: tipo_conta, bind: bindTipo_conta } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-
+  function handleSubmit({
+    ClienteId,
+    nome,
+    cel,
+    fone,
+    skype,
+    email,
+    aniver,
+    tipo_conta,
+  }) {
     dispatch(
       CliContUpdate(ClienteId, NOME, CEL, FONE, SKYPE, EMAIL, ANIVER, TIPO_CONT)
     );
@@ -82,70 +82,86 @@ export default function CliContUpdatee() {
                   <label>Nome </label>
                   <FormGroup>
                     <Input
+                      disabled={true}
+                      value={id}
                       className="cadastro"
                       name="NOME"
                       type="text"
-                      {...bindNome}
                     />
                   </FormGroup>
-                  <label>Celular</label>
+                  <label>cel</label>
                   <FormGroup>
+<<<<<<< HEAD
                     <Input
                       className="cadastro"
                       name="cel"
                       type="numeric"
                       {...bindCel}
                     />
+=======
+                    <Input className="cadastro" name="cel" type="numeric" />
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
                   </FormGroup>
-                  <label>Telefone</label>
+                  <label>fone</label>
                   <FormGroup>
+<<<<<<< HEAD
                     <Input
                       className="cadastro"
                       name="fone"
                       type="numeric"
                       {...bindFone}
                     />
+=======
+                    <Input className="cadastro" name="fone" type="numeric" />
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
                   </FormGroup>
-                  <label>Skype</label>
+                  <label>skype</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="SKYPE"
                       type="text"
-                      {...bindSkype}
+                      autoComplete="off"
                     />
                   </FormGroup>
-                  <label>Email</label>
+                  <label>email</label>
                   <FormGroup>
+<<<<<<< HEAD
                     <Input
                       className="cadastro"
                       name="email"
                       type="email"
                       {...bindEmail}
                     />
+=======
+                    <Input className="cadastro" name="email" type="email" />
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
                   </FormGroup>
-                  <label>Aniversário</label>
+                  <label>aniver</label>
                   <FormGroup>
+<<<<<<< HEAD
                     <Input
                       className="cadastro"
                       name="aniver"
                       type="date"
                       {...bindAniver}
                     />
+=======
+                    <Input className="cadastro" name="aniver" type="date" />
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
                   </FormGroup>{" "}
-                  <label>Tipo de Conta</label>
+                  <label>tipo_conta</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="TIPO_CONT"
                       type="numeric"
-                      {...bindTipo_conta}
                     />
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

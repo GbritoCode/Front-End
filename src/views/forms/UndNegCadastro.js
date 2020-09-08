@@ -23,17 +23,17 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
+
+import { Form, Input } from "@rocketseat/unform";
+
 import { undNegRequest } from "~/store/modules/general/actions";
+
 import * as yup from "yup";
-import { store } from "~/store";
-import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   EmpresaId: yup.string().required(),
@@ -42,15 +42,11 @@ const schema = yup.object().shape({
 
 export default function UndNegCadastro() {
   const dispatch = useDispatch();
-  const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
-  const { value: desc_und_neg, bind: bindDesc_und_neg } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({ EmpresaId, desc_und_neg }) {
+    console.log("asdas");
     dispatch(undNegRequest(EmpresaId, desc_und_neg));
-  };
+  }
   return (
     <>
       <div className="content">
@@ -66,31 +62,24 @@ export default function UndNegCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Empresa</label>
+                  <label>EmpresaId</label>
                   <FormGroup>
-                    <Input
-                      disabled={true}
-                      className="cadastro"
-                      name="EmpresaId"
-                      type="text"
-                      {...bindEmpresaId}
-                    />
+                    <Input className="cadastro" name="EmpresaId" type="text" />
                   </FormGroup>
 
-                  <label>Descrição da Unidade de Negócio</label>
+                  <label>desc_und_neg</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="desc_und_neg"
                       type="text"
-                      {...bindDesc_und_neg}
                     />
                   </FormGroup>
 
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

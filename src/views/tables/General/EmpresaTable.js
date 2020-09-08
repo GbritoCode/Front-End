@@ -37,12 +37,10 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          cnpj: client.id_federal,
-          nome: client.nome,
-          license: client.license,
-          UserId: client.UserId,
+          ID_FEDERAL: key,
+          NOME: client.NOME,
+          LICENSE: client.LICENSE,
+          USER_ID: client.USER_ID,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -127,26 +125,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Empresas Cadastradas
                   <Link to="/cadastro/geral/empresa">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar empresa
                     </Button>
                   </Link>
                 </CardTitle>
@@ -158,16 +145,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "CNPJ",
-                      accessor: "cnpj",
+                      Header: "Name",
+                      accessor: "ID_FEDERAL",
                     },
                     {
-                      Header: "Nome",
-                      accessor: "nome",
+                      Header: "Email",
+                      accessor: "NOME",
                     },
                     {
-                      Header: "license",
-                      accessor: "license",
+                      Header: "Idade",
+                      accessor: "LICENSE",
+                    },
+                    {
+                      Header: "Salário",
+                      accessor: "USR_ID",
                     },
                     {
                       Header: "Ações",

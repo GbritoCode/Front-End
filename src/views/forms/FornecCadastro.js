@@ -24,19 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 
+import { Form, Input } from "@rocketseat/unform";
+
 import { fornecRequest } from "~/store/modules/general/actions";
 
 import * as yup from "yup";
-import { store } from "~/store";
-import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   CNPJ: yup.string().required(),
@@ -59,28 +57,25 @@ const schema = yup.object().shape({
 
 export default function FornecCadastro() {
   const dispatch = useDispatch();
-  const empresa = store.getState().auth.empresa;
 
-  const { value: CNPJ, bind: bindCNPJ } = useInput("");
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
-  const { value: nome, bind: bindNome } = useInput("");
-  const { value: cond_pgmto, bind: bindCond_pgmto } = useInput("");
-  const { value: nome_conta, bind: bindNome_conta } = useInput("");
-  const { value: fone, bind: bindFone } = useInput("");
-  const { value: cep, bind: bindCep } = useInput("");
-  const { value: rua, bind: bindRua } = useInput("");
-  const { value: numero, bind: bindNumero } = useInput("");
-  const { value: complemento, bind: bindComplemento } = useInput("");
-  const { value: bairro, bind: bindBairro } = useInput("");
-  const { value: cidade, bind: bindCidade } = useInput("");
-  const { value: uf, bind: bindUf } = useInput("");
-  const { value: banco, bind: bindBanco } = useInput("");
-  const { value: agencia, bind: bindAgencia } = useInput("");
-  const { value: conta, bind: bindConta } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-
+  function handleSubmit({
+    CNPJ,
+    EmpresaId,
+    nome,
+    cond_pgmto,
+    nome_conta,
+    fone,
+    cep,
+    rua,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    uf,
+    banco,
+    agencia,
+    conta,
+  }) {
     dispatch(
       fornecRequest(
         CNPJ,
@@ -101,7 +96,7 @@ export default function FornecCadastro() {
         conta
       )
     );
-  };
+  }
   return (
     <>
       <div className="content">
@@ -119,163 +114,101 @@ export default function FornecCadastro() {
                 >
                   <label>CNPJ</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="CNPJ"
-                      type="text"
-                      {...bindCNPJ}
-                    />
+                    <Input className="cadastro" name="CNPJ" type="text" />
                   </FormGroup>
-                  <label>Empresa</label>
+                  <label>EmpresaId</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="EmpresaId"
-                      type="text"
-                      {...bindEmpresaId}
-                    />
+                    <Input className="cadastro" name="EmpresaId" type="text" />
                   </FormGroup>
-                  <label>Nome</label>
+                  <label>nome</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nome"
-                      type="text"
-                      {...bindNome}
-                    />
+                    <Input className="cadastro" name="nome" type="text" />
                   </FormGroup>
-                  <label>Condição de Pagamento</label>
+                  <label>cond_pgmto</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="cond_pgmto"
                       type="numeric"
-                      {...bindCond_pgmto}
+                      autoComplete="off"
                     />
                   </FormGroup>
-                  <label>Nome da Conta</label>
+                  <label>nome_conta</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nome_conta"
-                      type="text"
-                      {...bindNome_conta}
-                    />
+                    <Input className="cadastro" name="nome_conta" type="text" />
                   </FormGroup>
 
-                  <label>Telefone</label>
+                  <label>fone</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="fone"
-                      type="numeric"
-                      {...bindFone}
-                    />
+                    S
+                    <Input className="cadastro" name="fone" type="numeric" />
                   </FormGroup>
 
-                  <label>CEP</label>
+                  <label>cep</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="cep"
-                      type="text"
-                      {...bindCep}
-                    />
+                    <Input className="cadastro" name="cep" type="text" />
                   </FormGroup>
 
-                  <label>Rua</label>
+                  <label>rua</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="rua"
-                      type="text"
-                      {...bindRua}
-                    />
+                    <Input className="cadastro" name="rua" type="text" />
                   </FormGroup>
 
-                  <label>Número</label>
+                  <label>numero</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="numero"
-                      type="numeric"
-                      {...bindNumero}
-                    />
+                    <Input className="cadastro" name="numero" type="numeric" />
                   </FormGroup>
 
-                  <label>Complemento</label>
+                  <label>complemento</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="complemento"
                       type="text"
-                      {...bindComplemento}
                     />
                   </FormGroup>
 
-                  <label>Bairro</label>
+                  <label>bairro</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="bairro"
-                      type="text"
-                      {...bindBairro}
-                    />
+                    <Input className="cadastro" name="bairro" type="text" />
                   </FormGroup>
 
-                  <label>Cidade</label>
+                  <label>cidade</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="cidade"
-                      type="text"
-                      {...bindCidade}
-                    />
+                    <Input className="cadastro" name="cidade" type="text" />
                   </FormGroup>
 
-                  <label>UF</label>
+                  <label>uf</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="uf"
-                      type="text"
-                      {...bindUf}
-                    />
+                    <Input className="cadastro" name="uf" type="text" />
                   </FormGroup>
 
-                  <label>Banco</label>
+                  <label>banco</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="banco"
-                      type="text"
-                      {...bindBanco}
-                    />
+                    <Input className="cadastro" name="banco" type="text" />
                   </FormGroup>
 
-                  <label>Agência</label>
+                  <label>agencia</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="agencia"
-                      type="text"
-                      {...bindAgencia}
-                    />
+                    <Input className="cadastro" name="agencia" type="text" />
                   </FormGroup>
 
-                  <label>Conta</label>
+                  <label>conta</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="conta"
-                      type="text"
-                      {...bindConta}
-                    />
+                    <Input className="cadastro" name="conta" type="text" />
+                  </FormGroup>
+
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

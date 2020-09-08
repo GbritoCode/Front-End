@@ -1,5 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
 form.auth {
   text-align: left;
 }
@@ -11,13 +14,21 @@ input.auth {
   border-left: 0px;
   border-width: 1px;
   color: rebeccapurple;
+<<<<<<< HEAD
   border-top-color: rgba(255, 255, 255, 10);
   width: 85%;
+=======
+  width: 20%;
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
   padding-left: 15px;
   font: "arial";
 }
 input:focus.auth {
+<<<<<<< HEAD
   border: 1px solid rgba(230, 98, 222, 1);
+=======
+  border: 1px solid rgb(129, 126, 129);
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms
   border-left: 0;
 }
 
@@ -38,4 +49,7 @@ input.cadastro {
 input:focus.cadastro {
   border: 1px solid rgba(32, 30, 120, 7);
 }
+<<<<<<< HEAD
 >>>>>>> parent of a3593f1...  dados recebidos em paginass de update
+=======
+>>>>>>> parent of 29865d7... erro no update, e modificações nos forms

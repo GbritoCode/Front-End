@@ -24,19 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 
+import { Form, Input } from "@rocketseat/unform";
+
 import { empresaRequest } from "~/store/modules/general/actions";
 
 import * as yup from "yup";
-
-import { useInput } from 'hooks.js'
 
 const schema = yup.object().shape({
   id_federal: yup.string().required(),
@@ -47,13 +45,7 @@ const schema = yup.object().shape({
 export default function EmpresaCadastro() {
   const dispatch = useDispatch();
 
-  const { value: id_federal, bind: bindId_federal } = useInput("");
-  const { value: nome, bind: bindNome } = useInput("");
-  const { value: license, bind: bindLicense } = useInput("");
-  const { value: UserId, bind: bindUserId } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({ id_federal, nome, license, UserId }) {
     dispatch(empresaRequest(id_federal, nome, license, UserId));
   }
   return (
@@ -63,7 +55,7 @@ export default function EmpresaCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Empresa</CardTitle>
+                <CardTitle tag="h4">Cadastro de Empresa</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form
@@ -71,31 +63,39 @@ export default function EmpresaCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>CNPJ</label>
+                  <label>id_federal</label>
                   <FormGroup>
-                    <Input className="cadastro" name="id_federal" type="text" {...bindId_federal} />
+                    <Input className="cadastro" name="id_federal" type="text" />
                   </FormGroup>
-                  <label>Nome</label>
+                  <label>nome</label>
                   <FormGroup>
-                    <Input className="cadastro" name="nome" type="text" {...bindNome} />
+                    <Input className="cadastro" name="nome" type="text" />
                   </FormGroup>
-                  <label>License</label>
+                  <label>license</label>
                   <FormGroup>
-                    <Input className="cadastro" name="license" type="text" {...bindLicense} />
+                    <Input className="cadastro" name="license" type="text" />
                   </FormGroup>
-                  <label>Usuário</label>
+                  <label>UserId</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="UserId"
                       type="numeric"
-                      {...bindUserId}
+                      autoComplete="off"
                     />
+                  </FormGroup>
+
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

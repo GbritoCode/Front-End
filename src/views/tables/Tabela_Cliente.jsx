@@ -54,16 +54,16 @@ class Tabela_Cliente extends Component {
                 to={`/cliente_update/${client.id}/false`}
                 color="warning"
                 size="sm"
-                className={classNames("btn-icon btn-link like")}
+                eclassNam={classNames("btn-icon btn-link like")}
               >
-                <i className="tim-icons icon-triangle-right-17" />
+                <i className="tim-icons icon-pencil" />
               </Link>{" "}
               {/* use this button to add a edit kind of action */}
               <Link
                 to={`/cliente_update/${client.id}/true`}
                 color="warning"
                 size="sm"
-                className={classNames("btn-icon btn-link like")}
+                eclassNam={classNames("btn-icon btn-link like")}
               >
                 <i className="tim-icons icon-pencil" />
               </Link>{" "}
@@ -104,26 +104,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Clientes Cadastrados
                   <Link to="/cliente_cadastro">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
+                      size="md"
                       className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar cliente
                     </Button>
                   </Link>
                 </CardTitle>

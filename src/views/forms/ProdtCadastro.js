@@ -24,17 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
+
+import { Form, Input } from "@rocketseat/unform";
+
 import { prodtRequest } from "~/store/modules/general/actions";
+
 import * as yup from "yup";
-import { store } from "~/store";
-import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   EmpresaId: yup.string().required(),
@@ -43,15 +43,11 @@ const schema = yup.object().shape({
 
 export default function ProdtCadastro() {
   const dispatch = useDispatch();
-  const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
-  const { value: desc_prodt, bind: bindDesc_prodt } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({ EmpresaId, desc_prodt }) {
+    console.log("asdas");
     dispatch(prodtRequest(EmpresaId, desc_prodt));
-  };
+  }
   return (
     <>
       <div className="content">
@@ -67,29 +63,25 @@ export default function ProdtCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Empresa</label>
+                  <label>EmpresaId</label>
                   <FormGroup>
-                    <Input
-                      disabled={true}
-                      className="cadastro"
-                      name="EmpresaId"
-                      type="text"
-                      {...bindEmpresaId}
-                    />
+                    <Input className="cadastro" name="EmpresaId" type="text" />
                   </FormGroup>
-                  <label>Descrição do Produto</label>
+                  <label>desc_prodt</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="desc_prodt"
-                      type="text"
-                      {...bindDesc_prodt}
-                    />
+                    <Input className="cadastro" name="desc_prodt" type="text" />
+                  </FormGroup>
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

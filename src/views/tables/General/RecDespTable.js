@@ -37,12 +37,11 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          nome_abv: client.nome_abv,
-          EmpresaId: client.EmpresaId,
-          nome: client.nome,
-          license: client.license,
+          COD_REC_DESP: key,
+          NOME_ABV: client.NOME_ABV,
+          COD_EMP: client.COD_EMP,
+          NOME: client.NOME,
+          LICENSE: client.LICENSE,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -127,26 +126,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Receitas e Despesas Cadastrados
                   <Link to="/cadastro/geral/rec_desp">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar receita e despesa
                     </Button>
                   </Link>
                 </CardTitle>
@@ -158,16 +146,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Nome",
-                      accessor: "nome",
+                      Header: "Name",
+                      accessor: "COD_REC_DESP",
                     },
                     {
-                      Header: "Empresa",
-                      accessor: "EmpresaId",
+                      Header: "Email",
+                      accessor: "COD_EMP",
                     },
                     {
-                      Header: "Licença",
-                      accessor: "license",
+                      Header: "Idade",
+                      accessor: "NOME",
+                    },
+                    {
+                      Header: "Salário",
+                      accessor: "LICENSE",
                     },
                     {
                       Header: "Ações",

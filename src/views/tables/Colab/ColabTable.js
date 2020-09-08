@@ -37,18 +37,16 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          cpf: client.cpf,
-          FornecId: client.FornecId,
-          log_usr: client.log_usr,
-          EmpresaId: client.EmpresaId,
-          nome: client.nome,
-          dt_admiss: client.dt_admiss,
-          cel: client.cel,
-          skype: client.skype,
-          email: client.email,
-          espec: client.espec,
+          CPF: key,
+          COD_FORNEC: client.COD_FORNEC,
+          LOG_USR: client.LOG_USR,
+          COD_EMP: client.COD_EMP,
+          NOME: client.NOME,
+          DT_ADIMISS: client.DT_ADIMISS,
+          CEL: client.CEL,
+          SKYPE: client.SKYPE,
+          EMAIL: client.EMAIL,
+          ESPEC: client.ESPEC,
 
           actions: (
             // we've added some custom button actions
@@ -134,26 +132,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Colaborades Cadastrados
                   <Link to="/cadastro/colab/colab">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar colaborador
                     </Button>
                   </Link>
                 </CardTitle>
@@ -165,20 +152,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Nome",
-                      accessor: "nome",
+                      Header: "Name",
+                      accessor: "COD_FORNEC",
                     },
                     {
-                      Header: "CPF",
-                      accessor: "cpf",
+                      Header: "Email",
+                      accessor: "LOG_USR",
                     },
                     {
-                      Header: "Data de Adimissão",
-                      accessor: "dt_admiss",
+                      Header: "Idade",
+                      accessor: "COD_EMP",
                     },
                     {
-                      Header: "Especialidade",
-                      accessor: "espec",
+                      Header: "Salário",
+                      accessor: "NOME",
                     },
                     {
                       Header: "Ações",

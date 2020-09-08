@@ -24,16 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
+
+import { Form, Input } from "@rocketseat/unform";
+
 import { CliContRequest } from "~/store/modules/Cliente/actions";
+
 import * as yup from "yup";
-import { useInput } from "~/hooks.js";
 
 const schema = yup.object().shape({
   ClienteId: yup.string().required("O cnpj é obrigatório"),
@@ -51,25 +52,17 @@ const schema = yup.object().shape({
 
 export default function CliContCadastro() {
   const dispatch = useDispatch();
-  const {
-    value: ClienteId,
-    bind: bindClienteId,
-    reset: resetClienteId,
-  } = useInput("");
-  const { value: nome, bind: bindNome, reset: resetNome } = useInput("");
-  const { value: cel, bind: bindCel, reset: resetCel } = useInput("");
-  const { value: fone, bind: bindFone, reset: resetFone } = useInput("");
-  const { value: skype, bind: bindSkype, reset: resetSkype } = useInput("");
-  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
-  const { value: aniver, bind: bindAniver, reset: resetAniver } = useInput("");
-  const {
-    value: tipo_conta,
-    bind: bindTipo_conta,
-    reset: resetTipo_conta,
-  } = useInput("");
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({
+    ClienteId,
+    nome,
+    cel,
+    fone,
+    skype,
+    email,
+    aniver,
+    tipo_conta,
+  }) {
     dispatch(
       CliContRequest(
         ClienteId,
@@ -82,7 +75,7 @@ export default function CliContCadastro() {
         tipo_conta
       )
     );
-  };
+  }
   return (
     <>
       <div className="content">
@@ -98,83 +91,58 @@ export default function CliContCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Cliente</label>
+                  <label>ClienteId</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ClienteId"
-                      type="text"
-                      {...bindClienteId}
-                    />
+                    <Input className="cadastro" name="ClienteId" type="text" />
                   </FormGroup>
-                  <label>Nome</label>
+                  <label>nome</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nome"
-                      type="text"
-                      {...bindNome}
-                    />
+                    <Input className="cadastro" name="nome" type="text" />
                   </FormGroup>
-                  <label>Celular</label>
+                  <label>cel</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="cel"
-                      type="numeric"
-                      {...bindCel}
-                    />
+                    <Input className="cadastro" name="cel" type="numeric" />
                   </FormGroup>
-                  <label>Telefone</label>
+                  <label>fone</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="fone"
                       type="numeric"
                       autoComplete="off"
-                      {...bindFone}
                     />
                   </FormGroup>
-                  <label>Skype</label>
+                  <label>skype</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="skype"
-                      type="text"
-                      {...bindSkype}
-                    />
+                    <Input className="cadastro" name="skype" type="text" />
                   </FormGroup>
-                  <label>Email</label>
+                  <label>email</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="email"
-                      type="email"
-                      {...bindEmail}
-                    />
+                    <Input className="cadastro" name="email" type="email" />
                   </FormGroup>
-                  <label>Aniver</label>
+                  <label>aniver</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="aniver"
-                      type="date"
-                      {...bindAniver}
-                    />
+                    <Input className="cadastro" name="aniver" type="date" />
                   </FormGroup>
-                  <label>Tipo de Conta</label>
+                  <label>tipo_conta</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_conta"
                       type="numeric"
-                      {...bindTipo_conta}
                     />
+                  </FormGroup>
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

@@ -37,13 +37,12 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          EmpresaId: client.EmpresaId,
-          desc_item: client.desc_item,
-          tipo_item: client.tipo_item,
-          conta_contabil: client.conta_contabil,
-          cent_custo: client.cent_custo,
+          ITM_CONTROLE: key,
+          COD_EMP: client.COD_EMP,
+          DESC_ITM: client.DESC_ITM,
+          TIPO_ITM: client.TIPO_ITM,
+          CONT_CONTABIL: client.CONT_CONTABIL,
+          CENT_CUSTO: client.CENT_CUSTO,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -128,26 +127,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Itens Controle Cadastrados
                   <Link to="/cadastro/geral/itm_controle">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar item controle
                     </Button>
                   </Link>
                 </CardTitle>
@@ -159,12 +147,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Tipo",
-                      accessor: "tipo_item",
+                      Header: "Name",
+                      accessor: "DESC_ITM",
                     },
                     {
-                      Header: "Descrição",
-                      accessor: "desc_item",
+                      Header: "Email",
+                      accessor: "TIPO_ITM",
+                    },
+                    {
+                      Header: "Idade",
+                      accessor: "CONT_CONTABIL",
+                    },
+                    {
+                      Header: "Salário",
+                      accessor: "CENT_CUSTO",
                     },
                     {
                       Header: "Ações",

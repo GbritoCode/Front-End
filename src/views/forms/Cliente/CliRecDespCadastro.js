@@ -24,17 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { CliRecDespRequest } from "~/store/modules/Cliente/actions";
-import * as yup from "yup";
 
-import { useInput } from "~/hooks.js";
+import { Form, Input } from "@rocketseat/unform";
+
+import { CliRecDespRequest } from "~/store/modules/Cliente/actions";
+
+import * as yup from "yup";
 
 const schema = yup.object().shape({
   ClienteId: yup.string().required(),
@@ -45,26 +45,10 @@ const schema = yup.object().shape({
 export default function CliRecDespCadastro() {
   const dispatch = useDispatch();
 
-  const {
-    value: ClienteId,
-    bind: bindClienteId,
-    reset: resetClienteId,
-  } = useInput("");
-  const {
-    value: tipo_rec_desp,
-    bind: bindTipo_rec_desp,
-    reset: resetTipo_rec_desp,
-  } = useInput("");
-  const {
-    value: nome_rec_desp,
-    bind: bindNome_rec_desp,
-    reset: resetNome_rec_desp,
-  } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({ ClienteId, tipo_rec_desp, nome_rec_desp }) {
+    console.log("asdas");
     dispatch(CliRecDespRequest(ClienteId, tipo_rec_desp, nome_rec_desp));
-  };
+  }
   return (
     <>
       <div className="content">
@@ -82,37 +66,38 @@ export default function CliRecDespCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Cliente</label>
+                  <label>ClienteId</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ClienteId"
-                      type="text"
-                      {...bindClienteId}
-                    />
+                    <Input className="cadastro" name="ClienteId" type="text" />
                   </FormGroup>
-                  <label>Receita ou despesa</label>
+                  <label>tipo_rec_desp</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_rec_desp"
                       type="numeric"
-                      {...bindTipo_rec_desp}
                     />
                   </FormGroup>
-                  <label>Nome</label>
+                  <label>nome_rec_desp</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="nome_rec_desp"
                       type="text"
-                      {...bindNome_rec_desp}
                     />
+                  </FormGroup>
+
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

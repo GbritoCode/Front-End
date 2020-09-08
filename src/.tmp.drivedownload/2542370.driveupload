@@ -31,37 +31,53 @@ class Tabela_Cliente extends Component {
   };
 
   componentDidMount() {
-    this.loadCliente();
+    this.loadClients();
   }
-  loadCliente = async () => {
-    const response = await api.get("/cliente");
+  loadClients = async () => {
+    const id = this.props.match.params.id;
+    const response = await api.get(`/cliente/cont/${id}`);
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          idd: key,
-          id: client.id,
-          CNPJ: client.CNPJ,
-          nome_abv: client.nome_abv,
-          representante: client.representante,
-          tipo_comiss: client.tipo_comiss,
-          EmpresaId: client.EmpresaId,
-          prospect: client.prospect,
+          id: key,
+          idd: client.id,
+          Cliente: client.ClienteId,
+          nome: client.nome,
+          cel: client.cel,
+          fone: client.fone,
+          skype: client.skype,
+          email: client.email,
+          aniver: client.aniver,
+          tipo_cont: client.tipo_cont,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
-              <Link
-                to={`/cliente_update/${client.id}/false`}
-                color="warning"
+              <Button
+                onClick={() => {
+                  let obj = this.state.data.find((o) => o.id === key);
+                  alert(
+                    "You've clicked LIKE button on \n{ \nName: " +
+                      obj.COD_CLI +
+                      ", \nemail: " +
+                      obj.nome +
+                      ", \nidade: " +
+                      obj.cel +
+                      ", \nsalario: " +
+                      obj.fone +
+                      "\n}."
+                  );
+                }}
+                color="info"
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
-                <i className="tim-icons icon-pencil" />
-              </Link>{" "}
+                <i className="tim-icons icon-heart-2" />
+              </Button>{" "}
               {/* use this button to add a edit kind of action */}
               <Link
-                to={`/cliente_update/${client.id}/true`}
-                color="warning"
+                to={`/cliente/cont_update/${client.id}`}
+                color="info"
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
@@ -72,7 +88,7 @@ class Tabela_Cliente extends Component {
                 onClick={() => {
                   var data = this.state.data;
                   data.find((o, i) => {
-                    if (o.idd === key) {
+                    if (o.id === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
@@ -96,6 +112,7 @@ class Tabela_Cliente extends Component {
     });
     console.log(this.state.data);
   };
+
   render() {
     return (
       <>
@@ -104,16 +121,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Clientes
-                  <Link to="/cliente_cadastro">
+                  Continuação de Clientes Cadastrados
+                  <Link to="/cadastro/cliente/cont">
                     <Button
                       style={{ float: "right" }}
                       color="info"
-                      size="small"
+                      size="md"
                       className="text-center"
                     >
-                      <i tim-icons icon-simple-add />
-                      Adicionar cliente
+                      Adicionar continuação de cliente
                     </Button>
                   </Link>
                 </CardTitle>
@@ -125,20 +141,24 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "CNPJ",
-                      accessor: "CNPJ",
+                      Header: "Nome",
+                      accessor: "nome",
                     },
                     {
-                      Header: "Nome Abreviado",
-                      accessor: "nome_abv",
+                      Header: "Email",
+                      accessor: "cel",
                     },
                     {
-                      Header: "Representante",
-                      accessor: "representante",
+                      Header: "Telefone",
+                      accessor: "fone",
                     },
                     {
-                      Header: "Tipo de comissão",
-                      accessor: "tipo_comiss",
+                      Header: "Skype",
+                      accessor: "skype",
+                    },
+                    {
+                      Header: "Email",
+                      accessor: "email",
                     },
                     {
                       Header: "Ações",

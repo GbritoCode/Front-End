@@ -24,17 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
+
+import { Form, Input } from "@rocketseat/unform";
+
 import { itmControleRequest } from "~/store/modules/general/actions";
+
 import * as yup from "yup";
-import { store } from "~/store";
-import { useInput } from "hooks.js";
 
 const schema = yup.object().shape({
   EmpresaId: yup.string().required(),
@@ -46,17 +46,15 @@ const schema = yup.object().shape({
 
 export default function ItmControleCadastro() {
   const dispatch = useDispatch();
-  const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
-  const { value: desc_item, bind: bindDesc_item } = useInput("");
-  const { value: tipo_item, bind: bindTipo_item } = useInput("");
-  const { value: conta_contabil, bind: bindConta_contabil } = useInput("");
-  const { value: cent_custo, bind: bindCent_custo } = useInput("");
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-
+  function handleSubmit({
+    EmpresaId,
+    desc_item,
+    tipo_item,
+    conta_contabil,
+    cent_custo,
+  }) {
+    console.log("asdas");
     dispatch(
       itmControleRequest(
         EmpresaId,
@@ -66,7 +64,7 @@ export default function ItmControleCadastro() {
         cent_custo
       )
     );
-  };
+  }
   return (
     <>
       <div className="content">
@@ -82,41 +80,29 @@ export default function ItmControleCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Empresa</label>
+                  <label>EmpresaId</label>
                   <FormGroup>
-                    <Input
-                      disabled={true}
-                      className="cadastro"
-                      name="EmpresaId"
-                      type="text"
-                      {...bindEmpresaId}
-                    />
+                    <Input className="cadastro" name="EmpresaId" type="text" />
                   </FormGroup>
-                  <label>Descrição do Item</label>
+                  <label>desc_item</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="desc_item"
-                      type="text"
-                      {...bindDesc_item}
-                    />
+                    <Input className="cadastro" name="desc_item" type="text" />
                   </FormGroup>
-                  <label>Tipo de Item</label>
+                  <label>tipo_item</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="tipo_item"
                       type="numeric"
-                      {...bindTipo_item}
                     />
                   </FormGroup>
-                  <label>Conta Contábil</label>
+                  <label>conta_contabil</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="conta_contabil"
                       type="numeric"
-                      {...bindConta_contabil}
+                      autoComplete="off"
                     />
                   </FormGroup>
                   <label>cent_custo</label>
@@ -125,13 +111,19 @@ export default function ItmControleCadastro() {
                       className="cadastro"
                       name="cent_custo"
                       type="numeric"
-                      {...bindCent_custo}
                     />
+                  </FormGroup>
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="info"
+                    color="primary"
                     type="submit"
                   >
                     Submit

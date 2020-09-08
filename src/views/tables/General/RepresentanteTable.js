@@ -37,12 +37,11 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          EmpresaID: client.EmpresaID,
-          nome: client.nome,
-          percnt_comiss: client.percnt_comiss,
-          vlr_fix_mens: client.vlr_fix_mens,
+          COD_REPRESENTANTE: key,
+          COD_EMP: client.COD_EMP,
+          NOME: client.NOME,
+          PERCNT_COMISSAO: client.PERCNT_COMISSAO,
+          VLR_FIX_MENS: client.VLR_FIX_MENS,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -127,26 +126,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Representantes Cadastrados
                   <Link to="/cadastro/geral/represent">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar representante
                     </Button>
                   </Link>
                 </CardTitle>
@@ -158,16 +146,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Nome",
-                      accessor: "nome",
+                      Header: "Name",
+                      accessor: "COD_EMP",
                     },
                     {
-                      Header: "Valor Fixo Mensal",
-                      accessor: "vlr_fix_mens",
+                      Header: "Email",
+                      accessor: "NOME",
                     },
                     {
-                      Header: "Comissão (%)",
-                      accessor: "percnt_comiss",
+                      Header: "Idade",
+                      accessor: "PERCNT_COMISSAO",
+                    },
+                    {
+                      Header: "Salário",
+                      accessor: "VLR_FIX_MENS",
                     },
                     {
                       Header: "Ações",

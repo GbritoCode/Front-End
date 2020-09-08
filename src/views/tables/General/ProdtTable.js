@@ -37,10 +37,9 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          id: key,
-          idd: client.id,
-          EmpresaId: client.EmpresaId,
-          desc_prodt: client.desc_prodt,
+          COD_PRODT: key,
+          COD_EMP: client.COD_EMP,
+          DESC_PRODT: client.DESC_PRODT,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -121,26 +120,15 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Produtos Cadastrados
                   <Link to="/cadastro/geral/prodt">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
+                      style={{ float: "right" }}
                       color="info"
-                      size="small"
-                      className="text-left"
+                      size="md"
+                      className="text-center"
                     >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
+                      Adicionar produto
                     </Button>
                   </Link>
                 </CardTitle>
@@ -153,15 +141,15 @@ class Tabela_Cliente extends Component {
                   columns={[
                     {
                       Header: "Código do produto",
-                      accessor: "idd",
+                      accessor: "COD_PRODT",
                     },
                     {
-                      Header: "Empresa",
-                      accessor: "EmpresaId",
+                      Header: "Email",
+                      accessor: "COD_EMP",
                     },
                     {
-                      Header: "Descrição",
-                      accessor: "desc_prodt",
+                      Header: "Idade",
+                      accessor: "DESC_PRODT",
                     },
                     {
                       Header: "Ações",

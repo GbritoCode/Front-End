@@ -293,11 +293,10 @@ const routes = [
   //------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   {
     collapse: true,
-    name: "Páginas de cadastro invisíveis",
+    name: "Cadastros",
     rtlName: "إستمارات",
     icon: "tim-icons icon-notes",
     state: "formsCollapse",
-    invisible: true,
     views: [
       {
         path: "/cliente_cadastro",
@@ -512,7 +511,7 @@ const routes = [
   //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
   {
     collapse: true,
-    name: "Cadastros",
+    name: "Tabelas",
     rtlName: "الجداول",
     icon: "tim-icons icon-puzzle-10",
     state: "tablesCollapse",
@@ -537,7 +536,7 @@ const routes = [
       },
       {
         path: "/tabela_cliente",
-        name: "Clientes",
+        name: "Tabela de Clientes",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -546,37 +545,34 @@ const routes = [
       },
       {
         path: "/tabelas/cliente/comp/:id",
-        name: "Complemento de Clientes",
+        name: "Tabela de Complemento de Clientes",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
-        invisible: true,
         component: CliCompTable,
         layout: "/admin",
       },
       {
         path: "/tabelas/cliente/cont/:id",
-        name: "Continuação Cliente",
+        name: "Tabela Continuação Cliente",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
-        invisible: true,
         component: CliContTable,
         layout: "/admin",
       },
       {
         path: "/tabelas/cliente/rec_desp",
-        name: "Receita e Despesa de Cliente",
+        name: "Tabela de Receita e Despesa de Cliente",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
-        invisible: true,
         component: CliRecDespTable,
         layout: "/admin",
       },
       {
         path: "/tabelas/colab/colab",
-        name: "Colaborador",
+        name: "Tabela de Colaborador",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -585,17 +581,16 @@ const routes = [
       },
       {
         path: "/tabelas/colab/comp",
-        name: "Complemento de Colaborador",
+        name: "Tabela de Complemento de Colaborador",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
-        invisible: true,
         component: ColabCompTable,
         layout: "/admin",
       },
       {
         path: "/tabelas/general/area",
-        name: "Area",
+        name: "Tabela de Area",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -604,7 +599,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/empresa",
-        name: "Empresa",
+        name: "Tabela de Empresa",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -613,7 +608,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/fornec",
-        name: "Fornecedor",
+        name: "Tabela de Fornecedor",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -622,7 +617,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/itm_controle",
-        name: "Item Controle",
+        name: "Tabela de Item Controle",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -631,7 +626,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/parametros",
-        name: "Parametros",
+        name: "Tabela de Parametros",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -640,7 +635,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/prodt",
-        name: "Produto",
+        name: "Tabela de Produto",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -649,7 +644,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/rec_desp",
-        name: "Receita e Despesa",
+        name: "Tabela de Receita e Despesa",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -658,7 +653,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/representante",
-        name: "Representante",
+        name: "Tabela de Representante",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -667,7 +662,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/segmento",
-        name: "Segmento",
+        name: "Tabela de Segmento",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
@@ -676,7 +671,7 @@ const routes = [
       },
       {
         path: "/tabelas/general/und_neg",
-        name: "Unidade de Negócio",
+        name: "Tabela de Unidade de Negócio",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",

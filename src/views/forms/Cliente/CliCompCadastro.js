@@ -24,16 +24,17 @@ import {
   CardBody,
   CardTitle,
   Label,
-  Form,
-  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
+
+import { Form, Input } from "@rocketseat/unform";
+
 import { CliCompRequest } from "~/store/modules/Cliente/actions";
+
 import * as yup from "yup";
-import { useInput } from "~/hooks";
 
 const schema = yup.object().shape({
   ClienteId: yup.string().required(),
@@ -53,43 +54,20 @@ const schema = yup.object().shape({
 export default function CliCompCadastro() {
   const dispatch = useDispatch();
 
-  const {
-    value: ClienteId,
-    bind: bindClienteId,
-    reset: resetClienteId,
-  } = useInput("");
-  const {
-    value: rz_social,
-    bind: bindRz_social,
-    reset: resetRz_social,
-  } = useInput("");
-  const {
-    value: cond_pgmto,
-    bind: bindCond_pgmto,
-    reset: resetCond_pgmto,
-  } = useInput("");
-  const {
-    value: nome_abv,
-    bind: bindNome_abv,
-    reset: resetNome_abv,
-  } = useInput("");
-  const { value: cep, bind: bindCep, reset: resetCep } = useInput("");
-  const { value: rua, bind: bindRua, reset: resetRua } = useInput("");
-  const { value: numero, bind: bindNumero, reset: resetNumero } = useInput("");
-  const { value: bairro, bind: bindBairro, reset: resetBairro } = useInput("");
-  const { value: cidade, bind: bindCidade, reset: resetCidade } = useInput("");
-  const { value: uf, bind: bindUf, reset: resetUf } = useInput("");
-  const {
-    value: insc_mun,
-    bind: bindInsc_mun,
-    reset: resetInsc_mun,
-  } = useInput("");
-  const { value: insc_uf, bind: bindInsc_uf, reset: resetInsc_uf } = useInput(
-    ""
-  );
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
+  function handleSubmit({
+    ClienteId,
+    rz_social,
+    cond_pgmto,
+    nome_abv,
+    cep,
+    rua,
+    numero,
+    bairro,
+    cidade,
+    uf,
+    insc_mun,
+    insc_uf,
+  }) {
     dispatch(
       CliCompRequest(
         ClienteId,
@@ -106,7 +84,7 @@ export default function CliCompCadastro() {
         insc_uf
       )
     );
-  };
+  }
   return (
     <>
       <div className="content">
@@ -122,124 +100,80 @@ export default function CliCompCadastro() {
                   onSubmit={handleSubmit}
                   schema={schema}
                 >
-                  <label>Cliente</label>
+                  <label>ClienteId</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ClienteId"
-                      type="text"
-                      {...bindClienteId}
-                    />
+                    <Input className="cadastro" name="ClienteId" type="text" />
                   </FormGroup>
 
-                  <label>Razão Social</label>
+                  <label>rz_social</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="rz_social"
-                      type="text"
-                      {...bindRz_social}
-                    />
+                    <Input className="cadastro" name="rz_social" type="text" />
                   </FormGroup>
 
-                  <label>Condição de Pagamento</label>
+                  <label>cond_pgmto</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="cond_pgmto"
                       type="numeric"
-                      {...bindCond_pgmto}
                     />
                   </FormGroup>
 
-                  <label>Nome Abreviado</label>
+                  <label>nome_abv</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nome_abv"
-                      type="text"
-                      {...bindNome_abv}
-                    />
+                    <Input className="cadastro" name="nome_abv" type="text" />
                   </FormGroup>
 
-                  <label>CEP</label>
+                  <label>cep</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="cep"
-                      type="text"
-                      {...bindCep}
-                    />
+                    <Input className="cadastro" name="cep" type="text" />
                   </FormGroup>
 
-                  <label>Rua</label>
+                  <label>rua</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="rua"
-                      type="text"
-                      {...bindRua}
-                    />
+                    <Input className="cadastro" name="rua" type="text" />
                   </FormGroup>
 
-                  <label>Número</label>
+                  <label>numero</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="numero"
-                      type="numeric"
-                      {...bindNumero}
-                    />
+                    <Input className="cadastro" name="numero" type="numeric" />
                   </FormGroup>
 
-                  <label>Bairro</label>
+                  <label>bairro</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="bairro"
-                      type="text"
-                      {...bindBairro}
-                    />
+                    <Input className="cadastro" name="bairro" type="text" />
                   </FormGroup>
 
-                  <label>Cidade</label>
+                  <label>cidade</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="cidade"
-                      type="text"
-                      {...bindCidade}
-                    />
+                    <Input className="cadastro" name="cidade" type="text" />
                   </FormGroup>
 
-                  <label>UF</label>
+                  <label>uf</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="uf"
-                      type="text"
-                      {...bindUf}
-                    />
+                    <Input className="cadastro" name="uf" type="text" />
                   </FormGroup>
 
-                  <label>Inscrição Municipal</label>
+                  <label>insc_mun</label>
                   <FormGroup>
                     <Input
                       className="cadastro"
                       name="insc_mun"
                       type="numeric"
-                      {...bindInsc_mun}
                     />
                   </FormGroup>
 
-                  <label>Inscrição Federal</label>
+                  <label>insc_uf</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="insc_uf"
-                      type="numeric"
-                      {...bindInsc_uf}
-                    />
+                    <Input className="cadastro" name="insc_uf" type="numeric" />
+                  </FormGroup>
+
+                  <FormGroup check className="mt-3">
+                    <Label check>
+                      <Input name="check" type="checkbox" />
+                      <span className="form-check-sign" />
+                      Subscribe to newsletter
+                    </Label>
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
