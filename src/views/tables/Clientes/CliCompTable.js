@@ -78,27 +78,14 @@ class Tabela_CliComp extends Component {
                 <i className="tim-icons icon-heart-2" />
               </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked EDIT button on \n{ \nName: " +
-                      obj.ClienteId +
-                      ", \nemail: " +
-                      obj.nome_abv +
-                      ", \nidade: " +
-                      obj.rua +
-                      ", \nsalario: " +
-                      obj.uf +
-                      "\n}."
-                  );
-                }}
-                color="warning"
+              <Link
+                to={`/cliente/comp_update/${client.id}`}
+                color="info"
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
                 <i className="tim-icons icon-pencil" />
-              </Button>{" "}
+              </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
@@ -136,15 +123,26 @@ class Tabela_CliComp extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Complemento dos Clientes
                   <Link to="/cadastro/cliente/comp">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar complemento de cliente
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>

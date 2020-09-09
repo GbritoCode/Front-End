@@ -1,11 +1,11 @@
 /*!
 
  =========================================================
- * Black Dashboard Pro React - v1.0.0 based on Black Dashboard Pro - v1.0.0
+ * Black Dashboard Pro - v1.1.1
  =========================================================
 
- * Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
- * Copyright 2019 Creative Tim (http://www.creative-tim.com)
+ * Product Page: https://themes.getbootstrap.com/product/black-dashboard-pro-premium-bootstrap-4-admin/
+ * Copyright 2020 Creative Tim (http://www.creative-tim.com)
 
 
  =========================================================
@@ -14,7 +14,8 @@
 
  */
 
-// Core
+ // Core
+
 @import "black-dashboard-pro-react/custom/functions";
 @import "black-dashboard-pro-react/bootstrap/functions";
 
@@ -24,7 +25,8 @@
 @import "black-dashboard-pro-react/custom/mixins";
 @import "black-dashboard-pro-react/bootstrap/mixins";
 
-// Bootstrap components
+ // Bootstrap components
+
 @import "black-dashboard-pro-react/bootstrap/root";
 @import "black-dashboard-pro-react/bootstrap/reboot";
 @import "black-dashboard-pro-react/bootstrap/type";
@@ -58,42 +60,44 @@
 @import "black-dashboard-pro-react/bootstrap/utilities";
 @import "black-dashboard-pro-react/bootstrap/print";
 
-// Custom components
-@import "black-dashboard-pro-react/custom/reboot.scss";
-@import "black-dashboard-pro-react/custom/global.scss";
-@import "black-dashboard-pro-react/custom/utilities.scss";
-@import "black-dashboard-pro-react/custom/alerts.scss";
-@import "black-dashboard-pro-react/custom/avatars.scss";
-@import "black-dashboard-pro-react/custom/badge.scss";
-@import "black-dashboard-pro-react/custom/buttons.scss";
-@import "black-dashboard-pro-react/custom/close.scss";
-@import "black-dashboard-pro-react/custom/custom-forms.scss";
-@import "black-dashboard-pro-react/custom/dropdown.scss";
-@import "black-dashboard-pro-react/custom/footer.scss";
-@import "black-dashboard-pro-react/custom/forms.scss";
-@import "black-dashboard-pro-react/custom/grid.scss";
-@import "black-dashboard-pro-react/custom/icons.scss";
-@import "black-dashboard-pro-react/custom/images.scss";
-@import "black-dashboard-pro-react/custom/input-group.scss";
-@import "black-dashboard-pro-react/custom/info-areas.scss";
-@import "black-dashboard-pro-react/custom/modal.scss";
-@import "black-dashboard-pro-react/custom/nav.scss";
-@import "black-dashboard-pro-react/custom/navbar.scss";
-@import "black-dashboard-pro-react/custom/pagination.scss";
-@import "black-dashboard-pro-react/custom/tabs.scss";
-@import "black-dashboard-pro-react/custom/pills.scss";
-@import "black-dashboard-pro-react/custom/popover.scss";
-@import "black-dashboard-pro-react/custom/progress.scss";
-@import "black-dashboard-pro-react/custom/type.scss";
-@import "black-dashboard-pro-react/custom/tables";
-@import "black-dashboard-pro-react/custom/checkboxes-radio";
-@import "black-dashboard-pro-react/custom/fixed-plugin";
-@import "black-dashboard-pro-react/custom/sidebar-and-main-panel.scss";
-@import "black-dashboard-pro-react/custom/misc.scss";
-@import "black-dashboard-pro-react/custom/rtl.scss";
-@import "black-dashboard-pro-react/custom/timeline.scss";
+ // Custom components
 
-// Vendor / Plugins
+ @import "black-dashboard-pro-react/custom/reboot.scss";
+ @import "black-dashboard-pro-react/custom/global.scss";
+ @import "black-dashboard-pro-react/custom/utilities.scss";
+ @import "black-dashboard-pro-react/custom/alerts.scss";
+ @import "black-dashboard-pro-react/custom/avatars.scss";
+ @import "black-dashboard-pro-react/custom/badge.scss";
+ @import "black-dashboard-pro-react/custom/buttons.scss";
+ @import "black-dashboard-pro-react/custom/close.scss";
+ @import "black-dashboard-pro-react/custom/custom-forms.scss";
+ @import "black-dashboard-pro-react/custom/dropdown.scss";
+ @import "black-dashboard-pro-react/custom/footer.scss";
+ @import "black-dashboard-pro-react/custom/forms.scss";
+ @import "black-dashboard-pro-react/custom/grid.scss";
+ @import "black-dashboard-pro-react/custom/icons.scss";
+ @import "black-dashboard-pro-react/custom/images.scss";
+ @import "black-dashboard-pro-react/custom/input-group.scss";
+ @import "black-dashboard-pro-react/custom/info-areas.scss";
+ @import "black-dashboard-pro-react/custom/modal.scss";
+ @import "black-dashboard-pro-react/custom/nav.scss";
+ @import "black-dashboard-pro-react/custom/navbar.scss";
+ @import "black-dashboard-pro-react/custom/pagination.scss";
+ @import "black-dashboard-pro-react/custom/tabs.scss";
+ @import "black-dashboard-pro-react/custom/pills.scss";
+ @import "black-dashboard-pro-react/custom/popover.scss";
+ @import "black-dashboard-pro-react/custom/progress.scss";
+ @import "black-dashboard-pro-react/custom/type.scss";
+ @import "black-dashboard-pro-react/custom/tables";
+ @import "black-dashboard-pro-react/custom/checkboxes-radio";
+ @import "black-dashboard-pro-react/custom/fixed-plugin";
+ @import "black-dashboard-pro-react/custom/sidebar-and-main-panel.scss";
+ @import "black-dashboard-pro-react/custom/misc.scss";
+ @import "black-dashboard-pro-react/custom/rtl.scss";
+ @import "black-dashboard-pro-react/custom/timeline.scss";
+
+ // Vendor / Plugins
+
 @import "black-dashboard-pro-react/custom/vendor/plugin-datetimepicker.scss";
 @import "black-dashboard-pro-react/custom/vendor/plugin-nouislider.scss";
 @import "black-dashboard-pro-react/custom/vendor/plugin-fullcalendar.scss";
@@ -107,15 +111,19 @@
 @import "black-dashboard-pro-react/custom/vendor/plugin-datatables.net.scss";
 @import "black-dashboard-pro-react/custom/vendor/plugin-animate-bootstrap-notify.scss";
 @import "black-dashboard-pro-react/custom/vendor/plugin-card-wizard.scss";
+@import "black-dashboard-pro-react/custom/vendor/plugin-chartjs.scss";
 
 // example pages and sections
+
 @import "black-dashboard-pro-react/custom/example-pages.scss";
 
 // light mode
+
 @import "black-dashboard-pro-react/custom/white-content.scss";
 
 // Cards
-@import "black-dashboard-pro-react/custom/card";
+
+@import 'black-dashboard-pro-react/custom/card';
 @import "black-dashboard-pro-react/custom/cards/card-chart";
 @import "black-dashboard-pro-react/custom/cards/card-map";
 @import "black-dashboard-pro-react/custom/cards/card-user";

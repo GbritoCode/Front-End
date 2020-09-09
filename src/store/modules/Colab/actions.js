@@ -1,7 +1,10 @@
-export function requestFailure() {
-  return { type: "@cadastro/REQUEST_FAIL" };
+export function signFailure() {
+  return {
+    type: "@cadastro/CADASTRO_FALHA",
+  };
 }
-export function colabRequest({
+
+export function colabRequest(
   CPF,
   FornecId,
   log_usr,
@@ -11,8 +14,8 @@ export function colabRequest({
   cel,
   skype,
   email,
-  espec,
-}) {
+  espec
+) {
   return {
     type: "@cadastro/CADASTRO_COLAB_REQUEST",
     payload: {
@@ -30,15 +33,15 @@ export function colabRequest({
   };
 }
 
-export function colabCompRequest({
+export function colabCompRequest(
   ColabId,
   nivel,
   tipo_valor,
   valor,
   data_inic,
   data_fim,
-  tipo_atend,
-}) {
+  tipo_atend
+) {
   return {
     type: "@cadastro/CADASTRO_COLAB_COMP_REQUEST",
     payload: {

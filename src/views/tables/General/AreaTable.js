@@ -37,9 +37,10 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          COD_AREA: key,
-          COD_EMP: client.COD_EMP,
-          DESC_AREA: client.DESC_AREA,
+          id: key,
+          idd: client.id,
+          EmpresaId: client.EmpresaId,
+          desc_area: client.desc_area,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -120,15 +121,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Áreas Cadastradas
                   <Link to="/cadastro/geral/area">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar área
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -140,16 +152,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Name",
-                      accessor: "COD_AREA",
+                      Header: "Id Área",
+                      accessor: "idd",
                     },
                     {
-                      Header: "Email",
-                      accessor: "COD_EMP",
+                      Header: "Id Empresa",
+                      accessor: "EmpresaId",
                     },
                     {
-                      Header: "Idade",
-                      accessor: "DESC_AREA",
+                      Header: "Descrição da Área",
+                      accessor: "desc_area",
                     },
                     {
                       Header: "Ações",

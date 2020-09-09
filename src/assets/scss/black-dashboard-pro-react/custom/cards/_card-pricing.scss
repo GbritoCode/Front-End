@@ -1,12 +1,12 @@
 .card-pricing {
-  position: relative;
-  z-index: 1;
-  box-shadow: none;
-  min-height: 400px;
+    position: relative;
+    z-index: 1;
+    box-shadow: none;
+    min-height: 400px;
 
-  .card-body {
-    overflow: hidden;
-    padding: 0;
+    .card-body {
+      overflow: hidden;
+      padding: 0;
 
     .card-title {
       position: relative;
@@ -32,153 +32,155 @@
       z-index: 0;
     }
 
-    .card-prices {
-      .text-on-front {
+    .card-prices{
+      .text-on-front{
         position: relative;
         z-index: 2;
         color: rgba($white, 0.9);
         font-size: 3.6em;
         font-weight: 900;
         text-align: center;
-        span {
+        span{
+
           font-size: 0.7em;
         }
       }
 
-      .text-on-back {
+      .text-on-back{
         position: relative;
         z-index: 1;
         font-size: 9.5em;
         text-align: center;
         margin-top: -160px;
         font-weight: 900;
-        color: rgba($default-states, 0.1);
+        color: rgba($default-states,0.1);
       }
 
-      .plan {
+      .plan{
         font-weight: 600;
         font-size: 0.8em;
         margin-top: -80px;
         text-align: center;
-        color: rgba($white, 0.9);
+        color: rgba($white,0.9);
       }
     }
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
-    max-width: 240px;
-    margin: 80px auto 40px;
+    ul{
+        list-style: none;
+        padding: 0;
+        max-width: 240px;
+        margin: 80px auto 40px;
 
-    li {
-      color: rgba($white, 0.9);
-      background: $transparent-bg;
-      text-align: center;
-      font-size: 1.2em;
-      font-weight: $font-weight-bold;
-      padding: 5px 0;
-      border: none;
+        li{
+            color: rgba($white, 0.9);
+            background: $transparent-bg;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: $font-weight-bold;
+            padding: 5px 0;
+            border: none;
+
+        }
     }
-  }
-  &.card-white {
-    background: $white;
-    .card-body {
-      .card-title {
-        color: white;
+    &.card-white{
+      background: $white;
+      .card-body{
+        .card-title{
+          color:white;
+        }
       }
-    }
-    .card-body .card-prices {
-      .text-on-front,
-      .plan {
+      .card-body .card-prices{
+        .text-on-front, .plan {
+            color: $default-states;
+            span{
+              color: $default-states;
+            }
+        }
+      }
+
+      ul li{
+
         color: $default-states;
-        span {
-          color: $default-states;
+      }
+
+      .list-group-item{
+        background: $transparent-bg;
+      }
+    }
+
+    &.card-primary{
+      .card-body .card-prices{
+        .text-on-back{
+          color: rgba($primary,0.1);
         }
       }
     }
 
-    ul li {
-      color: $default-states;
-    }
-
-    .list-group-item {
-      background: $transparent-bg;
-    }
-  }
-
-  &.card-primary {
-    .card-body .card-prices {
-      .text-on-back {
-        color: rgba($primary, 0.1);
+    &.card-info{
+      .text-on-back{
+        color: rgba($info,0.1);
       }
     }
-  }
 
-  &.card-info {
-    .text-on-back {
-      color: rgba($info, 0.1);
-    }
-  }
-
-  &.card-success {
-    .card-body .card-prices {
-      .text-on-back {
-        color: rgba($success, 0.1);
+    &.card-success{
+      .card-body .card-prices{
+        .text-on-back{
+          color: rgba($success,0.1);
+        }
       }
     }
-  }
 
-  &.card-warning {
-    .card-body .card-prices {
-      .text-on-back {
-        color: rgba($warning, 0.1);
+    &.card-warning{
+      .card-body .card-prices{
+        .text-on-back{
+          color: rgba($warning,0.1);
+        }
       }
     }
-  }
 
-  &.card-danger {
-    .card-body .card-prices {
-      .text-on-back {
-        color: rgba($danger, 0.1);
+    &.card-danger{
+      .card-body .card-prices{
+        .text-on-back{
+          color: rgba($danger,0.1);
+        }
       }
     }
-  }
 
-  &.card-raised {
-    z-index: 3;
-    box-shadow: 0px 0px 40px 15px rgba($default-states, 0.3);
-    padding: 20px 0;
-    margin-top: -20px;
-    border-radius: $border-radius-sm;
-    img {
+    &.card-raised{
+      z-index: 3;
+      box-shadow: 0px 0px 40px 15px rgba($default-states,0.3);
+      padding: 20px 0;
+      margin-top: -20px;
       border-radius: $border-radius-sm;
+      img{
+        border-radius: $border-radius-sm;
+      }
     }
-  }
 }
 
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(md){
   .pricing-page {
-    [class*="col-"] {
-      &:first-child {
-        padding-right: 0;
-        .card:not(.card-raised) {
+    [class*="col-"]{
+      &:first-child{
+          padding-right: 0;
+         .card:not(.card-raised){
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
         }
       }
       &:not(:first-child):not(:last-child) {
         padding: 0;
-        .card:not(.card-raised) {
+        .card:not(.card-raised){
           border-radius: 0;
-          img {
+          img{
             border-radius: 0;
           }
         }
       }
       &:last-child {
         padding-left: 0;
-        .card:not(.card-raised) {
+        .card:not(.card-raised){
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
         }

@@ -128,7 +128,7 @@ export default function Routes() {
         component={CliRecDespTable}
         isPrivate
       />
-      <Route path="/tabelas/colab/colab" component={ColabTable} isPrivate />
+      <Route path="/tabelas/colab" component={ColabTable} isPrivate />
       <Route path="/tabelas/colab/comp" component={ColabCompTable} isPrivate />
       <Route path="/tabelas/general/area" component={AreaTable} isPrivate />
       <Route

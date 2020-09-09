@@ -5,6 +5,7 @@
 .table {
   width: 100%;
   margin-bottom: $spacer;
+  color: $table-color;
   background-color: $table-bg; // Reset for nesting within parents with `background-color`.
 
   th,
@@ -22,11 +23,8 @@
   tbody + tbody {
     border-top: (2 * $table-border-width) solid $table-border-color;
   }
-
-  .table {
-    background-color: $body-bg;
-  }
 }
+
 
 //
 // Condensed table w/ half padding
@@ -38,6 +36,7 @@
     padding: $table-cell-padding-sm;
   }
 }
+
 
 // Border versions
 //
@@ -54,7 +53,7 @@
   thead {
     th,
     td {
-      border-bottom-width: (2 * $table-border-width);
+      border-bottom-width: 2 * $table-border-width;
     }
   }
 }
@@ -78,6 +77,7 @@
   }
 }
 
+
 // Hover effect
 //
 // Placed here since it has to come after the potential zebra striping
@@ -85,10 +85,12 @@
 .table-hover {
   tbody tr {
     @include hover {
+      color: $table-hover-color;
       background-color: $table-hover-bg;
     }
   }
 }
+
 
 // Table backgrounds
 //
@@ -96,10 +98,11 @@
 // inheritance to nested tables.
 
 @each $color, $value in $theme-colors {
-  @include table-row-variant($color, theme-color-level($color, -9));
+  @include table-row-variant($color, theme-color-level($color, $table-bg-level), theme-color-level($color, $table-border-level));
 }
 
 @include table-row-variant(active, $table-active-bg);
+
 
 // Dark styles
 //
@@ -147,11 +150,13 @@
   &.table-hover {
     tbody tr {
       @include hover {
+        color: $table-dark-hover-color;
         background-color: $table-dark-hover-bg;
       }
     }
   }
 }
+
 
 // Responsive tables
 //
@@ -169,7 +174,6 @@
         width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        -ms-overflow-style: -ms-autohiding-scrollbar; // See https://github.com/twbs/bootstrap/pull/10057
 
         // Prevent double border on horizontal scroll due to use of `display: block;`
         > .table-bordered {

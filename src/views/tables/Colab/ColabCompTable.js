@@ -37,14 +37,15 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          COD_COLAB_COMP: key,
-          COD_COLAB: client.COD_COLAB,
-          NIVEL: client.NIVEL,
-          TIPO_VALOR: client.TIPO_VALOR,
-          VALOR: client.VALOR,
-          DATA_INIC: client.DATA_INIC,
-          DATA_FIM: client.DATA_FIM,
-          TIPO_ATEND: client.TIPO_ATEND,
+          id: key,
+          idd: client.id,
+          ColabId: client.ColabId,
+          nicel: client.nicel,
+          tipo_valor: client.tipo_valor,
+          valor: client.valor,
+          data_inic: client.data_inic,
+          data_fim: client.data_fim,
+          tipo_atend: client.tipo_atend,
 
           actions: (
             // we've added some custom button actions
@@ -130,15 +131,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Complemento de Colaboradores Cadastrados
                   <Link to="/cadastro/colab/comp">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar complemento de colaborador
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -150,20 +162,24 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Name",
-                      accessor: "COD_COLAB",
+                      Header: "Id",
+                      accessor: "idd",
                     },
                     {
-                      Header: "Email",
-                      accessor: "NIVEL",
+                      Header: "Nivel",
+                      accessor: "nivel",
                     },
                     {
-                      Header: "Idade",
-                      accessor: "TIPO_VALOR",
+                      Header: "Tipo de Valor",
+                      accessor: "tipo_valor",
                     },
                     {
-                      Header: "Salário",
-                      accessor: "VALOR",
+                      Header: "Data Inicial",
+                      accessor: "data_inic",
+                    },
+                    {
+                      Header: "Data final",
+                      accessor: "data_fim",
                     },
                     {
                       Header: "Ações",

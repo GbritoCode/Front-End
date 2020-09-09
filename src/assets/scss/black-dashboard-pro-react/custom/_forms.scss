@@ -105,7 +105,7 @@
 
   &.has-label {
     &:after {
-      top: 37px;
+      top: 13px;
     }
   }
 
@@ -126,6 +126,12 @@
 
   &.form-check .form-check-label {
     color: $danger-states;
+  }
+
+  &.input-group-focus {
+    .input-group-text {
+      border-color: #ec250d !important;
+    }
   }
 }
 

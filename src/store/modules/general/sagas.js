@@ -13,7 +13,7 @@ export function* areaCadastro({ payload }) {
       EmpresaId,
       desc_area,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/area");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -31,7 +31,7 @@ export function* empresaCadastro({ payload }) {
       license,
       UserId,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/empresa");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -78,7 +78,7 @@ export function* fornecCadastro({ payload }) {
       agencia,
       conta,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/fornec");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -103,7 +103,7 @@ export function* itmControleCadastro({ payload }) {
       conta_contabil,
       cent_custo,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/itm_controle");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -132,7 +132,7 @@ export function* parametrosCadastro({ payload }) {
       adianta_pgmto,
       perc_adianta_pgmto,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/parametros");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -148,7 +148,7 @@ export function* prodtCadastro({ payload }) {
       EmpresaId,
       desc_prodt,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/prodt");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -165,7 +165,7 @@ export function* recDespCadastro({ payload }) {
       nome,
       license,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/rec_desp");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -183,7 +183,7 @@ export function* representanteCadastro({ payload }) {
       percnt_comiss,
       vlr_fix_mens,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/representante");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());
@@ -191,23 +191,6 @@ export function* representanteCadastro({ payload }) {
 }
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
-
-export function* undNegCadastro({ payload }) {
-  try {
-    const { EmpresaId, desc_und_neg } = payload;
-    yield call(api.post, "und_neg", {
-      EmpresaId,
-      desc_und_neg,
-    });
-    history.push("/dashboard");
-  } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
-    yield put(requestFailure());
-  }
-}
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-
 export function* segmentoCadastro({ payload }) {
   try {
     const { EmpresaId, Und_negId, ProdutoId, AreaId, desc_segmt } = payload;
@@ -218,7 +201,22 @@ export function* segmentoCadastro({ payload }) {
       AreaId,
       desc_segmt,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/general/segmento");
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(requestFailure());
+  }
+}
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+export function* undNegCadastro({ payload }) {
+  try {
+    const { EmpresaId, desc_und_neg } = payload;
+    yield call(api.post, "und_neg", {
+      EmpresaId,
+      desc_und_neg,
+    });
+    history.push("/tabelas/general/und_neg");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(requestFailure());

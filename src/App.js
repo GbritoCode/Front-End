@@ -13,9 +13,10 @@ import history from "./services/history";
 
 import { store, persistor } from "./store";
 
-import "~/assets/css/nucleo-icons.css";
-import "~/assets/scss/black-dashboard-pro-react.scss?v=1.0.0";
-import "~/assets/demo/demo.css";
+import "assets/css/nucleo-icons.css";
+import "react-notification-alert/dist/animate.css";
+import "assets/scss/black-dashboard-pro-react.scss?v=1.1.0";
+import "assets/demo/demo.css";
 
 import GlobalStyle from "./styles/global";
 

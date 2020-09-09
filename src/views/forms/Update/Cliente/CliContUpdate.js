@@ -14,7 +14,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import ReactDatetime from "react-datetime";
 
 // reactstrap components
 import {
@@ -24,154 +25,170 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Form,
+  Input,
+  Label,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
-
-import { Form, Input } from "@rocketseat/unform";
 import { useParams } from "react-router-dom";
-
-<<<<<<< HEAD
 import { useInput } from "hooks.js";
+import axios from "axios";
 
-=======
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
 export default function CliContUpdatee() {
   const { id } = useParams();
 
-  /*async function loadCliente(id) {
-    const res = await fetc(`http://localhost:3001/cliente`);
-    res.json().then((res) => setData(res));
-  }
-
   useEffect(() => {
-    loadCliente(id);
-  });
-*/
-
+    async function loadData() {
+      setIsLoading(true);
+      const response = await axios(`http://localhost:3001/cliente/cont/${id}`);
+      setData(response.data[0]);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
-  function handleSubmit({
-    ClienteId,
-    nome,
-    cel,
-    fone,
-    skype,
-    email,
-    aniver,
-    tipo_conta,
-  }) {
+  const { value: ClienteId, bind: bindClienteId } = useInput();
+  const { value: nome, bind: bindNome } = useInput();
+  const { value: cel, bind: bindCel } = useInput();
+  const { value: fone, bind: bindFone } = useInput();
+  const { value: skype, bind: bindSkype } = useInput();
+  const { value: email, bind: bindEmail } = useInput();
+  const { value: aniver, bind: bindAniver } = useInput();
+  const { value: tipo_conta, bind: bindTipo_conta } = useInput();
+  console.log(data);
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
     dispatch(
-      CliContUpdate(ClienteId, NOME, CEL, FONE, SKYPE, EMAIL, ANIVER, TIPO_CONT)
+      CliContUpdate(
+        ClienteId,
+        nome,
+        cel,
+        fone,
+        skype,
+        email,
+        aniver,
+        tipo_conta
+      )
     );
-    console.log("sadasd");
   };
   return (
-    <>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Atualização de cliente</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form className="cadastro" onSubmit={handleSubmit}>
-                  <label>Nome </label>
-                  <FormGroup>
-                    <Input
-                      disabled={true}
-                      value={id}
-                      className="cadastro"
-                      name="NOME"
-                      type="text"
-                    />
-                  </FormGroup>
-                  <label>cel</label>
-                  <FormGroup>
-<<<<<<< HEAD
-                    <Input
-                      className="cadastro"
-                      name="cel"
-                      type="numeric"
-                      {...bindCel}
-                    />
-=======
-                    <Input className="cadastro" name="cel" type="numeric" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>
-                  <label>fone</label>
-                  <FormGroup>
-<<<<<<< HEAD
-                    <Input
-                      className="cadastro"
-                      name="fone"
-                      type="numeric"
-                      {...bindFone}
-                    />
-=======
-                    <Input className="cadastro" name="fone" type="numeric" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>
-                  <label>skype</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="SKYPE"
-                      type="text"
-                      autoComplete="off"
-                    />
-                  </FormGroup>
-                  <label>email</label>
-                  <FormGroup>
-<<<<<<< HEAD
-                    <Input
-                      className="cadastro"
-                      name="email"
-                      type="email"
-                      {...bindEmail}
-                    />
-=======
-                    <Input className="cadastro" name="email" type="email" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>
-                  <label>aniver</label>
-                  <FormGroup>
-<<<<<<< HEAD
-                    <Input
-                      className="cadastro"
-                      name="aniver"
-                      type="date"
-                      {...bindAniver}
-                    />
-=======
-                    <Input className="cadastro" name="aniver" type="date" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>{" "}
-                  <label>tipo_conta</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="TIPO_CONT"
-                      type="numeric"
-                    />
-                  </FormGroup>
-                  <Button
-                    style={{ marginTop: 35 }}
-                    className="form"
-                    color="primary"
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </>
+    <Fragment>
+      {isLoading ? (
+        <div></div>
+      ) : (
+        <>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Atualização de cliente</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <form className="cadastro" onSubmit={handleSubmit}>
+                      <Label>Nome </Label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="nome"
+                          type="text"
+                          defaultValue={data.nome}
+                          {...bindNome}
+                        />
+                      </FormGroup>
+                      <Row>
+                        <Col md="4">
+                          <Label>Celular</Label>
+                          <FormGroup>
+                            <Input
+                              className="cadastro"
+                              name="cel"
+                              type="numeric"
+                              defaultValue={data.cel}
+                              {...bindCel}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Telefone</Label>
+                          <FormGroup>
+                            <Input
+                              className="cadastro"
+                              name="fone"
+                              type="numeric"
+                              defaultValue={data.fone}
+                              {...bindFone}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <FormGroup>
+                            <Label>Aniversário </Label>
+                            <ReactDatetime
+                              inputProps={{
+                                className: "form-control",
+                              }}
+                              defaultValue={data.aniver}
+                              {...bindAniver}
+                            />
+                          </FormGroup>{" "}
+                          {""}
+                        </Col>
+                      </Row>
+                      <Label>Skype</Label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="skype"
+                          type="text"
+                          defaultValue={data.skype}
+                          {...bindSkype}
+                        />
+                      </FormGroup>
+                      <Label>Email</Label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="email"
+                          type="email"
+                          defaultValue={data.email}
+                          {...bindEmail}
+                        />
+                      </FormGroup>
+                      <Label>Tipo de Conta</Label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="tipo_conta"
+                          type="numeric"
+                          defaultValue={data.tipo_conta}
+                          {...bindTipo_conta}
+                        />
+                      </FormGroup>
+                      <Button
+                        style={{ marginTop: 35 }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Submit
+                      </Button>
+                    </form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </Fragment>
   );
 }

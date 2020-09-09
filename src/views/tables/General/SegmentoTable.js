@@ -37,12 +37,13 @@ class Tabela_Cliente extends Component {
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          COD_SEGMT: key,
-          COD_EMP: client.COD_EMP,
-          COD_UND_NEG: client.COD_UND_NEG,
-          COD_PRODT: client.COD_PRODT,
-          COD_AREA: client.COD_AREA,
-          DESC_SEGMT: client.DESC_SEGMT,
+          id: key,
+          idd: client.id,
+          EmpresaId: client.EmpresaId,
+          Und_negId: client.Und_negId,
+          ProdutoId: client.ProdutoId,
+          AreaId: client.AreaId,
+          desc_segmt: client.desc_segmt,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -127,15 +128,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Segmentos Cadastrados
                   <Link to="/cadastro/geral/sgmet">
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
-                      size="md"
-                      className="text-center"
+                      size="small"
+                      className="text-left"
                     >
-                      Adicionar segmento
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -147,20 +159,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Name",
-                      accessor: "COD_EMP",
+                      Header: "Descrição",
+                      accessor: "desc_segmt",
                     },
                     {
-                      Header: "Email",
-                      accessor: "COD_UND_NEG",
+                      Header: "Unidade de Negócio",
+                      accessor: "Und_negId",
                     },
                     {
-                      Header: "Idade",
-                      accessor: "COD_PRODT",
-                    },
-                    {
-                      Header: "Salário",
-                      accessor: "COD_AREA",
+                      Header: "Produto",
+                      accessor: "ProdutoId",
                     },
                     {
                       Header: "Ações",

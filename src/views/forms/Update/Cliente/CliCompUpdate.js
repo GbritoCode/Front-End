@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 // reactstrap components
 import {
@@ -24,288 +24,253 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Form,
+  Input,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliCompUpdate } from "~/store/modules/Cliente/actions";
-
-import { Form, Input } from "@rocketseat/unform";
-
 import * as yup from "yup";
-<<<<<<< HEAD
 import { useParams } from "react-router-dom";
-<<<<<<< HEAD
-import { useInput } from 'hooks.js'
-
-=======
->>>>>>> parent of a3593f1...  dados recebidos em paginass de update
-=======
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
+import { useInput } from "hooks.js";
+import axios from "axios";
 
 const schema = yup.object().shape({
   ClienteId: yup.string().required(),
-  RZ_SOCIAL: yup.string().required(),
-  COND_PGTO: yup.number().required(),
-  NOME_ABV: yup.string().required(),
-  CEP: yup.string().required(),
-  RUA: yup.string().required(),
-  NUMERO: yup.number().required(),
-  BAIRRO: yup.string().required(),
-  CIDADE: yup.string().required(),
-  UF: yup.string().required(),
-  INSC_MUN: yup.number().required(),
-  INSC_UF: yup.number().required(),
+  rz_social: yup.string().required(),
+  cond_pgmto: yup.number().required(),
+  nome_abv: yup.string().required(),
+  cep: yup.string().required(),
+  rua: yup.string().required(),
+  numero: yup.number().required(),
+  bairro: yup.string().required(),
+  cidade: yup.string().required(),
+  uf: yup.string().required(),
+  insc_mun: yup.number().required(),
+  insc_uf: yup.number().required(),
 });
 
 export default function CliCompUpdatee() {
   const dispatch = useDispatch();
+  const { id } = useParams();
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      const response = await axios(
+        `http://localhost:3001/cliente/complem/${id}`
+      );
+      setData(response.data[0]);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const { value: ClienteId, bind: bindClienteId } = useInput("");
-  const { value: rz_social, bind: bindRz_social } = useInput("");
-  const { value: cond_pgmto, bind: bindCond_pgmto } = useInput("");
-  const { value: nome_abv, bind: bindNome_abv } = useInput("");
-  const { value: cep, bind: bindCep } = useInput("");
-  const { value: rua, bind: bindRua } = useInput("");
-  const { value: numero, bind: bindNumero } = useInput("");
-  const { value: bairro, bind: bindBairro } = useInput("");
-  const { value: cidade, bind: bindCidade } = useInput("");
-  const { value: uf, bind: bindUf } = useInput("");
-  const { value: insc_mun, bind: bindInsc_mun } = useInput("");
-  const { value: insc_uf, bind: bindInsc_uf } = useInput("");
+  const { value: ClienteId, bind: bindClienteId } = useInput();
+  const { value: rz_social, bind: bindRz_social } = useInput();
+  const { value: cond_pgmto, bind: bindCond_pgmto } = useInput();
+  const { value: nome_abv, bind: bindNome_abv } = useInput();
+  const { value: cep, bind: bindCep } = useInput();
+  const { value: rua, bind: bindRua } = useInput();
+  const { value: numero, bind: bindNumero } = useInput();
+  const { value: bairro, bind: bindBairro } = useInput();
+  const { value: cidade, bind: bindCidade } = useInput();
+  const { value: uf, bind: bindUf } = useInput();
+  const { value: insc_mun, bind: bindInsc_mun } = useInput();
+  const { value: insc_uf, bind: bindInsc_uf } = useInput();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-=======
-  function handleSubmit({
-    ClienteId,
-    RZ_SOCIAL,
-    COND_PGTO,
-    NOME_ABV,
-    CEP,
-    RUA,
-    NUMERO,
-    BAIRRO,
-    CIDADE,
-    UF,
-    INSC_MUN,
-    INSC_UF,
-  }) {
->>>>>>> parent of a3593f1...  dados recebidos em paginass de update
-=======
-  function handleSubmit({
-    ClienteId,
-    rz_social,
-    cond_pgmto,
-    nome_abv,
-    cep,
-    rua,
-    numero,
-    bairro,
-    cidade,
-    uf,
-    insc_mun,
-    insc_uf,
-  }) {
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
     dispatch(
       CliCompUpdate(
         ClienteId,
-        RZ_SOCIAL,
-        COND_PGTO,
-        NOME_ABV,
-        CEP,
-        RUA,
-        NUMERO,
-        BAIRRO,
-        CIDADE,
-        UF,
-        INSC_MUN,
-        INSC_UF
+        rz_social,
+        cond_pgmto,
+        nome_abv,
+        cep,
+        rua,
+        numero,
+        bairro,
+        cidade,
+        uf,
+        insc_mun,
+        insc_uf
       )
     );
-  }
+  };
   return (
-    <>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Cadastro Complementar de Cliente</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
-                  <label>ClienteId</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="ClienteId" type="text" />
-                  </FormGroup>
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  <label>Razão Social</label>
-=======
-                  <label>rz_social</label>
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  <FormGroup>
-                    <Input className="cadastro" name="rz_social" type="text" />
-                  </FormGroup>
-
-<<<<<<< HEAD
-                  <label>Condição de Pagamento</label>
-=======
-                  <label>RZ_SOCIAL</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="RZ_SOCIAL" type="text" />
-                  </FormGroup>
-
-                  <label>COND_PGTO</label>
->>>>>>> parent of a3593f1...  dados recebidos em paginass de update
-=======
-                  <label>cond_pgmto</label>
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  <FormGroup>
-                    <Input
+    <Fragment>
+      {isLoading ? (
+        <div></div>
+      ) : (
+        <>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">
+                      Cadastro Complementar de Cliente
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form
                       className="cadastro"
-                      name="COND_PGTO"
-                      type="numeric"
-                    />
-                  </FormGroup>
+                      onSubmit={handleSubmit}
+                      schema={schema}
+                    >
+                      <label>Cliente</label>
+                      <FormGroup>
+                        <Input
+                          disabled={true}
+                          className="cadastro"
+                          name="ClienteId"
+                          type="text"
+                          defaultValue={data.ClienteId}
+                          {...bindClienteId}
+                        />
+                      </FormGroup>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  <label>Nome Abreviado</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="Nome Abreviado" type="text" {...bindNome_abv} />
-=======
-                  <label>NOME_ABV</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="NOME_ABV" type="text" />
->>>>>>> parent of a3593f1...  dados recebidos em paginass de update
-=======
-                  <label>nome_abv</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="nome_abv" type="text" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>
+                      <label>Razão Social</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="rz_social"
+                          type="text"
+                          defaultValue={data.rz_social}
+                          {...bindRz_social}
+                        />
+                      </FormGroup>
 
-                  <label>cep</label>
-                  <FormGroup>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    <Input className="cadastro" name="cep" type="text" {...bindCep} />
-=======
-                    <Input className="cadastro" name="cep" type="text" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>
+                      <label>Condição de Pagamento</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="cond_pgmto"
+                          type="numeric"
+                          defaultValue={data.cond_pgmto}
+                          {...bindCond_pgmto}
+                        />
+                      </FormGroup>
 
-                  <label>rua</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="rua" type="text" />
-                  </FormGroup>
+                      <label>Nome Abreviado</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="Nome Abreviado"
+                          type="text"
+                          defaultValue={data.nome_abv}
+                          {...bindNome_abv}
+                        />
+                      </FormGroup>
 
-                  <label>numero</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="numero" type="numeric" />
-                  </FormGroup>
+                      <label>CEP</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="cep"
+                          type="text"
+                          defaultValue={data.cep}
+                          {...bindCep}
+                        />
+                      </FormGroup>
 
-                  <label>bairro</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="bairro" type="text" />
-                  </FormGroup>
+                      <label>Rua</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="rua"
+                          type="text"
+                          defaultValue={data.rua}
+                          {...bindRua}
+                        />
+                      </FormGroup>
 
-                  <label>cidade</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="cidade" type="text" />
-                  </FormGroup>
+                      <label>Número</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="numero"
+                          type="numeric"
+                          defaultValue={data.numero}
+                          {...bindNumero}
+                        />
+                      </FormGroup>
 
-                  <label>uf</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="uf" type="text" />
-                  </FormGroup>
+                      <label>Bairro</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="bairro"
+                          type="text"
+                          defaultValue={data.bairro}
+                          {...bindBairro}
+                        />
+                      </FormGroup>
 
-<<<<<<< HEAD
-                  <label>Inscrição Municipal</label>
-=======
-                    <Input className="cadastro" name="CEP" type="text" />
-                  </FormGroup>
+                      <label>Cidade</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="cidade"
+                          type="text"
+                          defaultValue={data.cidade}
+                          {...bindCidade}
+                        />
+                      </FormGroup>
 
-                  <label>RUA</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="RUA" type="text" />
-                  </FormGroup>
+                      <label>Uf</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="uf"
+                          type="text"
+                          defaultValue={data.uf}
+                          {...bindUf}
+                        />
+                      </FormGroup>
 
-                  <label>NUMERO</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="NUMERO" type="numeric" />
-                  </FormGroup>
+                      <label>Inscrição Municipal</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="insc_mun"
+                          type="numeric"
+                          defaultValue={data.insc_mun}
+                          {...bindInsc_mun}
+                        />
+                      </FormGroup>
 
-                  <label>BAIRRO</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="BAIRRO" type="text" />
-                  </FormGroup>
+                      <label>Inscrição Federal</label>
+                      <FormGroup>
+                        <Input
+                          className="cadastro"
+                          name="insc_uf"
+                          type="numeric"
+                          defaultValue={data.insc_uf}
+                          {...bindInsc_uf}
+                        />
+                      </FormGroup>
 
-                  <label>CIDADE</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="CIDADE" type="text" />
-                  </FormGroup>
-
-                  <label>UF</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="UF" type="text" />
-                  </FormGroup>
-
-                  <label>INSC_MUN</label>
->>>>>>> parent of a3593f1...  dados recebidos em paginass de update
-=======
-                  <label>insc_mun</label>
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="INSC_MUN"
-                      type="numeric"
-                    />
-                  </FormGroup>
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  <label>Inscrição Federal</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="insc_uf" type="numeric" {...bindInsc_uf} />
-=======
-                  <label>INSC_UF</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="INSC_UF" type="numeric" />
->>>>>>> parent of a3593f1...  dados recebidos em paginass de update
-=======
-                  <label>insc_uf</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="insc_uf" type="numeric" />
->>>>>>> parent of 29865d7... erro no update, e modificações nos forms
-                  </FormGroup>
-
-                  <Button
-                    style={{ marginTop: 35 }}
-                    className="form"
-                    color="primary"
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </>
+                      <Button
+                        style={{ marginTop: 35 }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Submit
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </Fragment>
   );
 }

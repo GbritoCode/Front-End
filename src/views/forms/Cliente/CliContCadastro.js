@@ -24,45 +24,29 @@ import {
   CardBody,
   CardTitle,
   Label,
+  Form,
+  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-
-import { Form, Input } from "@rocketseat/unform";
-
 import { CliContRequest } from "~/store/modules/Cliente/actions";
-
-import * as yup from "yup";
-
-const schema = yup.object().shape({
-  ClienteId: yup.string().required("O cnpj é obrigatório"),
-  nome: yup.string().required("O nome é obrigatório"),
-  cel: yup.number().required("O cel é obrigatório"),
-  fone: yup.number("Digite um número").integer("Insira um número inteiro"),
-  skype: yup.string().required("O skype é obrigatório"),
-  email: yup
-    .string()
-    .email()
-    .required("O email é obrigatório"),
-  aniver: yup.date().required("O aniversário é obrigatório"),
-  tipo_conta: yup.number().required("O tipo da conta é obrigatório"),
-});
+import { useInput } from "~/hooks.js";
 
 export default function CliContCadastro() {
   const dispatch = useDispatch();
+  const { value: ClienteId, bind: bindClienteId } = useInput("", "number");
+  const { value: nome, bind: bindNome } = useInput("");
+  const { value: cel, bind: bindCel } = useInput("");
+  const { value: fone, bind: bindFone } = useInput("");
+  const { value: skype, bind: bindSkype } = useInput("");
+  const { value: email, bind: bindEmail } = useInput("", "email");
+  const { value: aniver, bind: bindAniver } = useInput("");
+  const { value: tipo_conta, bind: bindTipo_conta } = useInput("");
 
-  function handleSubmit({
-    ClienteId,
-    nome,
-    cel,
-    fone,
-    skype,
-    email,
-    aniver,
-    tipo_conta,
-  }) {
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     dispatch(
       CliContRequest(
         ClienteId,
@@ -75,7 +59,7 @@ export default function CliContCadastro() {
         tipo_conta
       )
     );
-  }
+  };
   return (
     <>
       <div className="content">
@@ -86,63 +70,62 @@ export default function CliContCadastro() {
                 <CardTitle tag="h4">Continuação Cadastro de Cliente</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
-                  <label>ClienteId</label>
+                <Form id="RegisterValidation" onSubmit={handleSubmit}>
+                  <label>Cliente</label>
                   <FormGroup>
-                    <Input className="cadastro" name="ClienteId" type="text" />
+                    <Input name="ClienteId" type="text" {...bindClienteId} />
                   </FormGroup>
-                  <label>nome</label>
+                  <label>Nome</label>
                   <FormGroup>
-                    <Input className="cadastro" name="nome" type="text" />
+                    <Input name="nome" type="text" {...bindNome} />
                   </FormGroup>
-                  <label>cel</label>
+                  <label>Celular</label>
                   <FormGroup>
-                    <Input className="cadastro" name="cel" type="numeric" />
+                    <Input name="cel" type="numeric" {...bindCel} />
                   </FormGroup>
-                  <label>fone</label>
+                  <label>Telefone</label>
                   <FormGroup>
                     <Input
-                      className="cadastro"
                       name="fone"
                       type="numeric"
                       autoComplete="off"
+                      {...bindFone}
                     />
                   </FormGroup>
-                  <label>skype</label>
+                  <label>Skype</label>
                   <FormGroup>
-                    <Input className="cadastro" name="skype" type="text" />
+                    <Input name="skype" type="text" {...bindSkype} />
                   </FormGroup>
-                  <label>email</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="email" type="email" />
+                  <Label>Email</Label>
+                  <FormGroup className={`has-label ${bindEmail.valueerror}`}>
+                    <Input name="email" type="email" {...bindEmail} />
+                    {bindEmail.valueerror === "has-danger" ? (
+                      <label className="error">
+                        Please enter a valid email address.
+                      </label>
+                    ) : null}
                   </FormGroup>
-                  <label>aniver</label>
-                  <FormGroup>
-                    <Input className="cadastro" name="aniver" type="date" />
-                  </FormGroup>
-                  <label>tipo_conta</label>
+                  <label>Aniver</label>
                   <FormGroup>
                     <Input
-                      className="cadastro"
-                      name="tipo_conta"
-                      type="numeric"
+                      className="form-control"
+                      name="aniver"
+                      type="date"
+                      {...bindAniver}
                     />
                   </FormGroup>
-                  <FormGroup check className="mt-3">
-                    <Label check>
-                      <Input name="check" type="checkbox" />
-                      <span className="form-check-sign" />
-                      Subscribe to newsletter
-                    </Label>
+                  <label>Tipo de Conta</label>
+                  <FormGroup>
+                    <Input
+                      name="tipo_conta"
+                      type="numeric"
+                      {...bindTipo_conta}
+                    />
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
-                    color="primary"
+                    color="info"
                     type="submit"
                   >
                     Submit

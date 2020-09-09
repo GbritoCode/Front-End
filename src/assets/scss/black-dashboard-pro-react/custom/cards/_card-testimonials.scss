@@ -1,46 +1,46 @@
-.card-testimonial {
-  @extend %card-profile;
+.card-testimonial{
+    @extend %card-profile;
 
-  .card-body {
-    padding-top: 25px;
-  }
-
-  .card-description + .card-title {
-    margin-top: 20px;
-  }
-
-  .card-footer {
-    margin-top: 0;
-    margin-bottom: 2.5rem;
-  }
-  .card-description {
-    & + .card-title {
-      margin-top: 30px;
-    }
-  }
-  .icon {
-    i {
-      font-size: 32px;
+    .card-body{
+        padding-top: 25px;
     }
 
-    &.icon-primary i {
-      color: $primary;
+    .card-description + .card-title{
+        margin-top: 20px;
     }
 
-    &.icon-info i {
-      color: $info;
+    .card-footer{
+        margin-top: 0;
+        margin-bottom: 2.5rem;
     }
+    .card-description{
+        & + .card-title{
+            margin-top: 30px;
+        }
+    }
+    .icon{
+        i{
+            font-size: 32px;
+        }
 
-    &.icon-danger i {
-      color: $danger;
-    }
+        &.icon-primary i{
+            color: $primary;
+        }
 
-    &.icon-warning i {
-      color: $warning;
-    }
+        &.icon-info i{
+            color: $info;
+        }
 
-    &.icon-success i {
-      color: $success;
+        &.icon-danger i{
+            color: $danger;
+        }
+
+        &.icon-warning i{
+            color: $warning;
+        }
+
+        &.icon-success i{
+            color: $success;
+        }
     }
-  }
 }

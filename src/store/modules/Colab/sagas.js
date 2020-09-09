@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import history from "~/services/history.js";
 import api from "~/services/api.js";
 
-import { requestFailure } from "./actions.js";
+import { signFailure } from "./actions.js";
 
 export function* colabCadastro({ payload }) {
   try {
@@ -32,10 +32,11 @@ export function* colabCadastro({ payload }) {
       email,
       espec,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/colab");
   } catch (err) {
+    console.log(err);
     toast.error("Falha no cadastro, este email já existe");
-    yield put(requestFailure());
+    yield put(signFailure());
   }
 }
 //--------------------------------------------------------------------------
@@ -60,10 +61,10 @@ export function* colabCompCadastro({ payload }) {
       data_fim,
       tipo_atend,
     });
-    history.push("/dashboard");
+    history.push("/tabelas/colab/comp");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
-    yield put(requestFailure());
+    yield put(signFailure());
   }
 }
 //--------------------------------------------------------------------------
