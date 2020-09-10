@@ -15,6 +15,7 @@
 
 */
 import React from "react";
+import ReactDatetime from "react-datetime";
 
 // reactstrap components
 import {
@@ -38,12 +39,12 @@ export default function CliContCadastro() {
   const dispatch = useDispatch();
   const { value: ClienteId, bind: bindClienteId } = useInput("", "number");
   const { value: nome, bind: bindNome } = useInput("");
-  const { value: cel, bind: bindCel } = useInput("");
-  const { value: fone, bind: bindFone } = useInput("");
+  const { value: cel, bind: bindCel } = useInput("", "number");
+  const { value: fone, bind: bindFone } = useInput("", "number");
   const { value: skype, bind: bindSkype } = useInput("");
   const { value: email, bind: bindEmail } = useInput("", "email");
   const { value: aniver, bind: bindAniver } = useInput("");
-  const { value: tipo_conta, bind: bindTipo_conta } = useInput("");
+  const { value: tipo_conta, bind: bindTipo_conta } = useInput("", "number");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -72,55 +73,74 @@ export default function CliContCadastro() {
               <CardBody>
                 <Form id="RegisterValidation" onSubmit={handleSubmit}>
                   <label>Cliente</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindClienteId.valueerror}`}
+                  >
                     <Input name="ClienteId" type="text" {...bindClienteId} />
+                    {bindClienteId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <label>Nome</label>
-                  <FormGroup>
+                  <FormGroup className={`has-label ${bindNome.valueerror}`}>
                     <Input name="nome" type="text" {...bindNome} />
+                    {bindNome.valueerror === "has-danger" ? (
+                      <label className="error">Insira um nome válido</label>
+                    ) : null}
                   </FormGroup>
-                  <label>Celular</label>
-                  <FormGroup>
-                    <Input name="cel" type="numeric" {...bindCel} />
-                  </FormGroup>
-                  <label>Telefone</label>
-                  <FormGroup>
-                    <Input
-                      name="fone"
-                      type="numeric"
-                      autoComplete="off"
-                      {...bindFone}
-                    />
-                  </FormGroup>
+                  <Row>
+                    <Col md="4">
+                      <Label>Celular</Label>
+                      <FormGroup className={`has-label ${bindCel.valueerror}`}>
+                        <Input name="cel" type="numeric" {...bindCel} />
+                        {bindCel.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Telefone</Label>
+                      <FormGroup className={`has-label ${bindFone.valueerror}`}>
+                        <Input name="fone" type="numeric" {...bindFone} />
+                        {bindFone.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label>Aniversário </Label>
+                        <Input name="aniver" type="date" {...bindAniver} />
+                      </FormGroup>{" "}
+                      {""}
+                    </Col>
+                  </Row>
                   <label>Skype</label>
-                  <FormGroup>
+                  <FormGroup className={`has-label ${bindSkype.valueerror}`}>
                     <Input name="skype" type="text" {...bindSkype} />
+                    {bindSkype.valueerror === "has-danger" ? (
+                      <label className="error">Insira um valor válido</label>
+                    ) : null}
                   </FormGroup>
                   <Label>Email</Label>
                   <FormGroup className={`has-label ${bindEmail.valueerror}`}>
                     <Input name="email" type="email" {...bindEmail} />
                     {bindEmail.valueerror === "has-danger" ? (
-                      <label className="error">
-                        Please enter a valid email address.
-                      </label>
+                      <label className="error">Insira um E-mail válido</label>
                     ) : null}
                   </FormGroup>
-                  <label>Aniver</label>
-                  <FormGroup>
-                    <Input
-                      className="form-control"
-                      name="aniver"
-                      type="date"
-                      {...bindAniver}
-                    />
-                  </FormGroup>
                   <label>Tipo de Conta</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindTipo_conta.valueerror}`}
+                  >
                     <Input
                       name="tipo_conta"
                       type="numeric"
                       {...bindTipo_conta}
                     />
+                    {bindTipo_conta.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}

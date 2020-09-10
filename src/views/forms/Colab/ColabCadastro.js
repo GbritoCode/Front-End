@@ -32,40 +32,23 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { colabRequest } from "~/store/modules/Colab/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "~/hooks.js";
-
-const schema = yup.object().shape({
-  CPF: yup.number("digite um número").required(),
-  FornecId: yup.number().required(),
-  log_usr: yup.number().required(),
-  EmpresaId: yup.number().required(),
-  nome: yup.string().required(),
-  dt_admiss: yup.date().required(),
-  cel: yup.number().required(),
-  skype: yup.string().required(),
-  email: yup
-    .string()
-    .email()
-    .required(),
-  espec: yup.string().required(),
-});
 
 export default function ColabCadastro() {
   const dispatch = useDispatch();
 
   const empresa = store.getState().auth.empresa;
 
-  const { value: CPF, bind: bindCPF } = useInput("");
-  const { value: FornecId, bind: bindFornecId } = useInput("");
-  const { value: log_usr, bind: bindLog_usr } = useInput("");
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput("");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
+  const { value: CPF, bind: bindCPF } = useInput("", "number");
+  const { value: FornecId, bind: bindFornecId } = useInput("", "number");
+  const { value: log_usr, bind: bindLog_usr } = useInput("", "number");
   const { value: nome, bind: bindNome } = useInput("");
   const { value: dt_admiss, bind: bindDt_admiss } = useInput("");
-  const { value: cel, bind: bindCel } = useInput("");
+  const { value: cel, bind: bindCel } = useInput("", "number");
   const { value: skype, bind: bindSkype } = useInput("");
-  const { value: email, bind: bindEmail } = useInput("");
+  const { value: email, bind: bindEmail } = useInput("", "email");
   const { value: espec, bind: bindEspec } = useInput("");
 
   const handleSubmit = (evt) => {
@@ -92,104 +75,94 @@ export default function ColabCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Pré-Cadastro de Colaborador</CardTitle>
+                <CardTitle tag="h4">Colaborador</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
+                  <label>Empresa</label>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
+                    <Input name="EmpresaId" type="numeric" {...bindEmpresaId} />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
+                  </FormGroup>
+
                   <label>CPF</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="CPF"
-                      type="numeric"
-                      {...bindCPF}
-                    />
+                  <FormGroup className={`has-label ${bindCPF.valueerror}`}>
+                    <Input name="CPF" type="numeric" {...bindCPF} />
+                    {bindCPF.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>FornecId</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="FornecId"
-                      type="numeric"
-                      {...bindFornecId}
-                    />
+
+                  <label>Fornecedor</label>
+                  <FormGroup className={`has-label ${bindFornecId.valueerror}`}>
+                    <Input name="FornecId" type="numeric" {...bindFornecId} />
+                    {bindFornecId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>log_usr</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="log_usr"
-                      type="numeric"
-                      {...bindLog_usr}
-                    />
+
+                  <label>Usuário</label>
+                  <FormGroup className={`has-label ${bindLog_usr.valueerror}`}>
+                    <Input name="log_usr" type="numeric" {...bindLog_usr} />
+                    {bindLog_usr.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>EmpresaId</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="EmpresaId"
-                      type="numeric"
-                      {...bindEmpresaId}
-                    />
+
+                  <label>Nome</label>
+                  <FormGroup className={`has-label ${bindNome.valueerror}`}>
+                    <Input name="nome" type="text" {...bindNome} />
+                    {bindNome.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>nome</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nome"
-                      type="text"
-                      {...bindNome}
-                    />
+
+                  <label>Data de Adimissão</label>
+                  <FormGroup
+                    className={`has-label ${bindDt_admiss.valueerror}`}
+                  >
+                    <Input name="dt_admiss" type="date" {...bindDt_admiss} />
+                    {bindDt_admiss.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>dt_admiss</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="dt_admiss"
-                      type="date"
-                      {...bindDt_admiss}
-                    />
+
+                  <label>Celular</label>
+                  <FormGroup className={`has-label ${bindCel.valueerror}`}>
+                    <Input name="cel" type="numeric" {...bindCel} />
+                    {bindCel.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>cel</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="cel"
-                      type="numeric"
-                      {...bindCel}
-                    />
+
+                  <label>Skype</label>
+                  <FormGroup className={`has-label ${bindSkype.valueerror}`}>
+                    <Input name="skype" type="text" {...bindSkype} />
+                    {bindSkype.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>skype</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="skype"
-                      type="text"
-                      {...bindSkype}
-                    />
+
+                  <label>Email</label>
+                  <FormGroup className={`has-label ${bindEmail.valueerror}`}>
+                    <Input name="email" type="text" {...bindEmail} />
+                    {bindEmail.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>email</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="email"
-                      type="text"
-                      {...bindEmail}
-                    />
+
+                  <label>Especialidade</label>
+                  <FormGroup className={`has-label ${bindEspec.valueerror}`}>
+                    <Input name="espec" type="text" {...bindEspec} />
+                    {bindEspec.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <label>espec</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="espec"
-                      type="text"
-                      {...bindEspec}
-                    />
-                  </FormGroup>
+
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"

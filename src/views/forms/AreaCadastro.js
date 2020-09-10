@@ -30,27 +30,16 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-
 import { areaRequest } from "~/store/modules/general/actions";
-
-import * as yup from "yup";
-
 import { useInput } from "hooks.js";
-
 import { store } from "~/store";
 
-const schema = yup.object().shape({
-  EmpresaId: yup
-    .number("precisa ser um número")
-    .required("empresaId é necesário"),
-  desc_area: yup.string().required(),
-});
 export default function CadastroCliente() {
   const dispatch = useDispatch();
 
   const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
   const { value: desc_area, bind: bindDesc_area } = useInput("");
 
   const handleSubmit = (evt) => {
@@ -67,29 +56,25 @@ export default function CadastroCliente() {
                 <CardTitle tag="h4">Cadastro de Area</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="EmpresaId"
-                      type="text"
-                      {...bindEmpresaId}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
+                    <Input name="EmpresaId" type="text" {...bindEmpresaId} />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Descrição Área</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="desc_area"
-                      type="text"
-                      {...bindDesc_area}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindDesc_area.valueerror}`}
+                  >
+                    <Input name="desc_area" type="text" {...bindDesc_area} />
+                    {bindDesc_area.valueerror === "has-danger" ? (
+                      <label className="error">Insira um valor válido</label>
+                    ) : null}
                   </FormGroup>
 
                   <Button

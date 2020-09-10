@@ -124,7 +124,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/cliente/rec_desp"
+        path="/tabelas/cliente/rec_desp/:id"
         component={CliRecDespTable}
         isPrivate
       />

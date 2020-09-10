@@ -31,18 +31,7 @@ import {
 import { useDispatch } from "react-redux";
 import { Form, Input } from "@rocketseat/unform";
 import { colabCompRequest } from "~/store/modules/Colab/actions";
-import * as yup from "yup";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  ColabId: yup.number().required(),
-  nivel: yup.number().required(),
-  tipo_valor: yup.number().required(),
-  valor: yup.number().required(),
-  data_inic: yup.date().required(),
-  data_fim: yup.date().required(),
-  tipo_atend: yup.number().required(),
-});
 
 export default function ColabCompCadastro() {
   const dispatch = useDispatch();
@@ -79,11 +68,7 @@ export default function ColabCompCadastro() {
                 <CardTitle tag="h4">Complemento do Colaborador</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form className="cadastro" onSubmit={handleSubmit}>
                   <label>Colaborador</label>
                   <FormGroup>
                     <Input

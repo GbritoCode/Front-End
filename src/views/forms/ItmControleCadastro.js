@@ -32,27 +32,21 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { itmControleRequest } from "~/store/modules/general/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  EmpresaId: yup.string().required(),
-  desc_item: yup.string().required(),
-  tipo_item: yup.number().required(),
-  conta_contabil: yup.number().required(),
-  cent_custo: yup.number().required(),
-});
 
 export default function ItmControleCadastro() {
   const dispatch = useDispatch();
   const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
   const { value: desc_item, bind: bindDesc_item } = useInput("");
-  const { value: tipo_item, bind: bindTipo_item } = useInput("");
-  const { value: conta_contabil, bind: bindConta_contabil } = useInput("");
-  const { value: cent_custo, bind: bindCent_custo } = useInput("");
+  const { value: tipo_item, bind: bindTipo_item } = useInput("", "number");
+  const { value: conta_contabil, bind: bindConta_contabil } = useInput(
+    "",
+    "number"
+  );
+  const { value: cent_custo, bind: bindCent_custo } = useInput("", "number");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -77,56 +71,64 @@ export default function ItmControleCadastro() {
                 <CardTitle tag="h4">Cadastro de Item Controle</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
                       disabled={true}
-                      className="cadastro"
                       name="EmpresaId"
                       type="text"
                       {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <label>Descrição do Item</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="desc_item"
-                      type="text"
-                      {...bindDesc_item}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindDesc_item.valueerror}`}
+                  >
+                    <Input name="desc_item" type="text" {...bindDesc_item} />
+                    {bindDesc_item.valueerror === "has-danger" ? (
+                      <label className="error">Insira um valor válido</label>
+                    ) : null}
                   </FormGroup>
                   <label>Tipo de Item</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="tipo_item"
-                      type="numeric"
-                      {...bindTipo_item}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindTipo_item.valueerror}`}
+                  >
+                    <Input name="tipo_item" type="numeric" {...bindTipo_item} />
+                    {bindTipo_item.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <label>Conta Contábil</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindConta_contabil.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="conta_contabil"
                       type="numeric"
                       {...bindConta_contabil}
                     />
+                    {bindConta_contabil.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <label>cent_custo</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindCent_custo.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="cent_custo"
                       type="numeric"
                       {...bindCent_custo}
                     />
+                    {bindCent_custo.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}

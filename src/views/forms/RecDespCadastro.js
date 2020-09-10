@@ -32,21 +32,14 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { recDespRequest } from "~/store/modules/general/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  EmpresaId: yup.string().required(),
-  nome: yup.string().required(),
-  license: yup.string().required(),
-});
 
 export default function RecDespCadastro() {
   const dispatch = useDispatch();
   const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
   const { value: nome, bind: bindNome } = useInput("");
   const { value: license, bind: bindLicense } = useInput("");
 
@@ -61,42 +54,41 @@ export default function RecDespCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cadastro de Receita e Despesa</CardTitle>
+                <CardTitle tag="h4">Receita e Despesa</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
                       disabled={true}
-                      className="cadastro"
                       name="EmpresaId"
                       type="text"
                       {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Nome</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nome"
-                      type="text"
-                      {...bindNome}
-                    />
+                  <FormGroup className={`has-label ${bindNome.valueerror}`}>
+                    <Input name="nome" type="text" {...bindNome} />
+                    {bindNome.valueerror === "has-danger" ? (
+                      <label className="error">Insira um nome válido</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>License</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="license"
-                      type="text"
-                      {...bindLicense}
-                    />
+                  <FormGroup className={`has-label ${bindLicense.valueerror}`}>
+                    <Input name="license" type="text" {...bindLicense} />
+                    {bindLicense.valueerror === "has-danger" ? (
+                      <label className="error">Insira um valor válido</label>
+                    ) : null}
                   </FormGroup>
+
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"

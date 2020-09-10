@@ -32,34 +32,13 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliRecDespRequest } from "~/store/modules/Cliente/actions";
-import * as yup from "yup";
-
 import { useInput } from "~/hooks.js";
-
-const schema = yup.object().shape({
-  ClienteId: yup.string().required(),
-  tipo_rec_desp: yup.number().required(),
-  nome_rec_desp: yup.string().required(),
-});
-
 export default function CliRecDespCadastro() {
   const dispatch = useDispatch();
 
-  const {
-    value: ClienteId,
-    bind: bindClienteId,
-    reset: resetClienteId,
-  } = useInput("");
-  const {
-    value: tipo_rec_desp,
-    bind: bindTipo_rec_desp,
-    reset: resetTipo_rec_desp,
-  } = useInput("");
-  const {
-    value: nome_rec_desp,
-    bind: bindNome_rec_desp,
-    reset: resetNome_rec_desp,
-  } = useInput("");
+  const { value: ClienteId, bind: bindClienteId } = useInput("");
+  const { value: tipo_rec_desp, bind: bindTipo_rec_desp } = useInput("");
+  const { value: nome_rec_desp, bind: bindNome_rec_desp } = useInput("");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -77,24 +56,14 @@ export default function CliRecDespCadastro() {
                 </CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Cliente</label>
                   <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ClienteId"
-                      type="text"
-                      {...bindClienteId}
-                    />
+                    <Input name="ClienteId" type="text" {...bindClienteId} />
                   </FormGroup>
                   <label>Receita ou despesa</label>
                   <FormGroup>
                     <Input
-                      className="cadastro"
                       name="tipo_rec_desp"
                       type="numeric"
                       {...bindTipo_rec_desp}
@@ -103,7 +72,6 @@ export default function CliRecDespCadastro() {
                   <label>Nome</label>
                   <FormGroup>
                     <Input
-                      className="cadastro"
                       name="nome_rec_desp"
                       type="text"
                       {...bindNome_rec_desp}

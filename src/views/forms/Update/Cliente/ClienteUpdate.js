@@ -26,6 +26,7 @@ import {
   FormGroup,
   Form,
   Input,
+  Label,
   Row,
   Col,
 } from "reactstrap";
@@ -52,10 +53,13 @@ function ClienteUpdatee() {
 
   const dispatch = useDispatch();
 
-  const { value: CNPJ, bind: bindCNPJ } = useInput();
+  const { value: CNPJ, bind: bindCNPJ } = useInput(undefined, "number");
   const { value: nome_abv, bind: bindNome_abv } = useInput();
   const { value: representante, bind: bindRepresentante } = useInput();
-  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput();
+  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput(
+    undefined,
+    "number"
+  );
   const { value: prospect, bind: bindProspect } = useInput();
 
   const handleSubmit = (evt) => {
@@ -93,7 +97,7 @@ function ClienteUpdatee() {
                         size="md"
                         className="text-center"
                       >
-                        Contatos do cliente
+                        Contatos
                       </Button>
                     </Link>
                     <Link to={"/tabelas/cliente/comp/" + id}>
@@ -103,61 +107,83 @@ function ClienteUpdatee() {
                         size="md"
                         className="text-center"
                       >
-                        Complemento do cliente
+                        Complemento
+                      </Button>
+                    </Link>
+                    <Link to={"/tabelas/cliente/rec_desp/" + id}>
+                      <Button
+                        style={{ textAlign: "right" }}
+                        color="info"
+                        size="md"
+                        className="text-center"
+                      >
+                        Receita/Despesa
                       </Button>
                     </Link>
                   </CardHeader>
                   <CardBody>
                     <Form className="cadastro" onSubmit={handleSubmit}>
-                      <label>CNPJ </label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="CNPJ"
-                          type="text"
-                          defaultValue={data.id}
-                          {...bindCNPJ}
-                        />
-                      </FormGroup>
-                      <label>Nome Abreviado</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="nome_abv"
-                          type="text"
-                          defaultValue={data.nome_abv}
-                          {...bindNome_abv}
-                        />
-                      </FormGroup>
-                      <label>Representante</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="representante"
-                          type="text"
-                          defaultValue={data.representante}
-                          {...bindRepresentante}
-                        />
-                      </FormGroup>
-                      <label>Tipo de Comissão</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="tipo_comiss"
-                          type="numeric"
-                          defaultValue={data.tipo_comiss}
-                          {...bindTipo_comiss}
-                        />
-                      </FormGroup>
-                      <label>EmpresaId</label>
+                      <Label>Empresa</Label>
                       <FormGroup>
                         <Input
                           disabled={true}
-                          className="cadastro"
                           name="EmpresaId"
-                          type="numeric"
                           defaultValue={data.EmpresaId}
                         />
+                      </FormGroup>
+                      <Label>CNPJ</Label>
+                      <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
+                        <Input
+                          defaultValue={data.CNPJ}
+                          name="CNPJ"
+                          type="numeric"
+                          {...bindCNPJ}
+                        />
+                        {bindCNPJ.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Nome Abreviado</Label>
+                      <FormGroup
+                        className={`has-label ${bindNome_abv.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.nome_abv}
+                          name="name_abv"
+                          type="text"
+                          {...bindNome_abv}
+                        />
+                        {bindNome_abv.valueerror === "has-danger" ? (
+                          <label className="error">Insira um nome válido</label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Representante</Label>
+                      <FormGroup
+                        className={`has-label ${bindRepresentante.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.representante}
+                          name="representante"
+                          type="text"
+                          {...bindRepresentante}
+                        />
+                        {bindRepresentante.valueerror === "has-danger" ? (
+                          <label className="error">Insira um nome válido</label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Tipo Comissão</Label>
+                      <FormGroup
+                        className={`has-label ${bindTipo_comiss.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.tipo_comiss}
+                          name="tipo_comiss"
+                          type="numeric"
+                          {...bindTipo_comiss}
+                        />
+                        {bindTipo_comiss.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
                       </FormGroup>
 
                       <Button

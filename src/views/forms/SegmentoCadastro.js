@@ -32,26 +32,17 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { segmentoRequest } from "~/store/modules/general/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  EmpresaId: yup.string().required(),
-  Und_negId: yup.number().required(),
-  ProdutoId: yup.number().required(),
-  AreaId: yup.number().required(),
-  desc_segmt: yup.string().required(),
-});
 
 export default function SegmentoCadastro() {
   const dispatch = useDispatch();
   const empresa = store.getState().auth.empresa;
 
   const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
-  const { value: Und_negId, bind: bindUnd_negId } = useInput("");
-  const { value: ProdutoId, bind: bindProdutoId } = useInput("");
-  const { value: AreaId, bind: bindAreaId } = useInput("");
+  const { value: Und_negId, bind: bindUnd_negId } = useInput("", "number");
+  const { value: ProdutoId, bind: bindProdutoId } = useInput("", "number");
+  const { value: AreaId, bind: bindAreaId } = useInput("", "number");
   const { value: desc_segmt, bind: bindDesc_segmt } = useInput("");
 
   const handleSubmit = (evt) => {
@@ -68,60 +59,63 @@ export default function SegmentoCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cadastro de Segmento</CardTitle>
+                <CardTitle tag="h4">Segmento</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
                       disabled={true}
-                      className="cadastro"
                       name="EmpresaId"
                       type="text"
                       {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Unidade de Negócio</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="Und_negId"
-                      type="numeric"
-                      {...bindUnd_negId}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindUnd_negId.valueerror}`}
+                  >
+                    <Input name="Und_negId" type="numeric" {...bindUnd_negId} />
+                    {bindUnd_negId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Produto</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ProdutoId"
-                      type="numeric"
-                      {...bindProdutoId}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindProdutoId.valueerror}`}
+                  >
+                    <Input name="ProdutoId" type="numeric" {...bindProdutoId} />{" "}
+                    {bindProdutoId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Área</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="AreaId"
-                      type="numeric"
-                      {...bindAreaId}
-                    />
+                  <FormGroup className={`has-label ${bindAreaId.valueerror}`}>
+                    <Input name="AreaId" type="numeric" {...bindAreaId} />{" "}
+                    {bindAreaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Descrição do Segmento</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="desc_segmt"
-                      type="text"
-                      {...bindDesc_segmt}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindDesc_segmt.valueerror}`}
+                  >
+                    <Input name="desc_segmt" type="text" {...bindDesc_segmt} />{" "}
+                    {bindDesc_segmt.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"

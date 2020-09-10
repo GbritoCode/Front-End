@@ -565,7 +565,7 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/tabelas/cliente/rec_desp",
+        path: "/tabelas/cliente/rec_desp/:id",
         name: "Receita e Despesa de Cliente",
         rtlName: "رد فعل الطاولة",
         mini: "RT",

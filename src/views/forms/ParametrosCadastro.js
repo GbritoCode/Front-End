@@ -32,32 +32,22 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { parametrosRequest } from "~/store/modules/general/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  EmpresaId: yup.number().required(),
-  impostos: yup.number().required(),
-  vlr_min_hr: yup.number().required(),
-  vlr_bs_hr: yup.number().required(),
-  vlr_bs_desp: yup.number().required(),
-  adianta_pgmto: yup.string().required(),
-  perc_adianta_pgmto: yup.number().required(),
-});
 
 export default function ParametrosCadastro() {
   const dispatch = useDispatch();
   const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
-  const { value: impostos, bind: bindImpostos } = useInput("");
-  const { value: vlr_min_hr, bind: bindVlr_min_hr } = useInput("");
-  const { value: vlr_bs_hr, bind: bindVlr_bs_hr } = useInput("");
-  const { value: vlr_bs_desp, bind: bindVlr_bs_desp } = useInput("");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
+  const { value: impostos, bind: bindImpostos } = useInput("", "number");
+  const { value: vlr_min_hr, bind: bindVlr_min_hr } = useInput("", "number");
+  const { value: vlr_bs_hr, bind: bindVlr_bs_hr } = useInput("", "number");
+  const { value: vlr_bs_desp, bind: bindVlr_bs_desp } = useInput("", "number");
   const { value: adianta_pgmto, bind: bindAdianta_pgmto } = useInput("");
   const { value: perc_adianta_pgmto, bind: bindPerc_adianta_pgmto } = useInput(
-    ""
+    "",
+    "number"
   );
 
   const handleSubmit = (evt) => {
@@ -82,82 +72,97 @@ export default function ParametrosCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cadastro de Parâmetros</CardTitle>
+                <CardTitle tag="h4">Parâmetros</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
                       disabled={true}
-                      className="cadastro"
                       name="EmpresaId"
                       type="numeric"
                       {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Impostos</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="impostos"
-                      type="numeric"
-                      {...bindImpostos}
-                    />
+                  <FormGroup className={`has-label ${bindImpostos.valueerror}`}>
+                    <Input name="impostos" type="numeric" {...bindImpostos} />
+                    {bindImpostos.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Valor Mínimo da Hora</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindVlr_min_hr.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="vlr_min_hr"
                       type="numeric"
                       {...bindVlr_min_hr}
                     />
+                    {bindVlr_min_hr.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Valor Base Da Hora</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="vlr_bs_hr"
-                      type="numeric"
-                      {...bindVlr_bs_hr}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindVlr_bs_hr.valueerror}`}
+                  >
+                    <Input name="vlr_bs_hr" type="numeric" {...bindVlr_bs_hr} />
+                    {bindVlr_bs_hr.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Valor Base da Despesa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindVlr_bs_desp.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="vlr_bs_desp"
                       type="numeric"
                       {...bindVlr_bs_desp}
                     />
+                    {bindVlr_bs_desp.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Adianta Pagamento</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindAdianta_pgmto.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="adianta_pgmto"
                       type="text"
                       {...bindAdianta_pgmto}
                     />
+                    {bindAdianta_pgmto.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Percentual do Adiantamento</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindPerc_adianta_pgmto.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="perc_adianta_pgmto"
                       type="numeric"
                       {...bindPerc_adianta_pgmto}
                     />
+                    {bindPerc_adianta_pgmto.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <Button
                     style={{ marginTop: 35 }}

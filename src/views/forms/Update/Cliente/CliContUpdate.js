@@ -55,8 +55,8 @@ export default function CliContUpdatee() {
 
   const { value: ClienteId, bind: bindClienteId } = useInput();
   const { value: nome, bind: bindNome } = useInput();
-  const { value: cel, bind: bindCel } = useInput();
-  const { value: fone, bind: bindFone } = useInput();
+  const { value: cel, bind: bindCel } = useInput(undefined, "number");
+  const { value: fone, bind: bindFone } = useInput(undefined, "number");
   const { value: skype, bind: bindSkype } = useInput();
   const { value: email, bind: bindEmail } = useInput();
   const { value: aniver, bind: bindAniver } = useInput();
@@ -107,35 +107,42 @@ export default function CliContUpdatee() {
                       <Row>
                         <Col md="4">
                           <Label>Celular</Label>
-                          <FormGroup>
+                          <FormGroup
+                            className={`has-label ${bindCel.valueerror}`}
+                          >
                             <Input
-                              className="cadastro"
                               name="cel"
                               type="numeric"
                               defaultValue={data.cel}
                               {...bindCel}
                             />
+                            {bindCel.valueerror === "has-danger" ? (
+                              <label className="error">Insira um número</label>
+                            ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
                           <Label>Telefone</Label>
-                          <FormGroup>
+                          <FormGroup
+                            className={`has-label ${bindFone.valueerror}`}
+                          >
                             <Input
-                              className="cadastro"
                               name="fone"
                               type="numeric"
                               defaultValue={data.fone}
                               {...bindFone}
                             />
+                            {bindFone.valueerror === "has-danger" ? (
+                              <label className="error">Insira um número</label>
+                            ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
                           <FormGroup>
                             <Label>Aniversário </Label>
-                            <ReactDatetime
-                              inputProps={{
-                                className: "form-control",
-                              }}
+                            <Input
+                              name="aniver"
+                              type="date"
                               defaultValue={data.aniver}
                               {...bindAniver}
                             />

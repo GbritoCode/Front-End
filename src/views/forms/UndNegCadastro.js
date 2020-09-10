@@ -31,20 +31,14 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { undNegRequest } from "~/store/modules/general/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  EmpresaId: yup.string().required(),
-  desc_und_neg: yup.string().required(),
-});
 
 export default function UndNegCadastro() {
   const dispatch = useDispatch();
   const empresa = store.getState().auth.empresa;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
   const { value: desc_und_neg, bind: bindDesc_und_neg } = useInput("");
 
   const handleSubmit = (evt) => {
@@ -58,33 +52,37 @@ export default function UndNegCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cadastro de Unidade de Negócio</CardTitle>
+                <CardTitle tag="h4">Unidade de Negócio</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
                       disabled={true}
-                      className="cadastro"
                       name="EmpresaId"
                       type="text"
                       {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Descrição da Unidade de Negócio</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindDesc_und_neg.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="desc_und_neg"
                       type="text"
                       {...bindDesc_und_neg}
                     />
+                    {bindDesc_und_neg.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <Button

@@ -33,7 +33,8 @@ class Tabela_Cliente extends Component {
     this.loadClients();
   }
   loadClients = async () => {
-    const response = await api.get("/cliente/rec_desp");
+    const id = this.props.match.params.id;
+    const response = await api.get(`/cliente/rec_desp/${id}`);
     this.setState({
       data: response.data.map((client, key) => {
         return {
@@ -127,7 +128,7 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/cliente/comp">
+                  <Link to="/cadastro/cliente/rec_desp">
                     <Button
                       style={{
                         float: "right",

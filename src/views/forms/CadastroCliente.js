@@ -57,11 +57,11 @@ export default function CadastroCliente() {
   const aa = data;
   console.log(aa);
   */
-  const { value: CNPJ, bind: bindCNPJ } = useInput("");
+  const { value: CNPJ, bind: bindCNPJ } = useInput("", "number");
   const { value: nome_abv, bind: bindNome_abv } = useInput("");
   const { value: representante, bind: bindRepresentante } = useInput("");
-  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput("");
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
+  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput("", "number");
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -80,53 +80,61 @@ export default function CadastroCliente() {
                 <CardTitle tag="h4">Cliente</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form className="cadastro" onSubmit={handleSubmit}>
-                  <Label>CNPJ</Label>
-                  <FormGroup>
+                <Form onSubmit={handleSubmit}>
+                  <Label>Empresa</Label>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
-                      name="CNPJ"
-                      type="text"
-                      {...bindCNPJ}
+                      disabled={true}
+                      name="EmpresaId"
+                      {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
+                  </FormGroup>
+                  <Label>CNPJ</Label>
+                  <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
+                    <Input name="CNPJ" type="text" {...bindCNPJ} />
+                    {bindCNPJ.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
                   <Label>Nome Abreviado</Label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="name_abv"
-                      type="text"
-                      {...bindNome_abv}
-                    />
+                  <FormGroup className={`has-label ${bindNome_abv.valueerror}`}>
+                    <Input name="name_abv" type="text" {...bindNome_abv} />
+                    {bindNome_abv.valueerror === "has-danger" ? (
+                      <label className="error">Insira um nome válido</label>
+                    ) : null}
                   </FormGroup>
                   <Label>Representante</Label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindRepresentante.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="representante"
                       type="text"
                       {...bindRepresentante}
                     />
+                    {bindRepresentante.valueerror === "has-danger" ? (
+                      <label className="error">Insira um nome válido</label>
+                    ) : null}
                   </FormGroup>
                   <Label>Tipo Comissão</Label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindTipo_comiss.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="tipo_comiss"
                       type="numeric"
-                      autoComplete="off"
                       {...bindTipo_comiss}
                     />
+                    {bindTipo_comiss.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
-                  <Label>Empresa</Label>
-                  <FormGroup>
-                    <Input
-                      disabled={true}
-                      className="cadastro"
-                      name="EmpresaId"
-                      {...bindEmpresaId}
-                    />
-                  </FormGroup>
+
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"

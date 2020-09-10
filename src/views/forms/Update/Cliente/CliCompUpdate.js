@@ -31,25 +31,9 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliCompUpdate } from "~/store/modules/Cliente/actions";
-import * as yup from "yup";
 import { useParams } from "react-router-dom";
 import { useInput } from "hooks.js";
 import axios from "axios";
-
-const schema = yup.object().shape({
-  ClienteId: yup.string().required(),
-  rz_social: yup.string().required(),
-  cond_pgmto: yup.number().required(),
-  nome_abv: yup.string().required(),
-  cep: yup.string().required(),
-  rua: yup.string().required(),
-  numero: yup.number().required(),
-  bairro: yup.string().required(),
-  cidade: yup.string().required(),
-  uf: yup.string().required(),
-  insc_mun: yup.number().required(),
-  insc_uf: yup.number().required(),
-});
 
 export default function CliCompUpdatee() {
   const dispatch = useDispatch();
@@ -68,18 +52,27 @@ export default function CliCompUpdatee() {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  const { value: ClienteId, bind: bindClienteId } = useInput();
-  const { value: rz_social, bind: bindRz_social } = useInput();
-  const { value: cond_pgmto, bind: bindCond_pgmto } = useInput();
+  const { value: ClienteId, bind: bindClienteId } = useInput(
+    undefined,
+    "number"
+  );
+  const { value: rz_social, bind: bindRz_social } = useInput(
+    undefined,
+    "number"
+  );
+  const { value: cond_pgmto, bind: bindCond_pgmto } = useInput(
+    undefined,
+    "number"
+  );
   const { value: nome_abv, bind: bindNome_abv } = useInput();
-  const { value: cep, bind: bindCep } = useInput();
+  const { value: cep, bind: bindCep } = useInput(undefined, "number");
   const { value: rua, bind: bindRua } = useInput();
-  const { value: numero, bind: bindNumero } = useInput();
+  const { value: numero, bind: bindNumero } = useInput(undefined, "number");
   const { value: bairro, bind: bindBairro } = useInput();
   const { value: cidade, bind: bindCidade } = useInput();
   const { value: uf, bind: bindUf } = useInput();
-  const { value: insc_mun, bind: bindInsc_mun } = useInput();
-  const { value: insc_uf, bind: bindInsc_uf } = useInput();
+  const { value: insc_mun, bind: bindInsc_mun } = useInput(undefined, "number");
+  const { value: insc_uf, bind: bindInsc_uf } = useInput(undefined, "number");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -117,144 +110,209 @@ export default function CliCompUpdatee() {
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
-                    <Form
-                      className="cadastro"
-                      onSubmit={handleSubmit}
-                      schema={schema}
-                    >
+                    <Form onSubmit={handleSubmit}>
                       <label>Cliente</label>
-                      <FormGroup>
+                      <FormGroup
+                        className={`has-label ${bindClienteId.valueerror}`}
+                      >
                         <Input
-                          disabled={true}
-                          className="cadastro"
+                          disabled
+                          defaultValue={data.ClienteId}
                           name="ClienteId"
                           type="text"
-                          defaultValue={data.ClienteId}
                           {...bindClienteId}
                         />
+                        {bindClienteId.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
                       </FormGroup>
 
                       <label>Razão Social</label>
-                      <FormGroup>
+                      <FormGroup
+                        className={`has-label ${bindRz_social.valueerror}`}
+                      >
                         <Input
-                          className="cadastro"
+                          defaultValue={data.rz_social}
                           name="rz_social"
                           type="text"
-                          defaultValue={data.rz_social}
                           {...bindRz_social}
                         />
+                        {bindRz_social.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
                       </FormGroup>
 
                       <label>Condição de Pagamento</label>
-                      <FormGroup>
+                      <FormGroup
+                        className={`has-label ${bindCond_pgmto.valueerror}`}
+                      >
                         <Input
-                          className="cadastro"
+                          defaultValue={data.cond_pgmto}
                           name="cond_pgmto"
                           type="numeric"
-                          defaultValue={data.cond_pgmto}
                           {...bindCond_pgmto}
                         />
+                        {bindCond_pgmto.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
                       </FormGroup>
 
                       <label>Nome Abreviado</label>
-                      <FormGroup>
+                      <FormGroup
+                        className={`has-label ${bindNome_abv.valueerror}`}
+                      >
                         <Input
-                          className="cadastro"
-                          name="Nome Abreviado"
-                          type="text"
                           defaultValue={data.nome_abv}
+                          name="nome_abv"
+                          type="text"
                           {...bindNome_abv}
                         />
+                        {bindNome_abv.valueerror === "has-danger" ? (
+                          <label className="error">Insira um nome válido</label>
+                        ) : null}
                       </FormGroup>
-
-                      <label>CEP</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="cep"
-                          type="text"
-                          defaultValue={data.cep}
-                          {...bindCep}
-                        />
-                      </FormGroup>
-
-                      <label>Rua</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="rua"
-                          type="text"
-                          defaultValue={data.rua}
-                          {...bindRua}
-                        />
-                      </FormGroup>
-
-                      <label>Número</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="numero"
-                          type="numeric"
-                          defaultValue={data.numero}
-                          {...bindNumero}
-                        />
-                      </FormGroup>
-
-                      <label>Bairro</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="bairro"
-                          type="text"
-                          defaultValue={data.bairro}
-                          {...bindBairro}
-                        />
-                      </FormGroup>
-
-                      <label>Cidade</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="cidade"
-                          type="text"
-                          defaultValue={data.cidade}
-                          {...bindCidade}
-                        />
-                      </FormGroup>
-
-                      <label>Uf</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="uf"
-                          type="text"
-                          defaultValue={data.uf}
-                          {...bindUf}
-                        />
-                      </FormGroup>
-
-                      <label>Inscrição Municipal</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="insc_mun"
-                          type="numeric"
-                          defaultValue={data.insc_mun}
-                          {...bindInsc_mun}
-                        />
-                      </FormGroup>
-
-                      <label>Inscrição Federal</label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="insc_uf"
-                          type="numeric"
-                          defaultValue={data.insc_uf}
-                          {...bindInsc_uf}
-                        />
-                      </FormGroup>
-
+                      <Row>
+                        <Col md="4">
+                          <label>CEP</label>
+                          <FormGroup
+                            className={`has-label ${bindCep.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.cep}
+                              name="cep"
+                              type="text"
+                              {...bindCep}
+                            />
+                            {bindCep.valueerror === "has-danger" ? (
+                              <label className="error">Insira um número</label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <label>Rua</label>
+                          <FormGroup
+                            className={`has-label ${bindRua.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.rua}
+                              name="rua"
+                              type="text"
+                              {...bindRua}
+                            />
+                            {bindRua.valueerror === "has-danger" ? (
+                              <label className="error">
+                                Insira um valor válido
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <label>Número</label>
+                          <FormGroup
+                            className={`has-label ${bindNumero.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.numero}
+                              name="numero"
+                              type="numeric"
+                              {...bindNumero}
+                            />
+                            {bindNumero.valueerror === "has-danger" ? (
+                              <label className="error">Insira um número</label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <label>Bairro</label>
+                          <FormGroup
+                            className={`has-label ${bindBairro.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.bairro}
+                              name="bairro"
+                              type="text"
+                              {...bindBairro}
+                            />
+                            {bindBairro.valueerror === "has-danger" ? (
+                              <label className="error">
+                                Insira um valor válido
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <label>Cidade</label>
+                          <FormGroup
+                            className={`has-label ${bindCidade.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.cidade}
+                              name="cidade"
+                              type="text"
+                              {...bindCidade}
+                            />
+                            {bindCidade.valueerror === "has-danger" ? (
+                              <label className="error">
+                                Insira um valor válido
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <label>UF</label>
+                          <FormGroup
+                            className={`has-label ${bindUf.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.uf}
+                              name="uf"
+                              type="text"
+                              {...bindUf}
+                            />
+                            {bindUf.valueerror === "has-danger" ? (
+                              <label className="error">
+                                Insira um valor válido
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="6">
+                          <label>Inscrição Municipal</label>
+                          <FormGroup
+                            className={`has-label ${bindInsc_mun.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.insc_mun}
+                              name="insc_mun"
+                              type="numeric"
+                              {...bindInsc_mun}
+                            />
+                            {bindInsc_mun.valueerror === "has-danger" ? (
+                              <label className="error">Insira um número</label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="6">
+                          <label>Inscrição Federal</label>
+                          <FormGroup
+                            className={`has-label ${bindInsc_uf.valueerror}`}
+                          >
+                            <Input
+                              defaultValue={data.insc_uf}
+                              name="insc_uf"
+                              type="numeric"
+                              {...bindInsc_uf}
+                            />
+                            {bindInsc_uf.valueerror === "has-danger" ? (
+                              <label className="error">Insira um número</label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"

@@ -32,14 +32,8 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { prodtRequest } from "~/store/modules/general/actions";
-import * as yup from "yup";
 import { store } from "~/store";
 import { useInput } from "hooks.js";
-
-const schema = yup.object().shape({
-  EmpresaId: yup.string().required(),
-  desc_prodt: yup.string().required(),
-});
 
 export default function ProdtCadastro() {
   const dispatch = useDispatch();
@@ -59,33 +53,35 @@ export default function ProdtCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cadastro de Produto</CardTitle>
+                <CardTitle tag="h4">Produto</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form
-                  className="cadastro"
-                  onSubmit={handleSubmit}
-                  schema={schema}
-                >
+                <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindEmpresaId.valueerror}`}
+                  >
                     <Input
                       disabled={true}
-                      className="cadastro"
                       name="EmpresaId"
                       type="text"
                       {...bindEmpresaId}
                     />
+                    {bindEmpresaId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um valor válido</label>
+                    ) : null}
                   </FormGroup>
+
                   <label>Descrição do Produto</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="desc_prodt"
-                      type="text"
-                      {...bindDesc_prodt}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindDesc_prodt.valueerror}`}
+                  >
+                    <Input name="desc_prodt" type="text" {...bindDesc_prodt} />
+                    {bindDesc_prodt.valueerror === "has-danger" ? (
+                      <label className="error">Insira um valor válido</label>
+                    ) : null}
                   </FormGroup>
+
                   <Button
                     style={{ marginTop: 35 }}
                     className="form"
