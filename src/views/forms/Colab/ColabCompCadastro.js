@@ -23,40 +23,63 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  Label,
+  Form,
+  Input,
   FormGroup,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { Form, Input } from "@rocketseat/unform";
 import { colabCompRequest } from "~/store/modules/Colab/actions";
 import { useInput } from "hooks.js";
 
 export default function ColabCompCadastro() {
   const dispatch = useDispatch();
 
-  const { value: ColabId, bind: bindColabId } = useInput("");
+  const { value: ColabId, bind: bindColabId } = useInput("", "number");
   const { value: nivel, bind: bindNivel } = useInput("");
-  const { value: tipo_valor, bind: bindTipo_valor } = useInput("");
-  const { value: valor, bind: bindValor } = useInput("");
+  const { value: tipo_valor, bind: bindTipo_valor } = useInput("", "number");
+  const { value: valor, bind: bindValor } = useInput("", "number");
   const { value: data_inic, bind: bindData_inic } = useInput("");
   const { value: data_fim, bind: bindData_fim } = useInput("");
-  const { value: tipo_atend, bind: bindTipo_atend } = useInput("");
+  const { value: tipo_atend, bind: bindTipo_atend } = useInput("", "number");
 
+  const errorCheckAux = [
+    bindColabId,
+    bindNivel,
+    bindTipo_valor,
+    bindValor,
+    bindTipo_atend,
+  ];
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(
-      colabCompRequest(
-        ColabId,
-        nivel,
-        tipo_valor,
-        valor,
-        data_inic,
-        data_fim,
-        tipo_atend
-      )
-    );
+
+    var tamanho = errorCheckAux.length;
+    console.log(errorCheckAux.length);
+    for (var j = 0; j < tamanho; j++) {
+      if (
+        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(errorCheckAux[j].value === "")
+      ) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      dispatch(
+        colabCompRequest(
+          ColabId,
+          nivel,
+          tipo_valor,
+          valor,
+          data_inic,
+          data_fim,
+          tipo_atend
+        )
+      );
+    }
   };
   return (
     <>
@@ -68,75 +91,80 @@ export default function ColabCompCadastro() {
                 <CardTitle tag="h4">Complemento do Colaborador</CardTitle>
               </CardHeader>
               <CardBody>
-                <Form className="cadastro" onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                   <label>Colaborador</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="ColabId"
-                      type="numeric"
-                      {...bindColabId}
-                    />
+                  <FormGroup className={`has-label ${bindColabId.valueerror}`}>
+                    <Input name="ColabId" type="numeric" {...bindColabId} />
+                    {bindColabId.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Nível</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="nivel"
-                      type="numeric"
-                      {...bindNivel}
-                    />
+                  <FormGroup className={`has-label ${bindNivel.valueerror}`}>
+                    <Input name="nivel" type="select" {...bindNivel}>
+                      <option disabled value="">
+                        {" "}
+                        Selecione o nível{" "}
+                      </option>
+                      <option value={1}>Adiministrador</option>
+                      <option value={2}>Consultor</option>
+                      <option value={3}>Outro</option>
+                    </Input>
                   </FormGroup>
 
                   <label>Tipo de valor</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindTipo_valor.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="tipo_valor"
                       type="numeric"
                       {...bindTipo_valor}
                     />
+                    {bindTipo_valor.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Valor</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="valor"
-                      type="numeric"
-                      {...bindValor}
-                    />
+                  <FormGroup className={`has-label ${bindValor.valueerror}`}>
+                    <Input name="valor" type="numeric" {...bindValor} />
+                    {bindValor.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Data Inicial</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="data_inic"
-                      type="date"
-                      {...bindData_inic}
-                    />
+                  <FormGroup
+                    className={`has-label ${bindData_inic.valueerror}`}
+                  >
+                    <Input name="data_inic" type="date" {...bindData_inic} />
+                    {bindData_inic.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Data Final</label>
-                  <FormGroup>
-                    <Input
-                      className="cadastro"
-                      name="data_fim"
-                      type="date"
-                      {...bindData_fim}
-                    />
+                  <FormGroup className={`has-label ${bindData_fim.valueerror}`}>
+                    <Input name="data_fim" type="date" {...bindData_fim} />
+                    {bindData_fim.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <label>Tipo de Atendimento</label>
-                  <FormGroup>
+                  <FormGroup
+                    className={`has-label ${bindTipo_atend.valueerror}`}
+                  >
                     <Input
-                      className="cadastro"
                       name="tipo_atend"
                       type="numeric"
                       {...bindTipo_atend}
                     />
+                    {bindTipo_atend.valueerror === "has-danger" ? (
+                      <label className="error">Insira um número</label>
+                    ) : null}
                   </FormGroup>
 
                   <Button

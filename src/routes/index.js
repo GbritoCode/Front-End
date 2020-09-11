@@ -30,18 +30,30 @@ import CliCompCadastro from "~/views/forms/Cliente/CliCompCadastro.js";
 import CliContCadastro from "~/views/forms/Cliente/CliContCadastro.js";
 import CliRecDespCadastro from "~/views/forms/Cliente/CliRecDespCadastro.js";
 
+import ColabUpdate from "~/views/forms/Update/Colab/ColabUpdate.js";
+import ColabCompUpdate from "~/views/forms/Update/Colab/ColabCompUpdate.js";
 import ColabCadastro from "~/views/forms/Colab/ColabCadastro.js";
 import ColabCompCadastro from "~/views/forms/Colab/ColabCompCadastro.js";
 
+import AreaUpdate from "~/views/forms/Update/General/AreaUpdate";
 import AreaCadastro from "~/views/forms/AreaCadastro.js";
+import EmpresaUpdate from "~/views/forms/Update/General/EmpresaUpdate";
 import EmpresaCadastro from "~/views/forms/EmpresaCadastro.js";
+import FornecUpdate from "~/views/forms/Update/General/FornecUpdate";
 import FornecCadastro from "~/views/forms/FornecCadastro.js";
+import ItmControleUpdate from "~/views/forms/Update/General/ItmControleUpdate";
 import ItmControleCadastro from "~/views/forms/ItmControleCadastro.js";
+import ParametrosUpdate from "~/views/forms/Update/General/ParametrosUpdate";
 import ParametrosCadastro from "~/views/forms/ParametrosCadastro.js";
+import ProdtUpdate from "~/views/forms/Update/General/ProdtUpdate";
 import ProdtCadastro from "~/views/forms/ProdtCadastro.js";
+import RecDespUpdate from "~/views/forms/Update/General/RecDespUpdate";
 import RecDespCadastro from "~/views/forms/RecDespCadastro.js";
+import RepresentanteUpdate from "~/views/forms/Update/General/RepresentanteUpdate";
 import RepresentanteCadastro from "~/views/forms/RepresentanteCadastro.js";
+import SegmentoUpdate from "~/views/forms/Update/General/SegmentoUpdate";
 import SegmentoCadastro from "~/views/forms/SegmentoCadastro.js";
+import UndNegUpdate from "~/views/forms/Update/General/UndNegUpdate";
 import UndNegCadastro from "~/views/forms/UndNegCadastro.js";
 
 //-----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
@@ -188,7 +200,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cadastro/cliente/comp"
+        path="/cadastro/cliente/comp/:id"
         component={CliCompCadastro}
         isPrivate
       />
@@ -198,7 +210,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cadastro/cliente/cont"
+        path="/cadastro/cliente/cont/:id"
         component={CliContCadastro}
         isPrivate
       />
@@ -219,16 +231,28 @@ export default function Routes() {
         component={ColabCadastro}
         isPrivate
       />{" "}
+      <Route path="/colab/update/:id" component={ColabUpdate} isPrivate />
       <Route
         path="/cadastro/colab/comp"
         component={ColabCompCadastro}
         isPrivate
       />
+      <Route
+        path="/colab/comp/update/:id"
+        component={ColabCompUpdate}
+        isPrivate
+      />
       {/**COLAB FIM */}
       <Route path="/cadastro/geral/area" component={AreaCadastro} isPrivate />
+      <Route path="/update/general/area/:id" component={AreaUpdate} isPrivate />
       <Route
         path="/cadastro/geral/empresa"
         component={EmpresaCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/general/empresa/:id"
+        component={EmpresaUpdate}
         isPrivate
       />
       <Route
@@ -237,8 +261,18 @@ export default function Routes() {
         isPrivate
       />
       <Route
+        path="/update/general/fornec/:id"
+        component={FornecUpdate}
+        isPrivate
+      />
+      <Route
         path="/cadastro/geral/itm_controle"
         component={ItmControleCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/general/itm_controle/:id"
+        component={ItmControleUpdate}
         isPrivate
       />
       <Route
@@ -246,10 +280,25 @@ export default function Routes() {
         component={ParametrosCadastro}
         isPrivate
       />
+      <Route
+        path="/update/general/parametros/:id"
+        component={ParametrosUpdate}
+        isPrivate
+      />
       <Route path="/cadastro/geral/prodt" component={ProdtCadastro} isPrivate />
+      <Route
+        path="/update/general/prodt/:id"
+        component={ProdtUpdate}
+        isPrivate
+      />
       <Route
         path="/cadastro/geral/rec_desp"
         component={RecDespCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/general/rec_desp/:id"
+        component={RecDespUpdate}
         isPrivate
       />
       <Route
@@ -258,13 +307,28 @@ export default function Routes() {
         isPrivate
       />
       <Route
+        path="/update/general/represent/:id"
+        component={RepresentanteUpdate}
+        isPrivate
+      />
+      <Route
         path="/cadastro/geral/sgmet"
         component={SegmentoCadastro}
         isPrivate
       />
       <Route
+        path="/update/general/segmento/:id"
+        component={SegmentoUpdate}
+        isPrivate
+      />
+      <Route
         path="/cadastro/geral/und_neg"
         component={UndNegCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/general/und_neg/:id"
+        component={UndNegUpdate}
         isPrivate
       />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

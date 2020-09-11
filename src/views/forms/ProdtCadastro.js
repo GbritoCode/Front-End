@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -33,18 +33,48 @@ import {
 import { useDispatch } from "react-redux";
 import { prodtRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
+import axios from "axios";
 import { useInput } from "hooks.js";
 
 export default function ProdtCadastro() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({});
   const empresa = store.getState().auth.empresa;
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      const response = await axios(`http://localhost:3001/empresa/${empresa}`);
+      setData(response.data);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
 
   const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa);
   const { value: desc_prodt, bind: bindDesc_prodt } = useInput("");
 
+  const errorCheckAux = [bindEmpresaId, bindDesc_prodt];
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(prodtRequest(EmpresaId, desc_prodt));
+
+    var tamanho = errorCheckAux.length;
+    console.log(errorCheckAux.length);
+    for (var j = 0; j < tamanho; j++) {
+      if (
+        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(errorCheckAux[j].value === "")
+      ) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      dispatch(prodtRequest(EmpresaId, desc_prodt));
+    }
   };
   return (
     <>
@@ -64,11 +94,17 @@ export default function ProdtCadastro() {
                     <Input
                       disabled={true}
                       name="EmpresaId"
-                      type="text"
+                      type="select"
                       {...bindEmpresaId}
-                    />
+                    >
+                      {" "}
+                      <option value={1}>
+                        {" "}
+                        Empresa selecionada: {data.nome}, CNPJ {data.id_federal}
+                      </option>
+                    </Input>
                     {bindEmpresaId.valueerror === "has-danger" ? (
-                      <label className="error">Insira um valor válido</label>
+                      <label className="error">Insira um número</label>
                     ) : null}
                   </FormGroup>
 

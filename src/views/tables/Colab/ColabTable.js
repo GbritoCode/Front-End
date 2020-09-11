@@ -39,7 +39,7 @@ class Tabela_Cliente extends Component {
         return {
           id: key,
           idd: client.id,
-          cpf: client.cpf,
+          CPF: client.CPF,
           FornecId: client.FornecId,
           log_usr: client.log_usr,
           EmpresaId: client.EmpresaId,
@@ -76,27 +76,14 @@ class Tabela_Cliente extends Component {
                 <i className="tim-icons icon-heart-2" />
               </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked EDIT button on \n{ \nName: " +
-                      obj.COD_FORNEC +
-                      ", \nemail: " +
-                      obj.LOG_USR +
-                      ", \nidade: " +
-                      obj.COD_EMP +
-                      ", \nsalario: " +
-                      obj.NOME +
-                      "\n}."
-                  );
-                }}
+              <Link
+                to={`/colab/update/${client.id}`}
                 color="warning"
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
                 <i className="tim-icons icon-pencil" />
-              </Button>{" "}
+              </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
@@ -170,7 +157,7 @@ class Tabela_Cliente extends Component {
                     },
                     {
                       Header: "CPF",
-                      accessor: "cpf",
+                      accessor: "CPF",
                     },
                     {
                       Header: "Data de Adimissão",

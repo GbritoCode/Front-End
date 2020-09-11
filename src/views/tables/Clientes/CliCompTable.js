@@ -116,6 +116,7 @@ class Tabela_CliComp extends Component {
   };
 
   render() {
+    const id = this.props.match.params.id;
     return (
       <>
         <div className="content">
@@ -123,7 +124,7 @@ class Tabela_CliComp extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/cliente/comp">
+                  <Link to={`/cadastro/cliente/comp/${id}`}>
                     <Button
                       style={{
                         float: "right",

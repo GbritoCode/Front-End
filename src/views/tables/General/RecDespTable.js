@@ -69,27 +69,14 @@ class Tabela_Cliente extends Component {
                 <i className="tim-icons icon-heart-2" />
               </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked EDIT button on \n{ \nName: " +
-                      obj.COD_REC_DESP +
-                      ", \nemail: " +
-                      obj.COD_EMP +
-                      ", \nidade: " +
-                      obj.NOME +
-                      ", \nsalario: " +
-                      obj.LICENSE +
-                      "\n}."
-                  );
-                }}
+              <Link
+                to={`/update/general/rec_desp/${client.id}`}
                 color="warning"
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
                 <i className="tim-icons icon-pencil" />
-              </Button>{" "}
+              </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {

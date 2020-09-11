@@ -45,18 +45,39 @@ import CliCompCadastro from "~/views/forms/Cliente/CliCompCadastro.js";
 import CliContCadastro from "~/views/forms/Cliente/CliContCadastro.js";
 import CliRecDespCadastro from "~/views/forms/Cliente/CliRecDespCadastro.js";
 
+import ColabUpdate from "~/views/forms/Update/Colab/ColabUpdate.js";
 import ColabCadastro from "~/views/forms/Colab/ColabCadastro.js";
+import ColabCompUpdate from "~/views/forms/Update/Colab/ColabCompUpdate.js";
 import ColabCompCadastro from "~/views/forms/Colab/ColabCompCadastro.js";
 
+import AreaUpdate from "~/views/forms/Update/General/AreaUpdate.js";
 import AreaCadastro from "~/views/forms/AreaCadastro.js";
+
+import EmpresaUpdate from "~/views/forms/Update/General/EmpresaUpdate.js";
 import EmpresaCadastro from "~/views/forms/EmpresaCadastro.js";
+
+import FornecUpdate from "~/views/forms/Update/General/FornecUpdate.js";
 import FornecCadastro from "~/views/forms/FornecCadastro.js";
+
+import ItmControleUpdate from "~/views/forms/Update/General/ItmControleUpdate.js";
 import ItmControleCadastro from "~/views/forms/ItmControleCadastro.js";
+
+import ParametrosUpdate from "~/views/forms/Update/General/ParametrosUpdate.js";
 import ParametrosCadastro from "~/views/forms/ParametrosCadastro.js";
+
+import ProdtUpdate from "~/views/forms/Update/General/ProdtUpdate.js";
 import ProdtCadastro from "~/views/forms/ProdtCadastro.js";
+
+import RecDespUpdate from "~/views/forms/Update/General/RecDespUpdate.js";
 import RecDespCadastro from "~/views/forms/RecDespCadastro.js";
+
+import RepresentanteUpdate from "~/views/forms/Update/General/RepresentanteUpdate.js";
 import RepresentanteCadastro from "~/views/forms/RepresentanteCadastro.js";
+
+import SegmentoUpdate from "~/views/forms/Update/General/SegmentoUpdate.js";
 import SegmentoCadastro from "~/views/forms/SegmentoCadastro.js";
+
+import UndNegUpdate from "~/views/forms/Update/General/UndNegUpdate.js";
 import UndNegCadastro from "~/views/forms/UndNegCadastro.js";
 
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
@@ -301,7 +322,7 @@ const routes = [
     views: [
       {
         path: "/cliente_cadastro",
-        name: "Cadastro de Clientes",
+        name: "Cliente",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -336,8 +357,8 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/cadastro/cliente/comp",
-        name: "Cadastro de Cliente Complemento",
+        path: "/cadastro/cliente/comp/:id",
+        name: "Complemento de Cliente",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -345,8 +366,8 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/cadastro/cliente/cont",
-        name: "Cadastro de Cliente Continuação",
+        path: "/cadastro/cliente/cont/:id",
+        name: "Continuação do Cliente",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -355,7 +376,7 @@ const routes = [
       },
       {
         path: "/cadastro/cliente/rec_desp",
-        name: "Cadastro de Receitas e Despesas do Cliente",
+        name: "Receitas/Despesas do Cliente",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -364,7 +385,7 @@ const routes = [
       },
       {
         path: "/cadastro/colab/colab",
-        name: "Cadastro de Colaborador",
+        name: "Colaborador",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -372,8 +393,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/colab/update/:id",
+        name: "Editar Colaborador",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: ColabUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/colab/comp",
-        name: "Cadastro de Colaborador Complemento",
+        name: "Complemento de Colaborador",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -381,8 +411,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/colab/comp/update/:id",
+        name: "Editar Complemento do Colaborador",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: ColabCompUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/area",
-        name: "Cadastro de Area",
+        name: "Área",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -390,8 +429,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/area/:id",
+        name: "Editar Area",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: AreaUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/empresa",
-        name: "Cadastro de Empresa",
+        name: "Empresa",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -399,12 +447,30 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/empresa/:id",
+        name: "Editar Empresa",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: EmpresaUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/Fornec",
-        name: "Cadastro de Fornecedor",
+        name: "Fornecedor",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: FornecCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/general/fornec/:id",
+        name: "Editar Fornecedor",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: FornecUpdate,
         layout: "/admin",
       },
       {
@@ -417,8 +483,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/itm_controle/:id",
+        name: "Editar Item Controle",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: ItmControleUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/parametros",
-        name: "Cadastro de Parametros",
+        name: "Parametros",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -426,8 +501,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/parametros/:id",
+        name: "Editar Parâmetros",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: ParametrosUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/prodt",
-        name: "Cadastro de Produto",
+        name: "Produto",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -435,8 +519,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/prodt/:id",
+        name: "Editar Produto",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: ProdtUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/rec_desp",
-        name: "Cadastro de Receitas e Despesas",
+        name: "Receitas/Despesas",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -444,8 +537,17 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/rec_desp/:id",
+        name: "Editar Receita/Despesa",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: RecDespUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/represent",
-        name: "Cadastro de Representante",
+        name: "Representante",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
@@ -453,12 +555,30 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/update/general/representante/:id",
+        name: "Editar Representante",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: RepresentanteUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/sgmet",
-        name: "Cadastro de Segmento",
+        name: "Segmento",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: SegmentoCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/general/segmento/:id",
+        name: "Editar Segmento",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: SegmentoUpdate,
         layout: "/admin",
       },
       {
@@ -468,6 +588,15 @@ const routes = [
         mini: "RF",
         rtlMini: "صو",
         component: UndNegCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/general/und_neg/:id",
+        name: "Editar Unidade de Negócio",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: UndNegUpdate,
         layout: "/admin",
       },
       //Cadastros Fim---------------------------------------------------------------------------------------------------------------------

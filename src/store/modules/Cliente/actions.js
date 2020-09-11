@@ -37,6 +37,7 @@ export function ClienteUpdateSuccess(profile) {
 }
 
 export function CliContRequest(
+  id,
   ClienteId,
   nome,
   cel,
@@ -53,6 +54,7 @@ export function CliContRequest(
 }
 
 export function CliContUpdate(
+  id,
   ClienteId,
   nome,
   cel,
@@ -64,7 +66,17 @@ export function CliContUpdate(
 ) {
   return {
     type: "@update/CONT_REQUEST",
-    payload: { ClienteId, nome, cel, fone, skype, email, aniver, tipo_conta },
+    payload: {
+      id,
+      ClienteId,
+      nome,
+      cel,
+      fone,
+      skype,
+      email,
+      aniver,
+      tipo_conta,
+    },
   };
 }
 
@@ -102,6 +114,7 @@ export function CliCompRequest(
 }
 
 export function CliCompUpdate(
+  id,
   ClienteId,
   rz_social,
   cond_pgmto,
@@ -118,6 +131,7 @@ export function CliCompUpdate(
   return {
     type: "@update/COMP_REQUEST",
     payload: {
+      id,
       ClienteId,
       rz_social,
       cond_pgmto,

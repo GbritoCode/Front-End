@@ -31,45 +31,52 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { ClienteUpdate } from "~/store/modules/Cliente/actions";
+import { itmControleUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import { useInput } from "hooks.js";
 import axios from "axios";
 
-function ClienteUpdatee() {
+function ItmCtrlUpdatee() {
   const { id } = useParams();
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/cliente/${id}`);
+      const response = await axios(`http://localhost:3001/itm_controle/${id}`);
       setData(response.data);
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState({});
+  const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
-
-  const { value: CNPJ, bind: bindCNPJ } = useInput(undefined, "number");
-  const { value: nome_abv, bind: bindNome_abv } = useInput(undefined);
-  const { value: representante, bind: bindRepresentante } = useInput(undefined);
-  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput(
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(
     undefined,
     "number"
   );
-  const { value: prospect, bind: bindProspect } = useInput(undefined);
+  const { value: desc_item, bind: bindDesc_item } = useInput(undefined);
+  const { value: tipo_item, bind: bindTipo_item } = useInput(
+    undefined,
+    "number"
+  );
+  const { value: conta_contabil, bind: bindConta_contabil } = useInput(
+    undefined,
+    "number"
+  );
+  const { value: cent_custo, bind: bindCent_custo } = useInput(
+    undefined,
+    "number"
+  );
 
   const errorCheckAux = [
-    bindCNPJ,
-    bindNome_abv,
-    bindRepresentante,
-    bindTipo_comiss,
-    bindProspect,
+    bindEmpresaId,
+    bindDesc_item,
+    bindTipo_item,
+    bindConta_contabil,
+    bindCent_custo,
   ];
-  console.log(data);
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -86,10 +93,16 @@ function ClienteUpdatee() {
         break;
       }
     }
-
     if (valid) {
       dispatch(
-        ClienteUpdate(id, CNPJ, nome_abv, representante, tipo_comiss, prospect)
+        itmControleUpdate(
+          id,
+          EmpresaId,
+          desc_item,
+          tipo_item,
+          conta_contabil,
+          cent_custo
+        )
       );
     }
   };
@@ -104,8 +117,8 @@ function ClienteUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Atualização de cliente</CardTitle>
-                    <Link to="/cliente_cadastro">
+                    <CardTitle tag="h4">Edição de Área</CardTitle>
+                    <Link to="/cadastro/geral/itm_controle">
                       <Button
                         style={{
                           float: "right",
@@ -127,102 +140,89 @@ function ClienteUpdatee() {
                         Novo
                       </Button>
                     </Link>
-                    <Link to={"/tabelas/cliente/cont/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Contatos
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/comp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Complemento
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/rec_desp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Receita/Despesa
-                      </Button>
-                    </Link>
                   </CardHeader>
                   <CardBody>
-                    <Form className="cadastro" onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup>
+                    <Form onSubmit={handleSubmit}>
+                      <label>Empresa</label>
+                      <FormGroup
+                        className={`has-label ${bindEmpresaId.valueerror}`}
+                      >
                         <Input
+                          defaultValue={EmpresaId}
                           disabled={true}
                           name="EmpresaId"
-                          defaultValue={data.EmpresaId}
-                        />
-                      </FormGroup>
-                      <Label>CNPJ</Label>
-                      <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
-                        <Input
-                          defaultValue={data.CNPJ}
-                          name="CNPJ"
-                          type="numeric"
-                          {...bindCNPJ}
-                        />
-                        {bindCNPJ.valueerror === "has-danger" ? (
+                          type="select"
+                          {...bindEmpresaId}
+                        >
+                          {" "}
+                          <option value={1}>
+                            {" "}
+                            Empresa selecionada: {data.nome}, CNPJ{" "}
+                            {data.id_federal}
+                          </option>
+                        </Input>
+                        {bindEmpresaId.valueerror === "has-danger" ? (
                           <label className="error">Insira um número</label>
                         ) : null}
                       </FormGroup>
-                      <Label>Nome Abreviado</Label>
+                      <label>Descrição do Item</label>
                       <FormGroup
-                        className={`has-label ${bindNome_abv.valueerror}`}
+                        className={`has-label ${bindDesc_item.valueerror}`}
                       >
                         <Input
-                          defaultValue={data.nome_abv}
-                          name="name_abv"
+                          defaultValue={data.desc_item}
+                          name="desc_item"
                           type="text"
-                          {...bindNome_abv}
+                          {...bindDesc_item}
                         />
-                        {bindNome_abv.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
+                        {bindDesc_item.valueerror === "has-danger" ? (
+                          <label className="error">
+                            Insira um valor válido
+                          </label>
                         ) : null}
                       </FormGroup>
-                      <Label>Representante</Label>
+                      <label>Tipo de Item</label>
                       <FormGroup
-                        className={`has-label ${bindRepresentante.valueerror}`}
+                        className={`has-label ${bindTipo_item.valueerror}`}
                       >
                         <Input
-                          defaultValue={data.representante}
-                          name="representante"
-                          type="text"
-                          {...bindRepresentante}
-                        />
-                        {bindRepresentante.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Tipo Comissão</Label>
-                      <FormGroup
-                        className={`has-label ${bindTipo_comiss.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.tipo_comiss}
-                          name="tipo_comiss"
+                          defaultValue={data.tipo_item}
+                          name="tipo_item"
                           type="numeric"
-                          {...bindTipo_comiss}
+                          {...bindTipo_item}
                         />
-                        {bindTipo_comiss.valueerror === "has-danger" ? (
+                        {bindTipo_item.valueerror === "has-danger" ? (
                           <label className="error">Insira um número</label>
                         ) : null}
                       </FormGroup>
-
+                      <label>Conta Contábil</label>
+                      <FormGroup
+                        className={`has-label ${bindConta_contabil.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.conta_contabil}
+                          name="conta_contabil"
+                          type="numeric"
+                          {...bindConta_contabil}
+                        />
+                        {bindConta_contabil.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+                      <label>cent_custo</label>
+                      <FormGroup
+                        className={`has-label ${bindCent_custo.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.cent_custo}
+                          name="cent_custo"
+                          type="numeric"
+                          {...bindCent_custo}
+                        />
+                        {bindCent_custo.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"
@@ -242,4 +242,4 @@ function ClienteUpdatee() {
     </Fragment>
   );
 }
-export default ClienteUpdatee;
+export default ItmCtrlUpdatee;

@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  Label,
   Form,
   Input,
   FormGroup,
@@ -33,11 +32,24 @@ import {
 import { useDispatch } from "react-redux";
 import { parametrosRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
+import axios from "axios";
 import { useInput } from "hooks.js";
 
 export default function ParametrosCadastro() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({});
   const empresa = store.getState().auth.empresa;
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      const response = await axios(`http://localhost:3001/empresa/${empresa}`);
+      setData(response.data);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
 
   const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
   const { value: impostos, bind: bindImpostos } = useInput("", "number");
@@ -50,21 +62,46 @@ export default function ParametrosCadastro() {
     "number"
   );
 
+  const errorCheckAux = [
+    bindEmpresaId,
+    bindImpostos,
+    bindVlr_min_hr,
+    bindVlr_bs_hr,
+    bindVlr_bs_desp,
+    bindAdianta_pgmto,
+    bindPerc_adianta_pgmto,
+  ];
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    dispatch(
-      parametrosRequest(
-        EmpresaId,
-        impostos,
-        vlr_min_hr,
-        vlr_bs_hr,
-        vlr_bs_desp,
-        adianta_pgmto,
-        perc_adianta_pgmto
-      )
-    );
+    var tamanho = errorCheckAux.length;
+    console.log(errorCheckAux.length);
+    for (var j = 0; j < tamanho; j++) {
+      if (
+        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(errorCheckAux[j].value === "")
+      ) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      dispatch(
+        parametrosRequest(
+          EmpresaId,
+          impostos,
+          vlr_min_hr,
+          vlr_bs_hr,
+          vlr_bs_desp,
+          adianta_pgmto,
+          perc_adianta_pgmto
+        )
+      );
+    }
   };
+
   return (
     <>
       <div className="content">
@@ -83,9 +120,15 @@ export default function ParametrosCadastro() {
                     <Input
                       disabled={true}
                       name="EmpresaId"
-                      type="numeric"
+                      type="select"
                       {...bindEmpresaId}
-                    />
+                    >
+                      {" "}
+                      <option value={1}>
+                        {" "}
+                        Empresa selecionada: {data.nome}, CNPJ {data.id_federal}
+                      </option>
+                    </Input>
                     {bindEmpresaId.valueerror === "has-danger" ? (
                       <label className="error">Insira um número</label>
                     ) : null}

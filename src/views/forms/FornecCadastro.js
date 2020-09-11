@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // reactstrap components
 import {
@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  Label,
   Form,
   Input,
   FormGroup,
@@ -33,13 +32,17 @@ import {
 import { useDispatch } from "react-redux";
 import { fornecRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
+import axios from "axios";
 import { useInput } from "hooks.js";
 
 export default function FornecCadastro() {
   const dispatch = useDispatch();
+  const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [cnpj = "", setCnpj] = useState();
+  const [cnpjError = "", setCnpjError] = useState();
   const empresa = store.getState().auth.empresa;
 
-  const { value: CNPJ, bind: bindCNPJ } = useInput("", "number");
   const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
   const { value: nome, bind: bindNome } = useInput("");
   const { value: cond_pgmto, bind: bindCond_pgmto } = useInput("", "number");
@@ -56,30 +59,164 @@ export default function FornecCadastro() {
   const { value: agencia, bind: bindAgencia } = useInput("");
   const { value: conta, bind: bindConta } = useInput("");
 
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      const response = await axios(`http://localhost:3001/empresa/${empresa}`);
+      setData(response.data);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
+
+  function validarCNPJ(cnpj) {
+    cnpj = cnpj.replace(/[^\d]+/g, "");
+
+    if (cnpj == "") return false;
+
+    // Elimina CNPJs invalidos conhecidos
+    if (
+      cnpj == "00000000000000" ||
+      cnpj == "11111111111111" ||
+      cnpj == "22222222222222" ||
+      cnpj == "33333333333333" ||
+      cnpj == "44444444444444" ||
+      cnpj == "55555555555555" ||
+      cnpj == "66666666666666" ||
+      cnpj == "77777777777777" ||
+      cnpj == "88888888888888" ||
+      cnpj == "99999999999999"
+    )
+      return false;
+
+    // Valida DVs
+    var tamanho = cnpj.length - 2;
+    var numeros = cnpj.substring(0, tamanho);
+    var digitos = cnpj.substring(tamanho);
+    var soma = 0;
+    var pos = tamanho - 7;
+    for (var i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    var resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(0)) return false;
+
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(1)) return false;
+
+    return true;
+  }
+
+  const normalizeInput = (value, previousValue) => {
+    if (!value) return value;
+    const currentValue = value.replace(/[^\d]/g, "");
+    const cvLength = currentValue.length;
+    renderCnpjState(value);
+    if (!previousValue || value.length > previousValue.length) {
+      if (cvLength < 3) return currentValue;
+      if (cvLength < 6)
+        return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
+      if (cvLength < 9)
+        return `${currentValue.slice(0, 2)}.${currentValue.slice(
+          2,
+          5
+        )}.${currentValue.slice(5)}`;
+      if (cvLength < 13)
+        return `${currentValue.slice(0, 2)}.${currentValue.slice(
+          2,
+          5
+        )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5, 8)}/${currentValue.slice(
+        8,
+        12
+      )}-${currentValue.slice(12, 14)}`;
+    }
+  };
+
+  async function handleChange({ target: { value } }) {
+    setCnpj((prevCnpj) => normalizeInput(value, prevCnpj));
+  }
+
+  const renderCnpjState = (value) => {
+    if (!validarCNPJ(value)) {
+      setCnpjError("has-danger");
+    } else {
+      setCnpjError("has-success");
+    }
+  };
+
+  const errorCheckAux = [
+    bindEmpresaId,
+    bindNome,
+    bindCond_pgmto,
+    bindNome_conta,
+    bindFone,
+    bindCep,
+    bindRua,
+    bindNumero,
+    bindComplemento,
+    bindBairro,
+    bindCidade,
+    bindUf,
+    bindBanco,
+    bindAgencia,
+    bindConta,
+  ];
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    dispatch(
-      fornecRequest(
-        CNPJ,
-        EmpresaId,
-        nome,
-        cond_pgmto,
-        nome_conta,
-        fone,
-        cep,
-        rua,
-        numero,
-        complemento,
-        bairro,
-        cidade,
-        uf,
-        banco,
-        agencia,
-        conta
-      )
-    );
+    var tamanho = errorCheckAux.length;
+    console.log(errorCheckAux.length);
+    for (var j = 0; j < tamanho; j++) {
+      if (
+        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(cnpjError === "has-danger") &
+        !(errorCheckAux[j].value === "") &
+        !(cnpj === "")
+      ) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      var cnpjdb = cnpj.replace(/[^\d]+/g, "");
+      dispatch(
+        fornecRequest(
+          cnpjdb,
+          EmpresaId,
+          nome,
+          cond_pgmto,
+          nome_conta,
+          fone,
+          cep,
+          rua,
+          numero,
+          complemento,
+          bairro,
+          cidade,
+          uf,
+          banco,
+          agencia,
+          conta
+        )
+      );
+    }
   };
+
   return (
     <>
       <div className="content">
@@ -96,20 +233,33 @@ export default function FornecCadastro() {
                     className={`has-label ${bindEmpresaId.valueerror}`}
                   >
                     <Input
-                      disabled
+                      disabled={true}
                       name="EmpresaId"
-                      type="text"
+                      type="select"
                       {...bindEmpresaId}
-                    />
+                    >
+                      {" "}
+                      <option value={1}>
+                        {" "}
+                        Empresa selecionada: {data.nome}, CNPJ {data.id_federal}
+                      </option>
+                    </Input>
                     {bindEmpresaId.valueerror === "has-danger" ? (
                       <label className="error">Insira um número</label>
                     ) : null}
                   </FormGroup>
+
                   <label>CNPJ</label>
-                  <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
-                    <Input name="CNPJ" type="text" {...bindCNPJ} />
-                    {bindCNPJ.valueerror === "has-danger" ? (
-                      <label className="error">Insira um número</label>
+                  <FormGroup className={`has-label ${cnpjError}`}>
+                    <Input
+                      maxLength={18}
+                      onChange={handleChange}
+                      name="cnpj"
+                      type="text"
+                      value={cnpj}
+                    />
+                    {cnpjError === "has-danger" ? (
+                      <label className="error">Insira um CNPJ válido</label>
                     ) : null}
                   </FormGroup>
                   <label>Nome</label>

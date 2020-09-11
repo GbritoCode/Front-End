@@ -79,6 +79,7 @@ export default function CliCompUpdatee() {
 
     dispatch(
       CliCompUpdate(
+        id,
         ClienteId,
         rz_social,
         cond_pgmto,
@@ -105,9 +106,7 @@ export default function CliCompUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">
-                      Cadastro Complementar de Cliente
-                    </CardTitle>
+                    <CardTitle tag="h4">Complemento do Cliente</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

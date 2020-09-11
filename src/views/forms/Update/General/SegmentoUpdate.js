@@ -31,45 +31,47 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { ClienteUpdate } from "~/store/modules/Cliente/actions";
+import { SegmentoUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import { useInput } from "hooks.js";
 import axios from "axios";
 
-function ClienteUpdatee() {
+function SegmentoUpdatee() {
   const { id } = useParams();
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/cliente/${id}`);
+      const response = await axios(`http://localhost:3001/segmento/${id}`);
       setData(response.data);
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState({});
+  const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
 
-  const { value: CNPJ, bind: bindCNPJ } = useInput(undefined, "number");
-  const { value: nome_abv, bind: bindNome_abv } = useInput(undefined);
-  const { value: representante, bind: bindRepresentante } = useInput(undefined);
-  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput(
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(undefined);
+  const { value: Und_negId, bind: bindUnd_negId } = useInput(
     undefined,
     "number"
   );
-  const { value: prospect, bind: bindProspect } = useInput(undefined);
+  const { value: ProdutoId, bind: bindProdutoId } = useInput(
+    undefined,
+    "number"
+  );
+  const { value: AreaId, bind: bindAreaId } = useInput(undefined, "number");
+  const { value: desc_segmt, bind: bindDesc_segmt } = useInput(undefined);
 
   const errorCheckAux = [
-    bindCNPJ,
-    bindNome_abv,
-    bindRepresentante,
-    bindTipo_comiss,
-    bindProspect,
+    bindEmpresaId,
+    bindUnd_negId,
+    bindProdutoId,
+    bindAreaId,
+    bindDesc_segmt,
   ];
-  console.log(data);
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -86,10 +88,9 @@ function ClienteUpdatee() {
         break;
       }
     }
-
     if (valid) {
       dispatch(
-        ClienteUpdate(id, CNPJ, nome_abv, representante, tipo_comiss, prospect)
+        SegmentoUpdate(id, EmpresaId, Und_negId, ProdutoId, AreaId, desc_segmt)
       );
     }
   };
@@ -104,8 +105,8 @@ function ClienteUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Atualização de cliente</CardTitle>
-                    <Link to="/cliente_cadastro">
+                    <CardTitle tag="h4">Edição de Área</CardTitle>
+                    <Link to="/cadastro/geral/area">
                       <Button
                         style={{
                           float: "right",
@@ -127,102 +128,90 @@ function ClienteUpdatee() {
                         Novo
                       </Button>
                     </Link>
-                    <Link to={"/tabelas/cliente/cont/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Contatos
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/comp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Complemento
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/rec_desp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Receita/Despesa
-                      </Button>
-                    </Link>
                   </CardHeader>
                   <CardBody>
-                    <Form className="cadastro" onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup>
+                    <Form onSubmit={handleSubmit}>
+                      <label>Empresa</label>
+                      <FormGroup
+                        className={`has-label ${bindEmpresaId.valueerror}`}
+                      >
                         <Input
+                          defaultValue={data.EmpresaId}
                           disabled={true}
                           name="EmpresaId"
-                          defaultValue={data.EmpresaId}
-                        />
-                      </FormGroup>
-                      <Label>CNPJ</Label>
-                      <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
-                        <Input
-                          defaultValue={data.CNPJ}
-                          name="CNPJ"
-                          type="numeric"
-                          {...bindCNPJ}
-                        />
-                        {bindCNPJ.valueerror === "has-danger" ? (
+                          type="select"
+                          {...bindEmpresaId}
+                        >
+                          {" "}
+                          <option value={1}>
+                            {" "}
+                            Empresa selecionada: {data.nome}, CNPJ{" "}
+                            {data.id_federal}
+                          </option>
+                        </Input>
+                        {bindEmpresaId.valueerror === "has-danger" ? (
                           <label className="error">Insira um número</label>
                         ) : null}
                       </FormGroup>
-                      <Label>Nome Abreviado</Label>
+                      <label>Unidade de Negócio</label>
                       <FormGroup
-                        className={`has-label ${bindNome_abv.valueerror}`}
+                        className={`has-label ${bindUnd_negId.valueerror}`}
                       >
                         <Input
-                          defaultValue={data.nome_abv}
-                          name="name_abv"
-                          type="text"
-                          {...bindNome_abv}
-                        />
-                        {bindNome_abv.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Representante</Label>
-                      <FormGroup
-                        className={`has-label ${bindRepresentante.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.representante}
-                          name="representante"
-                          type="text"
-                          {...bindRepresentante}
-                        />
-                        {bindRepresentante.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Tipo Comissão</Label>
-                      <FormGroup
-                        className={`has-label ${bindTipo_comiss.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.tipo_comiss}
-                          name="tipo_comiss"
+                          defaultValue={data.Und_negId}
+                          name="Und_negId"
                           type="numeric"
-                          {...bindTipo_comiss}
+                          {...bindUnd_negId}
                         />
-                        {bindTipo_comiss.valueerror === "has-danger" ? (
+                        {bindUnd_negId.valueerror === "has-danger" ? (
                           <label className="error">Insira um número</label>
                         ) : null}
                       </FormGroup>
 
+                      <label>Produto</label>
+                      <FormGroup
+                        className={`has-label ${bindProdutoId.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.ProdutoId}
+                          name="ProdutoId"
+                          type="numeric"
+                          {...bindProdutoId}
+                        />{" "}
+                        {bindProdutoId.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+
+                      <label>Área</label>
+                      <FormGroup
+                        className={`has-label ${bindAreaId.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.AreaId}
+                          name="AreaId"
+                          type="numeric"
+                          {...bindAreaId}
+                        />{" "}
+                        {bindAreaId.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+
+                      <label>Descrição do Segmento</label>
+                      <FormGroup
+                        className={`has-label ${bindDesc_segmt.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.desc_segmt}
+                          name="desc_segmt"
+                          type="text"
+                          {...bindDesc_segmt}
+                        />{" "}
+                        {bindDesc_segmt.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"
@@ -242,4 +231,4 @@ function ClienteUpdatee() {
     </Fragment>
   );
 }
-export default ClienteUpdatee;
+export default SegmentoUpdatee;

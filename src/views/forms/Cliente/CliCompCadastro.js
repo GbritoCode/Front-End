@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // reactstrap components
 import {
@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  Label,
   Form,
   Input,
   FormGroup,
@@ -33,9 +32,38 @@ import {
 import { useDispatch } from "react-redux";
 import { CliCompRequest } from "~/store/modules/Cliente/actions";
 import { useInput } from "~/hooks";
-
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import ajax from "ajax";
 export default function CliCompCadastro() {
+  const id = useParams();
   const dispatch = useDispatch();
+
+  const [data, setData] = useState({});
+  const [data1, setData1] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      const response = await axios(`http://localhost:3001/cliente/${id.id}`);
+      setData(response.data);
+      const response1 = await fetch(
+        `https://www.receitaws.com.br/v1/cnpj/61808531000108`,
+        {
+          method: "OPTIONS",
+          dataType: "jsonp",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "/",
+          },
+        }
+      );
+      setData1(response1.data);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
 
   const { value: ClienteId, bind: bindClienteId } = useInput("", "number");
   const { value: rz_social, bind: bindRz_social } = useInput("", "number");
@@ -69,6 +97,7 @@ export default function CliCompCadastro() {
       )
     );
   };
+  console.log(data1);
   return (
     <>
       <div className="content">
@@ -76,7 +105,7 @@ export default function CliCompCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cadastro Complementar de Cliente</CardTitle>
+                <CardTitle tag="h4">Complemento do Cliente</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
@@ -84,12 +113,29 @@ export default function CliCompCadastro() {
                   <FormGroup
                     className={`has-label ${bindClienteId.valueerror}`}
                   >
-                    <Input name="ClienteId" type="text" {...bindClienteId} />
+                    <Input
+                      disabled={true}
+                      name="ClienteId"
+                      type="select"
+                      {...bindClienteId}
+                    >
+                      {" "}
+                      <option value={data.id}>
+                        {" "}
+                        Cliente atual: {data.nome_abv}, CNPJ {data.CNPJ}
+                      </option>
+                    </Input>
                     {bindClienteId.valueerror === "has-danger" ? (
                       <label className="error">Insira um número</label>
                     ) : null}
                   </FormGroup>
-
+                  <Input
+                    hidden={true}
+                    disabled={true}
+                    name="cnpj"
+                    type="text"
+                    value={data.CNPJ}
+                  />
                   <label>Razão Social</label>
                   <FormGroup
                     className={`has-label ${bindRz_social.valueerror}`}

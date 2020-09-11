@@ -110,10 +110,11 @@ class Tabela_Cliente extends Component {
         };
       }),
     });
-    console.log(this.state.data);
   };
 
   render() {
+    const id = this.props.match.params.id;
+
     return (
       <>
         <div className="content">
@@ -121,7 +122,7 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/cliente/cont">
+                  <Link to={`/cadastro/cliente/cont/${id}`}>
                     <Button
                       style={{
                         float: "right",

@@ -31,45 +31,47 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { ClienteUpdate } from "~/store/modules/Cliente/actions";
+import { RepresentanteUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import { useInput } from "hooks.js";
 import axios from "axios";
 
-function ClienteUpdatee() {
+function RepresentanteUpdatee() {
   const { id } = useParams();
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/cliente/${id}`);
+      const response = await axios(`http://localhost:3001/representante/${id}`);
       setData(response.data);
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState({});
+  const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
-
-  const { value: CNPJ, bind: bindCNPJ } = useInput(undefined, "number");
-  const { value: nome_abv, bind: bindNome_abv } = useInput(undefined);
-  const { value: representante, bind: bindRepresentante } = useInput(undefined);
-  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput(
+  const { value: EmpresaId, bind: bindEmpresaId } = useInput(
     undefined,
     "number"
   );
-  const { value: prospect, bind: bindProspect } = useInput(undefined);
+  const { value: nome, bind: bindNome } = useInput(undefined);
+  const { value: prcnt_comiss, bind: bindPrcnt_comiss } = useInput(
+    undefined,
+    "number"
+  );
+  const { value: vlr_fix_mens, bind: bindVlr_fix_mens } = useInput(
+    undefined,
+    "number"
+  );
 
   const errorCheckAux = [
-    bindCNPJ,
-    bindNome_abv,
-    bindRepresentante,
-    bindTipo_comiss,
-    bindProspect,
+    bindEmpresaId,
+    bindNome,
+    bindPrcnt_comiss,
+    bindVlr_fix_mens,
   ];
-  console.log(data);
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -86,10 +88,9 @@ function ClienteUpdatee() {
         break;
       }
     }
-
     if (valid) {
       dispatch(
-        ClienteUpdate(id, CNPJ, nome_abv, representante, tipo_comiss, prospect)
+        RepresentanteUpdate(id, EmpresaId, nome, prcnt_comiss, vlr_fix_mens)
       );
     }
   };
@@ -104,8 +105,8 @@ function ClienteUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Atualização de cliente</CardTitle>
-                    <Link to="/cliente_cadastro">
+                    <CardTitle tag="h4">Edição de Área</CardTitle>
+                    <Link to="/cadastro/geral/area">
                       <Button
                         style={{
                           float: "right",
@@ -127,102 +128,74 @@ function ClienteUpdatee() {
                         Novo
                       </Button>
                     </Link>
-                    <Link to={"/tabelas/cliente/cont/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Contatos
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/comp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Complemento
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/rec_desp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Receita/Despesa
-                      </Button>
-                    </Link>
                   </CardHeader>
                   <CardBody>
-                    <Form className="cadastro" onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup>
+                    <Form onSubmit={handleSubmit}>
+                      <label>Empresa</label>
+                      <FormGroup
+                        className={`has-label ${bindEmpresaId.valueerror}`}
+                      >
                         <Input
+                          defaultValue={data.EmpresaId}
                           disabled={true}
                           name="EmpresaId"
-                          defaultValue={data.EmpresaId}
-                        />
-                      </FormGroup>
-                      <Label>CNPJ</Label>
-                      <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
-                        <Input
-                          defaultValue={data.CNPJ}
-                          name="CNPJ"
-                          type="numeric"
-                          {...bindCNPJ}
-                        />
-                        {bindCNPJ.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Nome Abreviado</Label>
-                      <FormGroup
-                        className={`has-label ${bindNome_abv.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.nome_abv}
-                          name="name_abv"
-                          type="text"
-                          {...bindNome_abv}
-                        />
-                        {bindNome_abv.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Representante</Label>
-                      <FormGroup
-                        className={`has-label ${bindRepresentante.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.representante}
-                          name="representante"
-                          type="text"
-                          {...bindRepresentante}
-                        />
-                        {bindRepresentante.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Tipo Comissão</Label>
-                      <FormGroup
-                        className={`has-label ${bindTipo_comiss.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.tipo_comiss}
-                          name="tipo_comiss"
-                          type="numeric"
-                          {...bindTipo_comiss}
-                        />
-                        {bindTipo_comiss.valueerror === "has-danger" ? (
+                          type="select"
+                          {...bindEmpresaId}
+                        >
+                          {" "}
+                          <option value={1}>
+                            {" "}
+                            Empresa selecionada: {data.nome}, CNPJ{" "}
+                            {data.id_federal}
+                          </option>
+                        </Input>
+                        {bindEmpresaId.valueerror === "has-danger" ? (
                           <label className="error">Insira um número</label>
                         ) : null}
                       </FormGroup>
 
+                      <label>Nome</label>
+                      <FormGroup className={`has-label ${bindNome.valueerror}`}>
+                        <Input
+                          defaultValue={data.nome}
+                          name="nome"
+                          type="text"
+                          {...bindNome}
+                        />{" "}
+                        {bindNome.valueerror === "has-danger" ? (
+                          <label className="error">Insira um nome válido</label>
+                        ) : null}
+                      </FormGroup>
+
+                      <label>Percentual de Comissão</label>
+                      <FormGroup
+                        className={`has-label ${bindPrcnt_comiss.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.prcnt_comiss}
+                          name="prcnt_comiss"
+                          type="numeric"
+                          {...bindPrcnt_comiss}
+                        />{" "}
+                        {bindPrcnt_comiss.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
+
+                      <label>Valor Fixo Mensal</label>
+                      <FormGroup
+                        className={`has-label ${bindVlr_fix_mens.valueerror}`}
+                      >
+                        <Input
+                          defaultValue={data.vlr_fix_mens}
+                          name="vlr_fix_mens"
+                          type="numeric"
+                          {...bindVlr_fix_mens}
+                        />{" "}
+                        {bindVlr_fix_mens.valueerror === "has-danger" ? (
+                          <label className="error">Insira um número</label>
+                        ) : null}
+                      </FormGroup>
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"
@@ -242,4 +215,4 @@ function ClienteUpdatee() {
     </Fragment>
   );
 }
-export default ClienteUpdatee;
+export default RepresentanteUpdatee;

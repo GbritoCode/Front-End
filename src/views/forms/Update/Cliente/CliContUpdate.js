@@ -61,13 +61,13 @@ export default function CliContUpdatee() {
   const { value: email, bind: bindEmail } = useInput();
   const { value: aniver, bind: bindAniver } = useInput();
   const { value: tipo_conta, bind: bindTipo_conta } = useInput();
-  console.log(data);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
     dispatch(
       CliContUpdate(
+        id,
         ClienteId,
         nome,
         cel,

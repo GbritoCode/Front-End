@@ -30,6 +30,17 @@ class Tabela_Cliente extends Component {
     data: [],
   };
 
+  normalizeCnpj = (value) => {
+    const currentValue = value.replace(/[^\d]/g, "");
+    return `${currentValue.slice(0, 2)}.${currentValue.slice(
+      2,
+      5
+    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
+      8,
+      12
+    )}-${currentValue.slice(12, 14)}`;
+  };
+
   componentDidMount() {
     this.loadCliente();
   }
@@ -40,7 +51,7 @@ class Tabela_Cliente extends Component {
         return {
           idd: key,
           id: client.id,
-          CNPJ: client.CNPJ,
+          CNPJ: this.normalizeCnpj(client.CNPJ),
           nome_abv: client.nome_abv,
           representante: client.representante,
           tipo_comiss: client.tipo_comiss,

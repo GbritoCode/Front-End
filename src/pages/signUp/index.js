@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import classnames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Input } from "@rocketseat/unform";
-import * as yup from "yup";
-
+import { useInput } from "hooks.js";
 import {
   Button,
   Card,
@@ -10,6 +9,8 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  Form,
+  Input,
   InputGroupAddon,
   InputGroupText,
   InputGroup,
@@ -17,78 +18,118 @@ import {
   Col,
 } from "reactstrap";
 
-import "~/auth.css";
-
 import { signUpRequest } from "~/store/modules/auth/actions";
-
-const Schema = yup.object().shape({
-  name: yup.string().required("o nome é obrigatório"),
-  email: yup
-    .string()
-    .email("Insira um email válido")
-    .required("o email é obrigatório"),
-  password: yup
-    .string()
-    .min(6, "a senha deve conter pelo menos 6 caracteres")
-    .required("A senha é obrigatória"),
-});
 
 export default function SignUp() {
   const dispatch = useDispatch();
+  const { value: name, bind: bindName } = useInput("");
+  const { value: email, bind: bindEmail } = useInput("");
+  const { value: password, bind: bindPassword } = useInput("");
+  const [emailFocus, setEmailFocus] = useState("");
+  const [nameFocus, setNameFocus] = useState("");
+  const [passFocus, setPassFocus] = useState("");
   const loading = useSelector((state) => state.auth.loading);
 
-  function handleSubmit({ name, email, password }) {
-    dispatch(signUpRequest(name, email, password));
-  }
+  const errorCheckAux = [bindName, bindEmail, bindPassword];
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+
+    var tamanho = errorCheckAux.length;
+    console.log(errorCheckAux.length);
+    for (var j = 0; j < tamanho; j++) {
+      if (
+        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(errorCheckAux[j].value === "")
+      ) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      dispatch(signUpRequest(name, email, password));
+    }
+  };
   return (
     <>
       <div className="content">
         <Container>
           <Col className="ml-auto mr-auto" lg="7" md="10">
-            <Form className="auth" schema={Schema} onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-primary.png")} />
                   <CardTitle tag="h1">Sign Up</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <InputGroup>
+                  <InputGroup
+                    className={classnames({
+                      "input-group-focus": nameFocus,
+                    })}
+                  >
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="tim-icons icon-single-02" />
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      className="auth"
+                      onBlur={(e) => {
+                        setNameFocus(false);
+                      }}
+                      onFocus={(e) => {
+                        setNameFocus(true);
+                      }}
                       name="name"
                       placeholder="Full Name"
                       type="text"
+                      {...bindName}
                     />
                   </InputGroup>
-                  <InputGroup>
+                  <InputGroup
+                    className={classnames({
+                      "input-group-focus": emailFocus,
+                    })}
+                  >
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="tim-icons icon-email-85" />
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      className="auth"
+                      onBlur={(e) => {
+                        setEmailFocus(false);
+                      }}
+                      onFocus={(e) => {
+                        setEmailFocus(true);
+                      }}
                       name="email"
                       type="email"
                       placeholder="E-mail"
+                      {...bindEmail}
                     />
                   </InputGroup>
-                  <InputGroup>
+                  <InputGroup
+                    className={classnames({
+                      "input-group-focus": passFocus,
+                    })}
+                  >
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="tim-icons icon-lock-circle" />
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      className="auth"
+                      onBlur={(e) => {
+                        setPassFocus(false);
+                      }}
+                      onFocus={(e) => {
+                        setPassFocus(true);
+                      }}
                       name="password"
                       type="password"
                       placeholder="Senha"
+                      {...bindPassword}
                     />
                   </InputGroup>
                 </CardBody>

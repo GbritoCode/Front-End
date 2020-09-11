@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import classnames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import * as yup from "yup";
 
 import {
   Button,
@@ -10,6 +10,7 @@ import {
   CardFooter,
   CardTitle,
   Form,
+  FormGroup,
   Input,
   InputGroupAddon,
   InputGroupText,
@@ -23,29 +24,35 @@ import { useInput } from "~/hooks.js";
 
 // reactstrap components
 
-const Schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Insira um email válido")
-    .required("o email é obrigatório"),
-  password: yup.string().required("A senha é obrigatória"),
-});
-
 export default function SignIn() {
   const dispatch = useDispatch();
-
-  const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
-  const {
-    value: password,
-    bind: bindPassword,
-    reset: resetPassoword,
-  } = useInput("");
+  const [emailFocus, setEmailFocus] = useState("");
+  const [passFocus, setPassFocus] = useState("");
+  const { value: email, bind: bindEmail } = useInput("");
+  const { value: password, bind: bindPassword } = useInput("");
 
   const loading = useSelector((state) => state.auth.loading);
 
+  const errorCheckAux = [bindEmail, bindPassword];
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(signInRequest(email, password));
+
+    var tamanho = errorCheckAux.length;
+    console.log(errorCheckAux.length);
+    for (var j = 0; j < tamanho; j++) {
+      if (
+        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(errorCheckAux[j].value === "")
+      ) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) {
+      dispatch(signInRequest(email, password));
+    }
   };
 
   return (
@@ -53,35 +60,53 @@ export default function SignIn() {
       <div className="content">
         <Container>
           <Col className="ml-auto mr-auto" lg="4" md="6">
-            <Form className="auth" schema={Schema} onSubmit={handleSubmit}>
+            <Form className="form" onSubmit={handleSubmit}>
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-primary.png")} />
                   <CardTitle tag="h1">Log in</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <InputGroup>
+                  <InputGroup
+                    className={classnames({
+                      "input-group-focus": emailFocus,
+                    })}
+                  >
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="tim-icons icon-email-85" />
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      className="auth"
+                      onBlur={(e) => {
+                        setEmailFocus(false);
+                      }}
+                      onFocus={(e) => {
+                        setEmailFocus(true);
+                      }}
                       name="email"
                       type="email"
                       placeholder="E-mail"
                       {...bindEmail}
                     />
                   </InputGroup>
-                  <InputGroup>
+                  <InputGroup
+                    className={classnames({
+                      "input-group-focus": passFocus,
+                    })}
+                  >
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
                         <i className="tim-icons icon-lock-circle" />
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      className="auth"
+                      onBlur={(e) => {
+                        setPassFocus(false);
+                      }}
+                      onFocus={(e) => {
+                        setPassFocus(true);
+                      }}
                       name="password"
                       type="password"
                       placeholder="Senha"
