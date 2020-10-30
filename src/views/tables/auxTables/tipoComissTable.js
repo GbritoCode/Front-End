@@ -7,7 +7,7 @@
 * Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
 * Copyright 2019 Creative Tim (https://www.creative-tim.com)
 
-* Coded by Creative Tim
+* coded by Creative Tim
 
 =========================================================
 
@@ -25,57 +25,36 @@ import api from "~/services/api";
 
 import { Link } from "react-router-dom";
 
-class Tabela_Cliente extends Component {
+class tipoComissTable extends Component {
   state = {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
-    const response = await api.get("/rec_desp");
+    const response = await api.get("/tipoComiss");
     this.setState({
       data: response.data.map((client, key) => {
         return {
           id: key,
           idd: client.id,
-          nome_abv: client.nome_abv,
-          EmpresaId: client.EmpresaId,
-          nome: client.nome,
-          license: client.license,
+          Empresa: client.Empresa.nome,
+          desc: client.desc,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_REC_DESP +
-                      ", \nemail: " +
-                      obj.COD_EMP +
-                      ", \nidade: " +
-                      obj.NOME +
-                      ", \nsalario: " +
-                      obj.LICENSE +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/update/general/rec_desp/${client.id}`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/update/aux/tipoComiss/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -114,7 +93,8 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/geral/rec_desp">
+                  Tipos de Comissão
+                  <Link to="/cadastro/aux/tipoComiss">
                     <Button
                       style={{
                         float: "right",
@@ -145,17 +125,18 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Nome",
-                      accessor: "nome",
-                    },
-                    {
                       Header: "Empresa",
-                      accessor: "EmpresaId",
+                      accessor: "Empresa",
                     },
                     {
-                      Header: "Licença",
-                      accessor: "license",
+                      Header: "Código",
+                      accessor: "idd",
                     },
+                    {
+                      Header: "Descrição",
+                      accessor: "desc",
+                    },
+
                     {
                       Header: "Ações",
                       accessor: "actions",
@@ -178,4 +159,4 @@ class Tabela_Cliente extends Component {
   }
 }
 
-export default Tabela_Cliente;
+export default tipoComissTable;

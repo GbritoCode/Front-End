@@ -23,7 +23,9 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
 
+import { normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 class Tabela_Cliente extends Component {
   state = {
@@ -31,19 +33,25 @@ class Tabela_Cliente extends Component {
   };
 
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadCliente();
   }
+
   loadCliente = async () => {
     const response = await api.get("/cliente");
+
     this.setState({
       data: response.data.map((client, key) => {
         return {
           idd: key,
           id: client.id,
-          CNPJ: client.CNPJ,
-          nome_abv: client.nome_abv,
-          representante: client.representante,
-          tipo_comiss: client.tipo_comiss,
+          CNPJ: normalizeCnpj(client.CNPJ),
+          nomeAbv: client.nomeAbv,
+          RepresentanteId: client.RepresentanteId,
+          Representante: client.Representante.nome,
+          TipoComisseId: client.TipoComisseId,
+          TipoComiss: client.tipoComisse.desc,
           EmpresaId: client.EmpresaId,
           prospect: client.prospect,
           actions: (
@@ -57,26 +65,27 @@ class Tabela_Cliente extends Component {
                 className={classNames("btn-icon btn-link like")}
               >
                 <i className="tim-icons icon-pencil" />
-              </Link>{" "}
+              </Link>
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/cliente_update/${client.id}/true`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
-              </Link>{" "}
+              <Link to={`/cliente_update/${client.id}/true`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
+              </Link>
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
                   var data = this.state.data;
                   data.find((o, i) => {
                     if (o.idd === key) {
-                      // here you should add some custom code so you can delete the data
-                      // from this component and from your server as well
+                      console.log(o.id)
+                      axios.delete(`http://localhost:51314/cliente/${o.id}`);
                       data.splice(i, 1);
-                      console.log(data);
+
                       return true;
                     }
                     return false;
@@ -94,8 +103,8 @@ class Tabela_Cliente extends Component {
         };
       }),
     });
-    console.log(this.state.data);
   };
+
   render() {
     return (
       <>
@@ -105,15 +114,26 @@ class Tabela_Cliente extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Clientes
-                  <Link to="/cliente_cadastro">
+                  <Link to={`/cliente_cadastro`}>
                     <Button
-                      style={{ float: "right" }}
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
                       color="info"
                       size="small"
-                      className="text-center"
+                      className="text-left"
                     >
-                      <i tim-icons icon-simple-add />
-                      Adicionar cliente
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Novo
                     </Button>
                   </Link>
                 </CardTitle>
@@ -130,15 +150,15 @@ class Tabela_Cliente extends Component {
                     },
                     {
                       Header: "Nome Abreviado",
-                      accessor: "nome_abv",
+                      accessor: "nomeAbv",
                     },
                     {
                       Header: "Representante",
-                      accessor: "representante",
+                      accessor: "Representante",
                     },
                     {
                       Header: "Tipo de comissão",
-                      accessor: "tipo_comiss",
+                      accessor: "TipoComiss",
                     },
                     {
                       Header: "Ações",

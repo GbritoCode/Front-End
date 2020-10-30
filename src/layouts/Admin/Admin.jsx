@@ -24,11 +24,10 @@ import NotificationAlert from "react-notification-alert";
 // core components
 import AdminNavbar from "~/components/Navbars/AdminNavbar.jsx";
 import Sidebar from "~/components/Sidebar/Sidebar.jsx";
-import FixedPlugin from "~/components/FixedPlugin/FixedPlugin.jsx";
 
 import routes from "~/routes/routes.js";
 
-import logo from "~/assets/img/react-logo.png";
+import logo from "~/assets/img/logo tovo.png";
 
 var ps;
 
@@ -63,7 +62,6 @@ class Admin extends React.Component {
     window.removeEventListener("scroll", this.showNavbarButton);
   }
   componentDidUpdate(e) {
-    console.log(e);
     if (
       e.children.props.location.pathname !==
       e.children.props.history.location.pathname
@@ -107,11 +105,11 @@ class Admin extends React.Component {
     });
   };
   getActiveRoute = (routes) => {
-    let activeRoute = "Default Brand Text";
+    let activeRoute = "";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = this.getActiveRoute(routes[i].views);
-        if (collapseActiveRoute !== activeRoute) {
+        if (collapseActiveRoute === activeRoute) {
           return collapseActiveRoute;
         }
       } else {
@@ -181,7 +179,7 @@ class Admin extends React.Component {
           activeColor={this.state.activeColor}
           logo={{
             outterLink: "https://www.creative-tim.com/",
-            text: "Creative Tim",
+            text: "Tovo",
             imgSrc: logo,
           }}
           closeSidebar={this.closeSidebar}
@@ -199,17 +197,7 @@ class Admin extends React.Component {
             toggleSidebar={this.toggleSidebar}
           />
           <Switch>{this.getRoutes(routes)} </Switch>
-
-          {
-            // we don't want the Footer to be rendered on full screen maps page
-          }
         </div>
-        <FixedPlugin
-          activeColor={this.state.activeColor}
-          sidebarMini={this.state.sidebarMini}
-          handleActiveClick={this.handleActiveClick}
-          handleMiniClick={this.handleMiniClick}
-        />
       </div>
     );
   }

@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -32,48 +32,242 @@ import {
 import { useDispatch } from "react-redux";
 import { EmpresaUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
-import { useInput } from "hooks.js";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 
 function EmpresaUpdatee() {
-  const { id } = useParams();
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
 
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
+  const stateSchema = {
+    cnpj: { value: "", error: "", message: "" },
+    nome: { value: "", error: "", message: "" },
+    license: { value: "", error: "", message: "" },
+    userId: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/empresa/${id}`);
+      const response = await axios(`http://localhost:51314/empresa/${id}`);
+      const response1 = await axios(`http://localhost:51314/users`);
+
       setData(response.data);
+      setData1(response1.data);
+      setValues((prevState) => ({
+        ...prevState,
+        cnpj: { value: response.data.idFederal },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        nome: { value: response.data.nome },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        license: { value: response.data.license },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        userId: { value: response.data.UserId },
+      }));
+
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  var options = {};
 
-  const dispatch = useDispatch();
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
 
-  const { value: nome, bind: bindNome } = useInput(undefined);
-  const { value: license, bind: bindLicense } = useInput(undefined);
-  const { value: UserId, bind: bindUserId } = useInput(undefined, "number");
+  function validarCNPJ(cnpj) {
+    cnpj = cnpj.replace(/[^\d]+/g, "");
 
-  const errorCheckAux = [bindNome, bindLicense, bindUserId];
+    if (cnpj == "") return false;
+
+    // Elimina CNPJs invalidos conhecidos
+    if (
+      cnpj == "00000000000000" ||
+      cnpj == "11111111111111" ||
+      cnpj == "22222222222222" ||
+      cnpj == "33333333333333" ||
+      cnpj == "44444444444444" ||
+      cnpj == "55555555555555" ||
+      cnpj == "66666666666666" ||
+      cnpj == "77777777777777" ||
+      cnpj == "88888888888888" ||
+      cnpj == "99999999999999"
+    )
+      return false;
+
+    // Valida DVs
+    var tamanho = cnpj.length - 2;
+    var numeros = cnpj.substring(0, tamanho);
+    var digitos = cnpj.substring(tamanho);
+    var soma = 0;
+    var pos = tamanho - 7;
+    for (var i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    var resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(0)) return false;
+
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(1)) return false;
+
+    return true;
+  }
+
+  const normalizeInput = (value) => {
+    if (!value) return value;
+    const currentValue = value.replace(/[^\d]/g, "");
+    const cvLength = currentValue.length;
+
+    if (cvLength < 3) return currentValue;
+    if (cvLength < 6)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
+    if (cvLength < 9)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5)}`;
+    if (cvLength < 13)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
+    return `${currentValue.slice(0, 2)}.${currentValue.slice(
+      2,
+      5
+    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
+      8,
+      12
+    )}-${currentValue.slice(12, 14)}`;
+  };
+
+  const renderCnpjState = (value) => {
+    if (!validarCNPJ(value)) {
+      setValues((prevState) => ({
+        ...prevState,
+        cnpj: { error: "has-danger", message: "Insira um CNPJ válido" },
+      }));
+    } else {
+      setValues((prevState) => ({
+        ...prevState,
+        cnpj: { error: "has-success", message: "" },
+      }));
+    }
+  };
+
+  const verifyNumber = (value) => {
+    var numberRex = new RegExp("^[0-9]+$");
+    if (numberRex.test(value)) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "number":
+        if (verifyNumber(target)) {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success" },
+          }));
+        } else {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+            },
+          }));
+        }
+        break;
+      case "cnpj":
+        setValues((prevState) => ({
+          ...prevState,
+          cnpj: { value: normalizeInput(target) },
+        }));
+        break;
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false;
+        var valid = false;
         break;
       }
     }
-    if (valid) {
-      dispatch(EmpresaUpdate(id, nome, license, UserId));
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
+      dispatch(
+        EmpresaUpdate(
+          id,
+          cnpjdb,
+          values.nome.value,
+          values.license.value,
+          values.userId.value
+        )
+      );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
   return (
@@ -82,6 +276,9 @@ function EmpresaUpdatee() {
         <div></div>
       ) : (
         <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
           <div className="content">
             <Row>
               <Col md="12">
@@ -114,66 +311,94 @@ function EmpresaUpdatee() {
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <label>CNPJ</label>
-                      <FormGroup>
+                      <FormGroup className={`has-label ${values.cnpj.error}`}>
                         <Input
-                          defaultValue={data.id_federal}
-                          disabled={true}
-                          name="id_federal"
+                          name="idFederal"
                           type="text"
+                          onChange={(event) =>
+                            handleChange(event, "cnpj", "cnpj")
+                          }
+                          value={values.cnpj.value}
+                          onBlur={(e) => {
+                            let value = e.target.value;
+                            renderCnpjState(value);
+                          }}
                         />
+                        {values.cnpj.error === "has-danger" ? (
+                          <label className="error">{values.cnpj.message}</label>
+                        ) : null}
                       </FormGroup>
 
                       <label>Nome</label>
-                      <FormGroup className={`has-label ${bindNome.valueerror}`}>
+                      <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input
-                          defaultValue={data.nome}
                           name="nome"
                           type="text"
-                          {...bindNome}
+                          onChange={(event) =>
+                            handleChange(event, "nome", "text")
+                          }
+                          value={values.nome.value}
                         />
-                        {bindNome.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
+                        {values.nome.error === "has-danger" ? (
+                          <label className="error">{values.nome.message}</label>
                         ) : null}
                       </FormGroup>
 
                       <label>License</label>
                       <FormGroup
-                        className={`has-label ${bindLicense.valueerror}`}
+                        className={`has-label ${values.license.error}`}
                       >
                         <Input
-                          defaultValue={data.license}
                           name="license"
                           type="text"
-                          {...bindLicense}
+                          onChange={(event) =>
+                            handleChange(event, "license", "text")
+                          }
+                          value={values.license.value}
                         />
-                        {bindLicense.valueerror === "has-danger" ? (
+                        {values.license.error === "has-danger" ? (
                           <label className="error">
-                            Insira um valor válido
+                            {values.license.message}
                           </label>
                         ) : null}
                       </FormGroup>
 
                       <label>Usuário</label>
-                      <FormGroup
-                        className={`has-label ${bindUserId.valueerror}`}
-                      >
+                      <FormGroup className={`has-label ${values.userId.error}`}>
                         <Input
-                          defaultValue={data.UserId}
                           name="UserId"
-                          type="numeric"
-                          {...bindUserId}
-                        />
-                        {bindUserId.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "userId", "text")
+                          }
+                          value={values.userId.value}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o usuário{" "}
+                          </option>
+                          {data1.map((user) => (
+                            <option key={user.id} value={user.id}>
+                              {" "}
+                              {user.name}, {user.email}{" "}
+                            </option>
+                          ))}
+                        </Input>{" "}
+                        {values.userId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.userId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
+
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"
                         color="info"
                         type="submit"
                       >
-                        Submit
+                        Enviar
                       </Button>
                     </Form>
                   </CardBody>

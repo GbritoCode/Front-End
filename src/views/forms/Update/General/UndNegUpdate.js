@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -26,58 +26,140 @@ import {
   FormGroup,
   Form,
   Input,
-  Label,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { UndNegUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
-import { useInput } from "hooks.js";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 
 function UndNegUpdatee() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState({});
+  const [data1, setData1] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    descUndNeg: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/und_neg/${id}`);
+      const response = await axios(`http://localhost:51314/und_neg/${id}`);
+      const response1 = await axios(
+        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+      );
       setData(response.data);
+      setData(response1.data);
+      setValues((prevState) => ({
+        ...prevState,
+        empresaId: { value: response.data.EmpresaId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        descUndNeg: { value: response.data.descUndNeg },
+      }));
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
 
-  const dispatch = useDispatch();
+  const normalizeInput = (value, previousValue) => {
+    if (!value) return value;
+    const currentValue = value.replace(/[^\d]/g, "");
+    const cvLength = currentValue.length;
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(
-    undefined,
-    "number"
-  );
-  const { value: desc_und_neg, bind: bindDesc_und_neg } = useInput(undefined);
+    if (cvLength < 3) return currentValue;
+    if (cvLength < 6)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
+    if (cvLength < 9)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5)}`;
+    if (cvLength < 13)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
+    return `${currentValue.slice(0, 2)}.${currentValue.slice(
+      2,
+      5
+    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
+      8,
+      12
+    )}-${currentValue.slice(12, 14)}`;
+  };
 
-  const errorCheckAux = [bindEmpresaId, bindDesc_und_neg];
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    console.log(errorCheckAux.length);
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false;
+        var valid = false;
         break;
       }
     }
-    if (valid) {
-      dispatch(UndNegUpdate(id, EmpresaId, desc_und_neg));
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      dispatch(
+        UndNegUpdate(id, values.empresaId.value, values.descUndNeg.value)
+      );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
   return (
@@ -86,12 +168,15 @@ function UndNegUpdatee() {
         <div></div>
       ) : (
         <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
           <div className="content">
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Área</CardTitle>
+                    <CardTitle tag="h4">Edição de Unidade de Negócio</CardTitle>
                     <Link to="/cadastro/geral/area">
                       <Button
                         style={{
@@ -119,39 +204,46 @@ function UndNegUpdatee() {
                     <Form onSubmit={handleSubmit}>
                       <label>Empresa</label>
                       <FormGroup
-                        className={`has-label ${bindEmpresaId.valueerror}`}
+                        className={`has-label ${values.empresaId.error}`}
                       >
                         <Input
-                          defaultValue={data.EmpresaId}
                           disabled={true}
                           name="EmpresaId"
                           type="select"
-                          {...bindEmpresaId}
+                          onChange={(event) =>
+                            handleChange(event, "empresaId", "text")
+                          }
+                          value={values.empresaId.value}
                         >
                           {" "}
                           <option value={1}>
                             {" "}
-                            Empresa selecionada: {data.nome}, CNPJ{" "}
-                            {data.id_federal}
+                            {data.nome} - {normalizeInput(data.idFederal)}
                           </option>
                         </Input>
-                        {bindEmpresaId.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
 
                       <label>Descrição da Unidade de Negócio</label>
                       <FormGroup
-                        className={`has-label ${bindDesc_und_neg.valueerror}`}
+                        className={`has-label ${values.descUndNeg.error}`}
                       >
                         <Input
-                          defaultValue={data.desc_und_neg}
-                          name="desc_und_neg"
+                          name="descUndNeg"
                           type="text"
-                          {...bindDesc_und_neg}
+                          onChange={(event) =>
+                            handleChange(event, "descUndNeg", "text")
+                          }
+                          value={values.descUndNeg.value}
                         />
-                        {bindDesc_und_neg.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
+                        {values.descUndNeg.error === "has-danger" ? (
+                          <label className="error">
+                            {values.descUndNeg.message}
+                          </label>
                         ) : null}
                       </FormGroup>
 
@@ -161,7 +253,7 @@ function UndNegUpdatee() {
                         color="info"
                         type="submit"
                       >
-                        Submit
+                        Enviar
                       </Button>
                     </Form>
                   </CardBody>

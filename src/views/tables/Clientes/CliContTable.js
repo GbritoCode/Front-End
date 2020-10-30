@@ -31,6 +31,8 @@ class Tabela_Cliente extends Component {
   };
 
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
@@ -52,36 +54,15 @@ class Tabela_Cliente extends Component {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_CLI +
-                      ", \nemail: " +
-                      obj.nome +
-                      ", \nidade: " +
-                      obj.cel +
-                      ", \nsalario: " +
-                      obj.fone +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/cliente/cont_update/${client.id}`}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/cliente/cont_update/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -122,6 +103,7 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Contato de Cliente
                   <Link to={`/cadastro/cliente/cont/${id}`}>
                     <Button
                       style={{
@@ -142,6 +124,27 @@ class Tabela_Cliente extends Component {
                         size="large"
                       />{" "}
                       Novo
+                    </Button>
+                  </Link>  <Link to={`/cliente_update/${id}/true`}>
+                  <Button
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
+                      color="success"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
                     </Button>
                   </Link>
                 </CardTitle>

@@ -27,10 +27,14 @@ import {
   chartExample7,
   chartExample8,
   chartExample9,
-  chartExample10
+  chartExample10,
 } from "~/variables/charts.js";
 
 class Charts extends React.Component {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   render() {
     return (
       <>

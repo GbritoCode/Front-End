@@ -14,8 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment, useEffect, useState } from "react";
-import ReactDatetime from "react-datetime";
+import React, { useRef, Fragment, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -34,50 +33,201 @@ import {
 import { useDispatch } from "react-redux";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
 import { useParams } from "react-router-dom";
-import { useInput } from "hooks.js";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { normalizeCnpj, normalizeFone } from "normalize";
 
 export default function CliContUpdatee() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const { id } = useParams();
+  const stateSchema = {
+    clienteId: { value: "", error: "", message: "" },
+    nome: { value: "", error: "", message: "" },
+    cel: { value: "", error: "", message: "" },
+    fone: { value: "", error: "", message: "" },
+    skype: { value: "", error: "", message: "" },
+    email: { value: "", error: "", message: "" },
+    aniver: { value: "", error: "", message: "" },
+    tipoConta: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
+  const [data, setData] = useState({});
+  const [data1, setData1] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/cliente/cont/${id}`);
-      setData(response.data[0]);
+      const response = await axios(
+        `http://localhost:51314/cliente/cont/1/${id}`
+      );
+      const response1 = await axios(
+        `http://localhost:51314/cliente/${response.data.ClienteId}`
+      );
+      setData(response.data);
+      setData1(response1.data);
+
+      setValues((prevState) => ({
+        ...prevState,
+        clienteId: { value: response.data.ClienteId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        nome: { value: response.data.nome },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        cel: { value: response.data.cel },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        fone: { value: response.data.fone },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        aniver: { value: response.data.aniver },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        tipoConta: { value: response.data.tipoConta },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        skype: { value: response.data.skype },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        email: { value: response.data.email },
+      }));
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const dispatch = useDispatch();
+  const verifyNumber = (value) => {
+    var numberRex = new RegExp("^[0-9]+$");
+    if (numberRex.test(value)) {
+      return true;
+    }
+    return false;
+  };
 
-  const { value: ClienteId, bind: bindClienteId } = useInput();
-  const { value: nome, bind: bindNome } = useInput();
-  const { value: cel, bind: bindCel } = useInput(undefined, "number");
-  const { value: fone, bind: bindFone } = useInput(undefined, "number");
-  const { value: skype, bind: bindSkype } = useInput();
-  const { value: email, bind: bindEmail } = useInput();
-  const { value: aniver, bind: bindAniver } = useInput();
-  const { value: tipo_conta, bind: bindTipo_conta } = useInput();
+  const verifyEmail = (value) => {
+    var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (emailRex.test(value)) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "number":
+        if (verifyNumber(target)) {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success" },
+          }));
+        } else {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+            },
+          }));
+        }
+        break;
+      case "email":
+        if (verifyEmail(target)) {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success" },
+          }));
+        } else {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um E-mail válido",
+            },
+          }));
+        }
+        break;
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    dispatch(
-      CliContUpdate(
-        id,
-        ClienteId,
-        nome,
-        cel,
-        fone,
-        skype,
-        email,
-        aniver,
-        tipo_conta
-      )
-    );
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
+        var valid = true;
+      } else {
+        var valid = false;
+        break;
+      }
+    }
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      dispatch(
+        CliContUpdate(
+          id,
+          values.clienteId.value,
+          values.nome.value,
+          values.cel.value,
+          values.fone.value,
+          values.skype.value,
+          values.email.value,
+          values.aniver.value,
+          values.tipoConta.value
+        )
+      );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
+    }
   };
   return (
     <Fragment>
@@ -85,110 +235,216 @@ export default function CliContUpdatee() {
         <div></div>
       ) : (
         <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
           <div className="content">
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Atualização de cliente</CardTitle>
+                    <CardTitle tag="h4">Edição de contato de cliente</CardTitle>
                   </CardHeader>
                   <CardBody>
-                    <form className="cadastro" onSubmit={handleSubmit}>
-                      <Label>Nome </Label>
-                      <FormGroup>
+                    <Form id="RegisterValidation" onSubmit={handleSubmit}>
+                      <label>Cliente</label>
+                      <FormGroup
+                        className={`has-label ${values.clienteId.error}`}
+                      >
                         <Input
-                          className="cadastro"
+                        disabled
+                          onChange={(event) =>
+                            handleChange(event, "clienteId", "text")
+                          }
+                          value={values.clienteId.value}
+                          name="ClienteId"
+                          type="select"
+                        >
+                          <option disabled value="">
+                            {" "}
+                            Selecione o Cliente{" "}
+                          </option>{" "}
+                          <option value={data1.id}>
+                            {" "}
+                             {data1.nomeAbv} -{" "}
+                            {normalizeCnpj(data1.CNPJ)}
+                          </option>
+                        </Input>
+                        {values.clienteId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.clienteId.message}
+                          </label>
+                        ) : null}
+                      </FormGroup>
+                      <label>Nome</label>
+                      <FormGroup className={`has-label ${values.nome.error}`}>
+                        <Input
                           name="nome"
                           type="text"
-                          defaultValue={data.nome}
-                          {...bindNome}
+                          onChange={(event) =>
+                            handleChange(event, "nome", "text")
+                          }
+                          value={values.nome.value}
                         />
+                        {values.nome.error === "has-danger" ? (
+                          <label className="error">{values.nome.message}</label>
+                        ) : null}
                       </FormGroup>
                       <Row>
-                        <Col md="4">
+                        <Col md="3">
                           <Label>Celular</Label>
                           <FormGroup
-                            className={`has-label ${bindCel.valueerror}`}
+                            className={`has-label ${values.cel.error}`}
                           >
                             <Input
                               name="cel"
                               type="numeric"
-                              defaultValue={data.cel}
-                              {...bindCel}
+                              onChange={(event) =>
+                                handleChange(event, "cel", "text")
+                              }
+                              onBlur={(e) => {
+                                let value = e.target.value;
+                                setValues((prevState) => ({
+                                  ...prevState,
+                                  cel: { value: normalizeFone(value) },
+                                }));
+                              }}
+                              value={values.cel.value}
                             />
-                            {bindCel.valueerror === "has-danger" ? (
-                              <label className="error">Insira um número</label>
+                            {values.cel.error === "has-danger" ? (
+                              <label className="error">
+                                {values.cel.message}
+                              </label>
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
+                        <Col md="3">
                           <Label>Telefone</Label>
                           <FormGroup
-                            className={`has-label ${bindFone.valueerror}`}
+                            className={`has-label ${values.fone.error}`}
                           >
                             <Input
                               name="fone"
                               type="numeric"
-                              defaultValue={data.fone}
-                              {...bindFone}
+                              onChange={(event) =>
+                                handleChange(event, "fone", "text")
+                              }
+                              onBlur={(e) => {
+                                let value = e.target.value;
+                                setValues((prevState) => ({
+                                  ...prevState,
+                                  fone: { value: normalizeFone(value) },
+                                }));
+                              }}
+                              value={values.fone.value}
                             />
-                            {bindFone.valueerror === "has-danger" ? (
-                              <label className="error">Insira um número</label>
+                            {values.fone.error === "has-danger" ? (
+                              <label className="error">
+                                {values.fone.message}
+                              </label>
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
-                          <FormGroup>
+                        <Col md="3">
+                          <FormGroup
+                            className={`has-label ${values.aniver.error}`}
+                          >
                             <Label>Aniversário </Label>
                             <Input
                               name="aniver"
                               type="date"
-                              defaultValue={data.aniver}
-                              {...bindAniver}
+                              onChange={(event) =>
+                                handleChange(event, "aniver", "text")
+                              }
+                              value={values.aniver.value}
                             />
-                          </FormGroup>{" "}
-                          {""}
+                            {values.aniver.error === "has-danger" ? (
+                              <label className="error">
+                                {values.aniver.message}
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="3">
+                          <label>tipo de Contato</label>
+                          <FormGroup
+                            className={`has-label ${values.tipoConta.error}`}
+                          >
+                            <Input
+                          name="tipoConta"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "tipoConta", "text")
+                          }
+                          value={values.tipoConta.value}
+                        >
+                          <option disabled value="">
+                            {" "}
+                            Selecione o tipo de contato{" "}
+                          </option>
+                          <option value={1}>Normal</option>
+                          <option value={2}>Nota Fiscal</option>
+                        </Input>
+                            {values.tipoConta.error === "has-danger" ? (
+                              <label className="error">
+                                {values.tipoConta.message}
+                              </label>
+                            ) : null}
+                          </FormGroup>
                         </Col>
                       </Row>
-                      <Label>Skype</Label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="skype"
-                          type="text"
-                          defaultValue={data.skype}
-                          {...bindSkype}
-                        />
-                      </FormGroup>
-                      <Label>Email</Label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="email"
-                          type="email"
-                          defaultValue={data.email}
-                          {...bindEmail}
-                        />
-                      </FormGroup>
-                      <Label>Tipo de Conta</Label>
-                      <FormGroup>
-                        <Input
-                          className="cadastro"
-                          name="tipo_conta"
-                          type="numeric"
-                          defaultValue={data.tipo_conta}
-                          {...bindTipo_conta}
-                        />
-                      </FormGroup>
+                      <Row>
+                        <Col md="6">
+                          <label>Skype</label>
+                          <FormGroup
+                            className={`has-label ${values.skype.error}`}
+                          >
+                            <Input
+                              name="skype"
+                              type="text"
+                              onChange={(event) =>
+                                handleChange(event, "skype", "text")
+                              }
+                              value={values.skype.value}
+                            />
+                            {values.skype.error === "has-danger" ? (
+                              <label className="error">
+                                {values.skype.message}
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="6">
+                          <Label>Email</Label>
+                          <FormGroup
+                            className={`has-label ${values.email.error}`}
+                          >
+                            <Input
+                              name="email"
+                              type="email"
+                              onChange={(event) =>
+                                handleChange(event, "email", "email")
+                              }
+                              value={values.email.value}
+                            />
+                            {values.email.error === "has-danger" ? (
+                              <label className="error">
+                                {values.email.message}
+                              </label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"
                         color="info"
                         type="submit"
                       >
-                        Submit
+                        Enviar
                       </Button>
-                    </form>
+                    </Form>
                   </CardBody>
                 </Card>
               </Col>

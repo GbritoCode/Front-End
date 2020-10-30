@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -26,54 +26,117 @@ import {
   FormGroup,
   Form,
   Input,
-  Label,
   Row,
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { AreaUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
-import { useInput } from "hooks.js";
+import { store } from "~/store";
 import axios from "axios";
+import { normalizeCnpj } from "normalize";
+import NotificationAlert from "react-notification-alert";
 
 function AreaUpdatee() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({});
+  const [data1, setData1] = useState({});
+  const empresa = store.getState().auth.empresa;
+
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    descArea: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/area/${id}`);
+      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:51314/area/${id}`);
       setData(response.data);
+      setData1(response1.data);
+
+      setValues((prevState) => ({
+        ...prevState,
+        descArea: { value: response1.data.descArea },
+      }));
+
+      setValues((prevState) => ({
+        ...prevState,
+        empresaId: { value: response.data.id },
+      }));
+
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
 
-  const dispatch = useDispatch();
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput();
-  const { value: desc_area, bind: bindDesc_area } = useInput();
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+        break;
+    }
+  };
+  var options = {};
 
-  const errorCheckAux = [bindEmpresaId, bindDesc_area];
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    console.log(errorCheckAux.length);
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
         valid = false;
         break;
       }
     }
-    if (valid) {
-      dispatch(AreaUpdate(id, EmpresaId, desc_area));
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      dispatch(AreaUpdate(id, values.empresaId.value, values.descArea.value));
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
   return (
@@ -82,6 +145,9 @@ function AreaUpdatee() {
         <div></div>
       ) : (
         <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
           <div className="content">
             <Row>
               <Col md="12">
@@ -115,49 +181,56 @@ function AreaUpdatee() {
                     <Form onSubmit={handleSubmit}>
                       <label>Empresa</label>
                       <FormGroup
-                        className={`has-label ${bindEmpresaId.valueerror}`}
+                        className={`has-label ${values.empresaId.error}`}
                       >
                         <Input
                           disabled={true}
                           name="EmpresaId"
                           type="select"
-                          {...bindEmpresaId}
+                          onChange={(event) =>
+                            handleChange(event, "empresaId", "text")
+                          }
+                          value={values.empresaId.value}
                         >
                           {" "}
                           <option value={1}>
                             {" "}
-                            Empresa selecionada: {data.nome}, CNPJ{" "}
-                            {data.id_federal}
+                            {data.nome} -{normalizeCnpj(data.idFederal)}
                           </option>
-                        </Input>
-                        {bindEmpresaId.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
+                        </Input>{" "}
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
 
                       <label>Descrição Área</label>
                       <FormGroup
-                        className={`has-label ${bindDesc_area.valueerror}`}
+                        className={`has-label ${values.descArea.error}`}
                       >
                         <Input
-                          defaultValue={data.desc_area}
-                          name="desc_area"
+                          name="descArea"
                           type="text"
-                          {...bindDesc_area}
-                        />
-                        {bindDesc_area.valueerror === "has-danger" ? (
+                          onChange={(event) =>
+                            handleChange(event, "descArea", "text")
+                          }
+                          value={values.descArea.value}
+                        />{" "}
+                        {values.descArea.error === "has-danger" ? (
                           <label className="error">
-                            Insira um valor válido
+                            {values.descArea.message}
                           </label>
                         ) : null}
                       </FormGroup>
+
                       <Button
                         style={{ marginTop: 35 }}
                         className="form"
                         color="info"
                         type="submit"
                       >
-                        Submit
+                        Enviar
                       </Button>
                     </Form>
                   </CardBody>

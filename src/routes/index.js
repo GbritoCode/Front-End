@@ -24,6 +24,7 @@ import ExtendedForms from "~/views/forms/ExtendedForms.jsx";
 import ClienteUpdate from "~/views/forms/Update/Cliente/ClienteUpdate.js";
 import CliContUpdate from "~/views/forms/Update/Cliente/CliContUpdate.js";
 import CliCompUpdate from "~/views/forms/Update/Cliente/CliCompUpdate.js";
+import cliRecDespUpdate from "~/views/forms//Update/Cliente/cliRecDespUpdate.js";
 
 import CadastroCliente from "~/views/forms/CadastroCliente.js";
 import CliCompCadastro from "~/views/forms/Cliente/CliCompCadastro.js";
@@ -47,8 +48,6 @@ import ParametrosUpdate from "~/views/forms/Update/General/ParametrosUpdate";
 import ParametrosCadastro from "~/views/forms/ParametrosCadastro.js";
 import ProdtUpdate from "~/views/forms/Update/General/ProdtUpdate";
 import ProdtCadastro from "~/views/forms/ProdtCadastro.js";
-import RecDespUpdate from "~/views/forms/Update/General/RecDespUpdate";
-import RecDespCadastro from "~/views/forms/RecDespCadastro.js";
 import RepresentanteUpdate from "~/views/forms/Update/General/RepresentanteUpdate";
 import RepresentanteCadastro from "~/views/forms/RepresentanteCadastro.js";
 import SegmentoUpdate from "~/views/forms/Update/General/SegmentoUpdate";
@@ -56,6 +55,14 @@ import SegmentoCadastro from "~/views/forms/SegmentoCadastro.js";
 import UndNegUpdate from "~/views/forms/Update/General/UndNegUpdate";
 import UndNegCadastro from "~/views/forms/UndNegCadastro.js";
 
+import RecDespUpdate from "~/views/forms/Update/General/RecDespUpdate";
+import RecDespCadastro from "~/views/forms/RecDespCadastro.js";
+import condPgmtoUpdate from "~/views/forms/Update/auxUpdate/condPgmtoUpdate.js";
+import condPgmtoCadastro from "~/views/forms/auxForm/condPgmtoCadastro.js";
+import tipoComissUpdate from "~/views/forms/Update/auxUpdate/tipoComissUpdate.js";
+import tipoComissCadastro from "~/views/forms/auxForm/tipoComissCadastro.js";
+import perfilUpdate from "~/views/forms/Update/auxUpdate/perfilUpdate.js";
+import perfilCadastro from "~/views/forms/auxForm/perfilCadastro.js";
 //-----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
 //-----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
 //-----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
@@ -66,13 +73,13 @@ import UndNegCadastro from "~/views/forms/UndNegCadastro.js";
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 
-import Tabela_Cliente from "~/views/tables/Tabela_Cliente.jsx";
+import Tabela_Cliente from "~/views/tables/Clientes/Tabela_Cliente.jsx";
 import CliCompTable from "~/views/tables/Clientes/CliCompTable.js";
 import CliContTable from "~/views/tables/Clientes/CliContTable.js";
 import CliRecDespTable from "~/views/tables/Clientes/CliRecDespTable.js";
 
 import ColabTable from "~/views/tables/Colab/ColabTable.js";
-import ColabCompTable from "~/views/tables/Colab/ColabCompTable.js";
+import colab from "~/views/tables/Colab/ColabCompTable.js";
 
 import AreaTable from "~/views/tables/General/AreaTable.js";
 import EmpresaTable from "~/views/tables/General/EmpresaTable.js";
@@ -80,11 +87,14 @@ import FornecTable from "~/views/tables/General/FornecTable.js";
 import ItmControleTable from "~/views/tables/General/ItmControleTable.js";
 import ParametrosTable from "~/views/tables/General/ParametrosTable.js";
 import ProdtTable from "~/views/tables/General/ProdtTable.js";
-import RecDespTable from "~/views/tables/General/RecDespTable.js";
 import RepresentanteTable from "~/views/tables/General/RepresentanteTable.js";
 import SegmentoTable from "~/views/tables/General/SegmentoTable.js";
 import UndNegTable from "~/views/tables/General/UndNegTable.js";
 
+import RecDespTable from "~/views/tables/auxTables/RecDespTable.js";
+import condPgmtoTable from "~/views/tables/auxTables/condPgmtoTable.js";
+import tipoComissTable from "~/views/tables/auxTables/tipoComissTable.js";
+import perfilTable from "~/views/tables/auxTables/perfilTable.js";
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
@@ -124,7 +134,11 @@ export default function Routes() {
       {/**CLIENTE */}
       <Route path="/regular-tables" component={RegularTables} isPrivate />
       <Route path="/extended-tables" component={ExtendedTables} isPrivate />
-      <Route path="/tabela_cliente" component={Tabela_Cliente} isPrivate />
+      <Route
+        path="/tabelas/cliente/cliente"
+        component={Tabela_Cliente}
+        isPrivate
+      />
       <Route
         path="/tabelas/cliente/comp/:id"
         component={CliCompTable}
@@ -140,8 +154,8 @@ export default function Routes() {
         component={CliRecDespTable}
         isPrivate
       />
-      <Route path="/tabelas/colab" component={ColabTable} isPrivate />
-      <Route path="/tabelas/colab/comp" component={ColabCompTable} isPrivate />
+      <Route path="/tabelas/colab" component={ColabTable} exact isPrivate />
+      <Route exact path="/tables/colab/comp/:id" component={colab} isPrivate />
       <Route path="/tabelas/general/area" component={AreaTable} isPrivate />
       <Route
         path="/tabelas/general/empresa"
@@ -161,11 +175,6 @@ export default function Routes() {
       />
       <Route path="/tabelas/general/prodt" component={ProdtTable} isPrivate />
       <Route
-        path="/tabelas/general/rec_desp"
-        component={RecDespTable}
-        isPrivate
-      />
-      <Route
         path="/tabelas/general/representante"
         component={RepresentanteTable}
         isPrivate
@@ -180,6 +189,18 @@ export default function Routes() {
         component={UndNegTable}
         isPrivate
       />
+      <Route path="/tabelas/aux/rec_desp" component={RecDespTable} isPrivate />
+      <Route
+        path="/tabelas/aux/condPgmto"
+        component={condPgmtoTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/aux/tipoComiss"
+        component={tipoComissTable}
+        isPrivate
+      />
+      <Route path="/tabelas/aux/perfil" component={perfilTable} isPrivate />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -220,8 +241,13 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cadastro/cliente/rec_desp"
+        path="/cadastro/cliente/rec_desp/:id"
         component={CliRecDespCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/cliente/rec_desp/:id"
+        component={cliRecDespUpdate}
         isPrivate
       />
       {/**CLIENTE FIM */}
@@ -233,7 +259,7 @@ export default function Routes() {
       />{" "}
       <Route path="/colab/update/:id" component={ColabUpdate} isPrivate />
       <Route
-        path="/cadastro/colab/comp"
+        path="/cadastro/colab/comp/:id"
         component={ColabCompCadastro}
         isPrivate
       />
@@ -296,6 +322,28 @@ export default function Routes() {
         component={RecDespCadastro}
         isPrivate
       />
+      <Route
+        path="/cadastro/aux/condPgmto"
+        component={condPgmtoCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/aux/condPgmto/:id"
+        component={condPgmtoUpdate}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/aux/tipoComiss"
+        component={tipoComissCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/aux/tipoComiss/:id"
+        component={tipoComissUpdate}
+        isPrivate
+      />
+      <Route path="/cadastro/aux/perfil" component={perfilCadastro} isPrivate />
+      <Route path="/update/aux/perfil/:id" component={perfilUpdate} isPrivate />
       <Route
         path="/update/general/rec_desp/:id"
         component={RecDespUpdate}

@@ -42,7 +42,7 @@ import {
   Table,
   Row,
   Col,
-  UncontrolledTooltip
+  UncontrolledTooltip,
 } from "reactstrap";
 
 // core components
@@ -50,7 +50,7 @@ import {
   chartExample1,
   chartExample2,
   chartExample3,
-  chartExample4
+  chartExample4,
 } from "~/variables/charts.js";
 
 var mapData = {
@@ -64,19 +64,24 @@ var mapData = {
   IN: 200,
   RO: 600,
   RU: 300,
-  US: 2920
+  US: 2920,
 };
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bigChartData: "data1"
+      bigChartData: "data1",
     };
   }
-  setBgChartData = name => {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
+
+  setBgChartData = (name) => {
     this.setState({
-      bigChartData: name
+      bigChartData: name,
     });
   };
   render() {
@@ -103,7 +108,7 @@ class Dashboard extends React.Component {
                           size="sm"
                           tag="label"
                           className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data1"
+                            active: this.state.bigChartData === "data1",
                           })}
                           onClick={() => this.setBgChartData("data1")}
                         >
@@ -121,7 +126,7 @@ class Dashboard extends React.Component {
                           size="sm"
                           tag="label"
                           className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data2"
+                            active: this.state.bigChartData === "data2",
                           })}
                           onClick={() => this.setBgChartData("data2")}
                         >
@@ -139,7 +144,7 @@ class Dashboard extends React.Component {
                           size="sm"
                           tag="label"
                           className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data3"
+                            active: this.state.bigChartData === "data3",
                           })}
                           onClick={() => this.setBgChartData("data3")}
                         >
@@ -342,19 +347,19 @@ class Dashboard extends React.Component {
                     <DropdownMenu right>
                       <DropdownItem
                         href="#pablo"
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                       >
                         Action
                       </DropdownItem>
                       <DropdownItem
                         href="#pablo"
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                       >
                         Another action
                       </DropdownItem>
                       <DropdownItem
                         href="#pablo"
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                       >
                         Something else
                       </DropdownItem>
@@ -602,26 +607,26 @@ class Dashboard extends React.Component {
                       <DropdownMenu right>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Another action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Something else
                         </DropdownItem>
                         <DropdownItem
                           className="text-danger"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Remove Data
                         </DropdownItem>
@@ -1079,7 +1084,7 @@ class Dashboard extends React.Component {
                         zoomOnScroll={false}
                         containerStyle={{
                           width: "100%",
-                          height: "300px"
+                          height: "300px",
                         }}
                         regionStyle={{
                           initial: {
@@ -1087,17 +1092,17 @@ class Dashboard extends React.Component {
                             "fill-opacity": 0.9,
                             stroke: "none",
                             "stroke-width": 0,
-                            "stroke-opacity": 0
-                          }
+                            "stroke-opacity": 0,
+                          },
                         }}
                         series={{
                           regions: [
                             {
                               values: mapData,
                               scale: ["#AAAAAA", "#444444"],
-                              normalizeFunction: "polynomial"
-                            }
-                          ]
+                              normalizeFunction: "polynomial",
+                            },
+                          ],
                         }}
                       />
                     </Col>

@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -32,51 +32,131 @@ import {
 import { useDispatch } from "react-redux";
 import { undNegRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
-import { useInput } from "hooks.js";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
 
 export default function UndNegCadastro() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
   const empresa = store.getState().auth.empresa;
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    descUndNeg: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/empresa/${empresa}`);
+      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       setData(response.data);
+      setValues((prevState) => ({
+        ...prevState,
+        empresaId: { value: response.data.id },
+      }));
       setIsLoading(false);
     }
     loadData();
   }, []);
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
-  const { value: desc_und_neg, bind: bindDesc_und_neg } = useInput("");
+  var options = {};
 
-  const errorCheckAux = [bindEmpresaId, bindDesc_und_neg];
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
+  const normalizeInput = (value, previousValue) => {
+    if (!value) return value;
+    const currentValue = value.replace(/[^\d]/g, "");
+    const cvLength = currentValue.length;
+
+    if (cvLength < 3) return currentValue;
+    if (cvLength < 6)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
+    if (cvLength < 9)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5)}`;
+    if (cvLength < 13)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
+    return `${currentValue.slice(0, 2)}.${currentValue.slice(
+      2,
+      5
+    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
+      8,
+      12
+    )}-${currentValue.slice(12, 14)}`;
+  };
+
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    console.log(errorCheckAux.length);
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false;
+        var valid = false;
         break;
       }
     }
-    if (valid) {
-      dispatch(undNegRequest(EmpresaId, desc_und_neg));
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      dispatch(undNegRequest(values.empresaId.value, values.descUndNeg.value));
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
   return (
     <>
+      <div className="rna-container">
+        <NotificationAlert ref={notifyElment} />
+      </div>
       <div className="content">
         <Row>
           <Col md="12">
@@ -87,37 +167,43 @@ export default function UndNegCadastro() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup
-                    className={`has-label ${bindEmpresaId.valueerror}`}
-                  >
+                  <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
                       name="EmpresaId"
                       type="select"
-                      {...bindEmpresaId}
+                      onChange={(event) =>
+                        handleChange(event, "empresaId", "text")
+                      }
+                      value={values.empresaId.value}
                     >
                       {" "}
                       <option value={1}>
                         {" "}
-                        Empresa selecionada: {data.nome}, CNPJ {data.id_federal}
+                        {data.nome} - {normalizeInput(data.idFederal)}
                       </option>
                     </Input>
-                    {bindEmpresaId.valueerror === "has-danger" ? (
-                      <label className="error">Insira um número</label>
+                    {values.empresaId.error === "has-danger" ? (
+                      <label className="error">
+                        {values.empresaId.message}
+                      </label>
                     ) : null}
                   </FormGroup>
 
                   <label>Descrição da Unidade de Negócio</label>
-                  <FormGroup
-                    className={`has-label ${bindDesc_und_neg.valueerror}`}
-                  >
+                  <FormGroup className={`has-label ${values.descUndNeg.error}`}>
                     <Input
-                      name="desc_und_neg"
+                      name="descUndNeg"
                       type="text"
-                      {...bindDesc_und_neg}
+                      onChange={(event) =>
+                        handleChange(event, "descUndNeg", "text")
+                      }
+                      value={values.descUndNeg.value}
                     />
-                    {bindDesc_und_neg.valueerror === "has-danger" ? (
-                      <label className="error">Insira um número</label>
+                    {values.descUndNeg.error === "has-danger" ? (
+                      <label className="error">
+                        {values.descUndNeg.message}
+                      </label>
                     ) : null}
                   </FormGroup>
 
@@ -127,7 +213,7 @@ export default function UndNegCadastro() {
                     color="info"
                     type="submit"
                   >
-                    Submit
+                    Enviar
                   </Button>
                 </Form>
               </CardBody>

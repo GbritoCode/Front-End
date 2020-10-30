@@ -38,6 +38,8 @@ class Tabela_Cliente extends Component {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
@@ -47,7 +49,7 @@ class Tabela_Cliente extends Component {
       data: response.data.map((client, key) => {
         return {
           CNPJ: key,
-          NOME_ABV: client.NOME_ABV,
+          nomeAbv: client.nomeAbv,
           REPRESENTANTE: client.REPRESENTANTE,
           TIPO_COMISS: client.TIPO_COMISS,
           CODIGO_EMP: client.CODIGO_EMP,
@@ -60,7 +62,7 @@ class Tabela_Cliente extends Component {
                   let obj = aux.find((o) => o.id === key);
                   alert(
                     "You've clicked LIKE button on \n{ \nName: " +
-                      obj.NOME_ABV +
+                      obj.nomeAbv +
                       ", \nemail: " +
                       obj.REPRESENTANTE +
                       ", \nidade: " +
@@ -82,7 +84,7 @@ class Tabela_Cliente extends Component {
                   let obj = this.state.data.find((o) => o.id === key);
                   alert(
                     "You've clicked EDIT button on \n{ \nName: " +
-                      obj.NOME_ABV +
+                      obj.nomeAbv +
                       ", \nemail: " +
                       obj.REPRESENTANTE +
                       ", \nidade: " +
@@ -156,7 +158,7 @@ class Tabela_Cliente extends Component {
                   columns={[
                     {
                       Header: "Name",
-                      accessor: "NOME_ABV",
+                      accessor: "nomeAbv",
                     },
                     {
                       Header: "Email",

@@ -29,7 +29,7 @@ import {
   Form,
   Input,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class ValidationForms extends React.Component {
@@ -73,11 +73,15 @@ class ValidationForms extends React.Component {
       maxLengthState: "",
       rangeState: "",
       minState: "",
-      maxState: ""
+      maxState: "",
     };
   }
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   // function that returns true if value is email, false otherwise
-  verifyEmail = value => {
+  verifyEmail = (value) => {
     var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (emailRex.test(value)) {
       return true;
@@ -99,7 +103,7 @@ class ValidationForms extends React.Component {
     return false;
   };
   // function that verifies if value contains only numbers
-  verifyNumber = value => {
+  verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -107,7 +111,7 @@ class ValidationForms extends React.Component {
     return false;
   };
   // verifies if value is a valid URL
-  verifyUrl = value => {
+  verifyUrl = (value) => {
     try {
       new URL(value);
       return true;
@@ -291,7 +295,7 @@ class ValidationForms extends React.Component {
       maxLengthState,
       rangeState,
       minState,
-      maxState
+      maxState,
     } = this.state;
     return (
       <>
@@ -309,7 +313,9 @@ class ValidationForms extends React.Component {
                       <Input
                         name="email"
                         type="email"
-                        onChange={e => this.change(e, "registerEmail", "email")}
+                        onChange={(e) =>
+                          this.change(e, "registerEmail", "email")
+                        }
                       />
                       {this.state.registerEmailState === "has-danger" ? (
                         <label className="error">
@@ -324,7 +330,7 @@ class ValidationForms extends React.Component {
                         name="password"
                         type="password"
                         autoComplete="off"
-                        onChange={e =>
+                        onChange={(e) =>
                           this.change(e, "registerPassword", "password")
                         }
                       />
@@ -342,7 +348,7 @@ class ValidationForms extends React.Component {
                         name="password_confirmation"
                         type="password"
                         autoComplete="off"
-                        onChange={e =>
+                        onChange={(e) =>
                           this.change(
                             e,
                             "registerConfirmPassword",
@@ -387,7 +393,7 @@ class ValidationForms extends React.Component {
                       <Input
                         name="fullname"
                         type="text"
-                        onChange={e =>
+                        onChange={(e) =>
                           this.change(e, "loginFullName", "length", 1)
                         }
                       />
@@ -400,7 +406,7 @@ class ValidationForms extends React.Component {
                       <Input
                         name="email"
                         type="email"
-                        onChange={e => this.change(e, "loginEmail", "email")}
+                        onChange={(e) => this.change(e, "loginEmail", "email")}
                       />
                       {this.state.loginEmailState === "has-danger" ? (
                         <label className="error">
@@ -414,7 +420,7 @@ class ValidationForms extends React.Component {
                         name="password"
                         type="password"
                         autoComplete="off"
-                        onChange={e =>
+                        onChange={(e) =>
                           this.change(e, "loginPassword", "password")
                         }
                       />
@@ -433,7 +439,7 @@ class ValidationForms extends React.Component {
                     <a
                       href="#pablo"
                       className="pull-right"
-                      onClick={e => e.preventDefault}
+                      onClick={(e) => e.preventDefault}
                     >
                       Forgot password?
                     </a>
@@ -455,7 +461,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="required"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "required", "length", 1)
                             }
                           />
@@ -477,7 +483,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="email"
                             type="text"
-                            onChange={e => this.change(e, "email", "email")}
+                            onChange={(e) => this.change(e, "email", "email")}
                           />
                           {this.state.emailState === "has-danger" ? (
                             <label className="error">
@@ -497,7 +503,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="number"
                             type="text"
-                            onChange={e => this.change(e, "number", "number")}
+                            onChange={(e) => this.change(e, "number", "number")}
                           />
                           {this.state.numberState === "has-danger" ? (
                             <label className="error">
@@ -517,7 +523,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="url"
                             type="text"
-                            onChange={e => this.change(e, "url", "url")}
+                            onChange={(e) => this.change(e, "url", "url")}
                           />
                           {this.state.urlState === "has-danger" ? (
                             <label className="error">
@@ -538,7 +544,7 @@ class ValidationForms extends React.Component {
                             id="idSource"
                             placeholder="#idSource"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "source", "equalTo", "destination")
                             }
                           />
@@ -550,7 +556,7 @@ class ValidationForms extends React.Component {
                             id="idDestination"
                             placeholder="#idDestination"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "destination", "equalTo", "source")
                             }
                           />
@@ -588,7 +594,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="min_length"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "minLength", "length", 5)
                             }
                           />
@@ -610,7 +616,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="max_length"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "maxLength", "max-length", 5)
                             }
                           />
@@ -632,7 +638,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="range"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "range", "range", 6, 10)
                             }
                           />
@@ -654,7 +660,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="min"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "min", "min-value", 6)
                             }
                           />
@@ -676,7 +682,7 @@ class ValidationForms extends React.Component {
                           <Input
                             name="max"
                             type="text"
-                            onChange={e =>
+                            onChange={(e) =>
                               this.change(e, "max", "max-value", 6)
                             }
                           />

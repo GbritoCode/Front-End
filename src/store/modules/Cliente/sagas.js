@@ -8,15 +8,21 @@ import { signFailure, ClienteUpdateSuccess } from "./actions.js";
 
 export function* clienteCadastro({ payload }) {
   try {
-    const { CNPJ, nome_abv, representante, tipo_comiss, EmpresaId } = payload;
+    const {
+      CNPJ,
+      nomeAbv,
+      RepresentanteId,
+      TipoComisseId,
+      EmpresaId,
+    } = payload;
     yield call(api.post, "cliente", {
       CNPJ,
-      nome_abv,
-      representante,
-      tipo_comiss,
+      nomeAbv,
+      RepresentanteId,
+      TipoComisseId,
       EmpresaId,
     });
-    history.push("/tabela_cliente");
+    history.push("/tabelas/cliente/cliente");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -25,18 +31,19 @@ export function* clienteCadastro({ payload }) {
 
 export function* updateCliente({ payload }) {
   try {
-    const { id, nome_abv, representante, tipo_comiss, prospect } = payload;
+    const { id, nomeAbv, RepresentanteId, TipoComisseId, prospect } = payload;
 
     const Cliente = Object.assign({
-      nome_abv,
-      representante,
-      tipo_comiss,
+      nomeAbv,
+      RepresentanteId,
+      TipoComisseId,
       prospect,
     });
 
     const response = yield call(api.put, `cliente/${id}`, Cliente);
 
     toast.success("cliente atualizado");
+    history.push("/tabelas/cliente/cliente");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
@@ -56,7 +63,7 @@ export function* cliContCadastro({ payload }) {
       skype,
       email,
       aniver,
-      tipo_conta,
+      tipoConta,
     } = payload;
     yield call(api.post, "cliente/cont", {
       ClienteId,
@@ -66,9 +73,9 @@ export function* cliContCadastro({ payload }) {
       skype,
       email,
       aniver,
-      tipo_conta,
+      tipoConta,
     });
-    history.push("/dashboard");
+    history.push(`/cliente_update/${ClienteId}/true`);
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -86,7 +93,7 @@ export function* updateCliCont({ payload }) {
       skype,
       email,
       aniver,
-      tipo_conta,
+      tipoConta,
     } = payload;
 
     const Cliente = Object.assign({
@@ -97,11 +104,12 @@ export function* updateCliCont({ payload }) {
       skype,
       email,
       aniver,
-      tipo_conta,
+      tipoConta,
     });
 
     const response = yield call(api.put, `cliente/cont/${id}`, Cliente);
 
+    history.push(`/cliente_update/${ClienteId}/true`);
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
@@ -116,33 +124,35 @@ export function* cliCompCadastro({ payload }) {
   try {
     const {
       ClienteId,
-      rz_social,
-      cond_pgmto,
-      nome_abv,
+      CondPgmtoId,
+      rzSocial,
+      nomeAbv,
+      fantasia,
       cep,
       rua,
       numero,
       bairro,
       cidade,
       uf,
-      insc_mun,
-      insc_uf,
+      inscMun,
+      inscEst,
     } = payload;
     yield call(api.post, "cliente/complem", {
       ClienteId,
-      rz_social,
-      cond_pgmto,
-      nome_abv,
+      CondPgmtoId,
+      rzSocial,
+      nomeAbv,
+      fantasia,
       cep,
       rua,
       numero,
       bairro,
       cidade,
       uf,
-      insc_mun,
-      insc_uf,
+      inscMun,
+      inscEst,
     });
-    history.push("/dashboard");
+    history.push(`/cliente_update/${ClienteId}/true`);
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -154,36 +164,39 @@ export function* updateCliComp({ payload }) {
     const {
       id,
       ClienteId,
-      rz_social,
-      cond_pgmto,
-      nome_abv,
+      CondPgmtoId,
+      rzSocial,
+      nomeAbv,
+      fantasia,
       cep,
       rua,
       numero,
       bairro,
       cidade,
       uf,
-      insc_mun,
-      insc_uf,
+      inscMun,
+      inscEst,
     } = payload;
 
     const Cliente = Object.assign({
       ClienteId,
-      rz_social,
-      cond_pgmto,
-      nome_abv,
+      CondPgmtoId,
+      rzSocial,
+      nomeAbv,
+      fantasia,
       cep,
       rua,
       numero,
       bairro,
       cidade,
       uf,
-      insc_mun,
-      insc_uf,
+      inscMun,
+      inscEst,
     });
 
-    const response = yield call(api.put, `cliente/comp/${id}`, Cliente);
+    const response = yield call(api.put, `cliente/complem/${id}`, Cliente);
 
+    history.push(`/cliente_update/${ClienteId}/true`);
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
@@ -196,13 +209,36 @@ export function* updateCliComp({ payload }) {
 //--------------------------------------------------------------------------
 export function* cliRecDespCadastro({ payload }) {
   try {
-    const { ClienteId, tipo_rec_desp, nome_rec_desp } = payload;
+    const { ClienteId, recDespId, tipoCobranca,valorRec } = payload;
     yield call(api.post, "cliente/rec_desp", {
       ClienteId,
-      tipo_rec_desp,
-      nome_rec_desp,
+      recDespId,
+      tipoCobranca,
+      valorRec
     });
-    history.push("/dashboard");
+    history.push(`/cliente_update/${ClienteId}/true`);
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
+
+export function* updateCliRecDesp({ payload }) {
+  try {
+    const { id, ClienteId, recDespId, tipoCobranca,valorRec } = payload;
+
+    const Cliente = Object.assign({
+      ClienteId,
+      recDespId,
+      tipoCobranca,
+      valorRec
+    });
+
+    const response = yield call(api.put, `cliente/rec_desp/${id}`, Cliente);
+
+    history.push(`/cliente_update/${ClienteId}/true`);
+    toast.success("cliente atualizado");
+    yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -216,5 +252,6 @@ export default all([
   takeLatest("@cadastro/CADASTRO_REC_DESP_REQUEST", cliRecDespCadastro),
   takeLatest("@update/CLIENTE_REQUEST", updateCliente),
   takeLatest("@update/CONT_REQUEST", updateCliCont),
-  takeLatest("@update/COMP_REQUEST", updateCliCont),
+  takeLatest("@update/COMP_REQUEST", updateCliComp),
+  takeLatest("@update/CLI_REC_DESP_REQUEST", updateCliRecDesp),
 ]);

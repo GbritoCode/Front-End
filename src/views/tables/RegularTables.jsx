@@ -23,6 +23,10 @@ import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
 import SortingTable from "components/SortingTable/SortingTable.jsx";
 
 class RegularTables extends React.Component {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   render() {
     return (
       <>
@@ -39,7 +43,7 @@ class RegularTables extends React.Component {
                       { text: "Name" },
                       { text: "Country" },
                       { text: "City" },
-                      { className: "text-center", text: "Salary" }
+                      { className: "text-center", text: "Salary" },
                     ]}
                     tbody={[
                       {
@@ -47,57 +51,57 @@ class RegularTables extends React.Component {
                           { text: "Dakota Rice" },
                           { text: "Niger" },
                           { text: "Oud-Turnhout" },
-                          { className: "text-center", text: "$36,738" }
-                        ]
+                          { className: "text-center", text: "$36,738" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Minerva Hooper" },
                           { text: "Curaçao" },
                           { text: "Sinaai-Waas" },
-                          { className: "text-center", text: "$23,789" }
-                        ]
+                          { className: "text-center", text: "$23,789" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Sage Rodriguez" },
                           { text: "Netherlands" },
                           { text: "Baileux" },
-                          { className: "text-center", text: "$56,142" }
-                        ]
+                          { className: "text-center", text: "$56,142" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Philip Chaney" },
                           { text: "Korea, South" },
                           { text: "Overland Park" },
-                          { className: "text-center", text: "$38,735" }
-                        ]
+                          { className: "text-center", text: "$38,735" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Doris Greene" },
                           { text: "Malawi" },
                           { text: "Feldkirchen in Kärnten" },
-                          { className: "text-center", text: "$63,542" }
-                        ]
+                          { className: "text-center", text: "$63,542" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Mason Porter" },
                           { text: "Chile" },
                           { text: "Gloucester" },
-                          { className: "text-center", text: "$78,615" }
-                        ]
+                          { className: "text-center", text: "$78,615" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Jon Porter" },
                           { text: "Portugal" },
                           { text: "Gloucester" },
-                          { className: "text-center", text: "$98,615" }
-                        ]
-                      }
+                          { className: "text-center", text: "$98,615" },
+                        ],
+                      },
                     ]}
                   />
                 </CardBody>
@@ -115,7 +119,7 @@ class RegularTables extends React.Component {
                       { text: "Name" },
                       { text: "Country" },
                       { text: "City" },
-                      { className: "text-center", text: "Salary" }
+                      { className: "text-center", text: "Salary" },
                     ]}
                     tbody={[
                       {
@@ -123,57 +127,57 @@ class RegularTables extends React.Component {
                           { text: "Dakota Rice" },
                           { text: "Niger" },
                           { text: "Oud-Turnhout" },
-                          { className: "text-center", text: "$36,738" }
-                        ]
+                          { className: "text-center", text: "$36,738" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Minerva Hooper" },
                           { text: "Curaçao" },
                           { text: "Sinaai-Waas" },
-                          { className: "text-center", text: "$23,789" }
-                        ]
+                          { className: "text-center", text: "$23,789" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Sage Rodriguez" },
                           { text: "Netherlands" },
                           { text: "Baileux" },
-                          { className: "text-center", text: "$56,142" }
-                        ]
+                          { className: "text-center", text: "$56,142" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Philip Chaney" },
                           { text: "Korea, South" },
                           { text: "Overland Park" },
-                          { className: "text-center", text: "$38,735" }
-                        ]
+                          { className: "text-center", text: "$38,735" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Doris Greene" },
                           { text: "Malawi" },
                           { text: "Feldkirchen in Kärnten" },
-                          { className: "text-center", text: "$63,542" }
-                        ]
+                          { className: "text-center", text: "$63,542" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Mason Porter" },
                           { text: "Chile" },
                           { text: "Gloucester" },
-                          { className: "text-center", text: "$78,615" }
-                        ]
+                          { className: "text-center", text: "$78,615" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Jon Porter" },
                           { text: "Portugal" },
                           { text: "Gloucester" },
-                          { className: "text-center", text: "$98,615" }
-                        ]
-                      }
+                          { className: "text-center", text: "$98,615" },
+                        ],
+                      },
                     ]}
                   />
                 </CardBody>
@@ -190,7 +194,7 @@ class RegularTables extends React.Component {
                       { text: "Name" },
                       { text: "Country" },
                       { text: "City" },
-                      { className: "text-center", text: "Salary" }
+                      { className: "text-center", text: "Salary" },
                     ]}
                     tbody={[
                       {
@@ -199,16 +203,16 @@ class RegularTables extends React.Component {
                           { text: "Dakota Rice" },
                           { text: "Niger" },
                           { text: "Oud-Turnhout" },
-                          { className: "text-center", text: "$36,738" }
-                        ]
+                          { className: "text-center", text: "$36,738" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Minerva Hooper" },
                           { text: "Curaçao" },
                           { text: "Sinaai-Waas" },
-                          { className: "text-center", text: "$23,789" }
-                        ]
+                          { className: "text-center", text: "$23,789" },
+                        ],
                       },
                       {
                         className: "table-info",
@@ -216,16 +220,16 @@ class RegularTables extends React.Component {
                           { text: "Sage Rodriguez" },
                           { text: "Netherlands" },
                           { text: "Baileux" },
-                          { className: "text-center", text: "$56,142" }
-                        ]
+                          { className: "text-center", text: "$56,142" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Philip Chaney" },
                           { text: "Korea, South" },
                           { text: "Overland Park" },
-                          { className: "text-center", text: "$38,735" }
-                        ]
+                          { className: "text-center", text: "$38,735" },
+                        ],
                       },
                       {
                         className: "table-danger",
@@ -233,16 +237,16 @@ class RegularTables extends React.Component {
                           { text: "Doris Greene" },
                           { text: "Malawi" },
                           { text: "Feldkirchen in Kärnten" },
-                          { className: "text-center", text: "$63,542" }
-                        ]
+                          { className: "text-center", text: "$63,542" },
+                        ],
                       },
                       {
                         data: [
                           { text: "Mason Porter" },
                           { text: "Chile" },
                           { text: "Gloucester" },
-                          { className: "text-center", text: "$78,615" }
-                        ]
+                          { className: "text-center", text: "$78,615" },
+                        ],
                       },
                       {
                         className: "table-warning",
@@ -250,9 +254,9 @@ class RegularTables extends React.Component {
                           { text: "Jon Porter" },
                           { text: "Portugal" },
                           { text: "Gloucester" },
-                          { className: "text-center", text: "$98,615" }
-                        ]
-                      }
+                          { className: "text-center", text: "$98,615" },
+                        ],
+                      },
                     ]}
                   />
                 </CardBody>

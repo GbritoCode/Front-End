@@ -47,6 +47,10 @@ var steps = [
 ];
 
 class Wizard extends React.Component {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   finishButtonClick(allStates) {
     console.log(allStates);
     const {
@@ -64,7 +68,7 @@ class Wizard extends React.Component {
       CODIGO_EMP,
     });
     axios
-      .post("http://localhost:3000/cliente", {
+      .post("http://localhost:51314/cliente", {
         NOME_ABV,
         CNPJ,
         REPRESENTANTE,

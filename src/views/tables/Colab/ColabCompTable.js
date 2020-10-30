@@ -20,67 +20,79 @@ import classNames from "classnames";
 import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-import axios from "axios";
+import {normalizeCurrency} from "normalize";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
 
-class Tabela_Cliente extends Component {
+class ColabCompTable extends Component {
   state = {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
+  }
+  checkNivel =(value) =>{
+    if (value == 1){
+      return "Trainee"
+    }else if(value==2){
+      return "Júnior"
+    }else if(value==3){
+      return "Pleno"
+    }else if(value==4){
+      return "Sênior"
+    }
+  }
+
+  checkAtend =(value) =>{
+    if (value == 1){
+      return "Consultoria"
+    }else if(value==2){
+      return "Tecnologia"
+    }else if(value==3){
+      return "Desenvolvimento"
+    }else if(value==4){
+      return "Complementar"
+    }
+  }
+  checkValor =(value) =>{
+    if (value == 1){
+      return "Por Hora"
+    }else if(value==2){
+      return "Fixo"
+    }
   }
   loadClients = async () => {
     const id = this.props.match.params.id;
-    const response = await axios(`http://localhost:3001/colab/comp/${id}`);
+    console.log(id);
+    const response = await api.get(`/colab/comp/${id}`);
     this.setState({
       data: response.data.map((client, key) => {
         return {
           id: key,
           idd: client.id,
-          ColabId: client.ColabId,
-          nicel: client.nicel,
-          tipo_valor: client.tipo_valor,
-          valor: client.valor,
-          data_inic: client.data_inic,
-          data_fim: client.data_fim,
-          tipo_atend: client.tipo_atend,
+          Colab: client.Colab.nome,
+          nivel: this.checkNivel(client.nivel),
+          tipoValor: this.checkValor(client.tipoValor),
+          valor: normalizeCurrency(JSON.stringify(client.valor)),
+          dataInic: client.dataInic,
+          dataFim: client.dataFim,
+          tipoAtend: this.checkAtend(client.tipoAtend),
 
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_COLAB +
-                      ", \nemail: " +
-                      obj.NIVEL +
-                      ", \nidade: " +
-                      obj.TIPO_VALOR +
-                      ", \nsalario: " +
-                      obj.VALOR +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/colab/update/comp/${client.id}`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/colab/comp/update/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -112,6 +124,8 @@ class Tabela_Cliente extends Component {
   };
 
   render() {
+    const id = this.props.match.params.id;
+
     return (
       <>
         <div className="content">
@@ -119,7 +133,8 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/colab/comp">
+                  Complemento de Colaborador
+                  <Link to={`/cadastro/colab/comp/${id}`}>
                     <Button
                       style={{
                         float: "right",
@@ -140,6 +155,28 @@ class Tabela_Cliente extends Component {
                       />{" "}
                       Novo
                     </Button>
+                  </Link>  
+                  <Link to={`/colab/update/${id}`}>
+                  <Button
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -150,24 +187,20 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Id",
-                      accessor: "idd",
+                      Header: "Colaborador",
+                      accessor: "Colab",
                     },
                     {
                       Header: "Nivel",
                       accessor: "nivel",
                     },
                     {
-                      Header: "Tipo de Valor",
-                      accessor: "tipo_valor",
+                      Header: "Valor",
+                      accessor: "valor",
                     },
                     {
-                      Header: "Data Inicial",
-                      accessor: "data_inic",
-                    },
-                    {
-                      Header: "Data final",
-                      accessor: "data_fim",
+                      Header: "Tipo de Atendimento",
+                      accessor: "tipoAtend",
                     },
                     {
                       Header: "Ações",
@@ -191,4 +224,4 @@ class Tabela_Cliente extends Component {
   }
 }
 
-export default Tabela_Cliente;
+export default ColabCompTable;

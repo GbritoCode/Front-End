@@ -23,13 +23,16 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
 
+import { normalizeCpf } from "normalize";
 import { Link } from "react-router-dom";
 
-class Tabela_Cliente extends Component {
+class colabTable extends Component {
   state = {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
@@ -39,12 +42,11 @@ class Tabela_Cliente extends Component {
         return {
           id: key,
           idd: client.id,
-          CPF: client.CPF,
+          CPF: normalizeCpf(client.CPF),
           FornecId: client.FornecId,
-          log_usr: client.log_usr,
-          EmpresaId: client.EmpresaId,
+          Empresa: client.Empresa.nome,
           nome: client.nome,
-          dt_admiss: client.dt_admiss,
+          dtAdmiss: client.dtAdmiss,
           cel: client.cel,
           skype: client.skype,
           email: client.email,
@@ -53,36 +55,15 @@ class Tabela_Cliente extends Component {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_FORNEC +
-                      ", \nemail: " +
-                      obj.LOG_USR +
-                      ", \nidade: " +
-                      obj.COD_EMP +
-                      ", \nsalario: " +
-                      obj.NOME +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/colab/update/${client.id}`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/colab/update/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -121,6 +102,7 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Colaborador
                   <Link to="/cadastro/colab/colab">
                     <Button
                       style={{
@@ -161,7 +143,7 @@ class Tabela_Cliente extends Component {
                     },
                     {
                       Header: "Data de Adimissão",
-                      accessor: "dt_admiss",
+                      accessor: "dtAdmiss",
                     },
                     {
                       Header: "Especialidade",
@@ -189,4 +171,4 @@ class Tabela_Cliente extends Component {
   }
 }
 
-export default Tabela_Cliente;
+export default colabTable;

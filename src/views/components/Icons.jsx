@@ -23,6 +23,10 @@ import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import icons from "variables/icons.jsx";
 
 class Icons extends React.Component {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   render() {
     return (
       <>

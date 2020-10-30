@@ -22,7 +22,7 @@ import ReactTable from "react-table-v6";
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
-
+import {normalizeCurrency} from 'normalize'
 import { Link } from "react-router-dom";
 
 class Tabela_Cliente extends Component {
@@ -30,7 +30,22 @@ class Tabela_Cliente extends Component {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
+  }
+  checkCobranca =(value) =>{
+    if (value == 1){
+      return "Por Hora"
+    }else if(value==2){
+      return "Por Projeto"
+    }else if(value==3){
+      return "Por Dia"
+    }else if(value==4){
+      return "Por Quilômetro"
+    }else if(value==5){
+      return "Por Refeição"
+    }
   }
   loadClients = async () => {
     const id = this.props.match.params.id;
@@ -41,56 +56,22 @@ class Tabela_Cliente extends Component {
           id: key,
           idd: client.id,
           ClienteId: client.ClienteId,
-          tipo_rec_desp: client.tipo_rec_desp,
-          nome_rec_desp: client.nome_rec_desp,
-
+          Rec_desp: client.Rec_desp.desc,
+          tipoCobranca: this.checkCobranca(client.tipoCobranca),
+          valorRec: normalizeCurrency(JSON.stringify(client.valorRec)),
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_REC_DESP +
-                      ", \nemail: " +
-                      obj.COD_CLI +
-                      ", \nidade: " +
-                      obj.TIPO_REC_DESP +
-                      ", \nsalario: " +
-                      obj.NOME_REC_DESP +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked EDIT button on \n{ \nName: " +
-                      obj.COD_REC_DESP +
-                      ", \nemail: " +
-                      obj.COD_CLI +
-                      ", \nidade: " +
-                      obj.TIPO_REC_DESP +
-                      ", \nsalario: " +
-                      obj.NOME_REC_DESP +
-                      "\n}."
-                  );
-                }}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
-              </Button>{" "}
+              <Link to={`/update/cliente/rec_desp/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
+              </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
@@ -121,6 +102,8 @@ class Tabela_Cliente extends Component {
   };
 
   render() {
+    const id = this.props.match.params.id;
+
     return (
       <>
         <div className="content">
@@ -128,7 +111,8 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cadastro/cliente/rec_desp">
+                  Receita e Despesa do Cliente
+                  <Link to={`/cadastro/cliente/rec_desp/${id}`}>
                     <Button
                       style={{
                         float: "right",
@@ -150,6 +134,29 @@ class Tabela_Cliente extends Component {
                       Novo
                     </Button>
                   </Link>
+
+                  <Link to={`/cliente_update/${id}/true`}>
+                  <Button
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
+                      color="success"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -159,16 +166,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "Cliente",
-                      accessor: "ClienteId",
-                    },
-                    {
-                      Header: "Nome",
-                      accessor: "nome_rec_desp",
+                      Header: "Tipo de Cobrança",
+                      accessor: "tipoCobranca",
                     },
                     {
                       Header: "Tipo",
-                      accessor: "tipo_rec_desp",
+                      accessor: "Rec_desp",
+                    },
+                    {
+                      Header: "Valor da Receita",
+                      accessor: "valorRec",
                     },
                     {
                       Header: "Ações",

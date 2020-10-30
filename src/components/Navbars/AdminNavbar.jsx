@@ -34,7 +34,7 @@ import {
   Nav,
   Container,
   Modal,
-  UncontrolledTooltip
+  UncontrolledTooltip,
 } from "reactstrap";
 
 class AdminNavbar extends React.Component {
@@ -43,7 +43,7 @@ class AdminNavbar extends React.Component {
     this.state = {
       collapseOpen: false,
       modalSearch: false,
-      color: "navbar-transparent"
+      color: "navbar-transparent",
     };
   }
   componentDidMount() {
@@ -56,11 +56,11 @@ class AdminNavbar extends React.Component {
   updateColor = () => {
     if (window.innerWidth < 993 && this.state.collapseOpen) {
       this.setState({
-        color: "bg-white"
+        color: "bg-white",
       });
     } else {
       this.setState({
-        color: "navbar-transparent"
+        color: "navbar-transparent",
       });
     }
   };
@@ -68,23 +68,27 @@ class AdminNavbar extends React.Component {
   toggleCollapse = () => {
     if (this.state.collapseOpen) {
       this.setState({
-        color: "navbar-transparent"
+        color: "navbar-transparent",
       });
     } else {
       this.setState({
-        color: "bg-white"
+        color: "bg-white",
       });
     }
     this.setState({
-      collapseOpen: !this.state.collapseOpen
+      collapseOpen: !this.state.collapseOpen,
     });
   };
   // this function is to open the Search modal
   toggleModalSearch = () => {
     this.setState({
-      modalSearch: !this.state.modalSearch
+      modalSearch: !this.state.modalSearch,
     });
   };
+  logout() {
+    localStorage.clear();
+    window.location.href = "/";
+  }
   render() {
     return (
       <>
@@ -93,7 +97,7 @@ class AdminNavbar extends React.Component {
             [this.state.color]:
               this.props.children.props.location.pathname.indexOf(
                 "full-screen-map"
-              ) === -1
+              ) === -1,
           })}
           expand="lg"
         >
@@ -119,7 +123,7 @@ class AdminNavbar extends React.Component {
               </div>
               <div
                 className={classNames("navbar-toggle d-inline", {
-                  toggled: this.props.sidebarOpened
+                  toggled: this.props.sidebarOpened,
                 })}
               >
                 <button
@@ -132,7 +136,7 @@ class AdminNavbar extends React.Component {
                   <span className="navbar-toggler-bar bar3" />
                 </button>
               </div>
-              <NavbarBrand href="#pablo" onClick={e => e.preventDefault()}>
+              <NavbarBrand href="#pablo" onClick={(e) => e.preventDefault()}>
                 {this.props.brandText}
               </NavbarBrand>
             </div>
@@ -208,7 +212,7 @@ class AdminNavbar extends React.Component {
                     color="default"
                     data-toggle="dropdown"
                     nav
-                    onClick={e => e.preventDefault()}
+                    onClick={(e) => e.preventDefault()}
                   >
                     <div className="photo">
                       <img alt="..." src={require("assets/img/mike.jpg")} />
@@ -225,7 +229,9 @@ class AdminNavbar extends React.Component {
                     </NavLink>
                     <DropdownItem divider tag="li" />
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item">Log out</DropdownItem>
+                      <DropdownItem className="nav-item" onClick={this.logout}>
+                        Log out
+                      </DropdownItem>
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>

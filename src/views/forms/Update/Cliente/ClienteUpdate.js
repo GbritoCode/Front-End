@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -33,78 +33,275 @@ import {
 import { useDispatch } from "react-redux";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import { useParams, Link } from "react-router-dom";
-import { useInput } from "hooks.js";
 import axios from "axios";
+import { store } from "~/store";
+import NotificationAlert from "react-notification-alert";
 
 function ClienteUpdatee() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const empresa = store.getState().auth.empresa;
+  const [data, setData] = useState({});
+  const [data1, setData1] = useState({});
+  const [data2, setData2] = useState({});
+  const [data3, setData3] = useState({});
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    cnpj: { value: "", error: "", message: "" },
+    nomeAbv: { value: "", error: "", message: "" },
+    RepresentanteId: { value: "", error: "", message: "" },
+    TipoComisseId: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/cliente/${id}`);
+      const response = await axios(`http://localhost:51314/cliente/${id}`);
+      const response1 = await axios(`http://localhost:51314/tipoComiss`);
+      const response2 = await axios(`http://localhost:51314/representante`);
+      const response3 = await axios(`http://localhost:51314/empresa/${empresa}`);
       setData(response.data);
+      setData1(response1.data);
+      setData2(response2.data);
+      setData3(response3.data);
+      setValues((prevState) => ({
+        ...prevState,
+        empresaId: { value: response.data.EmpresaId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        cnpj: { value: normalizeInput(response.data.CNPJ) },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        nomeAbv: { value: response.data.nomeAbv },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        RepresentanteId: { value: response.data.RepresentanteId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        TipoComisseId: { value: response.data.TipoComisseId },
+      }));
+
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  function validarCNPJ(cnpj) {
+    cnpj = cnpj.replace(/[^\d]+/g, "");
 
-  const dispatch = useDispatch();
+    if (cnpj == "") return false;
 
-  const { value: CNPJ, bind: bindCNPJ } = useInput(undefined, "number");
-  const { value: nome_abv, bind: bindNome_abv } = useInput(undefined);
-  const { value: representante, bind: bindRepresentante } = useInput(undefined);
-  const { value: tipo_comiss, bind: bindTipo_comiss } = useInput(
-    undefined,
-    "number"
-  );
-  const { value: prospect, bind: bindProspect } = useInput(undefined);
+    // Elimina CNPJs invalidos conhecidos
+    if (
+      cnpj === "00000000000000" ||
+      cnpj === "11111111111111" ||
+      cnpj === "22222222222222" ||
+      cnpj === "33333333333333" ||
+      cnpj === "44444444444444" ||
+      cnpj === "55555555555555" ||
+      cnpj === "66666666666666" ||
+      cnpj === "77777777777777" ||
+      cnpj === "88888888888888" ||
+      cnpj === "99999999999999"
+    )
+      return false;
 
-  const errorCheckAux = [
-    bindCNPJ,
-    bindNome_abv,
-    bindRepresentante,
-    bindTipo_comiss,
-    bindProspect,
-  ];
-  console.log(data);
+    // Valida DVs
+    var tamanho = cnpj.length - 2;
+    var numeros = cnpj.substring(0, tamanho);
+    var digitos = cnpj.substring(tamanho);
+    var soma = 0;
+    var pos = tamanho - 7;
+    for (var i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    var resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(0)) return false;
+
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (i = tamanho; i >= 1; i--) {
+      soma += numeros.charAt(tamanho - i) * pos--;
+      if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+    if (resultado != digitos.charAt(1)) return false;
+
+    return true;
+  }
+
+  const normalizeInput = (value) => {
+    if (!value) return value;
+    const currentValue = value.replace(/[^\d]/g, "");
+    const cvLength = currentValue.length;
+    if (cvLength < 3) return currentValue;
+    if (cvLength < 6)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
+    if (cvLength < 9)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5)}`;
+    if (cvLength < 13)
+      return `${currentValue.slice(0, 2)}.${currentValue.slice(
+        2,
+        5
+      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
+    return `${currentValue.slice(0, 2)}.${currentValue.slice(
+      2,
+      5
+    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
+      8,
+      12
+    )}-${currentValue.slice(12, 14)}`;
+  };
+
+  const renderCnpjState = (value) => {
+    if (!validarCNPJ(value)) {
+      setValues((prevState) => ({
+        ...prevState,
+        cnpj: {
+          error: "has-danger",
+          message: "Insira um CNPJ válido",
+        },
+      }));
+    } else {
+      setValues((prevState) => ({
+        ...prevState,
+        cnpj: { value: value, error: "has-success", message: "" },
+      }));
+    }
+  };
+
+  const verifyNumber = (value) => {
+    var numberRex = new RegExp("^[0-9]+$");
+    if (numberRex.test(value)) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "number":
+        if (verifyNumber(target)) {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success" },
+          }));
+        } else {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+            },
+          }));
+        }
+        break;
+
+      case "cnpj":
+        setValues((prevState) => ({
+          ...prevState,
+          cnpj: { value: normalizeInput(target) },
+        }));
+        break;
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    console.log(errorCheckAux.length);
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false;
+        var valid = false;
+        break;
+      }
+    }
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
         break;
       }
     }
 
-    if (valid) {
+    if (valid && filled) {
+      var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
+
       dispatch(
-        ClienteUpdate(id, CNPJ, nome_abv, representante, tipo_comiss, prospect)
+        ClienteUpdate(
+          id,
+          values.nomeAbv.value,
+          values.RepresentanteId.value,
+          values.TipoComisseId.value,
+          values.empresaId.value
+        )
       );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
+
   return (
     <Fragment>
       {isLoading ? (
-        <div></div>
+        <div> </div>
       ) : (
         <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
           <div className="content">
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Atualização de cliente</CardTitle>
+                    <CardTitle tag="h4">Edição de cliente</CardTitle>
                     <Link to="/cliente_cadastro">
                       <Button
                         style={{
@@ -157,69 +354,155 @@ function ClienteUpdatee() {
                         Receita/Despesa
                       </Button>
                     </Link>
+                    <Link to={`/tabelas/cliente/cliente`}>
+                  <Button
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   </CardHeader>
                   <CardBody>
-                    <Form className="cadastro" onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit}>
                       <Label>Empresa</Label>
-                      <FormGroup>
+                      <FormGroup
+                        className={`has-label ${values.empresaId.error}`}
+                      >
                         <Input
                           disabled={true}
                           name="EmpresaId"
-                          defaultValue={data.EmpresaId}
-                        />
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "empresaId", "text")
+                          }
+                          value={values.empresaId.value}
+                        >
+                          {" "}
+                          <option value={1}>
+                            {" "}
+                            {data3.nome} - {normalizeInput(data3.idFederal)}
+                          </option>
+                        </Input>
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
+                        ) : null}
                       </FormGroup>
-                      <Label>CNPJ</Label>
-                      <FormGroup className={`has-label ${bindCNPJ.valueerror}`}>
+                      <label>CNPJ</label>
+                      <FormGroup className={`has-label ${values.cnpj.error}`}>
                         <Input
-                          defaultValue={data.CNPJ}
-                          name="CNPJ"
-                          type="numeric"
-                          {...bindCNPJ}
+                        disabled
+                          maxLength={18}
+                          name="cnpj"
+                          type="text"
+                          onChange={(event) =>
+                            handleChange(event, "cnpj", "cnpj")
+                          }
+                          value={values.cnpj.value}
+                          onBlur={(e) => {
+                            let value = e.target.value;
+                            renderCnpjState(value);
+                          }}
                         />
-                        {bindCNPJ.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
                       <Label>Nome Abreviado</Label>
                       <FormGroup
-                        className={`has-label ${bindNome_abv.valueerror}`}
+                        className={`has-label ${values.nomeAbv.error}`}
                       >
                         <Input
-                          defaultValue={data.nome_abv}
+                        disabled
                           name="name_abv"
                           type="text"
-                          {...bindNome_abv}
+                          onChange={(event) =>
+                            handleChange(event, "nomeAbv", "text")
+                          }
+                          value={values.nomeAbv.value}
                         />
-                        {bindNome_abv.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
                       <Label>Representante</Label>
                       <FormGroup
-                        className={`has-label ${bindRepresentante.valueerror}`}
+                        className={`has-label ${values.RepresentanteId.error}`}
                       >
                         <Input
-                          defaultValue={data.representante}
                           name="representante"
-                          type="text"
-                          {...bindRepresentante}
-                        />
-                        {bindRepresentante.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "representante", "text")
+                          }
+                          value={values.RepresentanteId.value}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o representante{" "}
+                          </option>
+                          {data2.map((representante) => (
+                            <option value={representante.id}>
+                              {" "}
+                              {representante.nome}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
                       <Label>Tipo Comissão</Label>
                       <FormGroup
-                        className={`has-label ${bindTipo_comiss.valueerror}`}
+                        className={`has-label ${values.TipoComisseId.error}`}
                       >
                         <Input
-                          defaultValue={data.tipo_comiss}
-                          name="tipo_comiss"
-                          type="numeric"
-                          {...bindTipo_comiss}
-                        />
-                        {bindTipo_comiss.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
+                          name="tipoComiss"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "tipoComiss", "text")
+                          }
+                          value={values.TipoComisseId.value}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o tipo de comissão{" "}
+                          </option>
+                          {data1.map((tipoComiss) => (
+                            <option value={tipoComiss.id}>
+                              {" "}
+                              {tipoComiss.id} -{tipoComiss.desc}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.empresaId.error === "has-danger" ? (
+                          <label className="error">
+                            {values.empresaId.message}
+                          </label>
                         ) : null}
                       </FormGroup>
 
@@ -229,7 +512,7 @@ function ClienteUpdatee() {
                         color="info"
                         type="submit"
                       >
-                        Submit
+                        Enviar
                       </Button>
                     </Form>
                   </CardBody>

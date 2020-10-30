@@ -25,65 +25,43 @@ import api from "~/services/api";
 
 import { Link } from "react-router-dom";
 
-class Tabela_Cliente extends Component {
+class recDespTable extends Component {
   state = {
     data: [],
   };
-
-  normalizeCnpj = (value) => {
-    const currentValue = value.replace(/[^\d]/g, "");
-    return `${currentValue.slice(0, 2)}.${currentValue.slice(
-      2,
-      5
-    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
-      8,
-      12
-    )}-${currentValue.slice(12, 14)}`;
-  };
-
   componentDidMount() {
-    this.loadCliente();
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+    this.loadClients();
   }
-  loadCliente = async () => {
-    const response = await api.get("/cliente");
+  loadClients = async () => {
+    const response = await api.get("/rec_desp");
     this.setState({
       data: response.data.map((client, key) => {
         return {
-          idd: key,
-          id: client.id,
-          CNPJ: this.normalizeCnpj(client.CNPJ),
-          nome_abv: client.nome_abv,
-          representante: client.representante,
-          tipo_comiss: client.tipo_comiss,
-          EmpresaId: client.EmpresaId,
-          prospect: client.prospect,
+          id: key,
+          idd: client.id,
+          Empresa: client.Empresa.nome,
+          desc: client.desc,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Link
-                to={`/cliente_update/${client.id}/false`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-triangle-right-17" />
-              </Link>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/cliente_update/${client.id}/true`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/update/general/rec_desp/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
                   var data = this.state.data;
                   data.find((o, i) => {
-                    if (o.idd === key) {
+                    if (o.id === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
@@ -105,8 +83,8 @@ class Tabela_Cliente extends Component {
         };
       }),
     });
-    console.log(this.state.data);
   };
+
   render() {
     return (
       <>
@@ -115,7 +93,8 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  <Link to="/cliente_cadastro">
+                  Receita e Despesa
+                  <Link to="/cadastro/geral/rec_desp">
                     <Button
                       style={{
                         float: "right",
@@ -124,13 +103,13 @@ class Tabela_Cliente extends Component {
                       }}
                       color="info"
                       size="small"
-                      className="text-center"
+                      className="text-left"
                     >
                       <i
                         className="tim-icons icon-simple-add"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 10,
+                          paddingRight: 5,
                         }}
                         size="large"
                       />{" "}
@@ -146,20 +125,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
-                      Header: "CNPJ",
-                      accessor: "CNPJ",
+                      Header: "Empresa",
+                      accessor: "Empresa",
                     },
                     {
-                      Header: "Nome Abreviado",
-                      accessor: "nome_abv",
+                      Header: "Código",
+                      accessor: "idd",
                     },
                     {
-                      Header: "Representante",
-                      accessor: "representante",
-                    },
-                    {
-                      Header: "Tipo de comissão",
-                      accessor: "tipo_comiss",
+                      Header: "Descrição",
+                      accessor: "desc",
                     },
                     {
                       Header: "Ações",
@@ -183,4 +158,4 @@ class Tabela_Cliente extends Component {
   }
 }
 
-export default Tabela_Cliente;
+export default recDespTable;

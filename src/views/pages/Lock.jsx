@@ -29,11 +29,13 @@ import {
   InputGroupText,
   InputGroup,
   Container,
-  Col
+  Col,
 } from "reactstrap";
 
 class Lock extends React.Component {
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     document.body.classList.toggle("lock-page");
   }
   componentWillUnmount() {
@@ -66,7 +68,7 @@ class Lock extends React.Component {
                     color="primary"
                     href="#pablo"
                     size="lg"
-                    onClick={e => e.preventDefault()}
+                    onClick={(e) => e.preventDefault()}
                   >
                     Unlock
                   </Button>

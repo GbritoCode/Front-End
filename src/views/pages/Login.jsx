@@ -30,11 +30,13 @@ import {
   InputGroupText,
   InputGroup,
   Container,
-  Col
+  Col,
 } from "reactstrap";
 
 class Login extends React.Component {
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     document.body.classList.toggle("login-page");
   }
   componentWillUnmount() {
@@ -79,7 +81,7 @@ class Login extends React.Component {
                       className="mb-3"
                       color="primary"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={(e) => e.preventDefault()}
                       size="lg"
                     >
                       Get Started
@@ -89,7 +91,7 @@ class Login extends React.Component {
                         <a
                           className="link footer-link"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Create Account
                         </a>
@@ -100,7 +102,7 @@ class Login extends React.Component {
                         <a
                           className="link footer-link"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           Need Help?
                         </a>

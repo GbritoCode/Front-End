@@ -21,6 +21,9 @@ import {
 import { signUpRequest } from "~/store/modules/auth/actions";
 
 export default function SignUp() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const dispatch = useDispatch();
   const { value: name, bind: bindName } = useInput("");
   const { value: email, bind: bindEmail } = useInput("");

@@ -39,6 +39,7 @@ import ExtendedForms from "~/views/forms/ExtendedForms.jsx";
 import ClienteUpdate from "~/views/forms/Update/Cliente/ClienteUpdate.js";
 import CliContUpdate from "~/views/forms/Update/Cliente/CliContUpdate.js";
 import CliCompUpdate from "~/views/forms/Update/Cliente/CliCompUpdate.js";
+import CliRecDespUpdate from "~/views/forms/Update/Cliente/cliRecDespUpdate.js";
 
 import CadastroCliente from "~/views/forms/CadastroCliente.js";
 import CliCompCadastro from "~/views/forms/Cliente/CliCompCadastro.js";
@@ -68,9 +69,6 @@ import ParametrosCadastro from "~/views/forms/ParametrosCadastro.js";
 import ProdtUpdate from "~/views/forms/Update/General/ProdtUpdate.js";
 import ProdtCadastro from "~/views/forms/ProdtCadastro.js";
 
-import RecDespUpdate from "~/views/forms/Update/General/RecDespUpdate.js";
-import RecDespCadastro from "~/views/forms/RecDespCadastro.js";
-
 import RepresentanteUpdate from "~/views/forms/Update/General/RepresentanteUpdate.js";
 import RepresentanteCadastro from "~/views/forms/RepresentanteCadastro.js";
 
@@ -80,6 +78,17 @@ import SegmentoCadastro from "~/views/forms/SegmentoCadastro.js";
 import UndNegUpdate from "~/views/forms/Update/General/UndNegUpdate.js";
 import UndNegCadastro from "~/views/forms/UndNegCadastro.js";
 
+import RecDespUpdate from "~/views/forms/Update/General/RecDespUpdate.js";
+import RecDespCadastro from "~/views/forms/RecDespCadastro.js";
+
+import condPgmtoUpdate from "~/views/forms/Update/auxUpdate/condPgmtoUpdate.js";
+import condPgmtoCadastro from "~/views/forms/auxForm/condPgmtoCadastro.js";
+
+import tipoComissUpdate from "~/views/forms/Update/auxUpdate/tipoComissUpdate.js";
+import tipoComissCadastro from "~/views/forms/auxForm/tipoComissCadastro.js";
+
+import perfilUpdate from "~/views/forms/Update/auxUpdate/perfilUpdate.js";
+import perfilCadastro from "~/views/forms/auxForm/perfilCadastro.js";
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
@@ -92,7 +101,7 @@ import UndNegCadastro from "~/views/forms/UndNegCadastro.js";
 //-------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
 
-import Tabela_Cliente from "~/views/tables/Tabela_Cliente.jsx";
+import Tabela_Cliente from "~/views/tables/Clientes/Tabela_Cliente.jsx";
 import CliCompTable from "~/views/tables/Clientes/CliCompTable.js";
 import CliContTable from "~/views/tables/Clientes/CliContTable.js";
 import CliRecDespTable from "~/views/tables/Clientes/CliRecDespTable.js";
@@ -106,11 +115,14 @@ import FornecTable from "~/views/tables/General/FornecTable.js";
 import ItmControleTable from "~/views/tables/General/ItmControleTable.js";
 import ParametrosTable from "~/views/tables/General/ParametrosTable.js";
 import ProdtTable from "~/views/tables/General/ProdtTable.js";
-import RecDespTable from "~/views/tables/General/RecDespTable.js";
 import RepresentanteTable from "~/views/tables/General/RepresentanteTable.js";
 import SegmentoTable from "~/views/tables/General/SegmentoTable.js";
 import UndNegTable from "~/views/tables/General/UndNegTable.js";
 
+import RecDespTable from "~/views/tables/auxTables/RecDespTable.js";
+import condPgmtoTable from "~/views/tables/auxTables/condPgmtoTable.js";
+import tipoComissTable from "~/views/tables/auxTables/tipoComissTable.js";
+import perfilTable from "~/views/tables/auxTables/perfilTable.js";
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
@@ -218,6 +230,24 @@ const routes = [
   },
   {
     collapse: true,
+    name: "Administrador",
+    rtlName: "المكونات",
+    icon: "tim-icons icon-molecule-40",
+    state: "AdministradorCollapse",
+    views: [
+      {
+        path: "/tabelas/aux/perfil",
+        name: "Perfis",
+        rtlName: "طاولات عادية",
+        mini: "PRF",
+        rtlMini: "صر",
+        component: perfilTable,
+        layout: "/admin",
+      },
+    ],
+  },
+  {
+    collapse: true,
     name: "Components",
     rtlName: "المكونات",
     icon: "tim-icons icon-molecule-40",
@@ -240,26 +270,18 @@ const routes = [
             component: Buttons,
             layout: "/admin",
           },
+          {
+            path: "/grid-system",
+            name: "Grid System",
+            rtlName: "نظام الشبكة",
+            mini: "GS",
+            rtlMini: "زو",
+            component: Grid,
+            layout: "/admin",
+          },
         ],
       },
-      {
-        path: "/buttons",
-        name: "Buttons",
-        rtlName: "وصفت",
-        mini: "B",
-        rtlMini: "ب",
-        component: Buttons,
-        layout: "/admin",
-      },
-      {
-        path: "/grid-system",
-        name: "Grid System",
-        rtlName: "نظام الشبكة",
-        mini: "GS",
-        rtlMini: "زو",
-        component: Grid,
-        layout: "/admin",
-      },
+
       {
         path: "/panels",
         name: "Panels",
@@ -375,12 +397,21 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/cadastro/cliente/rec_desp",
+        path: "/cadastro/cliente/rec_desp/:id",
         name: "Receitas/Despesas do Cliente",
         rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliRecDespCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/cliente/rec_desp/:id",
+        name: "Receitas/Despesas do Cliente",
+        rtlName: "أشكال عادية",
+        mini: "RF",
+        rtlMini: "صو",
+        component: CliRecDespUpdate,
         layout: "/admin",
       },
       {
@@ -402,7 +433,7 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/cadastro/colab/comp",
+        path: "/cadastro/colab/comp/:id",
         name: "Complemento de Colaborador",
         rtlName: "أشكال عادية",
         mini: "RF",
@@ -546,6 +577,60 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/cadastro/aux/condPgmto",
+        name: "Condições de pagamento",
+        rtlName: "أشكال عادية",
+        mini: "CPG",
+        rtlMini: "صو",
+        component: condPgmtoCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/aux/condPgmto/:id",
+        name: "Condições de pagamento",
+        rtlName: "أشكال عادية",
+        mini: "CPG",
+        rtlMini: "صو",
+        component: condPgmtoUpdate,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/aux/tipoComiss",
+        name: "Tipos de Comissão",
+        rtlName: "أشكال عادية",
+        mini: "CMS",
+        rtlMini: "صو",
+        component: tipoComissCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/aux/tipoComiss/:id",
+        name: "Tipos de Comissão",
+        rtlName: "أشكال عادية",
+        mini: "CMS",
+        rtlMini: "صو",
+        component: tipoComissUpdate,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/aux/perfil",
+        name: "Perfis",
+        rtlName: "أشكال عادية",
+        mini: "PRF",
+        rtlMini: "صو",
+        component: perfilCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/aux/perfil/:id",
+        name: "Perfis",
+        rtlName: "أشكال عادية",
+        mini: "PRF",
+        rtlMini: "صو",
+        component: perfilUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/represent",
         name: "Representante",
         rtlName: "أشكال عادية",
@@ -555,7 +640,7 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/update/general/representante/:id",
+        path: "/update/general/represent/:id",
         name: "Editar Representante",
         rtlName: "أشكال عادية",
         mini: "RF",
@@ -647,6 +732,35 @@ const routes = [
     state: "tablesCollapse",
     views: [
       {
+        path: "/tabelas/aux/condPgmto",
+        name: "Condição de Pagamento",
+        rtlName: "طاولات عادية",
+        mini: "CPG",
+        rtlMini: "صر",
+        component: condPgmtoTable,
+        layout: "/admin",
+      },
+      {
+        path: "/tabelas/aux/tipoComiss",
+        name: "Tipos de Comissão",
+        rtlName: "طاولات عادية",
+        mini: "CMS",
+        rtlMini: "صر",
+        component: tipoComissTable,
+        layout: "/admin",
+      },
+
+      {
+        path: "/tabelas/aux/rec_desp",
+        name: "Receita e Despesa",
+        rtlName: "رد فعل الطاولة",
+        mini: "RDP",
+        rtlMini: "در",
+        component: RecDespTable,
+        layout: "/admin",
+      },
+
+      {
         path: "/regular-tables",
         name: "Regular Tables",
         rtlName: "طاولات عادية",
@@ -665,7 +779,7 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/tabela_cliente",
+        path: "/tabelas/cliente/cliente",
         name: "Clientes",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
@@ -713,7 +827,7 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/tabelas/colab/comp",
+        path: "/tables/colab/comp/:id",
         name: "Complemento de Colaborador",
         rtlName: "رد فعل الطاولة",
         mini: "RT",
@@ -774,15 +888,6 @@ const routes = [
         mini: "RT",
         rtlMini: "در",
         component: ProdtTable,
-        layout: "/admin",
-      },
-      {
-        path: "/tabelas/general/rec_desp",
-        name: "Receita e Despesa",
-        rtlName: "رد فعل الطاولة",
-        mini: "RT",
-        rtlMini: "در",
-        component: RecDespTable,
         layout: "/admin",
       },
       {
