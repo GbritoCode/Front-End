@@ -34,11 +34,13 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class Register extends React.Component {
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     document.body.classList.toggle("register-page");
   }
   componentWillUnmount() {
@@ -127,7 +129,7 @@ class Register extends React.Component {
                         <Label check>
                           <Input type="checkbox" />
                           <span className="form-check-sign" />I agree to the{" "}
-                          <a href="#pablo" onClick={e => e.preventDefault()}>
+                          <a href="#pablo" onClick={(e) => e.preventDefault()}>
                             terms and conditions
                           </a>
                           .
@@ -140,7 +142,7 @@ class Register extends React.Component {
                       className="btn-round"
                       color="primary"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={(e) => e.preventDefault()}
                       size="lg"
                     >
                       Get Started

@@ -25,6 +25,9 @@ import { useInput } from "~/hooks.js";
 // reactstrap components
 
 export default function SignIn() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const dispatch = useDispatch();
   const [emailFocus, setEmailFocus] = useState("");
   const [passFocus, setPassFocus] = useState("");

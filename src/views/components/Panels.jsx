@@ -29,7 +29,7 @@ import {
   TabContent,
   TabPane,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class Panels extends React.Component {
@@ -40,8 +40,12 @@ class Panels extends React.Component {
       verticalTabs: "profile",
       verticalTabsIcons: "home",
       pageTabs: "home",
-      openedCollapses: ["collapseOne"]
+      openedCollapses: ["collapseOne"],
     };
+  }
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
   }
   // with this function we create an array with the opened collapses
   // it is like a toggle function for all collapses from this page
@@ -50,12 +54,12 @@ class Panels extends React.Component {
     let openedCollapses = this.state.openedCollapses;
     if (openedCollapses.includes(collapse)) {
       this.setState({
-        openedCollapses: openedCollapses.filter(item => item !== collapse)
+        openedCollapses: openedCollapses.filter((item) => item !== collapse),
       });
     } else {
       openedCollapses.push(collapse);
       this.setState({
-        openedCollapses: openedCollapses
+        openedCollapses: openedCollapses,
       });
     }
   };
@@ -63,7 +67,7 @@ class Panels extends React.Component {
   changeActiveTab = (e, tabState, tadName) => {
     e.preventDefault();
     this.setState({
-      [tabState]: tadName
+      [tabState]: tadName,
     });
   };
   render() {
@@ -88,7 +92,7 @@ class Panels extends React.Component {
                             ? "active"
                             : ""
                         }
-                        onClick={e =>
+                        onClick={(e) =>
                           this.changeActiveTab(e, "horizontalTabs", "profile")
                         }
                       >
@@ -104,7 +108,7 @@ class Panels extends React.Component {
                             ? "active"
                             : ""
                         }
-                        onClick={e =>
+                        onClick={(e) =>
                           this.changeActiveTab(e, "horizontalTabs", "settings")
                         }
                       >
@@ -120,7 +124,7 @@ class Panels extends React.Component {
                             ? "active"
                             : ""
                         }
-                        onClick={e =>
+                        onClick={(e) =>
                           this.changeActiveTab(e, "horizontalTabs", "options")
                         }
                       >
@@ -179,7 +183,7 @@ class Panels extends React.Component {
                                 ? "active"
                                 : ""
                             }
-                            onClick={e =>
+                            onClick={(e) =>
                               this.changeActiveTab(e, "verticalTabs", "profile")
                             }
                           >
@@ -195,7 +199,7 @@ class Panels extends React.Component {
                                 ? "active"
                                 : ""
                             }
-                            onClick={e =>
+                            onClick={(e) =>
                               this.changeActiveTab(
                                 e,
                                 "verticalTabs",
@@ -215,7 +219,7 @@ class Panels extends React.Component {
                                 ? "active"
                                 : ""
                             }
-                            onClick={e =>
+                            onClick={(e) =>
                               this.changeActiveTab(e, "verticalTabs", "options")
                             }
                           >
@@ -279,7 +283,7 @@ class Panels extends React.Component {
                         href="#pablo"
                         data-parent="#accordion"
                         data-toggle="collapse"
-                        onClick={e => this.collapsesToggle(e, "collapseOne")}
+                        onClick={(e) => this.collapsesToggle(e, "collapseOne")}
                       >
                         Collapsible Group Item #1{" "}
                         <i className="tim-icons icon-minimal-down" />
@@ -316,7 +320,7 @@ class Panels extends React.Component {
                         href="#pablo"
                         data-parent="#accordion"
                         data-toggle="collapse"
-                        onClick={e => this.collapsesToggle(e, "collapseTwo")}
+                        onClick={(e) => this.collapsesToggle(e, "collapseTwo")}
                       >
                         Collapsible Group Item #2{" "}
                         <i className="tim-icons icon-minimal-down" />
@@ -353,7 +357,9 @@ class Panels extends React.Component {
                         href="#pablo"
                         data-parent="#accordion"
                         data-toggle="collapse"
-                        onClick={e => this.collapsesToggle(e, "collapseThree")}
+                        onClick={(e) =>
+                          this.collapsesToggle(e, "collapseThree")
+                        }
                       >
                         Collapsible Group Item #3{" "}
                         <i className="tim-icons icon-minimal-down" />
@@ -407,7 +413,7 @@ class Panels extends React.Component {
                                 ? "active"
                                 : ""
                             }
-                            onClick={e =>
+                            onClick={(e) =>
                               this.changeActiveTab(
                                 e,
                                 "verticalTabsIcons",
@@ -428,7 +434,7 @@ class Panels extends React.Component {
                                 ? "active"
                                 : ""
                             }
-                            onClick={e =>
+                            onClick={(e) =>
                               this.changeActiveTab(
                                 e,
                                 "verticalTabsIcons",
@@ -489,7 +495,7 @@ class Panels extends React.Component {
                         className={
                           this.state.pageTabs === "home" ? "active" : ""
                         }
-                        onClick={e =>
+                        onClick={(e) =>
                           this.changeActiveTab(e, "pageTabs", "home")
                         }
                       >
@@ -504,7 +510,7 @@ class Panels extends React.Component {
                         className={
                           this.state.pageTabs === "messages" ? "active" : ""
                         }
-                        onClick={e =>
+                        onClick={(e) =>
                           this.changeActiveTab(e, "pageTabs", "messages")
                         }
                       >
@@ -519,7 +525,7 @@ class Panels extends React.Component {
                         className={
                           this.state.pageTabs === "settings" ? "active" : ""
                         }
-                        onClick={e =>
+                        onClick={(e) =>
                           this.changeActiveTab(e, "pageTabs", "settings")
                         }
                       >

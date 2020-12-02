@@ -30,7 +30,7 @@ import {
   Modal,
   ModalBody,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class Notifications extends React.Component {
@@ -38,27 +38,31 @@ class Notifications extends React.Component {
     super(props);
     this.state = {
       visible: true,
-      modalMini: false,
+      modalMini: true,
       modalClassic: false,
-      modalNotice: false
+      modalNotice: false,
     };
+  }
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
   }
   toggleModalClassic = () => {
     this.setState({
-      modalClassic: !this.state.modalClassic
+      modalClassic: !this.state.modalClassic,
     });
   };
   toggleModalNotice = () => {
     this.setState({
-      modalNotice: !this.state.modalNotice
+      modalNotice: !this.state.modalNotice,
     });
   };
   toggleModalMini = () => {
     this.setState({
-      modalMini: !this.state.modalMini
+      modalMini: !this.state.modalMini,
     });
   };
-  notify = place => {
+  notify = (place) => {
     var color = Math.floor(Math.random() * 5 + 1);
     var type;
     switch (color) {
@@ -93,7 +97,7 @@ class Notifications extends React.Component {
       ),
       type: type,
       icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
+      autoDismiss: 7,
     };
     this.refs.notificationAlert.notificationAlert(options);
   };

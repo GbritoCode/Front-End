@@ -25,8 +25,12 @@ class SweetAlert extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      alert: null
+      alert: null,
     };
+  }
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
   }
   // to stop the warning of calling setState of unmounted component
   componentWillUnmount() {
@@ -46,7 +50,7 @@ class SweetAlert extends React.Component {
           confirmBtnBsStyle="success"
           btnSize=""
         />
-      )
+      ),
     });
   };
   titleAndTextAlert = () => {
@@ -62,7 +66,7 @@ class SweetAlert extends React.Component {
         >
           It's pretty, isn't it?
         </ReactBSAlert>
-      )
+      ),
     });
   };
   successAlert = () => {
@@ -79,7 +83,7 @@ class SweetAlert extends React.Component {
         >
           You clicked the button!
         </ReactBSAlert>
-      )
+      ),
     });
   };
   htmlAlert = () => {
@@ -96,7 +100,7 @@ class SweetAlert extends React.Component {
           You can use <b>bold</b> text,{" "}
           <a href="https://www.creative-tim.com/">links</a> and other HTML tags
         </ReactBSAlert>
-      )
+      ),
     });
   };
   warningWithConfirmMessage = () => {
@@ -117,7 +121,7 @@ class SweetAlert extends React.Component {
         >
           You will not be able to recover this imaginary file!
         </ReactBSAlert>
-      )
+      ),
     });
   };
   warningWithConfirmAndCancelMessage = () => {
@@ -138,7 +142,7 @@ class SweetAlert extends React.Component {
         >
           You will not be able to recover this imaginary file!
         </ReactBSAlert>
-      )
+      ),
     });
   };
   autoCloseAlert = () => {
@@ -152,7 +156,7 @@ class SweetAlert extends React.Component {
         >
           I will close in 2 seconds.
         </ReactBSAlert>
-      )
+      ),
     });
     setTimeout(this.hideAlert, 2000);
   };
@@ -164,16 +168,16 @@ class SweetAlert extends React.Component {
           showCancel
           style={{ display: "block", marginTop: "-100px" }}
           title="Input something"
-          onConfirm={e => this.inputConfirmAlert(e)}
+          onConfirm={(e) => this.inputConfirmAlert(e)}
           onCancel={() => this.hideAlert()}
           confirmBtnBsStyle="success"
           cancelBtnBsStyle="danger"
           btnSize=""
         />
-      )
+      ),
     });
   };
-  inputConfirmAlert = e => {
+  inputConfirmAlert = (e) => {
     this.setState({ alert: e });
     setTimeout(this.inputConfirmAlertNext, 200);
   };
@@ -192,7 +196,7 @@ class SweetAlert extends React.Component {
         >
           <b>{inputValue}</b>
         </ReactBSAlert>
-      )
+      ),
     });
   };
   successDelete = () => {
@@ -209,7 +213,7 @@ class SweetAlert extends React.Component {
         >
           Your imaginary file has been deleted.
         </ReactBSAlert>
-      )
+      ),
     });
   };
   cancelDetele = () => {
@@ -226,12 +230,12 @@ class SweetAlert extends React.Component {
         >
           Your imaginary file is safe :)
         </ReactBSAlert>
-      )
+      ),
     });
   };
   hideAlert = () => {
     this.setState({
-      alert: null
+      alert: null,
     });
   };
   render() {

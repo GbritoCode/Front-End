@@ -26,10 +26,14 @@ import {
   DropdownItem,
   UncontrolledDropdown,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class Timeline extends React.Component {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   render() {
     return (
       <>
@@ -128,19 +132,19 @@ class Timeline extends React.Component {
                             <DropdownMenu>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={e => e.preventDefault()}
+                                onClick={(e) => e.preventDefault()}
                               >
                                 Action
                               </DropdownItem>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={e => e.preventDefault()}
+                                onClick={(e) => e.preventDefault()}
                               >
                                 Another action
                               </DropdownItem>
                               <DropdownItem
                                 href="#pablo"
-                                onClick={e => e.preventDefault()}
+                                onClick={(e) => e.preventDefault()}
                               >
                                 Something else here
                               </DropdownItem>

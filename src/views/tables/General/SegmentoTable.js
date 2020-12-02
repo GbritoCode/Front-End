@@ -24,12 +24,16 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
@@ -39,44 +43,23 @@ class Tabela_Cliente extends Component {
         return {
           id: key,
           idd: client.id,
-          EmpresaId: client.EmpresaId,
-          Und_negId: client.Und_negId,
-          ProdutoId: client.ProdutoId,
-          AreaId: client.AreaId,
-          desc_segmt: client.desc_segmt,
+          Empresa: client.Empresa.nome,
+          UndNeg: client.UndNeg.descUndNeg,
+          Produto: client.Produto.descProdt,
+          Area: client.Area.descArea,
+          descSegmt: client.descSegmt,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_EMP +
-                      ", \nemail: " +
-                      obj.COD_UND_NEG +
-                      ", \nidade: " +
-                      obj.COD_PRODT +
-                      ", \nsalario: " +
-                      obj.COD_AREA +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/update/general/segmento/${client.id}`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/update/general/segmento/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -115,27 +98,18 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Segmento
                   <Link to="/cadastro/geral/sgmet">
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -147,15 +121,19 @@ class Tabela_Cliente extends Component {
                   columns={[
                     {
                       Header: "Descrição",
-                      accessor: "desc_segmt",
+                      accessor: "descSegmt",
                     },
                     {
                       Header: "Unidade de Negócio",
-                      accessor: "Und_negId",
+                      accessor: "UndNeg",
                     },
                     {
                       Header: "Produto",
-                      accessor: "ProdutoId",
+                      accessor: "Produto",
+                    },
+                    {
+                      Header: "Área",
+                      accessor: "Area",
                     },
                     {
                       Header: "Ações",

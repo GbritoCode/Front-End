@@ -29,11 +29,13 @@ import {
   Progress,
   Container,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 
 class Pricing extends React.Component {
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     document.body.classList.toggle("pricing-page");
   }
   componentWillUnmount() {
