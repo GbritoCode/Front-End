@@ -34,13 +34,17 @@ class Calendar extends React.Component {
     super(props);
     this.state = {
       events: events,
-      alert: null
+      alert: null,
     };
   }
-  selectedEvent = event => {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
+  selectedEvent = (event) => {
     alert(event.title);
   };
-  addNewEventAlert = slotInfo => {
+  addNewEventAlert = (slotInfo) => {
     this.setState({
       alert: (
         <SweetAlert
@@ -48,12 +52,12 @@ class Calendar extends React.Component {
           showCancel
           style={{ display: "block", marginTop: "-100px" }}
           title="Input something"
-          onConfirm={e => this.addNewEvent(e, slotInfo)}
+          onConfirm={(e) => this.addNewEvent(e, slotInfo)}
           onCancel={() => this.hideAlert()}
           confirmBtnBsStyle="info"
           cancelBtnBsStyle="danger"
         />
-      )
+      ),
     });
   };
   addNewEvent = (e, slotInfo) => {
@@ -61,16 +65,16 @@ class Calendar extends React.Component {
     newEvents.push({
       title: e,
       start: slotInfo.start,
-      end: slotInfo.end
+      end: slotInfo.end,
     });
     this.setState({
       alert: null,
-      events: newEvents
+      events: newEvents,
     });
   };
   hideAlert = () => {
     this.setState({
-      alert: null
+      alert: null,
     });
   };
   eventColors = (event, start, end, isSelected) => {
@@ -79,7 +83,7 @@ class Calendar extends React.Component {
       ? (backgroundColor = backgroundColor + event.color)
       : (backgroundColor = backgroundColor + "default");
     return {
-      className: backgroundColor
+      className: backgroundColor,
     };
   };
   render() {
@@ -98,8 +102,8 @@ class Calendar extends React.Component {
                     defaultView="month"
                     scrollToTime={new Date(1970, 1, 1, 6)}
                     defaultDate={new Date()}
-                    onSelectEvent={event => this.selectedEvent(event)}
-                    onSelectSlot={slotInfo => this.addNewEventAlert(slotInfo)}
+                    onSelectEvent={(event) => this.selectedEvent(event)}
+                    onSelectSlot={(slotInfo) => this.addNewEventAlert(slotInfo)}
                     eventPropGetter={this.eventColors}
                   />
                 </CardBody>

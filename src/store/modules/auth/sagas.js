@@ -24,14 +24,16 @@ export function* signIn({ payload }) {
 
 export function* signUp({ payload }) {
   try {
-    const { name, email, password } = payload;
+    const { name, email, password, colab } = payload;
     yield call(api.post, "users", {
       name,
       email,
       password,
       provider: true
     });
-    history.push("/login");
+    if (colab == false) {
+      history.push("/login");
+    }
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());

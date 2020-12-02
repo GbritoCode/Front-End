@@ -20,6 +20,10 @@ import React from "react";
 import { Card, CardBody, Row, Col } from "reactstrap";
 
 class Grid extends React.Component {
+  componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
+  }
   render() {
     return (
       <>

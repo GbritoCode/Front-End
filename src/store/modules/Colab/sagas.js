@@ -11,11 +11,11 @@ export function* colabCadastro({ payload }) {
     const {
       CPF,
       FornecId,
-      log_usr,
       EmpresaId,
       nome,
-      dt_admiss,
+      dtAdmiss,
       cel,
+      PerfilId,
       skype,
       email,
       espec,
@@ -23,18 +23,17 @@ export function* colabCadastro({ payload }) {
     yield call(api.post, "colab", {
       CPF,
       FornecId,
-      log_usr,
       EmpresaId,
       nome,
-      dt_admiss,
+      dtAdmiss,
       cel,
+      PerfilId,
       skype,
       email,
       espec,
     });
     history.push("/tabelas/colab");
   } catch (err) {
-    console.log(err);
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
   }
@@ -46,10 +45,9 @@ export function* updateColab({ payload }) {
       id,
       CPF,
       FornecId,
-      log_usr,
-      EmpresaId,
+      PerfilId,
       nome,
-      dt_admiss,
+      dtAdmiss,
       cel,
       skype,
       email,
@@ -59,10 +57,9 @@ export function* updateColab({ payload }) {
     const Colab = Object.assign({
       CPF,
       FornecId,
-      log_usr,
-      EmpresaId,
+      PerfilId,
       nome,
-      dt_admiss,
+      dtAdmiss,
       cel,
       skype,
       email,
@@ -70,7 +67,8 @@ export function* updateColab({ payload }) {
     });
 
     const response = yield call(api.put, `colab/${id}`, Colab);
-
+    console.log(Colab + "       sada     " + response);
+    history.push("/tabelas/colab");
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
@@ -85,22 +83,22 @@ export function* colabCompCadastro({ payload }) {
     const {
       ColabId,
       nivel,
-      tipo_valor,
+      tipoValor,
       valor,
-      data_inic,
-      data_fim,
-      tipo_atend,
+      dataInic,
+      dataFim,
+      tipoAtend,
     } = payload;
     yield call(api.post, "colab/comp", {
       ColabId,
       nivel,
-      tipo_valor,
+      tipoValor,
       valor,
-      data_inic,
-      data_fim,
-      tipo_atend,
+      dataInic,
+      dataFim,
+      tipoAtend,
     });
-    history.push("/tabelas/colab/comp");
+    history.push(`/tables/colab/comp/${ColabId}`);
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -112,26 +110,27 @@ export function* updateColabComp({ payload }) {
       id,
       ColabId,
       nivel,
-      tipo_valor,
+      tipoValor,
       valor,
-      data_inic,
-      data_fim,
-      tipo_atend,
+      dataInic,
+      dataFim,
+      tipoAtend,
     } = payload;
 
     const Colab = Object.assign({
       ColabId,
       nivel,
-      tipo_valor,
+      tipoValor,
       valor,
-      data_inic,
-      data_fim,
-      tipo_atend,
+      dataInic,
+      dataFim,
+      tipoAtend,
     });
 
     const response = yield call(api.put, `colab/comp/${id}`, Colab);
 
     toast.success("cliente atualizado");
+    history.push(`/colab/update/${ColabId}`);
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");

@@ -21,6 +21,9 @@ import {
 import { signUpRequest } from "~/store/modules/auth/actions";
 
 export default function SignUp() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const dispatch = useDispatch();
   const { value: name, bind: bindName } = useInput("");
   const { value: email, bind: bindEmail } = useInput("");
@@ -31,6 +34,7 @@ export default function SignUp() {
   const loading = useSelector((state) => state.auth.loading);
 
   const errorCheckAux = [bindName, bindEmail, bindPassword];
+  const colab = false
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -48,7 +52,7 @@ export default function SignUp() {
       }
     }
     if (valid) {
-      dispatch(signUpRequest(name, email, password));
+      dispatch(signUpRequest(name, email, password, colab));
     }
   };
   return (

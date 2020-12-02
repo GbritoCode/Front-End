@@ -23,7 +23,11 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
 
+import { normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
+import axios from "axios"
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
@@ -31,52 +35,52 @@ class Tabela_Cliente extends Component {
   };
 
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadCliente();
   }
+
   loadCliente = async () => {
-    const response = await api.get("/cliente");
+    const response = await api.get("/cliente/?prospect=false");
+
     this.setState({
       data: response.data.map((client, key) => {
         return {
           idd: key,
           id: client.id,
-          CNPJ: client.CNPJ,
-          nome_abv: client.nome_abv,
-          representante: client.representante,
-          tipo_comiss: client.tipo_comiss,
+          CNPJ: normalizeCnpj(client.CNPJ),
+          nomeAbv: client.nomeAbv,
+          RepresentanteId: client.RepresentanteId,
+          Representante: client.Representante.nome,
+          TipoComisseId: client.TipoComisseId,
+          TipoComiss: client.tipoComisse.desc,
           EmpresaId: client.EmpresaId,
           prospect: client.prospect,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
-              <Link
-                to={`/cliente_update/${client.id}/false`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
-              </Link>{" "}
+
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/cliente_update/${client.id}/true`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
-              </Link>{" "}
+              <Link to={`/cliente_update/${client.id}/true`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
+              </Link>
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
                   var data = this.state.data;
                   data.find((o, i) => {
                     if (o.idd === key) {
-                      // here you should add some custom code so you can delete the data
-                      // from this component and from your server as well
+                      console.log(o.id)
+                      axios.delete(`http://localhost:51314/cliente/${o.id}`);
                       data.splice(i, 1);
-                      console.log(data);
+
                       return true;
                     }
                     return false;
@@ -94,8 +98,8 @@ class Tabela_Cliente extends Component {
         };
       }),
     });
-    console.log(this.state.data);
   };
+
   render() {
     return (
       <>
@@ -105,16 +109,17 @@ class Tabela_Cliente extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Clientes
-                  <Link to="/cliente_cadastro">
-                    <Button
-                      style={{ float: "right" }}
-                      color="info"
-                      size="small"
-                      className="text-center"
-                    >
-                      <i tim-icons icon-simple-add />
-                      Adicionar cliente
-                    </Button>
+                  <Link to={`/cliente_cadastro/false`}>
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right",
+                        }}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -130,15 +135,15 @@ class Tabela_Cliente extends Component {
                     },
                     {
                       Header: "Nome Abreviado",
-                      accessor: "nome_abv",
+                      accessor: "nomeAbv",
                     },
                     {
                       Header: "Representante",
-                      accessor: "representante",
+                      accessor: "Representante",
                     },
                     {
                       Header: "Tipo de comissão",
-                      accessor: "tipo_comiss",
+                      accessor: "TipoComiss",
                     },
                     {
                       Header: "Ações",

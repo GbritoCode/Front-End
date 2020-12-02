@@ -6,6 +6,8 @@ import AuthLayout from "layouts/Auth/Auth.jsx";
 import AdminLayout from "layouts/Admin/Admin.jsx";
 
 import { store } from "~/store";
+import Axios from "axios";
+import history from "~/services/history";
 
 export default function RouteWrapper({
   component: Component,
@@ -13,6 +15,13 @@ export default function RouteWrapper({
   ...rest
 }) {
   const signed = store.getState().auth.signed;
+  /*
+    Axios("http://localhost:51314/empresa").then((result) => {
+      if (signed && result.data.length === 0) {
+        //      history.push("/cadastro/wizard/empresa");
+        return <Redirect to={{ pathname: "/login" }} />;
+      }
+    }) */
 
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;
@@ -34,10 +43,6 @@ export default function RouteWrapper({
     />
   );
 }
-RouteWrapper.propTypes = {
-  isPrivate: PropTypes.bool,
-  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-};
 
 RouteWrapper.defaultProps = {
   isPrivate: false,

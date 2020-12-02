@@ -24,12 +24,16 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
@@ -39,39 +43,20 @@ class Tabela_Cliente extends Component {
         return {
           id: key,
           idd: client.id,
-          EmpresaId: client.EmpresaId,
-          desc_prodt: client.desc_prodt,
+          Empresa: client.Empresa.nome,
+          descProdt: client.descProdt,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.COD_PRODT +
-                      ", \nemail: " +
-                      obj.COD_EMP +
-                      ", \nidade: " +
-                      obj.DESC_PRODT +
-                      ", \nsalario: "
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/update/general/prodt/${client.id}`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/update/general/prodt/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -110,27 +95,18 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Produto
                   <Link to="/cadastro/geral/prodt">
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -141,16 +117,16 @@ class Tabela_Cliente extends Component {
                   resizable={false}
                   columns={[
                     {
+                      Header: "Empresa",
+                      accessor: "Empresa",
+                    },
+                    {
                       Header: "Código do produto",
                       accessor: "idd",
                     },
                     {
-                      Header: "Empresa",
-                      accessor: "EmpresaId",
-                    },
-                    {
                       Header: "Descrição",
-                      accessor: "desc_prodt",
+                      accessor: "descProdt",
                     },
                     {
                       Header: "Ações",

@@ -25,7 +25,7 @@ class FixedPlugin extends Component {
     super(props);
     this.state = {
       classes: "dropdown",
-      darkMode: true
+      darkMode: true,
     };
   }
   handleClick = () => {
@@ -37,7 +37,7 @@ class FixedPlugin extends Component {
   };
   handleActiveMode = () => {
     this.setState({
-      darkMode: !this.state.darkMode
+      darkMode: !this.state.darkMode,
     });
     document.body.classList.toggle("white-content");
   };
@@ -47,7 +47,7 @@ class FixedPlugin extends Component {
         <div className={this.state.classes}>
           <a
             href="#pablo"
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               this.handleClick();
             }}

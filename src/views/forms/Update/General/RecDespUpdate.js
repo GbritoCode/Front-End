@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Label,
   Form,
   Input,
   Row,
@@ -32,159 +33,295 @@ import {
 import { useDispatch } from "react-redux";
 import { RecDespUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
-import { useInput } from "hooks.js";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-
+import { normalizeCnpj } from 'normalize'
 function RecDespUpdatee() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState({});
+  const [data1, setData1] = useState({});
+  const [data2, setData2] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    itmControleId: { value: "", error: "", message: "" },
+    desc: { value: "", error: "", message: "" },
+    recDesp: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/rec_desp/${id}`);
+      const response = await axios(`http://localhost:51314/rec_desp/${id}`);
+      const response1 = await axios(
+        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+      );
+      const response2 = await axios(`http://localhost:51314/itm_controle/`);
       setData(response.data);
+      setData1(response1.data);
+      setData2(response2.data);
+      setValues((prevState) => ({
+        ...prevState,
+        empresaId: { value: response.data.EmpresaId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        itmControleId: { value: response.data.itmControleId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        desc: { value: response.data.desc },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        recDesp: { value: response.data.recDesp },
+      }));
       setIsLoading(false);
     }
     loadData();
   }, []);
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
 
-  const dispatch = useDispatch();
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(
-    undefined,
-    "number"
-  );
-  const { value: nome, bind: bindNome } = useInput(undefined);
-  const { value: license, bind: bindLicense } = useInput(undefined);
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+  var options = {};
 
-  const errorCheckAux = [bindEmpresaId, bindNome, bindLicense];
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
+  const checkRec = (values) => {
+    if (values.recDesp.value == "Rec") {
+      return true
+    }
+  }
+
+  const checkDesp = (values) => {
+    if (values.recDesp.value == "Desp") {
+      return true
+    }
+  }
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false;
+        var valid = false;
         break;
       }
     }
-    if (valid) {
-      dispatch(RecDespUpdate(id, EmpresaId, nome, license));
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      dispatch(RecDespUpdate(id, values.empresaId.value, values.itmControleId.values, values.desc.value, values.recDesp.value));
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
+
   return (
     <Fragment>
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de Área</CardTitle>
-                    <Link to="/cadastro/geral/area">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
-                          style={{
-                            paddingBottom: 4,
-                            paddingRight: 10,
-                          }}
-                          size="large"
-                        />{" "}
-                        Novo
-                      </Button>
-                    </Link>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
-                      <FormGroup
-                        className={`has-label ${bindEmpresaId.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.EmpresaId}
-                          disabled={true}
-                          name="EmpresaId"
-                          type="select"
-                          {...bindEmpresaId}
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+
+                      <CardTitle tag="h4">Edição de Receita e Despesa</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <label>Empresa</label>
+                        <FormGroup
+                          className={`has-label ${values.empresaId.error}`}
                         >
-                          {" "}
-                          <option value={1}>
+                          <Input
+                            disabled={true}
+                            name="EmpresaId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "empresaId", "text")
+                            }
+                            value={values.empresaId.value}
+                          >
                             {" "}
-                            Empresa selecionada: {data.nome}, CNPJ{" "}
-                            {data.id_federal}
-                          </option>
-                        </Input>
-                        {bindEmpresaId.valueerror === "has-danger" ? (
-                          <label className="error">Insira um número</label>
-                        ) : null}
-                      </FormGroup>
+                            <option value={1}>
+                              {" "}
+                              {data1.nome} - {normalizeCnpj(data1.idFederal)}
+                            </option>
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Label>Item Controle</Label>
+                        <FormGroup
+                          className={`has-label ${values.itmControleId.error}`}
+                        >
+                          <Input
+                            name="itmControleId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "itmControleId", "text")
+                            }
+                            value={values.itmControleId.value}
+                          >
+                            {" "}
+                            <option disabled value="">
+                              {" "}
+                            Selecione o item controle{" "}
+                            </option>
+                            {data2.map((itm) => (
+                              <option value={itm.id}>
+                                {" "}
+                                {itm.descItem} - {itm.tipoItem}{" "}
+                              </option>
+                            ))}
+                          </Input>
+                          {values.itmControleId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.itmControleId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <label>Descrição</label>
+                        <FormGroup className={`has-label ${values.desc.error}`}>
+                          <Input
+                            name="license"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "desc", "text")
+                            }
+                            value={values.desc.value}
+                          />
+                          {values.desc.error === "has-danger" ? (
+                            <label className="error">{values.desc.message}</label>
+                          ) : null}
+                        </FormGroup>
 
-                      <label>Nome</label>
-                      <FormGroup className={`has-label ${bindNome.valueerror}`}>
-                        <Input
-                          defaultValue={data.nome}
-                          name="nome"
-                          type="text"
-                          {...bindNome}
-                        />
-                        {bindNome.valueerror === "has-danger" ? (
-                          <label className="error">Insira um nome válido</label>
-                        ) : null}
-                      </FormGroup>
-
-                      <label>License</label>
-                      <FormGroup
-                        className={`has-label ${bindLicense.valueerror}`}
-                      >
-                        <Input
-                          defaultValue={data.license}
-                          name="license"
-                          type="text"
-                          {...bindLicense}
-                        />
-                        {bindLicense.valueerror === "has-danger" ? (
-                          <label className="error">
-                            Insira um valor válido
-                          </label>
-                        ) : null}
-                      </FormGroup>
-
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Submit
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                        <FormGroup style={{ marginBottom: 20 }} check className={`has-label ${values.recDesp.error}`}>
+                          <Label check>
+                            <Input
+                              checked={checkRec(values)}
+                              name="rec/desp"
+                              type="radio"
+                              onChange={(event) => handleChange(event, "recDesp", "text")}
+                              value={"Rec"}
+                            />
+                    Receita
+                    </Label>
+                          <Label check>
+                            <Input
+                              checked={checkDesp(values)}
+                              name="rec/desp"
+                              type="radio"
+                              onChange={(event) => handleChange(event, "recDesp", "text")}
+                              value={"Desp"}
+                            />
+                    Despesa
+                    </Label>
+                          {values.recDesp.error === "has-danger" ? (
+                            <label className="error">{values.recDesp.message}</label>
+                          ) : null}
+                        </FormGroup>
+                        <Link to={`/tabelas/aux/rec_desp`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="text-left"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

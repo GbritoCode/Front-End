@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -32,66 +32,150 @@ import {
 import { useDispatch } from "react-redux";
 import { representanteRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
-import { useInput } from "hooks.js";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { normalizeCnpj, normalizeCurrency } from "normalize";
+import { Link } from "react-router-dom";
 
 export default function RepresentanteCadastro() {
+  //--------- colocando no modo claro do template
+  document.body.classList.add("white-content");
+
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
+  const [data1, setData1] = useState([]);
   const empresa = store.getState().auth.empresa;
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    nome: { value: "", error: "", message: "" },
+    tipoComiss: { value: "", error: "", message: "" },
+    vlrFixMens: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:3001/empresa/${empresa}`);
+      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:51314/tipoComiss/`);
       setData(response.data);
+      setData1(response1.data);
+      setValues((prevState) => ({
+        ...prevState,
+        empresaId: { value: response.data.id },
+      }));
       setIsLoading(false);
     }
     loadData();
   }, []);
+  var options = {};
 
-  const { value: EmpresaId, bind: bindEmpresaId } = useInput(empresa, "number");
-  const { value: nome, bind: bindNome } = useInput("");
-  const { value: prcnt_comiss, bind: bindPrcnt_comiss } = useInput(
-    "",
-    "number"
-  );
-  const { value: vlr_fix_mens, bind: bindVlr_fix_mens } = useInput(
-    "",
-    "number"
-  );
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
 
-  const errorCheckAux = [
-    bindEmpresaId,
-    bindNome,
-    bindPrcnt_comiss,
-    bindVlr_fix_mens,
-  ];
+  const verifyNumber = (value) => {
+    var numberRex = new RegExp("^[0-9]+$");
+    if (numberRex.test(value)) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleChange = (event, name, type) => {
+    event.persist();
+    let target = event.target.value;
+    switch (type) {
+      case "number":
+        if (verifyNumber(target)) {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success" },
+          }));
+        } else {
+          setValues((prevState) => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+            },
+          }));
+        }
+        break;
+      case "currency":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: normalizeCurrency(target) },
+        }));
+        break;
+      case "text":
+        setValues((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+    }
+  };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    var aux = Object.entries(values);
+    const tamanho = aux.length;
 
-    var tamanho = errorCheckAux.length;
-    console.log(errorCheckAux.length);
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
-        !(errorCheckAux[j].value === "")
-      ) {
+    for (let i = 0; i < tamanho; i++) {
+      if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false;
+        var valid = false;
         break;
       }
     }
-    if (valid) {
+    for (let j = 0; j < tamanho; j++) {
+      if (aux[j][1].value !== "") {
+        var filled = true;
+      } else {
+        var filled = false;
+        setValues((prevState) => ({
+          ...prevState,
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+        }));
+        break;
+      }
+    }
+
+    if (valid && filled) {
+      var vlrFixMensdb = values.vlrFixMens.value.replace(/[^\d]+/g, "");
+
       dispatch(
-        representanteRequest(EmpresaId, nome, prcnt_comiss, vlr_fix_mens)
+        representanteRequest(
+          values.empresaId.value,
+          values.nome.value,
+          values.tipoComiss.value,
+          vlrFixMensdb
+        )
       );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7,
+      };
+      notify();
     }
   };
   return (
     <>
+      <div className="rna-container">
+        <NotificationAlert ref={notifyElment} />
+      </div>
       <div className="content">
         <Row>
           <Col md="12">
@@ -102,69 +186,134 @@ export default function RepresentanteCadastro() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <label>Empresa</label>
-                  <FormGroup
-                    className={`has-label ${bindEmpresaId.valueerror}`}
-                  >
+                  <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
                       name="EmpresaId"
                       type="select"
-                      {...bindEmpresaId}
+                      onChange={(event) =>
+                        handleChange(event, "empresaId", "text")
+                      }
+                      value={values.empresaId.value}
                     >
                       {" "}
                       <option value={1}>
                         {" "}
-                        Empresa selecionada: {data.nome}, CNPJ {data.id_federal}
+                        {data.nome} - {normalizeCnpj(data.idFederal)}
                       </option>
                     </Input>
-                    {bindEmpresaId.valueerror === "has-danger" ? (
-                      <label className="error">Insira um número</label>
+                    {values.empresaId.error === "has-danger" ? (
+                      <label className="error">
+                        {values.empresaId.message}
+                      </label>
                     ) : null}
                   </FormGroup>
 
                   <label>Nome</label>
-                  <FormGroup className={`has-label ${bindNome.valueerror}`}>
-                    <Input name="nome" type="text" {...bindNome} />{" "}
-                    {bindNome.valueerror === "has-danger" ? (
-                      <label className="error">Insira um nome válido</label>
-                    ) : null}
-                  </FormGroup>
-
-                  <label>Percentual de Comissão</label>
-                  <FormGroup
-                    className={`has-label ${bindPrcnt_comiss.valueerror}`}
-                  >
+                  <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
-                      name="prcnt_comiss"
-                      type="numeric"
-                      {...bindPrcnt_comiss}
+                      name="nome"
+                      type="text"
+                      onChange={(event) => handleChange(event, "nome", "text")}
+                      value={values.nome.value}
                     />{" "}
-                    {bindPrcnt_comiss.valueerror === "has-danger" ? (
-                      <label className="error">Insira um número</label>
+                    {values.nome.error === "has-danger" ? (
+                      <label className="error">{values.nome.message}</label>
                     ) : null}
                   </FormGroup>
-
-                  <label>Valor Fixo Mensal</label>
-                  <FormGroup
-                    className={`has-label ${bindVlr_fix_mens.valueerror}`}
-                  >
-                    <Input
-                      name="vlr_fix_mens"
-                      type="numeric"
-                      {...bindVlr_fix_mens}
-                    />{" "}
-                    {bindVlr_fix_mens.valueerror === "has-danger" ? (
-                      <label className="error">Insira um número</label>
-                    ) : null}
-                  </FormGroup>
-
+                  <Row>
+                    <Col md="6">
+                      {" "}
+                      <label>Tipo de Comissão</label>
+                      <FormGroup
+                        className={`has-label ${values.tipoComiss.error}`}
+                      >
+                        <Input
+                          name="tipoComiss"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "tipoComiss", "text")
+                          }
+                          value={values.tipoComiss.value}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o tipo de comissão{" "}
+                          </option>
+                          {data1.map((tipoComiss) => (
+                            <option value={tipoComiss.id}>
+                              {" "}
+                              {tipoComiss.id} - {tipoComiss.desc}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.tipoComiss.error === "has-danger" ? (
+                          <label className="error">
+                            {values.tipoComiss.message}
+                          </label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="6">
+                      {" "}
+                      <label>Valor Fixo Mensal</label>
+                      <FormGroup
+                        className={`has-label ${values.vlrFixMens.error}`}
+                      >
+                        <Input
+                          name="vlrFixMens"
+                          type="numeric"
+                          onChange={(event) =>
+                            handleChange(event, "vlrFixMens", "currency")
+                          }
+                          value={values.vlrFixMens.value}
+                        />{" "}
+                        {values.vlrFixMens.error === "has-danger" ? (
+                          <label className="error">
+                            {values.vlrFixMens.message}
+                          </label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Link to={`/tabelas/general/representante`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="form"
+                    >
+                      <i className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Submit
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

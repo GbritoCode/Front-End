@@ -236,7 +236,6 @@ class Wizard extends React.Component {
               ) : null}
             </InputGroup>
           </Col>
-          <Col sm="10"></Col>
         </Row>
       </>
     );

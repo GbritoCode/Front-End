@@ -24,12 +24,16 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
     data: [],
   };
   componentDidMount() {
+    //--------- colocando no modo claro do template
+    document.body.classList.add("white-content");
     this.loadClients();
   }
   loadClients = async () => {
@@ -39,46 +43,25 @@ class Tabela_Cliente extends Component {
         return {
           id: key,
           idd: client.id,
-          EmpresaId: client.EmpresaId,
+          Empresa: client.Empresa.nome,
           impostos: client.impostos,
-          vlr_min_hr: client.vlr_min_hr,
-          vlr_bs_desp: client.vlr_bs_desp,
-          vlr_bs_hr: client.vlr_bs_hr,
-          adianta_pgmto: client.adianta_pgmto,
-          perc_adianta_pgmto: client.perc_adianta_pgmto,
+          vlrMinHr: client.vlrMinHr,
+          vlrBsDesp: client.vlrBsDesp,
+          vlrBsHr: client.vlrBsHr,
+          adiantaPgmto: client.adiantaPgmto,
+          percAdiantaPgmto: client.percAdiantaPgmto,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              <Button
-                onClick={() => {
-                  let obj = this.state.data.find((o) => o.id === key);
-                  alert(
-                    "You've clicked LIKE button on \n{ \nName: " +
-                      obj.IMPOSTOS +
-                      ", \nemail: " +
-                      obj.VLR_BS_DESP +
-                      ", \nidade: " +
-                      obj.ADIANTA_PGMTO +
-                      ", \nsalario: " +
-                      obj.PERC_ADIANTA_PGMTO +
-                      "\n}."
-                  );
-                }}
-                color="info"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-heart-2" />
-              </Button>{" "}
               {/* use this button to add a edit kind of action */}
-              <Link
-                to={`/update/general/parametros/${client.id}`}
-                color="warning"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-pencil" />
+              <Link to={`/update/general/parametros/${client.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <i className="tim-icons icon-pencil" />
+                </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
               <Button
@@ -117,27 +100,18 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+                  Parâmetros
                   <Link to="/cadastro/geral/parametros">
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -153,15 +127,15 @@ class Tabela_Cliente extends Component {
                     },
                     {
                       Header: "Valor Base Hora",
-                      accessor: "vlr_bs_hr",
+                      accessor: "vlrBsHr",
                     },
                     {
                       Header: "Valor Mínimo da Hora",
-                      accessor: "vlr_min_hr",
+                      accessor: "vlrMinHr",
                     },
                     {
                       Header: "Valor Base da Despesa",
-                      accessor: "vlr_bs_desp",
+                      accessor: "vlrBsDesp",
                     },
                     {
                       Header: "Ações",

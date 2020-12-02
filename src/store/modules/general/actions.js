@@ -8,31 +8,31 @@ export function ClienteUpdateSuccess(profile) {
   };
 }
 
-export function areaRequest(EmpresaId, desc_area) {
+export function areaRequest(EmpresaId, descArea) {
   return {
     type: "@cadastro/AREA_REQUEST",
-    payload: { EmpresaId, desc_area },
+    payload: { EmpresaId, descArea },
   };
 }
-export function AreaUpdate(id, EmpresaId, desc_area) {
+export function AreaUpdate(id, EmpresaId, descArea) {
   return {
     type: "@update/AREA_REQUEST",
-    payload: { id, EmpresaId, desc_area },
+    payload: { id, EmpresaId, descArea },
   };
 }
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function empresaRequest(id_federal, nome, license, UserId) {
+export function empresaRequest(idFederal, nome, license, UserId, first) {
   return {
     type: "@cadastro/EMPRESA_REQUEST",
-    payload: { id_federal, nome, license, UserId },
+    payload: { idFederal, nome, license, UserId, first },
   };
 }
-export function EmpresaUpdate(id, Id_federal, nome, license, UserId) {
+export function EmpresaUpdate(id, idFederal, nome, license, UserId) {
   return {
     type: "@update/EMPRESA_REQUEST",
-    payload: { id, Id_federal, nome, license, UserId },
+    payload: { id, idFederal, nome, license, UserId },
   };
 }
 //----------------------------------------------------
@@ -42,8 +42,8 @@ export function fornecRequest(
   CNPJ,
   EmpresaId,
   nome,
-  cond_pgmto,
-  nome_conta,
+  CondPgmtoId,
+  nomeConta,
   fone,
   cep,
   rua,
@@ -54,7 +54,8 @@ export function fornecRequest(
   uf,
   banco,
   agencia,
-  conta
+  conta,
+  first
 ) {
   return {
     type: "@cadastro/FORNEC_REQUEST",
@@ -62,8 +63,8 @@ export function fornecRequest(
       CNPJ,
       EmpresaId,
       nome,
-      cond_pgmto,
-      nome_conta,
+      CondPgmtoId,
+      nomeConta,
       fone,
       cep,
       rua,
@@ -75,6 +76,7 @@ export function fornecRequest(
       banco,
       agencia,
       conta,
+      first
     },
   };
 }
@@ -83,8 +85,8 @@ export function FornecUpdate(
   CNPJ,
   EmpresaId,
   nome,
-  cond_pgmto,
-  nome_conta,
+  CondPgmtoId,
+  nomeConta,
   fone,
   cep,
   rua,
@@ -104,8 +106,8 @@ export function FornecUpdate(
       CNPJ,
       EmpresaId,
       nome,
-      cond_pgmto,
-      nome_conta,
+      CondPgmtoId,
+      nomeConta,
       fone,
       cep,
       rua,
@@ -125,39 +127,39 @@ export function FornecUpdate(
 
 export function itmControleRequest(
   EmpresaId,
-  desc_item,
-  tipo_item,
-  conta_contabil,
-  cent_custo
+  descItem,
+  tipoItem,
+  contaContabil,
+  centCusto
 ) {
   return {
     type: "@cadastro/ITM_CONTROLE_REQUEST",
     payload: {
       EmpresaId,
-      desc_item,
-      tipo_item,
-      conta_contabil,
-      cent_custo,
+      descItem,
+      tipoItem,
+      contaContabil,
+      centCusto,
     },
   };
 }
 export function itmControleUpdate(
   id,
   EmpresaId,
-  desc_item,
-  tipo_item,
-  conta_contabil,
-  cent_custo
+  descItem,
+  tipoItem,
+  contaContabil,
+  centCusto
 ) {
   return {
     type: "@update/ITM_CONTROLE_REQUEST",
     payload: {
       id,
       EmpresaId,
-      desc_item,
-      tipo_item,
-      conta_contabil,
-      cent_custo,
+      descItem,
+      tipoItem,
+      contaContabil,
+      centCusto,
     },
   };
 }
@@ -167,22 +169,22 @@ export function itmControleUpdate(
 export function parametrosRequest(
   EmpresaId,
   impostos,
-  vlr_min_hr,
-  vlr_bs_hr,
-  vlr_bs_desp,
-  adianta_pgmto,
-  perc_adianta_pgmto
+  vlrMinHr,
+  vlrBsHr,
+  vlrBsDesp,
+  adiantaPgmto,
+  percAdiantaPgmto
 ) {
   return {
     type: "@cadastro/PARAMETROS_REQUEST",
     payload: {
       EmpresaId,
       impostos,
-      vlr_min_hr,
-      vlr_bs_hr,
-      vlr_bs_desp,
-      adianta_pgmto,
-      perc_adianta_pgmto,
+      vlrMinHr,
+      vlrBsHr,
+      vlrBsDesp,
+      adiantaPgmto,
+      percAdiantaPgmto,
     },
   };
 }
@@ -190,11 +192,11 @@ export function ParametrosUpdate(
   id,
   EmpresaId,
   impostos,
-  vlr_min_hr,
-  vlr_bs_hr,
-  vlr_bs_desp,
-  adianta_pgmto,
-  perc_adianta_pgmto
+  vlrMinHr,
+  vlrBsHr,
+  vlrBsDesp,
+  adiantaPgmto,
+  percAdiantaPgmto
 ) {
   return {
     type: "@update/PARAMETROS_REQUEST",
@@ -202,57 +204,136 @@ export function ParametrosUpdate(
       id,
       EmpresaId,
       impostos,
-      vlr_min_hr,
-      vlr_bs_hr,
-      vlr_bs_desp,
-      adianta_pgmto,
-      perc_adianta_pgmto,
+      vlrMinHr,
+      vlrBsHr,
+      vlrBsDesp,
+      adiantaPgmto,
+      percAdiantaPgmto,
     },
   };
 }
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function prodtRequest(EmpresaId, desc_prodt) {
+export function prodtRequest(EmpresaId, descProdt) {
   return {
     type: "@cadastro/PRODT_REQUEST",
     payload: {
       EmpresaId,
-      desc_prodt,
+      descProdt,
     },
   };
 }
-export function ProdtUpdate(id, EmpresaId, desc_prodt) {
+export function ProdtUpdate(id, EmpresaId, descProdt) {
   return {
     type: "@update/PRODUTO_REQUEST",
     payload: {
       id,
       EmpresaId,
-      desc_prodt,
+      descProdt,
     },
   };
 }
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function recDespRequest(EmpresaId, nome, license) {
+export function recDespRequest(EmpresaId, itmControleId, desc, recDesp) {
   return {
     type: "@cadastro/REC_DESP_REQUEST",
     payload: {
       EmpresaId,
-      nome,
-      license,
+      itmControleId,
+      desc,
+      recDesp
     },
   };
 }
-export function RecDespUpdate(id, EmpresaId, nome, license) {
+export function RecDespUpdate(id, EmpresaId, itmControleId, desc, recDesp) {
   return {
     type: "@update/REC_DESP_REQUEST",
     payload: {
       id,
       EmpresaId,
-      nome,
-      license,
+      itmControleId,
+      desc,
+      recDesp
+    },
+  };
+}
+//----------------------------------------------------
+//----------------------------------------------------
+
+export function condPgmtoRequest(EmpresaId, cod, desc, diasPrazo, first) {
+  return {
+    type: "@cadastro/COND_PGMTO_REQUEST",
+    payload: {
+      EmpresaId,
+      cod,
+      desc,
+      diasPrazo,
+      first
+    },
+  };
+}
+export function condPgmtoUpdate(id, EmpresaId, cod, desc, diasPrazo) {
+  return {
+    type: "@update/COND_PGMTO_REQUEST",
+    payload: {
+      id,
+      EmpresaId,
+      cod,
+      desc,
+      diasPrazo,
+    },
+  };
+}
+//----------------------------------------------------
+//----------------------------------------------------
+
+export function tipoComissRequest(EmpresaId, desc, prcnt, bsComiss) {
+  return {
+    type: "@cadastro/TIPO_COMISS_REQUEST",
+    payload: {
+      EmpresaId,
+      desc,
+      prcnt,
+      bsComiss
+    },
+  };
+}
+export function tipoComissUpdate(id, EmpresaId, desc, prcnt, bsComiss) {
+  return {
+    type: "@update/TIPO_COMISS_REQUEST",
+    payload: {
+      id,
+      EmpresaId,
+      desc,
+      prcnt,
+      bsComiss
+    },
+  };
+}
+//----------------------------------------------------
+//----------------------------------------------------
+
+export function perfilRequest(EmpresaId, desc, first) {
+  return {
+    type: "@cadastro/PERFIL_REQUEST",
+    payload: {
+      EmpresaId,
+      desc,
+      first
+    },
+  };
+}
+export function perfilUpdate(id, EmpresaId, desc) {
+  return {
+    type: "@update/PERFIL_REQUEST",
+    payload: {
+      id,
+      EmpresaId,
+
+      desc,
     },
   };
 }
@@ -262,16 +343,16 @@ export function RecDespUpdate(id, EmpresaId, nome, license) {
 export function representanteRequest(
   EmpresaId,
   nome,
-  percnt_comiss,
-  vlr_fix_mens
+  TipoComisseId,
+  vlrFixMens
 ) {
   return {
     type: "@cadastro/REPRESENTANTE_REQUEST",
     payload: {
       EmpresaId,
       nome,
-      percnt_comiss,
-      vlr_fix_mens,
+      TipoComisseId,
+      vlrFixMens,
     },
   };
 }
@@ -279,8 +360,8 @@ export function RepresentanteUpdate(
   id,
   EmpresaId,
   nome,
-  percnt_comiss,
-  vlr_fix_mens
+  TipoComisseId,
+  vlrFixMens
 ) {
   return {
     type: "@update/REPRESENTANTE_REQUEST",
@@ -288,30 +369,30 @@ export function RepresentanteUpdate(
       id,
       EmpresaId,
       nome,
-      percnt_comiss,
-      vlr_fix_mens,
+      TipoComisseId,
+      vlrFixMens,
     },
   };
 }
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function undNegRequest(EmpresaId, desc_und_neg) {
+export function undNegRequest(EmpresaId, descUndNeg) {
   return {
-    type: "@cadastro/UND_NEG_REQUEST",
+    type: "@cadastro/UndNeg_REQUEST",
     payload: {
       EmpresaId,
-      desc_und_neg,
+      descUndNeg,
     },
   };
 }
-export function UndNegUpdate(id, EmpresaId, desc_und_neg) {
+export function UndNegUpdate(id, EmpresaId, descUndNeg) {
   return {
-    type: "@update/UND_NEG_REQUEST",
+    type: "@update/UndNeg_REQUEST",
     payload: {
       id,
       EmpresaId,
-      desc_und_neg,
+      descUndNeg,
     },
   };
 }
@@ -320,39 +401,39 @@ export function UndNegUpdate(id, EmpresaId, desc_und_neg) {
 
 export function segmentoRequest(
   EmpresaId,
-  Und_negId,
+  UndNegId,
   ProdutoId,
   AreaId,
-  desc_segmt
+  descSegmt
 ) {
   return {
     type: "@cadastro/SEGMENTO_REQUEST",
     payload: {
       EmpresaId,
-      Und_negId,
+      UndNegId,
       ProdutoId,
       AreaId,
-      desc_segmt,
+      descSegmt,
     },
   };
 }
 export function SegmentoUpdate(
   id,
   EmpresaId,
-  Und_negId,
+  UndNegId,
   ProdutoId,
   AreaId,
-  desc_segmt
+  descSegmt
 ) {
   return {
     type: "@update/SEGMENTO_REQUEST",
     payload: {
       id,
       EmpresaId,
-      Und_negId,
+      UndNegId,
       ProdutoId,
       AreaId,
-      desc_segmt,
+      descSegmt,
     },
   };
 }
