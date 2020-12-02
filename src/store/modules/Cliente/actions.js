@@ -154,14 +154,14 @@ export function CliCompUpdate(
 //------------------------------------------
 //------------------------------------------
 
-export function CliRecDespRequest(ClienteId, recDespId, tipoCobranca,valorRec) {
+export function CliRecDespRequest(ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim) {
   return {
     type: "@cadastro/CADASTRO_REC_DESP_REQUEST",
-    payload: { ClienteId, recDespId, tipoCobranca, valorRec },
+    payload: { ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim },
   };
 }
 
-export function cliRecDespUpdate(id, ClienteId, recDespId, tipoCobranca,valorRec) {
+export function cliRecDespUpdate(id, ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim) {
   return {
     type: "@update/CLI_REC_DESP_REQUEST",
     payload: {
@@ -169,7 +169,9 @@ export function cliRecDespUpdate(id, ClienteId, recDespId, tipoCobranca,valorRec
       ClienteId,
       recDespId,
       tipoCobranca,
-      valorRec
+      valorRec,
+      dataInic,
+      dataFim
     },
   };
 }

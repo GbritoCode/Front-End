@@ -14,6 +14,7 @@ export function* clienteCadastro({ payload }) {
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
+      prospect
     } = payload;
     yield call(api.post, "cliente", {
       CNPJ,
@@ -21,6 +22,7 @@ export function* clienteCadastro({ payload }) {
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
+      prospect
     });
     history.push("/tabelas/cliente/cliente");
   } catch (err) {
@@ -109,7 +111,7 @@ export function* updateCliCont({ payload }) {
 
     const response = yield call(api.put, `cliente/cont/${id}`, Cliente);
 
-    history.push(`/cliente_update/${ClienteId}/true`);
+    history.push(`/tabelas/cliente/cont/${ClienteId}`);
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
@@ -196,7 +198,7 @@ export function* updateCliComp({ payload }) {
 
     const response = yield call(api.put, `cliente/complem/${id}`, Cliente);
 
-    history.push(`/cliente_update/${ClienteId}/true`);
+    history.push(`/tabelas/cliente/comp/${ClienteId}`);
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
@@ -209,38 +211,42 @@ export function* updateCliComp({ payload }) {
 //--------------------------------------------------------------------------
 export function* cliRecDespCadastro({ payload }) {
   try {
-    const { ClienteId, recDespId, tipoCobranca,valorRec } = payload;
+    const { ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
     yield call(api.post, "cliente/rec_desp", {
       ClienteId,
       recDespId,
       tipoCobranca,
-      valorRec
+      valorRec,
+      dataInic,
+      dataFim
     });
     history.push(`/cliente_update/${ClienteId}/true`);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error("Value already exists in period");
     yield put(signFailure());
   }
 }
 
 export function* updateCliRecDesp({ payload }) {
   try {
-    const { id, ClienteId, recDespId, tipoCobranca,valorRec } = payload;
+    const { id, ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
 
     const Cliente = Object.assign({
       ClienteId,
       recDespId,
       tipoCobranca,
-      valorRec
+      valorRec,
+      dataInic,
+      dataFim
     });
 
     const response = yield call(api.put, `cliente/rec_desp/${id}`, Cliente);
 
-    history.push(`/cliente_update/${ClienteId}/true`);
+    history.push(`/tabelas/cliente/rec_desp/${ClienteId}`);
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error("Falha!");
     yield put(signFailure());
   }
 }

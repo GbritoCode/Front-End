@@ -35,8 +35,7 @@ import { RecDespUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import {normalizeCnpj} from 'normalize'
-
+import { normalizeCnpj } from 'normalize'
 function RecDespUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
@@ -45,11 +44,13 @@ function RecDespUpdatee() {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
+  const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
+    itmControleId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
-    rec_desp: { value: "", error: "", message: "" },
+    recDesp: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -60,11 +61,17 @@ function RecDespUpdatee() {
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
+      const response2 = await axios(`http://localhost:51314/itm_controle/`);
       setData(response.data);
       setData1(response1.data);
+      setData2(response2.data);
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
+      }));
+      setValues((prevState) => ({
+        ...prevState,
+        itmControleId: { value: response.data.itmControleId },
       }));
       setValues((prevState) => ({
         ...prevState,
@@ -72,7 +79,7 @@ function RecDespUpdatee() {
       }));
       setValues((prevState) => ({
         ...prevState,
-        rec_desp: { value: response.data.rec_desp },
+        recDesp: { value: response.data.recDesp },
       }));
       setIsLoading(false);
     }
@@ -98,14 +105,14 @@ function RecDespUpdatee() {
     notifyElment.current.notificationAlert(options);
   }
 
-const   checkRec=(values)=>{
-    if (values.rec_desp.value == "Rec"){
+  const checkRec = (values) => {
+    if (values.recDesp.value == "Rec") {
       return true
     }
   }
 
-  const   checkDesp=(values)=>{
-    if (values.rec_desp.value == "Desp"){
+  const checkDesp = (values) => {
+    if (values.recDesp.value == "Desp") {
       return true
     }
   }
@@ -137,7 +144,7 @@ const   checkRec=(values)=>{
     }
 
     if (valid && filled) {
-      dispatch(RecDespUpdate(id, values.empresaId.value, values.desc.value,values.rec_desp.value));
+      dispatch(RecDespUpdate(id, values.empresaId.value, values.itmControleId.values, values.desc.value, values.recDesp.value));
     } else {
       options = {
         place: "tr",
@@ -159,124 +166,162 @@ const   checkRec=(values)=>{
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de Receita e Despesa</CardTitle>
-                    <Link to="/cadastro/geral/area">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
-                          style={{
-                            paddingBottom: 4,
-                            paddingRight: 10,
-                          }}
-                          size="large"
-                        />{" "}
-                        Novo
-                      </Button>
-                    </Link>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled={true}
-                          name="EmpresaId"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+
+                      <CardTitle tag="h4">Edição de Receita e Despesa</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <label>Empresa</label>
+                        <FormGroup
+                          className={`has-label ${values.empresaId.error}`}
                         >
-                          {" "}
-                          <option value={1}>
+                          <Input
+                            disabled={true}
+                            name="EmpresaId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "empresaId", "text")
+                            }
+                            value={values.empresaId.value}
+                          >
                             {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
+                            <option value={1}>
+                              {" "}
+                              {data1.nome} - {normalizeCnpj(data1.idFederal)}
+                            </option>
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Label>Item Controle</Label>
+                        <FormGroup
+                          className={`has-label ${values.itmControleId.error}`}
+                        >
+                          <Input
+                            name="itmControleId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "itmControleId", "text")
+                            }
+                            value={values.itmControleId.value}
+                          >
+                            {" "}
+                            <option disabled value="">
+                              {" "}
+                            Selecione o item controle{" "}
+                            </option>
+                            {data2.map((itm) => (
+                              <option value={itm.id}>
+                                {" "}
+                                {itm.descItem} - {itm.tipoItem}{" "}
+                              </option>
+                            ))}
+                          </Input>
+                          {values.itmControleId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.itmControleId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <label>Descrição</label>
+                        <FormGroup className={`has-label ${values.desc.error}`}>
+                          <Input
+                            name="license"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "desc", "text")
+                            }
+                            value={values.desc.value}
+                          />
+                          {values.desc.error === "has-danger" ? (
+                            <label className="error">{values.desc.message}</label>
+                          ) : null}
+                        </FormGroup>
 
-                      <label>Descrição</label>
-                      <FormGroup className={`has-label ${values.desc.error}`}>
-                        <Input
-                          name="license"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "desc", "text")
-                          }
-                          value={values.desc.value}
-                        />
-                        {values.desc.error === "has-danger" ? (
-                          <label className="error">{values.desc.message}</label>
-                        ) : null}
-                      </FormGroup>
-
-                      <FormGroup check className={`has-label ${values.rec_desp.error}`}>
-                  <Label check>
-                    <Input
-                     checked={checkRec(values)}
-                      name="rec/desp"
-                      type="radio"
-                      onChange={(event) => handleChange(event, "rec_desp", "text")}
-                      value={"Rec"}
-                    />
+                        <FormGroup style={{ marginBottom: 20 }} check className={`has-label ${values.recDesp.error}`}>
+                          <Label check>
+                            <Input
+                              checked={checkRec(values)}
+                              name="rec/desp"
+                              type="radio"
+                              onChange={(event) => handleChange(event, "recDesp", "text")}
+                              value={"Rec"}
+                            />
                     Receita
                     </Label>
-                    <Label check>
-                    <Input
-                     checked={checkDesp(values)}
-                     name="rec/desp"
-                      type="radio"
-                      onChange={(event) => handleChange(event, "rec_desp", "text")}
-                      value={"Desp"}
-                    />
+                          <Label check>
+                            <Input
+                              checked={checkDesp(values)}
+                              name="rec/desp"
+                              type="radio"
+                              onChange={(event) => handleChange(event, "recDesp", "text")}
+                              value={"Desp"}
+                            />
                     Despesa
                     </Label>
-                    {values.rec_desp.error === "has-danger" ? (
-                      <label className="error">{values.rec_desp.message}</label>
-                    ) : null}
-                  </FormGroup>
-
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                          {values.recDesp.error === "has-danger" ? (
+                            <label className="error">{values.recDesp.message}</label>
+                          ) : null}
+                        </FormGroup>
+                        <Link to={`/tabelas/aux/rec_desp`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="text-left"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

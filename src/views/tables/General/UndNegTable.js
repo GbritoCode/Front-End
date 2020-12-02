@@ -24,6 +24,8 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
@@ -54,6 +56,8 @@ class Tabela_Cliente extends Component {
                   className={classNames("btn-icon btn-link like")}
                 >
                   <i className="tim-icons icon-pencil" />
+
+
                 </Button>
               </Link>{" "}
               {/* use this button to remove the data row */}
@@ -95,26 +99,16 @@ class Tabela_Cliente extends Component {
                 <CardTitle tag="h4">
                   Unidade de Negócio
                   <Link to="/cadastro/geral/Und_neg">
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>

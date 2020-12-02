@@ -212,215 +212,222 @@ function ParametrosUpdatee() {
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de Parâmetros</CardTitle>
-                    <Link to="/cadastro/geral/area">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
-                          style={{
-                            paddingBottom: 4,
-                            paddingRight: 10,
-                          }}
-                          size="large"
-                        />{" "}
-                        Novo
-                      </Button>
-                    </Link>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled={true}
-                          name="EmpresaId"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">Edição de Parâmetros</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <label>Empresa</label>
+                        <FormGroup
+                          className={`has-label ${values.empresaId.error}`}
                         >
-                          {" "}
-                          <option value={1}>
+                          <Input
+                            disabled={true}
+                            name="EmpresaId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "empresaId", "text")
+                            }
+                            value={values.empresaId.value}
+                          >
                             {" "}
-                            {data.nome} - {normalizeCnpj(data.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <Row>
-                        <Col md="4">
-                          {" "}
-                          <label>Impostos</label>
-                          <FormGroup
-                            className={`has-label ${values.impostos.error}`}
+                            <option value={1}>
+                              {" "}
+                              {data.nome} - {normalizeCnpj(data.idFederal)}
+                            </option>
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Row>
+                          <Col md="4">
+                            {" "}
+                            <label>Impostos</label>
+                            <FormGroup
+                              className={`has-label ${values.impostos.error}`}
+                            >
+                              <Input
+                                name="impostos"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(event, "impostos", "currency")
+                                }
+                                value={values.impostos.value}
+                              />
+                              {values.impostos.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.impostos.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                            <label>Valor Mínimo da Hora</label>
+                            <FormGroup
+                              className={`has-label ${values.vlrMinHr.error}`}
+                            >
+                              <Input
+                                name="vlrMinHr"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(event, "vlrMinHr", "currency")
+                                }
+                                value={values.vlrMinHr.value}
+                              />
+                              {values.vlrMinHr.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.vlrMinHr.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>Valor Base Da Hora</label>
+                            <FormGroup
+                              className={`has-label ${values.vlrBsHr.error}`}
+                            >
+                              <Input
+                                name="vlrBsHr"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(event, "vlrBsHr", "currency")
+                                }
+                                value={values.vlrBsHr.value}
+                              />
+                              {values.vlrBsHr.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.vlrBsHr.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                            {" "}
+                            <label>Valor Base da Despesa</label>
+                            <FormGroup
+                              className={`has-label ${values.vlrBsDesp.error}`}
+                            >
+                              <Input
+                                name="vlrBsDesp"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(event, "vlrBsDesp", "currency")
+                                }
+                                value={values.vlrBsDesp.value}
+                              />
+                              {values.vlrBsDesp.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.vlrBsDesp.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>Adianta Pagamento</label>
+                            <FormGroup
+                              className={`has-label ${values.adiantaPgmto.error}`}
+                            >
+                              <Input
+                                name="adiantaPgmto"
+                                type="text"
+                                onChange={(event) =>
+                                  handleChange(event, "adiantaPgmto", "currency")
+                                }
+                                value={values.adiantaPgmto.value}
+                              />
+                              {values.adiantaPgmto.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.adiantaPgmto.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                            <label>Percentual do Adiantamento</label>
+                            <FormGroup
+                              className={`has-label ${values.percAdiantaPgmto.error}`}
+                            >
+                              <Input
+                                name="percAdiantaPgmto"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(
+                                    event,
+                                    "percAdiantaPgmto",
+                                    "number"
+                                  )
+                                }
+                                value={values.percAdiantaPgmto.value}
+                              />
+                              {values.percAdiantaPgmto.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.percAdiantaPgmto.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Link to={`/tabelas/general/parametros`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="form"
                           >
-                            <Input
-                              name="impostos"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(event, "impostos", "currency")
-                              }
-                              value={values.impostos.value}
-                            />
-                            {values.impostos.error === "has-danger" ? (
-                              <label className="error">
-                                {values.impostos.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          {" "}
-                          <label>Valor Mínimo da Hora</label>
-                          <FormGroup
-                            className={`has-label ${values.vlrMinHr.error}`}
-                          >
-                            <Input
-                              name="vlrMinHr"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(event, "vlrMinHr", "currency")
-                              }
-                              value={values.vlrMinHr.value}
-                            />
-                            {values.vlrMinHr.error === "has-danger" ? (
-                              <label className="error">
-                                {values.vlrMinHr.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>Valor Base Da Hora</label>
-                          <FormGroup
-                            className={`has-label ${values.vlrBsHr.error}`}
-                          >
-                            <Input
-                              name="vlrBsHr"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(event, "vlrBsHr", "currency")
-                              }
-                              value={values.vlrBsHr.value}
-                            />
-                            {values.vlrBsHr.error === "has-danger" ? (
-                              <label className="error">
-                                {values.vlrBsHr.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          {" "}
-                          <label>Valor Base da Despesa</label>
-                          <FormGroup
-                            className={`has-label ${values.vlrBsDesp.error}`}
-                          >
-                            <Input
-                              name="vlrBsDesp"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(event, "vlrBsDesp", "currency")
-                              }
-                              value={values.vlrBsDesp.value}
-                            />
-                            {values.vlrBsDesp.error === "has-danger" ? (
-                              <label className="error">
-                                {values.vlrBsDesp.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>Adianta Pagamento</label>
-                          <FormGroup
-                            className={`has-label ${values.adiantaPgmto.error}`}
-                          >
-                            <Input
-                              name="adiantaPgmto"
-                              type="text"
-                              onChange={(event) =>
-                                handleChange(event, "adiantaPgmto", "currency")
-                              }
-                              value={values.adiantaPgmto.value}
-                            />
-                            {values.adiantaPgmto.error === "has-danger" ? (
-                              <label className="error">
-                                {values.adiantaPgmto.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          {" "}
-                          <label>Percentual do Adiantamento</label>
-                          <FormGroup
-                            className={`has-label ${values.percAdiantaPgmto.error}`}
-                          >
-                            <Input
-                              name="percAdiantaPgmto"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(
-                                  event,
-                                  "percAdiantaPgmto",
-                                  "number"
-                                )
-                              }
-                              value={values.percAdiantaPgmto.value}
-                            />
-                            {values.percAdiantaPgmto.error === "has-danger" ? (
-                              <label className="error">
-                                {values.percAdiantaPgmto.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                            <i className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

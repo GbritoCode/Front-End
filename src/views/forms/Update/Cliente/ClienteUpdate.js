@@ -36,12 +36,18 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
+import { normalizeCnpj } from 'normalize'
+import classNames from "classnames";
+import Tooltip from '@material-ui/core/Tooltip';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import { AttachMoney, Contacts } from "@material-ui/icons";
 
-function ClienteUpdatee() {
+function ClienteUpdatee(props) {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id, prct } = useParams();
+  console.log(props)
   const [isLoading, setIsLoading] = useState(true);
   const empresa = store.getState().auth.empresa;
   const [data, setData] = useState({});
@@ -74,7 +80,7 @@ function ClienteUpdatee() {
       }));
       setValues((prevState) => ({
         ...prevState,
-        cnpj: { value: normalizeInput(response.data.CNPJ) },
+        cnpj: { value: normalizeCnpj(response.data.CNPJ) },
       }));
       setValues((prevState) => ({
         ...prevState,
@@ -140,32 +146,6 @@ function ClienteUpdatee() {
     return true;
   }
 
-  const normalizeInput = (value) => {
-    if (!value) return value;
-    const currentValue = value.replace(/[^\d]/g, "");
-    const cvLength = currentValue.length;
-    if (cvLength < 3) return currentValue;
-    if (cvLength < 6)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
-    if (cvLength < 9)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5)}`;
-    if (cvLength < 13)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
-    return `${currentValue.slice(0, 2)}.${currentValue.slice(
-      2,
-      5
-    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
-      8,
-      12
-    )}-${currentValue.slice(12, 14)}`;
-  };
-
   const renderCnpjState = (value) => {
     if (!validarCNPJ(value)) {
       setValues((prevState) => ({
@@ -216,7 +196,7 @@ function ClienteUpdatee() {
       case "cnpj":
         setValues((prevState) => ({
           ...prevState,
-          cnpj: { value: normalizeInput(target) },
+          cnpj: { value: normalizeCnpj(target) },
         }));
         break;
       case "text":
@@ -231,6 +211,37 @@ function ClienteUpdatee() {
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
+  }
+
+  function checkProsp(param) {
+    if (param == 'true') {
+      return <>
+        <Link to={"/tabelas/cliente/comp/" + id}>
+          <Tooltip title="Complemento" placement="top" interactive>
+            <Button
+              style={{ float: "right" }}
+              color="default"
+              size="sm"
+              className={classNames("btn-icon btn-link like")}
+            >
+              <EventNoteIcon />
+            </Button>
+          </Tooltip>
+        </Link>
+        <Link to={"/tabelas/cliente/rec_desp/" + id}>
+          <Tooltip title="Receita" placement="top" interactive>
+            <Button
+              style={{ float: "right" }}
+              color="default"
+              size="sm"
+              className={classNames("btn-icon btn-link like")}
+            >
+              <AttachMoney />
+            </Button>
+          </Tooltip>
+        </Link>
+      </>
+    }
   }
 
   const handleSubmit = (evt) => {
@@ -260,7 +271,6 @@ function ClienteUpdatee() {
     }
 
     if (valid && filled) {
-      var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
 
       dispatch(
         ClienteUpdate(
@@ -292,236 +302,206 @@ function ClienteUpdatee() {
       {isLoading ? (
         <div> </div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de cliente</CardTitle>
-                    <Link to="/cliente_cadastro">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
-                          style={{
-                            paddingBottom: 4,
-                            paddingRight: 10,
-                          }}
-                          size="large"
-                        />{" "}
-                        Novo
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/cont/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Contatos
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/comp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Complemento
-                      </Button>
-                    </Link>
-                    <Link to={"/tabelas/cliente/rec_desp/" + id}>
-                      <Button
-                        style={{ textAlign: "right" }}
-                        color="info"
-                        size="md"
-                        className="text-center"
-                      >
-                        Receita/Despesa
-                      </Button>
-                    </Link>
-                    <Link to={`/tabelas/cliente/cliente`}>
-                  <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      {checkProsp(prct)}
+
+                      <Link to={"/tabelas/cliente/cont/" + id}>
+                        <Tooltip title="Contato" placement="top" interactive>
+                          <Button
+                            style={{ float: "right" }}
+                            color="default"
+                            size="sm"
+                            className={classNames("btn-icon btn-link like")}
+                          >
+                            <Contacts />
+                          </Button>
+                        </Tooltip>
+                      </Link>
+                      <CardTitle tag="h4">Edição do cliente</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <Label>Empresa</Label>
+                        <FormGroup
+                          className={`has-label ${values.empresaId.error}`}
+                        >
+                          <Input
+                            disabled={true}
+                            name="EmpresaId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "empresaId", "text")
+                            }
+                            value={values.empresaId.value}
+                          >
+                            {" "}
+                            <option value={1}>
+                              {" "}
+                              {data3.nome} - {normalizeCnpj(data3.idFederal)}
+                            </option>
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <label>CNPJ</label>
+                        <FormGroup className={`has-label ${values.cnpj.error}`}>
+                          <Input
+                            disabled
+                            maxLength={18}
+                            name="cnpj"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "cnpj", "cnpj")
+                            }
+                            value={values.cnpj.value}
+                            onBlur={(e) => {
+                              let value = e.target.value;
+                              renderCnpjState(value);
+                            }}
+                          />
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Label>Nome Abreviado</Label>
+                        <FormGroup
+                          className={`has-label ${values.nomeAbv.error}`}
+                        >
+                          <Input
+                            disabled
+                            name="name_abv"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "nomeAbv", "text")
+                            }
+                            value={values.nomeAbv.value}
+                          />
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Label>Representante</Label>
+                        <FormGroup
+                          className={`has-label ${values.RepresentanteId.error}`}
+                        >
+                          <Input
+                            name="RepresentanteId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "RepresentanteId", "text")
+                            }
+                            value={values.RepresentanteId.value}
+                          >
+                            {" "}
+                            <option disabled value="">
+                              {" "}
+                            Selecione o representante{" "}
+                            </option>
+                            {data2.map((representante) => (
+                              <option value={representante.id}>
+                                {" "}
+                                {representante.nome}{" "}
+                              </option>
+                            ))}
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Label>Tipo Comissão</Label>
+                        <FormGroup
+                          className={`has-label ${values.TipoComisseId.error}`}
+                        >
+                          <Input
+                            name="TipoComisseId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "TipoComisseId", "text")
+                            }
+                            value={values.TipoComisseId.value}
+                          >
+                            {" "}
+                            <option disabled value="">
+                              {" "}
+                            Selecione o tipo de comissão{" "}
+                            </option>
+                            {data1.map((tipoComiss) => (
+                              <option value={tipoComiss.id}>
+                                {" "}
+                                {tipoComiss.id} -{tipoComiss.desc}{" "}
+                              </option>
+                            ))}
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Link to={"/tabelas/cliente/cliente"}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="text-left"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
                       Voltar
                     </Button>
-                  </Link>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled={true}
-                          name="EmpresaId"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data3.nome} - {normalizeInput(data3.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <label>CNPJ</label>
-                      <FormGroup className={`has-label ${values.cnpj.error}`}>
-                        <Input
-                        disabled
-                          maxLength={18}
-                          name="cnpj"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "cnpj", "cnpj")
-                          }
-                          value={values.cnpj.value}
-                          onBlur={(e) => {
-                            let value = e.target.value;
-                            renderCnpjState(value);
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
                           }}
-                        />
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Nome Abreviado</Label>
-                      <FormGroup
-                        className={`has-label ${values.nomeAbv.error}`}
-                      >
-                        <Input
-                        disabled
-                          name="name_abv"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "nomeAbv", "text")
-                          }
-                          value={values.nomeAbv.value}
-                        />
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Representante</Label>
-                      <FormGroup
-                        className={`has-label ${values.RepresentanteId.error}`}
-                      >
-                        <Input
-                          name="representante"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "representante", "text")
-                          }
-                          value={values.RepresentanteId.value}
+                          className="form"
+                          color="info"
+                          type="submit"
                         >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o representante{" "}
-                          </option>
-                          {data2.map((representante) => (
-                            <option value={representante.id}>
-                              {" "}
-                              {representante.nome}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Tipo Comissão</Label>
-                      <FormGroup
-                        className={`has-label ${values.TipoComisseId.error}`}
-                      >
-                        <Input
-                          name="tipoComiss"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "tipoComiss", "text")
-                          }
-                          value={values.TipoComisseId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o tipo de comissão{" "}
-                          </option>
-                          {data1.map((tipoComiss) => (
-                            <option value={tipoComiss.id}>
-                              {" "}
-                              {tipoComiss.id} -{tipoComiss.desc}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

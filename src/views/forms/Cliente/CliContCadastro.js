@@ -51,10 +51,13 @@ export default function CliContCadastro() {
     fone: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    aniver: { value: "", error: "", message: "" },
     tipoConta: { value: "", error: "", message: "" },
   };
+  const optionalSchema = {
+    aniver: { value: null, error: "", message: "" },
+  }
   const [values, setValues] = useState(stateSchema);
+  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     async function loadData() {
@@ -129,6 +132,12 @@ export default function CliContCadastro() {
           }));
         }
         break;
+      case "optional":
+        setOptional((prevState) => ({
+          ...prevState,
+          [name]: { value: target },
+        }));
+        break
       case "text":
         setValues((prevState) => ({
           ...prevState,
@@ -174,7 +183,7 @@ export default function CliContCadastro() {
           fonedb,
           values.skype.value,
           values.email.value,
-          values.aniver.value,
+          optional.aniver.value,
           values.tipoConta.value
         )
       );
@@ -203,28 +212,6 @@ export default function CliContCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-              <Link to={`/tabelas/cliente/cont/${values.clienteId.value}`}>
-                  <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
                 <CardTitle tag="h4">Contato do cliente</CardTitle>
               </CardHeader>
               <CardBody>
@@ -232,7 +219,7 @@ export default function CliContCadastro() {
                   <label>Cliente</label>
                   <FormGroup className={`has-label ${values.clienteId.error}`}>
                     <Input
-                    disabled
+                      disabled
                       onChange={(event) =>
                         handleChange(event, "clienteId", "text")
                       }
@@ -246,7 +233,7 @@ export default function CliContCadastro() {
                       </option>{" "}
                       <option value={data.id}>
                         {" "}
-                         {data.nomeAbv} - {data.CNPJ}
+                        {data.nomeAbv} - {data.CNPJ}
                       </option>
                     </Input>
                     {values.clienteId.error === "has-danger" ? (
@@ -272,8 +259,8 @@ export default function CliContCadastro() {
                       <Label>Celular</Label>
                       <FormGroup className={`has-label ${values.cel.error}`}>
                         <Input
-                        minLength={10}
-                        maxLength={11}
+                          minLength={10}
+                          maxLength={11}
                           name="cel"
                           type="numeric"
                           onChange={(event) =>
@@ -297,8 +284,8 @@ export default function CliContCadastro() {
                       <Label>Telefone</Label>
                       <FormGroup className={`has-label ${values.fone.error}`}>
                         <Input
-                        minLength={10}
-                        maxLength={11}
+                          minLength={10}
+                          maxLength={11}
                           name="fone"
                           type="numeric"
                           onChange={(event) =>
@@ -319,29 +306,29 @@ export default function CliContCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="3">
-                      <FormGroup className={`has-label ${values.aniver.error}`}>
+                      <FormGroup className={`has-label ${optional.aniver.error}`}>
                         <Label>Aniversário </Label>
                         <Input
                           name="aniver"
                           type="date"
                           onChange={(event) =>
-                            handleChange(event, "aniver", "text")
+                            handleChange(event, "aniver", "optional")
                           }
-                          value={values.aniver.value}
+                          value={optional.aniver.value}
                         />
-                        {values.aniver.error === "has-danger" ? (
+                        {optional.aniver.error === "has-danger" ? (
                           <label className="error">
-                            {values.aniver.message}
+                            {optional.aniver.message}
                           </label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="3">
-                    <label>tipo de Contato</label>
-                          <FormGroup
-                            className={`has-label ${values.tipoConta.error}`}
-                          >
-                            <Input
+                      <label>tipo de Contato</label>
+                      <FormGroup
+                        className={`has-label ${values.tipoConta.error}`}
+                      >
+                        <Input
                           name="tipoConta"
                           type="select"
                           onChange={(event) =>
@@ -356,12 +343,12 @@ export default function CliContCadastro() {
                           <option value={1}>Normal</option>
                           <option value={2}>Nota Fiscal</option>
                         </Input>
-                            {values.tipoConta.error === "has-danger" ? (
-                              <label className="error">
-                                {values.tipoConta.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
+                        {values.tipoConta.error === "has-danger" ? (
+                          <label className="error">
+                            {values.tipoConta.message}
+                          </label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                   </Row>
                   <Row>
@@ -402,14 +389,44 @@ export default function CliContCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-
+                  <Link to={`/tabelas/cliente/cont/${values.clienteId.value}`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

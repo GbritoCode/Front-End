@@ -22,8 +22,10 @@ import ReactTable from "react-table-v6";
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
-import {normalizeCurrency} from 'normalize'
+import { normalizeCurrency } from 'normalize'
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
@@ -34,16 +36,16 @@ class Tabela_Cliente extends Component {
     document.body.classList.add("white-content");
     this.loadClients();
   }
-  checkCobranca =(value) =>{
-    if (value == 1){
+  checkCobranca = (value) => {
+    if (value == 1) {
       return "Por Hora"
-    }else if(value==2){
+    } else if (value == 2) {
       return "Por Projeto"
-    }else if(value==3){
+    } else if (value == 3) {
       return "Por Dia"
-    }else if(value==4){
+    } else if (value == 4) {
       return "Por Quilômetro"
-    }else if(value==5){
+    } else if (value == 5) {
       return "Por Refeição"
     }
   }
@@ -56,7 +58,7 @@ class Tabela_Cliente extends Component {
           id: key,
           idd: client.id,
           ClienteId: client.ClienteId,
-          Rec_desp: client.Rec_desp.desc,
+          recDesp: client.recDesp.desc,
           tipoCobranca: this.checkCobranca(client.tipoCobranca),
           valorRec: normalizeCurrency(JSON.stringify(client.valorRec)),
           actions: (
@@ -99,6 +101,7 @@ class Tabela_Cliente extends Component {
         };
       }),
     });
+    console.log(response)
   };
 
   render() {
@@ -111,38 +114,26 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Receita e Despesa do Cliente
+                  Receita do Cliente
                   <Link to={`/cadastro/cliente/rec_desp/${id}`}>
+                    <Button
+                      style={{
+                        float: "right",
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <AddIcon fontSize="large" />
+                    </Button>
+                  </Link>
+
+                  <Link to={`/cliente_update/${id}/true`}>
                     <Button
                       style={{
                         float: "right",
                         paddingLeft: 15,
                         paddingRight: 15,
                       }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
-                  </Link>
-
-                  <Link to={`/cliente_update/${id}/true`}>
-                  <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="success"
+                      color="secundary"
                       size="small"
                       className="text-left"
                     >
@@ -171,7 +162,7 @@ class Tabela_Cliente extends Component {
                     },
                     {
                       Header: "Tipo",
-                      accessor: "Rec_desp",
+                      accessor: "recDesp",
                     },
                     {
                       Header: "Valor da Receita",

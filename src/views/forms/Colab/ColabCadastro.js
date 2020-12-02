@@ -35,7 +35,8 @@ import { signUpRequest } from "~/store/modules/auth/actions";
 import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeFone, normalizeCpf } from "normalize";
+import { normalizeFone, normalizeCpf, normalizeCnpj } from "normalize";
+import { Link } from "react-router-dom";
 
 export default function ColabCadastro() {
   //--------- colocando no modo claro do template
@@ -198,6 +199,7 @@ export default function ColabCadastro() {
     }
   };
 
+  const colab = true
   const handleSubmit = (evt) => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -223,11 +225,12 @@ export default function ColabCadastro() {
         break;
       }
     }
-  
+
 
     if (valid && filled) {
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
-      
+      var celdb = values.cel.value.replace(/[^\d]+/g, "");
+
       dispatch(
         colabRequest(
           cpfdb,
@@ -235,7 +238,7 @@ export default function ColabCadastro() {
           values.empresaId.value,
           values.nome.value,
           values.dtAdmiss.value,
-          values.cel.value,
+          celdb,
           values.PerfilId.value,
           values.skype.value,
           values.email.value,
@@ -243,7 +246,7 @@ export default function ColabCadastro() {
         )
       );
       dispatch(
-        signUpRequest(values.nome.value, values.email.value, "Aidera2020")
+        signUpRequest(values.nome.value, values.email.value, "Aidera2020", colab)
       );
     } else {
       options = {
@@ -288,7 +291,7 @@ export default function ColabCadastro() {
                       {" "}
                       <option value={1}>
                         {" "}
-                        {data.nome} - {data.idFederal}
+                        {data.nome} - {normalizeCnpj(data.idFederal)}
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
@@ -306,10 +309,10 @@ export default function ColabCadastro() {
                       type="text"
                       onChange={(event) => handleChange(event, "cpf", "cpf")}
                       value={values.cpf.value}
-                          onBlur={(e) => {
-                            let value = e.target.value;
-                            renderCpfState(value);
-                          }}
+                      onBlur={(e) => {
+                        let value = e.target.value;
+                        renderCpfState(value);
+                      }}
                     />
                     {values.cpf.error === "has-danger" ? (
                       <label className="error">{values.cpf.message}</label>
@@ -358,8 +361,8 @@ export default function ColabCadastro() {
                       <label>Celular</label>
                       <FormGroup className={`has-label ${values.cel.error}`}>
                         <Input
-                        maxLength={11}
-                        minLength={10}
+                          maxLength={11}
+                          minLength={10}
                           name="cel"
                           type="numeric"
                           onChange={(event) =>
@@ -498,14 +501,44 @@ export default function ColabCadastro() {
                       <label className="error">{values.espec.message}</label>
                     ) : null}
                   </FormGroup>
-                  
+                  <Link to={`/tabelas/colab`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

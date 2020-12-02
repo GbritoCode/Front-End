@@ -24,6 +24,8 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_CliComp extends Component {
   state = {
@@ -107,29 +109,19 @@ class Tabela_CliComp extends Component {
                 <CardTitle tag="h4">
                   Complemento de Cliente
                   <Link to={`/cadastro/cliente/comp/${id}`}>
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                   <Link to={`/cliente_update/${id}/true`}>
-                  <Button
+                    <Button
                       style={{
                         float: "right",
                         paddingLeft: 15,

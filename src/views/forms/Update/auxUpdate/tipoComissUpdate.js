@@ -63,7 +63,7 @@ function AreaUpdatee() {
       const response1 = await axios(`http://localhost:51314/tipoComiss/${id}`);
       setData(response.data);
       setData1(response1.data);
-      
+
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.id },
@@ -75,7 +75,7 @@ function AreaUpdatee() {
 
       setValues((prevState) => ({
         ...prevState,
-        prcnt: { value: normalizeCurrency(JSON.stringify( response1.data.prcnt)) },
+        prcnt: { value: normalizeCurrency(JSON.stringify(response1.data.prcnt)) },
       }));
 
       setValues((prevState) => ({
@@ -141,7 +141,7 @@ function AreaUpdatee() {
 
     if (valid && filled) {
       var prcntdb = values.prcnt.value.replace(/[^\d]+/g, "");
-      dispatch(tipoComissUpdate(id, values.empresaId.value, values.desc.value,prcntdb,values.bsComiss.value));
+      dispatch(tipoComissUpdate(id, values.empresaId.value, values.desc.value, prcntdb, values.bsComiss.value));
     } else {
       options = {
         place: "tr",
@@ -162,140 +162,170 @@ function AreaUpdatee() {
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de Tipo de Comissão</CardTitle>
-                    <Link to="/cadastro/aux/tipoComiss">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      <Link to="/cadastro/aux/tipoComiss">
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingRight: 10,
+                            float: "right",
+                            paddingLeft: 15,
+                            paddingRight: 15,
                           }}
-                          size="large"
-                        />{" "}
+                          color="info"
+                          size="small"
+                          className="text-center"
+                        >
+                          <i
+                            className="tim-icons icon-simple-add"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 10,
+                            }}
+                            size="large"
+                          />{" "}
                         Novo
                       </Button>
-                    </Link>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled={true}
-                          name="EmpresaId"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
+                      </Link>
+                      <CardTitle tag="h4">Edição de Tipo de Comissão</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <label>Empresa</label>
+                        <FormGroup
+                          className={`has-label ${values.empresaId.error}`}
                         >
-                          {" "}
-                          <option value={1}>
+                          <Input
+                            disabled={true}
+                            name="EmpresaId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "empresaId", "text")
+                            }
+                            value={values.empresaId.value}
+                          >
                             {" "}
-                            {data.nome} -{normalizeCnpj(data.idFederal)}
-                          </option>
-                        </Input>{" "}
-                        {values.empresaId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.empresaId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <Row>
-                    <Col md='4'>
-                  <label>Descrição</label>
-                  <FormGroup className={`has-label ${values.desc.error}`}>
-                    <Input
-                      name="desc"
-                      type="text"
-                      onChange={(event) => handleChange(event, "desc", "text")}
-                      value={values.desc.value}
-                    />
-                    {values.desc.error === "has-danger" ? (
-                      <label className="error">{values.desc.message}</label>
-                    ) : null}
-                  </FormGroup>
-                    </Col><Col md='4'>
-                      
-                  <label>Percentual</label>
-                  <FormGroup className={`has-label ${values.prcnt.error}`}>
-                    <Input
-                      name="prcnt"
-                      type="text"
-                      onChange={(event) => handleChange(event, "prcnt", "prcnt")}
-                      value={values.prcnt.value}
-                    />
-                    {values.prcnt.error === "has-danger" ? (
-                      <label className="error">{values.prcnt.message}</label>
-                    ) : null}
-                  </FormGroup>
-                      </Col>
-                      <Col md='4'>
-                         <label>Base de Comissão</label>
-                          <FormGroup className={`has-label ${values.bsComiss.error}`}>
-                            <Input
-                              name="bsComiss"
-                              type="select"
-                              onChange={(event) =>
-                                handleChange(event, "bsComiss", "text")
-                              }
-                              value={values.bsComiss.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Comissão{" "}
-                              </option>
-                              <option value="1">Lucro Líquido</option>
-                              <option value="2">Lucro Bruto</option>
-                              <option value="3">Total Projeto</option>
-                              <option value="4">Fixado</option>
-                            </Input>
-                            {values.bsComiss.error === "has-danger" ? (
-                              <label className="error">
-                                {values.bsComiss.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                          </Col>
-                          </Row>
+                            <option value={1}>
+                              {" "}
+                              {data.nome} -{normalizeCnpj(data.idFederal)}
+                            </option>
+                          </Input>{" "}
+                          {values.empresaId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.empresaId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <Row>
+                          <Col md='4'>
+                            <label>Descrição</label>
+                            <FormGroup className={`has-label ${values.desc.error}`}>
+                              <Input
+                                name="desc"
+                                type="text"
+                                onChange={(event) => handleChange(event, "desc", "text")}
+                                value={values.desc.value}
+                              />
+                              {values.desc.error === "has-danger" ? (
+                                <label className="error">{values.desc.message}</label>
+                              ) : null}
+                            </FormGroup>
+                          </Col><Col md='4'>
 
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                            <label>Percentual</label>
+                            <FormGroup className={`has-label ${values.prcnt.error}`}>
+                              <Input
+                                name="prcnt"
+                                type="text"
+                                onChange={(event) => handleChange(event, "prcnt", "prcnt")}
+                                value={values.prcnt.value}
+                              />
+                              {values.prcnt.error === "has-danger" ? (
+                                <label className="error">{values.prcnt.message}</label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md='4'>
+                            <label>Base de Comissão</label>
+                            <FormGroup className={`has-label ${values.bsComiss.error}`}>
+                              <Input
+                                name="bsComiss"
+                                type="select"
+                                onChange={(event) =>
+                                  handleChange(event, "bsComiss", "text")
+                                }
+                                value={values.bsComiss.value}
+                              >
+                                <option disabled value="">
+                                  {" "}
+                                Selecione a Comissão{" "}
+                                </option>
+                                <option value="1">Lucro Líquido</option>
+                                <option value="2">Lucro Bruto</option>
+                                <option value="3">Total Projeto</option>
+                                <option value="4">Fixado</option>
+                              </Input>
+                              {values.bsComiss.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.bsComiss.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Link to={`/tabelas/aux/tipoComiss`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="text-left"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

@@ -35,18 +35,23 @@ import { CliRecDespRequest } from "~/store/modules/Cliente/actions";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import {normalizeCnpj,normalizeCurrency} from 'normalize'
+import { normalizeCnpj, normalizeCurrency } from 'normalize'
 
 export default function CliRecDespCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
+  let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
+  var endDate = new Date()
+  endDate.setDate(endDate.getDate() + 1)
   const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
     recDespId: { value: "", error: "", message: "" },
     tipoCobranca: { value: "", error: "", message: "" },
     valorRec: { value: "", error: "", message: "" },
+    dataInic: { value: year + "-" + month + "-" + date, error: "", message: "" },
+    dataFim: { value: year + "-" + month + "-" + endDate.getDate(), error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
   const [data, setData] = useState({});
@@ -56,7 +61,7 @@ export default function CliRecDespCadastro() {
   useEffect(() => {
     async function loadData() {
       const response = await axios(`http://localhost:51314/cliente/${id.id}`);
-      const response1 = await axios(`http://localhost:51314/rec_desp/`);
+      const response1 = await axios(`http://localhost:51314/rec_desp/?rec=true`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
@@ -104,10 +109,10 @@ export default function CliRecDespCadastro() {
           }));
         }
         break;
-        case "currency":
+      case "currency":
         setValues((prevState) => ({
           ...prevState,
-          [name]: { value:normalizeCurrency( target) },
+          [name]: { value: normalizeCurrency(target) },
         }));
         break
       case "text":
@@ -151,7 +156,9 @@ export default function CliRecDespCadastro() {
           values.clienteId.value,
           values.recDespId.value,
           values.tipoCobranca.value,
-          valorRecdb
+          valorRecdb,
+          values.dataInic.value,
+          values.dataFim.value,
         )
       );
     } else {
@@ -179,36 +186,15 @@ export default function CliRecDespCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-              <Link to={`/tabelas/cliente/rec_desp/${values.clienteId.value}`}>
-                  <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
-                <CardTitle tag="h4">Receita e Despesa de Cliente</CardTitle>
+
+                <CardTitle tag="h4">Receita do Cliente</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <label>Cliente</label>
                   <FormGroup className={`has-label ${values.clienteId.error}`}>
                     <Input
-                    disabled
+                      disabled
                       onChange={(event) =>
                         handleChange(event, "clienteId", "text")
                       }
@@ -222,7 +208,7 @@ export default function CliRecDespCadastro() {
                       </option>{" "}
                       <option value={data.id}>
                         {" "}
-                         {data.nomeAbv} - {normalizeCnpj(data.CNPJ)}
+                        {data.nomeAbv} - {normalizeCnpj(data.CNPJ)}
                       </option>
                     </Input>
                     {values.clienteId.error === "has-danger" ? (
@@ -231,58 +217,59 @@ export default function CliRecDespCadastro() {
                       </label>
                     ) : null}
                   </FormGroup>
-                  <label>Receita ou Despesa</label>
-                      <FormGroup
-                        className={`has-label ${values.recDespId.error}`}
-                      >
-                        <Input
-                          name="recDespId"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "recDespId", "text")
-                          }
-                          value={values.recDespId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
+                  <label>Receita</label>
+                  <FormGroup
+                    className={`has-label ${values.recDespId.error}`}
+                  >
+                    <Input
+                      name="recDespId"
+                      type="select"
+                      onChange={(event) =>
+                        handleChange(event, "recDespId", "text")
+                      }
+                      value={values.recDespId.value}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
                             Selecione a receita ou despesa{" "}
-                          </option>
-                          {data1.map((recDespId) => (
-                            <option value={recDespId.id}>
-                              {" "}
-                              {recDespId.id} - {recDespId.desc}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.recDespId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.recDespId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
+                      </option>
+                      {data1.map((recDespId) => (
+                        <option value={recDespId.id}>
+                          {" "}
+                          {recDespId.id} - {recDespId.desc}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {values.recDespId.error === "has-danger" ? (
+                      <label className="error">
+                        {values.recDespId.message}
+                      </label>
+                    ) : null}
+                  </FormGroup>
                   <label>Tipo de Cobrança</label>
                   <FormGroup
                     className={`has-label ${values.tipoCobranca.error}`}
                   >
-                  <Input
-                          name="tipoCobranca"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "tipoCobranca", "text")
-                          }
-                          value={values.tipoCobranca.value}
-                        >
-                          <option disabled value="">
-                            {" "}
+                    <Input
+                      name="tipoCobranca"
+                      type="select"
+                      onChange={(event) =>
+                        handleChange(event, "tipoCobranca", "text")
+                      }
+                      value={values.tipoCobranca.value}
+                    >
+                      <option disabled value="">
+                        {" "}
                             Selecione o tipo de cobrança{" "}
-                          </option>
-                          <option value={1}>Por Hora</option>
-                          <option value={2}>Por Projeto</option>
-                          <option value={3}>Por Dia</option>
-                          <option value={4}>Por Quilometro</option>
-                          <option value={5}>Por Refeição</option>
-                        </Input>
+                      </option>
+                      <option value={1}>Por Hora</option>
+                      <option value={2}>Por Projeto</option>
+                      <option value={3}>Por Dia</option>
+                      <option value={4}>Por Quilometro</option>
+                      <option value={5}>Por Refeição</option>
+                      <option value={6}>Por Pacote</option>
+                    </Input>
                     {values.tipoCobranca.error === "has-danger" ? (
                       <label className="error">
                         {values.tipoCobranca.message}
@@ -290,30 +277,89 @@ export default function CliRecDespCadastro() {
                     ) : null}
                   </FormGroup>
                   <label>Valor da Receita</label>
-                      <FormGroup
-                        className={`has-label ${values.valorRec.error}`}
-                      >
-                        <Input
-                          name="valorRec"
-                          type="numeric"
-                          onChange={(event) =>
-                            handleChange(event, "valorRec", "currency")
-                          }
-                          value={values.valorRec.value}
-                        />{" "}
-                        {values.valorRec.error === "has-danger" ? (
-                          <label className="error">
-                            {values.valorRec.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
+                  <FormGroup
+                    className={`has-label ${values.valorRec.error}`}
+                  >
+                    <Input
+                      name="valorRec"
+                      type="numeric"
+                      onChange={(event) =>
+                        handleChange(event, "valorRec", "currency")
+                      }
+                      value={values.valorRec.value}
+                    />{" "}
+                    {values.valorRec.error === "has-danger" ? (
+                      <label className="error">
+                        {values.valorRec.message}
+                      </label>
+                    ) : null}
+                  </FormGroup>
+                  <Label>Data Inicial</Label>
+                  <FormGroup className={`has-label ${values.dataInic.error}`}>
+                    <Input
+                      name="dataInic"
+                      type="date"
+                      onChange={(event) =>
+                        handleChange(event, "dataInic", "text")
+                      }
+                      value={values.dataInic.value}
+                    />
+                    {values.dataInic.error === "has-danger" ? (
+                      <label className="error">{values.dataInic.message}</label>
+                    ) : null}
+                  </FormGroup>
+                  <Label>Data Final</Label>
+                  <FormGroup className={`has-label ${values.dataFim.error}`}>
+                    <Input
+                      name="dataFim"
+                      type="date"
+                      onChange={(event) =>
+                        handleChange(event, "dataFim", "text")
+                      }
+                      value={values.dataFim.value}
+                    />
+                    {values.dataFim.error === "has-danger" ? (
+                      <label className="error">{values.dataFim.message}</label>
+                    ) : null}
+                  </FormGroup>
+                  <Link to={`/tabelas/cliente/rec_desp/${values.clienteId.value}`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

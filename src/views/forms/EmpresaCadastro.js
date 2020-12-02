@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import { empresaRequest } from "~/store/modules/general/actions";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function EmpresaCadastro() {
   //--------- colocando no modo claro do template
@@ -370,13 +371,43 @@ export default function EmpresaCadastro() {
                     ) : null}
                   </FormGroup>
 
+                  <Link to={`/tabelas/general/empresa`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="form"
+                    >
+                      <i className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

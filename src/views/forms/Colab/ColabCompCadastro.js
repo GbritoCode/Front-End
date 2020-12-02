@@ -32,7 +32,7 @@ import {
 import { useDispatch } from "react-redux";
 import { colabCompRequest } from "~/store/modules/Colab/actions";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { normalizeCurrency } from "normalize";
 
@@ -189,7 +189,7 @@ export default function ColabCompCadastro() {
                   <label>Colaborador</label>
                   <FormGroup className={`has-label ${values.colabId.error}`}>
                     <Input
-                    disabled
+                      disabled
                       name="ColabId"
                       onChange={(event) =>
                         handleChange(event, "colabId", "text")
@@ -203,7 +203,7 @@ export default function ColabCompCadastro() {
                       </option>{" "}
                       <option value={data.id}>
                         {" "}
-                         {data.nome} - {data.CPF}
+                        {data.nome} - {data.CPF}
                       </option>
                     </Input>
 
@@ -246,21 +246,21 @@ export default function ColabCompCadastro() {
                       <FormGroup
                         className={`has-label ${values.tipoValor.error}`}
                       >
-                          <Input
-                              name="tipoValor"
-                              type="select"
-                              onChange={(event) =>
-                                handleChange(event, "tipoValor", "text")
-                              }
-                              value={values.tipoValor.value}
-                            >
-                              <option disabled value="">
-                                {" "}
+                        <Input
+                          name="tipoValor"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "tipoValor", "text")
+                          }
+                          value={values.tipoValor.value}
+                        >
+                          <option disabled value="">
+                            {" "}
                                 Selecione o tipo de valor{" "}
-                              </option>
-                              <option value={1}>Por Hora</option>
+                          </option>
+                          <option value={1}>Por Hora</option>
                           <option value={2}>Fixo</option>
-                            </Input>
+                        </Input>
                         {values.tipoValor.error === "has-danger" ? (
                           <label className="error">
                             {values.tipoValor.message}
@@ -336,7 +336,7 @@ export default function ColabCompCadastro() {
                       <FormGroup
                         className={`has-label ${values.tipoAtend.error}`}
                       >
-                      <Input
+                        <Input
                           name="tipoAtend"
                           type="select"
                           onChange={(event) =>
@@ -361,14 +361,44 @@ export default function ColabCompCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-
+                  <Link to={`/tables/colab/comp/1`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

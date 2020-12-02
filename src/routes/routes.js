@@ -89,6 +89,12 @@ import tipoComissCadastro from "~/views/forms/auxForm/tipoComissCadastro.js";
 
 import perfilUpdate from "~/views/forms/Update/auxUpdate/perfilUpdate.js";
 import perfilCadastro from "~/views/forms/auxForm/perfilCadastro.js";
+
+import CadastroOport from "~/views/forms/oportunidade/oportunidadeCadastro";
+
+import CotacaoCadastro from "~/views/forms/oportunidade/cotacaoCadastro";
+import cotacaoUpdate from "~/views/forms/Update/oportunidades/cotacaoUpdate";
+
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
 //--------------------------Cadastros Linha248/Linha404 ---------------------------------------------------------------------
@@ -146,6 +152,21 @@ import User from "~/views/pages/User.jsx";
 
 import Rtl from "~/views/pages/Rtl.jsx";
 import Lock from "~/views/pages/Lock.jsx";
+import OportTable from "~/views/tables/oportTables/oportTable";
+import cotacaoTable from "~/views/tables/oportTables/cotacaoTable";
+
+import UpdateOport from "~/views/forms/Update/oportunidades/oportUpdate";
+import RecursoTable from "~/views/tables/oportTables/recursoTable";
+import RecursoCadastro from "~/views/forms/oportunidade/recursoCadastro";
+import RecursoUpdate from "~/views/forms/Update/oportunidades/recursoUpdate";
+import prospectTable from "../views/tables/Clientes/prospectTable";
+import WizardCadastro from "~/views/forms/wizardTeste";
+import WizardFornec from "~/views/forms/wizardFornec";
+import WizardColab from "~/views/forms/wizardColab";
+import ParcelaUpdate from "~/views/forms/Update/oportunidades/parcelaUpdate";
+import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
+import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
+
 
 const routes = [
   {
@@ -224,24 +245,6 @@ const routes = [
         mini: "UP",
         rtlMini: "شع",
         component: User,
-        layout: "/admin",
-      },
-    ],
-  },
-  {
-    collapse: true,
-    name: "Administrador",
-    rtlName: "المكونات",
-    icon: "tim-icons icon-molecule-40",
-    state: "AdministradorCollapse",
-    views: [
-      {
-        path: "/tabelas/aux/perfil",
-        name: "Perfis",
-        rtlName: "طاولات عادية",
-        mini: "PRF",
-        rtlMini: "صر",
-        component: perfilTable,
         layout: "/admin",
       },
     ],
@@ -343,7 +346,7 @@ const routes = [
     invisible: true,
     views: [
       {
-        path: "/cliente_cadastro",
+        path: "/cliente_cadastro/:prospect",
         name: "Cliente",
         rtlName: "أشكال عادية",
         mini: "RF",
@@ -631,6 +634,78 @@ const routes = [
         layout: "/admin",
       },
       {
+        path: "/cadastro/oportunidade/oport",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: CadastroOport,
+        layout: "/admin",
+      },
+      {
+        path: "/update/oportunidade/oport/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: UpdateOport,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/oportunidade/cotacao/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: CotacaoCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/oportunidade/cotacao/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: cotacaoUpdate,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/oportunidade/recurso/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: RecursoCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/oportunidade/recurso/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: RecursoUpdate,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/oportunidade/parcela/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: ParcelaCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/update/oportunidade/parcela/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: ParcelaUpdate,
+        layout: "/admin",
+      },
+      {
         path: "/cadastro/geral/represent",
         name: "Representante",
         rtlName: "أشكال عادية",
@@ -726,6 +801,72 @@ const routes = [
   //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
   {
     collapse: true,
+    name: "Administrador",
+    rtlName: "المكونات",
+    icon: "tim-icons icon-molecule-40",
+    state: "AdministradorCollapse",
+    views: [
+      {
+        path: "/tabelas/aux/perfil",
+        name: "Perfis",
+        rtlName: "طاولات عادية",
+        mini: "PRF",
+        rtlMini: "صر",
+        component: perfilTable,
+        layout: "/admin",
+      },
+    ],
+  },
+  {
+    collapse: true,
+    name: "Oportunidades",
+    rtlName: "المكونات",
+    icon: "tim-icons icon-molecule-40",
+    state: "OportunidadeCollapse",
+    views: [
+      {
+        path: "/tabelas/oportunidade/oport",
+        name: "Oportunidades",
+        rtlName: "طاولات عادية",
+        mini: "OPT",
+        rtlMini: "صر",
+        component: OportTable,
+        layout: "/admin",
+      },
+      {
+        path: "/tabelas/oportunidade/cotacao/:id",
+        name: "Cotacao",
+        rtlName: "طاولات عادية",
+        mini: "OPT",
+        rtlMini: "صر",
+        component: cotacaoTable,
+        layout: "/admin",
+        invisible: true
+      },
+      {
+        path: "/tabelas/oportunidade/recurso/:id",
+        name: "Recursos",
+        rtlName: "أشكال عادية",
+        mini: "rec",
+        rtlMini: "صو",
+        component: RecursoTable,
+        layout: "/admin",
+        invisible: true
+      },
+      {
+        path: "/tabelas/oportunidade/parcela/:id",
+        name: "Recursos",
+        rtlName: "أشكال عادية",
+        mini: "rec",
+        rtlMini: "صو",
+        component: ParcelaTable,
+        layout: "/admin",
+        invisible: true
+      },
+    ],
+  },
+  {
+    collapse: true,
     name: "Cadastros",
     rtlName: "الجداول",
     icon: "tim-icons icon-puzzle-10",
@@ -785,6 +926,42 @@ const routes = [
         mini: "RT",
         rtlMini: "در",
         component: Tabela_Cliente,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/wizard/empresa",
+        name: "wizard",
+        rtlName: "رد فعل الطاولة",
+        mini: "RT",
+        rtlMini: "در",
+        component: WizardCadastro,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/wizard/fornec",
+        name: "wizardFornec",
+        rtlName: "رد فعل الطاولة",
+        mini: "RT",
+        rtlMini: "در",
+        component: WizardFornec,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/wizard/colab",
+        name: "wizardColab",
+        rtlName: "رد فعل الطاولة",
+        mini: "RT",
+        rtlMini: "در",
+        component: WizardColab,
+        layout: "/admin",
+      },
+      {
+        path: "/tabelas/cliente/prospect",
+        name: "Prospects",
+        rtlName: "رد فعل الطاولة",
+        mini: "RT",
+        rtlMini: "در",
+        component: prospectTable,
         layout: "/admin",
       },
       {

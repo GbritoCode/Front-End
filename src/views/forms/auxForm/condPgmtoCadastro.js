@@ -33,8 +33,9 @@ import { useDispatch } from "react-redux";
 import { condPgmtoRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
 import axios from "axios";
-import {normalizeCnpj} from 'normalize.js'
+import { normalizeCnpj } from 'normalize.js'
 import NotificationAlert from "react-notification-alert";
+import { Link } from "react-router-dom";
 
 export default function CondPgmtoCadastro() {
   //--------- colocando no modo claro do template
@@ -46,6 +47,7 @@ export default function CondPgmtoCadastro() {
   const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
+    cod: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
     diasPrazo: { value: "", error: "", message: "" },
   };
@@ -111,7 +113,7 @@ export default function CondPgmtoCadastro() {
     }
 
     if (valid && filled) {
-      dispatch(condPgmtoRequest(values.empresaId.value, values.desc.value, values.diasPrazo.value));
+      dispatch(condPgmtoRequest(values.empresaId.value, values.cod.value, values.desc.value, values.diasPrazo.value));
     } else {
       options = {
         place: "tr",
@@ -165,6 +167,19 @@ export default function CondPgmtoCadastro() {
                     ) : null}
                   </FormGroup>
 
+                  <label>Código</label>
+                  <FormGroup className={`has-label ${values.cod.error}`}>
+                    <Input
+                      name="license"
+                      type="text"
+                      onChange={(event) => handleChange(event, "cod", "text")}
+                      value={values.cod.value}
+                    />
+                    {values.cod.error === "has-danger" ? (
+                      <label className="error">{values.cod.message}</label>
+                    ) : null}
+                  </FormGroup>
+
                   <label>Descrição</label>
                   <FormGroup className={`has-label ${values.desc.error}`}>
                     <Input
@@ -179,27 +194,57 @@ export default function CondPgmtoCadastro() {
                   </FormGroup>
 
                   <label>Dias de Prazo</label>
-                      <FormGroup className={`has-label ${values.diasPrazo.error}`}>
-                        <Input
-                          name="diasPrazo"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "diasPrazo", "text")
-                          }
-                          value={values.diasPrazo.value}
-                        />{" "}
-                        {values.diasPrazo.error === "has-danger" ? (
-                          <label className="error">{values.diasPrazo.message}</label>
-                        ) : null}
-                      </FormGroup>
-
+                  <FormGroup className={`has-label ${values.diasPrazo.error}`}>
+                    <Input
+                      name="diasPrazo"
+                      type="text"
+                      onChange={(event) =>
+                        handleChange(event, "diasPrazo", "text")
+                      }
+                      value={values.diasPrazo.value}
+                    />{" "}
+                    {values.diasPrazo.error === "has-danger" ? (
+                      <label className="error">{values.diasPrazo.message}</label>
+                    ) : null}
+                  </FormGroup>
+                  <Link to={`/tabelas/aux/condPgmto`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

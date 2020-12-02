@@ -36,10 +36,11 @@ import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeCnpj } from "normalize.js";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function CadastroCliente() {
   //--------- colocando no modo claro do template
+  const { prospect } = useParams()
   let jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
@@ -48,14 +49,18 @@ export default function CadastroCliente() {
   const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const empresa = store.getState().auth.empresa;
-
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
+    rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
     tipoComiss: { value: "", error: "", message: "" },
   };
+  const optionalSchema = {
+    fantasia: { value: "", error: "", message: "" },
+  }
+  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -158,17 +163,14 @@ export default function CadastroCliente() {
       };
       notify();
     } else {
-      if (response.data.fantasia === "") {
-        setValues((prevState) => ({
-          ...prevState,
-          nomeAbv: { value: response.data.nome },
-        }));
-      } else {
-        setValues((prevState) => ({
-          ...prevState,
-          nomeAbv: { value: response.data.fantasia },
-        }));
-      }
+      setValues((prevState) => ({
+        ...prevState,
+        rzSoc: { value: response.data.nome },
+      }));
+      setOptional((prevState) => ({
+        ...prevState,
+        fantasia: { value: response.data.fantasia },
+      }));
     }
   }
 
@@ -260,14 +262,14 @@ export default function CadastroCliente() {
 
     if (valid && filled) {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
-
       dispatch(
         ClienteRequest(
           cnpjdb,
           values.nomeAbv.value,
           values.representante.value,
           values.tipoComiss.value,
-          values.empresaId.value
+          values.empresaId.value,
+          prospect
         )
       );
     } else {
@@ -295,28 +297,6 @@ export default function CadastroCliente() {
           <Col md="12">
             <Card>
               <CardHeader>
-              <Link to={`/tabelas/cliente/cliente`}>
-                  <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
                 <CardTitle tag="h4">Cliente</CardTitle>
               </CardHeader>
               <CardBody>
@@ -361,6 +341,43 @@ export default function CadastroCliente() {
 
                     {values.cnpj.error === "has-danger" ? (
                       <label className="error">{values.cnpj.message}</label>
+                    ) : null}
+                  </FormGroup>
+                  <label>Razão Social</label>
+                  <FormGroup className={`has-label ${values.rzSoc.error}`}>
+                    <Input
+                      disabled
+                      id="rzSoc"
+                      name="rzSoc"
+                      type="text"
+                      onChange={(event) =>
+                        handleChange(event, "rzSoc", "text")
+                      }
+                      value={values.rzSoc.value}
+                    />
+                    {values.rzSoc.error === "has-danger" ? (
+                      <label className="error">
+                        {values.rzSoc.message}
+                      </label>
+                    ) : null}
+                  </FormGroup>
+                  <label>Nome Fanasia</label>
+                  <FormGroup
+                    className={`has-label ${optional.fantasia.error}`}
+                  >
+                    <Input
+                      disabled
+                      onChange={(event) =>
+                        handleChange(event, "fantasia", "optional")
+                      }
+                      value={optional.fantasia.value}
+                      name="nomeAbv"
+                      type="text"
+                    />
+                    {optional.fantasia.error === "has-danger" ? (
+                      <label className="error">
+                        {optional.fantasia.message}
+                      </label>
                     ) : null}
                   </FormGroup>
                   <Label>Nome Abreviado</Label>
@@ -444,14 +461,44 @@ export default function CadastroCliente() {
                       </FormGroup>
                     </Col>
                   </Row>
-
+                  <Link to={"/tabelas/cliente/cliente"}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

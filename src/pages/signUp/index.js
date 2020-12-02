@@ -34,6 +34,7 @@ export default function SignUp() {
   const loading = useSelector((state) => state.auth.loading);
 
   const errorCheckAux = [bindName, bindEmail, bindPassword];
+  const colab = false
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
@@ -51,7 +52,7 @@ export default function SignUp() {
       }
     }
     if (valid) {
-      dispatch(signUpRequest(name, email, password));
+      dispatch(signUpRequest(name, email, password, colab));
     }
   };
   return (

@@ -31,7 +31,7 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliCompUpdate } from "~/store/modules/Cliente/actions";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 
@@ -241,349 +241,387 @@ export default function CliCompUpdatee() {
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">
-                      Edição de Complemento do Cliente
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">
+                        Edição de Complemento do Cliente
                     </CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <label>Cliente</label>
-                      <FormGroup
-                        className={`has-label ${values.clienteId.error}`}
-                      >
-                        <Input
-                        disabled
-                          onChange={(event) =>
-                            handleChange(event, "clienteId", "text")
-                          }
-                          value={values.clienteId.value}
-                          name="ClienteId"
-                          type="select"
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <label>Cliente</label>
+                        <FormGroup
+                          className={`has-label ${values.clienteId.error}`}
                         >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o Cliente{" "}
-                          </option>{" "}
-                          <option value={data2.id}>
-                            {" "}
-                             {data2.nomeAbv} - {data2.CNPJ}
-                          </option>
-                        </Input>
-                        {values.clienteId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.clienteId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-
-                      <label>Razão Social</label>
-                      <FormGroup className={`has-label ${values.rzSoc.error}`}>
-                        <Input
-                          id="rzSoc"
-                          name="rzSoc"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "rzSoc", "text")
-                          }
-                          value={values.rzSoc.value}
-                        />
-                        {values.rzSoc.error === "has-danger" ? (
-                          <label className="error">
-                            {values.rzSoc.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <label>Nome Abreviado</label>
-                      <FormGroup
-                        className={`has-label ${values.nomeAbv.error}`}
-                      >
-                        <Input
-                          onChange={(event) =>
-                            handleChange(event, "nomeAbv", "text")
-                          }
-                          value={values.nomeAbv.value}
-                          name="nomeAbv"
-                          type="text"
-                        />
-                        {values.nomeAbv.error === "has-danger" ? (
-                          <label className="error">
-                            {values.nomeAbv.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <label>Nome Fantasia</label>
-                      <FormGroup
-                        className={`has-label ${values.fantasia.error}`}
-                      >
-                        <Input
-                          onChange={(event) =>
-                            handleChange(event, "fantasia", "text")
-                          }
-                          value={values.fantasia.value}
-                          name="nomeAbv"
-                          type="text"
-                        />
-                        {values.fantasia.error === "has-danger" ? (
-                          <label className="error">
-                            {values.fantasia.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-
-                      <Row>
-                        <Col md="4">
-                          <label>CEP</label>
-                          <FormGroup
-                            className={`has-label ${values.cep.error}`}
+                          <Input
+                            disabled
+                            onChange={(event) =>
+                              handleChange(event, "clienteId", "text")
+                            }
+                            value={values.clienteId.value}
+                            name="ClienteId"
+                            type="select"
                           >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "cep", "text")
-                              }
-                              value={values.cep.value}
-                              name="cep"
-                              type="text"
-                            />
-                            {values.cep.error === "has-danger" ? (
-                              <label className="error">
-                                {values.cep.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>Rua</label>
-                          <FormGroup
-                            className={`has-label ${values.rua.error}`}
-                          >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "rua", "text")
-                              }
-                              value={values.rua.value}
-                              name="rua"
-                              type="text"
-                            />
-                            {values.rua.error === "has-danger" ? (
-                              <label className="error">
-                                {values.rua.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-
-                        <Col md="4">
-                          <label>Número</label>
-                          <FormGroup
-                            className={`has-label ${values.numero.error}`}
-                          >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "numero", "number")
-                              }
-                              value={values.numero.value}
-                              name="numero"
-                              type="numeric"
-                            />
-                            {values.numero.error === "has-danger" ? (
-                              <label className="error">
-                                {values.numero.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          <label>Bairro</label>
-                          <FormGroup
-                            className={`has-label ${values.bairro.error}`}
-                          >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "bairro", "text")
-                              }
-                              value={values.bairro.value}
-                              name="bairro"
-                              type="text"
-                            />
-                            {values.bairro.error === "has-danger" ? (
-                              <label className="error">
-                                {values.bairro.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>Cidade</label>
-                          <FormGroup
-                            className={`has-label ${values.cidade.error}`}
-                          >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "cidade", "text")
-                              }
-                              value={values.cidade.value}
-                              name="cidade"
-                              type="text"
-                            />
-                            {values.cidade.error === "has-danger" ? (
-                              <label className="error">
-                                {values.cidade.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>UF</label>
-                          <FormGroup className={`has-label ${values.uf.error}`}>
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "uf", "text")
-                              }
-                              value={values.uf.value}
-                              name="uf"
-                              type="select"
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione o estado{" "}
-                              </option>
-                              <option value="AC">Acre</option>
-                              <option value="AL">Alagoas</option>
-                              <option value="AP">Amapá</option>
-                              <option value="AM">Amazonas</option>
-                              <option value="BA">Bahia</option>
-                              <option value="CE">Ceará</option>
-                              <option value="DF">Distrito Federal</option>
-                              <option value="ES">Espírito Santo</option>
-                              <option value="GO">Goiás</option>
-                              <option value="MA">Maranhão</option>
-                              <option value="MT">Mato Grosso</option>
-                              <option value="MS">Mato Grosso do Sul</option>
-                              <option value="MG">Minas Gerais</option>
-                              <option value="PA">Pará</option>
-                              <option value="PB">Paraíba</option>
-                              <option value="PR">Paraná</option>
-                              <option value="PE">Pernambuco</option>
-                              <option value="PI">Piauí</option>
-                              <option value="RJ">Rio de Janeiro</option>
-                              <option value="RN">Rio Grande do Norte</option>
-                              <option value="RS">Rio Grande do Sul</option>
-                              <option value="RO">Rondônia</option>
-                              <option value="RR">Roraima</option>
-                              <option value="SC">Santa Catarina</option>
-                              <option value="SP">São Paulo</option>
-                              <option value="SE">Sergipe</option>
-                              <option value="TO">Tocantins</option>
-                            </Input>
-                            {values.uf.error === "has-danger" ? (
-                              <label className="error">
-                                {values.uf.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          <label>Inscrição Municipal</label>
-                          <FormGroup
-                            className={`has-label ${values.inscMun.error}`}
-                          >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "inscMun", "text")
-                              }
-                              value={values.inscMun.value}
-                              name="inscMun"
-                              type="numeric"
-                            />
-                            {values.inscMun.error === "has-danger" ? (
-                              <label className="error">
-                                {values.inscMun.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>Inscrição Estadual</label>
-                          <FormGroup
-                            className={`has-label ${values.inscEst.error}`}
-                          >
-                            <Input
-                              onChange={(event) =>
-                                handleChange(event, "inscEst", "text")
-                              }
-                              value={values.inscEst.value}
-                              name="inscEst"
-                              type="numeric"
-                            />
-                            {values.inscEst.error === "has-danger" ? (
-                              <label className="error">
-                                {values.inscEst.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <label>Condição de Pagamento</label>
-                          <FormGroup
-                            className={`has-label ${values.CondPgmtoId.error}`}
-                          >
-                            <Input
-                              name="CondPgmtoId"
-                              type="select"
-                              onChange={(event) =>
-                                handleChange(event, "CondPgmtoId", "text")
-                              }
-                              value={values.CondPgmtoId.value}
-                            >
+                            <option disabled value="">
                               {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione a condição de pagamento{" "}
-                              </option>
-                              {data1.map((condPgmto) => (
-                                <option value={condPgmto.id}>
+                            Selecione o Cliente{" "}
+                            </option>{" "}
+                            <option value={data2.id}>
+                              {" "}
+                              {data2.nomeAbv} - {data2.CNPJ}
+                            </option>
+                          </Input>
+                          {values.clienteId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.clienteId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+
+                        <label>Razão Social</label>
+                        <FormGroup className={`has-label ${values.rzSoc.error}`}>
+                          <Input
+                            id="rzSoc"
+                            name="rzSoc"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "rzSoc", "text")
+                            }
+                            value={values.rzSoc.value}
+                          />
+                          {values.rzSoc.error === "has-danger" ? (
+                            <label className="error">
+                              {values.rzSoc.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <label>Nome Abreviado</label>
+                        <FormGroup
+                          className={`has-label ${values.nomeAbv.error}`}
+                        >
+                          <Input
+                            disabled
+                            onChange={(event) =>
+                              handleChange(event, "nomeAbv", "text")
+                            }
+                            value={values.nomeAbv.value}
+                            name="nomeAbv"
+                            type="text"
+                          />
+                          {values.nomeAbv.error === "has-danger" ? (
+                            <label className="error">
+                              {values.nomeAbv.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <label>Nome Fantasia</label>
+                        <FormGroup
+                          className={`has-label ${values.fantasia.error}`}
+                        >
+                          <Input
+                            onChange={(event) =>
+                              handleChange(event, "fantasia", "text")
+                            }
+                            value={values.fantasia.value}
+                            name="nomeAbv"
+                            type="text"
+                          />
+                          {values.fantasia.error === "has-danger" ? (
+                            <label className="error">
+                              {values.fantasia.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+
+                        <Row>
+                          <Col md="4">
+                            <label>CEP</label>
+                            <FormGroup
+                              className={`has-label ${values.cep.error}`}
+                            >
+                              <Input
+                                disabled
+                                onChange={(event) =>
+                                  handleChange(event, "cep", "text")
+                                }
+                                value={values.cep.value}
+                                name="cep"
+                                type="text"
+                              />
+                              {values.cep.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.cep.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>Rua</label>
+                            <FormGroup
+                              className={`has-label ${values.rua.error}`}
+                            >
+                              <Input
+                                disabled
+                                onChange={(event) =>
+                                  handleChange(event, "rua", "text")
+                                }
+                                value={values.rua.value}
+                                name="rua"
+                                type="text"
+                              />
+                              {values.rua.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.rua.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+
+                          <Col md="4">
+                            <label>Número</label>
+                            <FormGroup
+                              className={`has-label ${values.numero.error}`}
+                            >
+                              <Input
+                                disabled
+                                onChange={(event) =>
+                                  handleChange(event, "numero", "number")
+                                }
+                                value={values.numero.value}
+                                name="numero"
+                                type="numeric"
+                              />
+                              {values.numero.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.numero.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                            <label>Bairro</label>
+                            <FormGroup
+                              className={`has-label ${values.bairro.error}`}
+                            >
+                              <Input
+                                disabled
+                                onChange={(event) =>
+                                  handleChange(event, "bairro", "text")
+                                }
+                                value={values.bairro.value}
+                                name="bairro"
+                                type="text"
+                              />
+                              {values.bairro.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.bairro.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>Cidade</label>
+                            <FormGroup
+                              className={`has-label ${values.cidade.error}`}
+                            >
+                              <Input
+                                disabled
+                                onChange={(event) =>
+                                  handleChange(event, "cidade", "text")
+                                }
+                                value={values.cidade.value}
+                                name="cidade"
+                                type="text"
+                              />
+                              {values.cidade.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.cidade.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>UF</label>
+                            <FormGroup className={`has-label ${values.uf.error}`}>
+                              <Input
+                                disabled
+                                onChange={(event) =>
+                                  handleChange(event, "uf", "text")
+                                }
+                                value={values.uf.value}
+                                name="uf"
+                                type="select"
+                              >
+                                <option disabled value="">
                                   {" "}
-                                  {condPgmto.id} -{condPgmto.desc}{" "}
+                                Selecione o estado{" "}
                                 </option>
-                              ))}
-                            </Input>
-                            {values.CondPgmtoId.error === "has-danger" ? (
-                              <label className="error">
-                                {values.CondPgmtoId.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                              </Input>
+                              {values.uf.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.uf.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                            <label>Inscrição Municipal</label>
+                            <FormGroup
+                              className={`has-label ${values.inscMun.error}`}
+                            >
+                              <Input
+                                onChange={(event) =>
+                                  handleChange(event, "inscMun", "text")
+                                }
+                                value={values.inscMun.value}
+                                name="inscMun"
+                                type="numeric"
+                              />
+                              {values.inscMun.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.inscMun.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>Inscrição Estadual</label>
+                            <FormGroup
+                              className={`has-label ${values.inscEst.error}`}
+                            >
+                              <Input
+                                onChange={(event) =>
+                                  handleChange(event, "inscEst", "text")
+                                }
+                                value={values.inscEst.value}
+                                name="inscEst"
+                                type="numeric"
+                              />
+                              {values.inscEst.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.inscEst.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <label>Condição de Pagamento</label>
+                            <FormGroup
+                              className={`has-label ${values.CondPgmtoId.error}`}
+                            >
+                              <Input
+                                name="CondPgmtoId"
+                                type="select"
+                                onChange={(event) =>
+                                  handleChange(event, "CondPgmtoId", "text")
+                                }
+                                value={values.CondPgmtoId.value}
+                              >
+                                {" "}
+                                <option disabled value="">
+                                  {" "}
+                                Selecione a condição de pagamento{" "}
+                                </option>
+                                {data1.map((condPgmto) => (
+                                  <option value={condPgmto.id}>
+                                    {" "}
+                                    {condPgmto.id} -{condPgmto.desc}{" "}
+                                  </option>
+                                ))}
+                              </Input>
+                              {values.CondPgmtoId.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.CondPgmtoId.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Link to={`/tabelas/cliente/comp/${values.clienteId.value}`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="text-left"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

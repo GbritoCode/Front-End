@@ -20,10 +20,12 @@ import classNames from "classnames";
 import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-
+import { normalizeCurrency } from 'normalize'
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class tipoComissTable extends Component {
   state = {
@@ -43,6 +45,8 @@ class tipoComissTable extends Component {
           idd: client.id,
           Empresa: client.Empresa.nome,
           desc: client.desc,
+          prcnt: normalizeCurrency(JSON.stringify(client.prcnt)) + " %",
+          bsComiss: client.bsComiss,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -65,7 +69,7 @@ class tipoComissTable extends Component {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
-                      console.log(data);
+                      console.log(o);
                       return true;
                     }
                     return false;
@@ -95,26 +99,16 @@ class tipoComissTable extends Component {
                 <CardTitle tag="h4">
                   Tipos de Comissão
                   <Link to="/cadastro/aux/tipoComiss">
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -123,11 +117,19 @@ class tipoComissTable extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
+                  defaultFilterMethod={(filter, row, column) => {
+                    const id = filter.pivotId || filter.id
+                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  }}
+                  previousText="Anterior"
+                  nextText="Próximo"
+                  loadingText="Carregando"
+                  noDataText="Dados não encontrados"
+                  pageText="Página"
+                  ofText="de"
+                  rowsText="Linhas"
                   columns={[
-                    {
-                      Header: "Empresa",
-                      accessor: "Empresa",
-                    },
+
                     {
                       Header: "Código",
                       accessor: "idd",
@@ -135,6 +137,14 @@ class tipoComissTable extends Component {
                     {
                       Header: "Descrição",
                       accessor: "desc",
+                    },
+                    {
+                      Header: "Porcentagem",
+                      accessor: "prcnt",
+                    },
+                    {
+                      Header: "Base de Comissão",
+                      accessor: "bsComiss",
                     },
 
                     {

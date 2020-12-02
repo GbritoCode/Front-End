@@ -117,6 +117,22 @@ import Timeline from "~/views/pages/Timeline.jsx";
 import User from "~/views/pages/User.jsx";
 
 import Lock from "~/views/pages/Lock.jsx";
+import OportTable from "~/views/tables/oportTables/oportTable";
+import cotacaoTable from "~/views/tables/oportTables/cotacaoTable";
+import CadastroOport from "~/views/forms/oportunidade/oportunidadeCadastro";
+import updateOport from "~/views/forms/Update/oportunidades/oportUpdate";
+import CotacaoCadastro from "~/views/forms/oportunidade/cotacaoCadastro";
+import cotacaoUpdate from "~/views/forms/Update/oportunidades/cotacaoUpdate";
+import RecursoTable from "~/views/tables/oportTables/recursoTable";
+import RecursoCadastro from "~/views/forms/oportunidade/recursoCadastro";
+import RecursoUpdate from "~/views/forms/Update/oportunidades/recursoUpdate";
+import prospectTable from "~/views/tables/Clientes/prospectTable";
+import WizardCadastro from "~/views/forms/wizardTeste";
+import WizardFornec from "~/views/forms/wizardFornec";
+import WizardColab from "~/views/forms/wizardColab";
+import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
+import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
+import ParcelaUpdate from "~/views/forms/Update/oportunidades/parcelaUpdate";
 
 export default function Routes() {
   return (
@@ -137,6 +153,26 @@ export default function Routes() {
       <Route
         path="/tabelas/cliente/cliente"
         component={Tabela_Cliente}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/cliente/prospect"
+        component={prospectTable}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/wizard/empresa"
+        component={WizardCadastro}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/wizard/fornec"
+        component={WizardFornec}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/wizard/colab"
+        component={WizardColab}
         isPrivate
       />
       <Route
@@ -201,6 +237,17 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/tabelas/aux/perfil" component={perfilTable} isPrivate />
+
+      <Route
+        path="/tabelas/oportunidade/oport"
+        component={OportTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/oportunidade/cotacao/:id"
+        component={cotacaoTable}
+        isPrivate
+      />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -214,7 +261,7 @@ export default function Routes() {
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------*/}
       {/**CLIENTE */}
-      <Route path="/cliente_cadastro" component={CadastroCliente} isPrivate />
+      <Route path="/cliente_cadastro/:prospect" component={CadastroCliente} isPrivate />
       <Route
         path="/cliente_update/:id/:prct?"
         component={ClienteUpdate}
@@ -377,6 +424,57 @@ export default function Routes() {
       <Route
         path="/update/general/und_neg/:id"
         component={UndNegUpdate}
+        isPrivate
+      />
+
+      <Route
+        path="/cadastro/oportunidade/oport"
+        component={CadastroOport}
+        isPrivate
+      />
+      <Route
+        path="/update/oportunidade/oport/:id"
+        component={updateOport}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/oportunidade/cotacao/:id"
+        component={CotacaoCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/oportunidade/cotacao/:id"
+        component={cotacaoUpdate}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/oportunidade/recurso/:id"
+        component={RecursoTable}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/oportunidade/recurso/:id"
+        component={RecursoCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/oportunidade/recurso/:id"
+        component={RecursoUpdate}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/oportunidade/parcela/:id"
+        component={ParcelaTable}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/oportunidade/parcela/:id"
+        component={ParcelaCadastro}
+        isPrivate
+      />
+      <Routes
+        path="/update/oportunidade/parcela/:id"
+        component={ParcelaUpdate}
         isPrivate
       />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

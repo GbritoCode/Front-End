@@ -275,139 +275,147 @@ function EmpresaUpdatee() {
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de Empresa</CardTitle>
-                    <Link to="/cadastro/geral/area">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15,
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
-                          style={{
-                            paddingBottom: 4,
-                            paddingRight: 10,
-                          }}
-                          size="large"
-                        />{" "}
-                        Novo
-                      </Button>
-                    </Link>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <label>CNPJ</label>
-                      <FormGroup className={`has-label ${values.cnpj.error}`}>
-                        <Input
-                          name="idFederal"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "cnpj", "cnpj")
-                          }
-                          value={values.cnpj.value}
-                          onBlur={(e) => {
-                            let value = e.target.value;
-                            renderCnpjState(value);
-                          }}
-                        />
-                        {values.cnpj.error === "has-danger" ? (
-                          <label className="error">{values.cnpj.message}</label>
-                        ) : null}
-                      </FormGroup>
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">Edição de Empresa</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <label>CNPJ</label>
+                        <FormGroup className={`has-label ${values.cnpj.error}`}>
+                          <Input
+                            name="idFederal"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "cnpj", "cnpj")
+                            }
+                            value={values.cnpj.value}
+                            onBlur={(e) => {
+                              let value = e.target.value;
+                              renderCnpjState(value);
+                            }}
+                          />
+                          {values.cnpj.error === "has-danger" ? (
+                            <label className="error">{values.cnpj.message}</label>
+                          ) : null}
+                        </FormGroup>
 
-                      <label>Nome</label>
-                      <FormGroup className={`has-label ${values.nome.error}`}>
-                        <Input
-                          name="nome"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "nome", "text")
-                          }
-                          value={values.nome.value}
-                        />
-                        {values.nome.error === "has-danger" ? (
-                          <label className="error">{values.nome.message}</label>
-                        ) : null}
-                      </FormGroup>
+                        <label>Nome</label>
+                        <FormGroup className={`has-label ${values.nome.error}`}>
+                          <Input
+                            name="nome"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "nome", "text")
+                            }
+                            value={values.nome.value}
+                          />
+                          {values.nome.error === "has-danger" ? (
+                            <label className="error">{values.nome.message}</label>
+                          ) : null}
+                        </FormGroup>
 
-                      <label>License</label>
-                      <FormGroup
-                        className={`has-label ${values.license.error}`}
-                      >
-                        <Input
-                          name="license"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "license", "text")
-                          }
-                          value={values.license.value}
-                        />
-                        {values.license.error === "has-danger" ? (
-                          <label className="error">
-                            {values.license.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-
-                      <label>Usuário</label>
-                      <FormGroup className={`has-label ${values.userId.error}`}>
-                        <Input
-                          name="UserId"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "userId", "text")
-                          }
-                          value={values.userId.value}
+                        <label>License</label>
+                        <FormGroup
+                          className={`has-label ${values.license.error}`}
                         >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o usuário{" "}
-                          </option>
-                          {data1.map((user) => (
-                            <option key={user.id} value={user.id}>
-                              {" "}
-                              {user.name}, {user.email}{" "}
-                            </option>
-                          ))}
-                        </Input>{" "}
-                        {values.userId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.userId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
+                          <Input
+                            name="license"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "license", "text")
+                            }
+                            value={values.license.value}
+                          />
+                          {values.license.error === "has-danger" ? (
+                            <label className="error">
+                              {values.license.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
 
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                        <label>Usuário</label>
+                        <FormGroup className={`has-label ${values.userId.error}`}>
+                          <Input
+                            name="UserId"
+                            type="select"
+                            onChange={(event) =>
+                              handleChange(event, "userId", "text")
+                            }
+                            value={values.userId.value}
+                          >
+                            {" "}
+                            <option disabled value="">
+                              {" "}
+                            Selecione o usuário{" "}
+                            </option>
+                            {data1.map((user) => (
+                              <option key={user.id} value={user.id}>
+                                {" "}
+                                {user.name}, {user.email}{" "}
+                              </option>
+                            ))}
+                          </Input>{" "}
+                          {values.userId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.userId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+
+                        <Link to={`/tabelas/general/empresa`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="form"
+                          >
+                            <i className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

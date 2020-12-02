@@ -32,7 +32,7 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeCnpj, normalizeFone } from "normalize";
@@ -234,224 +234,255 @@ export default function CliContUpdatee() {
       {isLoading ? (
         <div></div>
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de contato de cliente</CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <Form id="RegisterValidation" onSubmit={handleSubmit}>
-                      <label>Cliente</label>
-                      <FormGroup
-                        className={`has-label ${values.clienteId.error}`}
-                      >
-                        <Input
-                        disabled
-                          onChange={(event) =>
-                            handleChange(event, "clienteId", "text")
-                          }
-                          value={values.clienteId.value}
-                          name="ClienteId"
-                          type="select"
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">Edição de contato de cliente</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form id="RegisterValidation" onSubmit={handleSubmit}>
+                        <label>Cliente</label>
+                        <FormGroup
+                          className={`has-label ${values.clienteId.error}`}
                         >
-                          <option disabled value="">
-                            {" "}
+                          <Input
+                            disabled
+                            onChange={(event) =>
+                              handleChange(event, "clienteId", "text")
+                            }
+                            value={values.clienteId.value}
+                            name="ClienteId"
+                            type="select"
+                          >
+                            <option disabled value="">
+                              {" "}
                             Selecione o Cliente{" "}
-                          </option>{" "}
-                          <option value={data1.id}>
-                            {" "}
-                             {data1.nomeAbv} -{" "}
-                            {normalizeCnpj(data1.CNPJ)}
-                          </option>
-                        </Input>
-                        {values.clienteId.error === "has-danger" ? (
-                          <label className="error">
-                            {values.clienteId.message}
-                          </label>
-                        ) : null}
-                      </FormGroup>
-                      <label>Nome</label>
-                      <FormGroup className={`has-label ${values.nome.error}`}>
-                        <Input
-                          name="nome"
-                          type="text"
-                          onChange={(event) =>
-                            handleChange(event, "nome", "text")
-                          }
-                          value={values.nome.value}
-                        />
-                        {values.nome.error === "has-danger" ? (
-                          <label className="error">{values.nome.message}</label>
-                        ) : null}
-                      </FormGroup>
-                      <Row>
-                        <Col md="3">
-                          <Label>Celular</Label>
-                          <FormGroup
-                            className={`has-label ${values.cel.error}`}
-                          >
-                            <Input
-                              name="cel"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(event, "cel", "text")
-                              }
-                              onBlur={(e) => {
-                                let value = e.target.value;
-                                setValues((prevState) => ({
-                                  ...prevState,
-                                  cel: { value: normalizeFone(value) },
-                                }));
-                              }}
-                              value={values.cel.value}
-                            />
-                            {values.cel.error === "has-danger" ? (
-                              <label className="error">
-                                {values.cel.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="3">
-                          <Label>Telefone</Label>
-                          <FormGroup
-                            className={`has-label ${values.fone.error}`}
-                          >
-                            <Input
-                              name="fone"
-                              type="numeric"
-                              onChange={(event) =>
-                                handleChange(event, "fone", "text")
-                              }
-                              onBlur={(e) => {
-                                let value = e.target.value;
-                                setValues((prevState) => ({
-                                  ...prevState,
-                                  fone: { value: normalizeFone(value) },
-                                }));
-                              }}
-                              value={values.fone.value}
-                            />
-                            {values.fone.error === "has-danger" ? (
-                              <label className="error">
-                                {values.fone.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="3">
-                          <FormGroup
-                            className={`has-label ${values.aniver.error}`}
-                          >
-                            <Label>Aniversário </Label>
-                            <Input
-                              name="aniver"
-                              type="date"
-                              onChange={(event) =>
-                                handleChange(event, "aniver", "text")
-                              }
-                              value={values.aniver.value}
-                            />
-                            {values.aniver.error === "has-danger" ? (
-                              <label className="error">
-                                {values.aniver.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="3">
-                          <label>tipo de Contato</label>
-                          <FormGroup
-                            className={`has-label ${values.tipoConta.error}`}
-                          >
-                            <Input
-                          name="tipoConta"
-                          type="select"
-                          onChange={(event) =>
-                            handleChange(event, "tipoConta", "text")
-                          }
-                          value={values.tipoConta.value}
-                        >
-                          <option disabled value="">
-                            {" "}
+                            </option>{" "}
+                            <option value={data1.id}>
+                              {" "}
+                              {data1.nomeAbv} -{" "}
+                              {normalizeCnpj(data1.CNPJ)}
+                            </option>
+                          </Input>
+                          {values.clienteId.error === "has-danger" ? (
+                            <label className="error">
+                              {values.clienteId.message}
+                            </label>
+                          ) : null}
+                        </FormGroup>
+                        <label>Nome</label>
+                        <FormGroup className={`has-label ${values.nome.error}`}>
+                          <Input
+                            name="nome"
+                            type="text"
+                            onChange={(event) =>
+                              handleChange(event, "nome", "text")
+                            }
+                            value={values.nome.value}
+                          />
+                          {values.nome.error === "has-danger" ? (
+                            <label className="error">{values.nome.message}</label>
+                          ) : null}
+                        </FormGroup>
+                        <Row>
+                          <Col md="3">
+                            <Label>Celular</Label>
+                            <FormGroup
+                              className={`has-label ${values.cel.error}`}
+                            >
+                              <Input
+                                name="cel"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(event, "cel", "text")
+                                }
+                                onBlur={(e) => {
+                                  let value = e.target.value;
+                                  setValues((prevState) => ({
+                                    ...prevState,
+                                    cel: { value: normalizeFone(value) },
+                                  }));
+                                }}
+                                value={values.cel.value}
+                              />
+                              {values.cel.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.cel.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="3">
+                            <Label>Telefone</Label>
+                            <FormGroup
+                              className={`has-label ${values.fone.error}`}
+                            >
+                              <Input
+                                name="fone"
+                                type="numeric"
+                                onChange={(event) =>
+                                  handleChange(event, "fone", "text")
+                                }
+                                onBlur={(e) => {
+                                  let value = e.target.value;
+                                  setValues((prevState) => ({
+                                    ...prevState,
+                                    fone: { value: normalizeFone(value) },
+                                  }));
+                                }}
+                                value={values.fone.value}
+                              />
+                              {values.fone.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.fone.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="3">
+                            <FormGroup
+                              className={`has-label ${values.aniver.error}`}
+                            >
+                              <Label>Aniversário </Label>
+                              <Input
+                                name="aniver"
+                                type="date"
+                                onChange={(event) =>
+                                  handleChange(event, "aniver", "text")
+                                }
+                                value={values.aniver.value}
+                              />
+                              {values.aniver.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.aniver.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="3">
+                            <label>tipo de Contato</label>
+                            <FormGroup
+                              className={`has-label ${values.tipoConta.error}`}
+                            >
+                              <Input
+                                name="tipoConta"
+                                type="select"
+                                onChange={(event) =>
+                                  handleChange(event, "tipoConta", "text")
+                                }
+                                value={values.tipoConta.value}
+                              >
+                                <option disabled value="">
+                                  {" "}
                             Selecione o tipo de contato{" "}
-                          </option>
-                          <option value={1}>Normal</option>
-                          <option value={2}>Nota Fiscal</option>
-                        </Input>
-                            {values.tipoConta.error === "has-danger" ? (
-                              <label className="error">
-                                {values.tipoConta.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="6">
-                          <label>Skype</label>
-                          <FormGroup
-                            className={`has-label ${values.skype.error}`}
-                          >
-                            <Input
-                              name="skype"
-                              type="text"
-                              onChange={(event) =>
-                                handleChange(event, "skype", "text")
-                              }
-                              value={values.skype.value}
-                            />
-                            {values.skype.error === "has-danger" ? (
-                              <label className="error">
-                                {values.skype.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="6">
-                          <Label>Email</Label>
-                          <FormGroup
-                            className={`has-label ${values.email.error}`}
-                          >
-                            <Input
-                              name="email"
-                              type="email"
-                              onChange={(event) =>
-                                handleChange(event, "email", "email")
-                              }
-                              value={values.email.value}
-                            />
-                            {values.email.error === "has-danger" ? (
-                              <label className="error">
-                                {values.email.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
+                                </option>
+                                <option value={1}>Normal</option>
+                                <option value={2}>Nota Fiscal</option>
+                              </Input>
+                              {values.tipoConta.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.tipoConta.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="6">
+                            <label>Skype</label>
+                            <FormGroup
+                              className={`has-label ${values.skype.error}`}
+                            >
+                              <Input
+                                name="skype"
+                                type="text"
+                                onChange={(event) =>
+                                  handleChange(event, "skype", "text")
+                                }
+                                value={values.skype.value}
+                              />
+                              {values.skype.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.skype.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="6">
+                            <Label>Email</Label>
+                            <FormGroup
+                              className={`has-label ${values.email.error}`}
+                            >
+                              <Input
+                                name="email"
+                                type="email"
+                                onChange={(event) =>
+                                  handleChange(event, "email", "email")
+                                }
+                                value={values.email.value}
+                              />
+                              {values.email.error === "has-danger" ? (
+                                <label className="error">
+                                  {values.email.message}
+                                </label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
 
-                      <Button
-                        style={{ marginTop: 35 }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                        <Link to={`/tabelas/cliente/cont/${values.clienteId.value}`}>
+                          <Button
+                            style={{
+                              paddingLeft: 32,
+                              paddingRight: 33,
+                            }}
+                            color="secundary"
+                            size="small"
+                            className="text-left"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1,
+                              }}
+                              size="large"
+                            />{" "}
+                      Voltar
+                    </Button>
+                        </Link>
+                        <Button
+                          style={{
+                            paddingLeft: 29,
+                            paddingRight: 30,
+                          }}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3,
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </Fragment>
   );
 }

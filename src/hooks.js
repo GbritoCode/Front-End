@@ -1,4 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+export const Aux = () => {
+  const notifyElment = useRef(null);
+  return notifyElment
+}
 
 export const useInput = (initialValue, type) => {
   const [value, setValue] = useState(initialValue);

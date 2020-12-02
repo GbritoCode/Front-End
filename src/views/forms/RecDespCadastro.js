@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  CustomInput,
   Label,
   Form,
   Input,
@@ -35,8 +34,9 @@ import { useDispatch } from "react-redux";
 import { recDespRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
 import axios from "axios";
-import{normalizeCnpj} from 'normalize'
+import { normalizeCnpj } from 'normalize'
 import NotificationAlert from "react-notification-alert";
+import { Link } from 'react-router-dom'
 
 export default function RecDespCadastro() {
   //--------- colocando no modo claro do template
@@ -45,11 +45,13 @@ export default function RecDespCadastro() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
+  const [data1, setData1] = useState([]);
   const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
+    itmControleId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
-    rec_desp: { value: "", error: "", message: "" },
+    recDesp: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -57,7 +59,9 @@ export default function RecDespCadastro() {
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:51314/itm_controle/`);
       setData(response.data);
+      setData1(response1.data);
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.id },
@@ -113,7 +117,7 @@ export default function RecDespCadastro() {
     }
 
     if (valid && filled) {
-      dispatch(recDespRequest(values.empresaId.value, values.desc.value,values.rec_desp.value));
+      dispatch(recDespRequest(values.empresaId.value, values.itmControleId.value, values.desc.value, values.recDesp.value));
     } else {
       options = {
         place: "tr",
@@ -166,7 +170,36 @@ export default function RecDespCadastro() {
                       </label>
                     ) : null}
                   </FormGroup>
-
+                  <Label>Item Controle</Label>
+                  <FormGroup
+                    className={`has-label ${values.itmControleId.error}`}
+                  >
+                    <Input
+                      name="itmControleId"
+                      type="select"
+                      onChange={(event) =>
+                        handleChange(event, "itmControleId", "text")
+                      }
+                      value={values.itmControleId.value}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                            Selecione o item controle{" "}
+                      </option>
+                      {data1.map((itm) => (
+                        <option value={itm.id}>
+                          {" "}
+                          {itm.descItem} - {itm.tipoItem}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {values.itmControleId.error === "has-danger" ? (
+                      <label className="error">
+                        {values.itmControleId.message}
+                      </label>
+                    ) : null}
+                  </FormGroup>
                   <label>Descrição</label>
                   <FormGroup className={`has-label ${values.desc.error}`}>
                     <Input
@@ -180,36 +213,67 @@ export default function RecDespCadastro() {
                     ) : null}
                   </FormGroup>
 
-                  <FormGroup check className={`has-label ${values.rec_desp.error}`}>
-                  <Label check>
-                    <Input
-                      name="rec/desp"
-                      type="radio"
-                      onChange={(event) => handleChange(event, "rec_desp", "text")}
-                      value={"Rec"}
-                    />
+                  <FormGroup style={{ marginBottom: 20 }} check className={`has-label ${values.recDesp.error}`}>
+                    <Label check>
+                      <Input
+                        name="rec/desp"
+                        type="radio"
+                        onChange={(event) => handleChange(event, "recDesp", "text")}
+                        value={"Rec"}
+                      />
                     Receita
                     </Label>
                     <Label check>
-                    <Input
-                      name="rec/desp"
-                      type="radio"
-                      onChange={(event) => handleChange(event, "rec_desp", "text")}
-                      value={"Desp"}
-                    />
+                      <Input
+                        name="rec/desp"
+                        type="radio"
+                        onChange={(event) => handleChange(event, "recDesp", "text")}
+                        value={"Desp"}
+                      />
                     Despesa
                     </Label>
-                    {values.rec_desp.error === "has-danger" ? (
-                      <label className="error">{values.rec_desp.message}</label>
+                    {values.recDesp.error === "has-danger" ? (
+                      <label className="error">{values.recDesp.message}</label>
                     ) : null}
                   </FormGroup>
+                  <Link to={`/tabelas/aux/rec_desp`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

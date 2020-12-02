@@ -15,13 +15,15 @@
 
 */
 import React, { Component } from "react";
-import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-import {normalizeCurrency} from "normalize";
+import { normalizeCurrency } from "normalize";
 import api from "~/services/api";
+import classNames from "classnames";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 import { Link } from "react-router-dom";
 
@@ -34,33 +36,33 @@ class ColabCompTable extends Component {
     document.body.classList.add("white-content");
     this.loadClients();
   }
-  checkNivel =(value) =>{
-    if (value == 1){
+  checkNivel = (value) => {
+    if (value == 1) {
       return "Trainee"
-    }else if(value==2){
+    } else if (value == 2) {
       return "Júnior"
-    }else if(value==3){
+    } else if (value == 3) {
       return "Pleno"
-    }else if(value==4){
+    } else if (value == 4) {
       return "Sênior"
     }
   }
 
-  checkAtend =(value) =>{
-    if (value == 1){
+  checkAtend = (value) => {
+    if (value == 1) {
       return "Consultoria"
-    }else if(value==2){
+    } else if (value == 2) {
       return "Tecnologia"
-    }else if(value==3){
+    } else if (value == 3) {
       return "Desenvolvimento"
-    }else if(value==4){
+    } else if (value == 4) {
       return "Complementar"
     }
   }
-  checkValor =(value) =>{
-    if (value == 1){
+  checkValor = (value) => {
+    if (value == 1) {
       return "Por Hora"
-    }else if(value==2){
+    } else if (value == 2) {
       return "Fixo"
     }
   }
@@ -134,30 +136,20 @@ class ColabCompTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Complemento de Colaborador
-                  <Link to={`/cadastro/colab/comp/${id}`}>
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                    <Link to={`/cadastro/colab/comp/${id}`}>
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
-                  </Link>  
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
+                  </Link>
                   <Link to={`/colab/update/${id}`}>
-                  <Button
+                    <Button
                       style={{
                         float: "right",
                         paddingLeft: 15,

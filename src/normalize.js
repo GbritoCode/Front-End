@@ -1,5 +1,6 @@
 export function normalizeCpf(value) {
   if (!value) return value;
+  value = JSON.stringify(value)
   const currentValue = value.replace(/[^\d]/g, "");
   const cvLength = currentValue.length;
   if (cvLength < 4) return currentValue;
@@ -19,6 +20,7 @@ export function normalizeCpf(value) {
 
 export function normalizeFone(value) {
   if (!value) return value;
+  value = JSON.stringify(value)
   const currentValue = value.replace(/[^\d]/g, "");
   const cvLength = currentValue.length;
   if (cvLength == 10)
@@ -36,6 +38,7 @@ export function normalizeFone(value) {
 
 export function normalizeCnpj(value) {
   if (!value) return value;
+  value = JSON.stringify(value)
   const currentValue = value.replace(/[^\d]/g, "");
   const cvLength = currentValue.length;
   if (cvLength < 3) return currentValue;
@@ -108,7 +111,16 @@ export function validarCNPJ(cnpj) {
 }
 
 export function normalizeCurrency(value) {
+  value = JSON.stringify(value)
   var v = value.replace(/\D/g, "");
+  v = (v / 100).toFixed(2) + "";
+  v = v.replace(".", ",");
+  v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+  v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+  return v;
+}
+export function normalizeCalcCurrency(value) {
+  var v = value.replace(/[.,]+/g, "");
   v = (v / 100).toFixed(2) + "";
   v = v.replace(".", ",");
   v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");

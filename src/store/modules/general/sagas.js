@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import history from "~/services/history.js";
 import api from "~/services/api.js";
 
-import { requestFailure, ClienteUpdateSuccess } from "./actions.js";
+import { requestFailure, ClienteUpdateSuccess, condPgmtoRequest } from "./actions.js";
 
 export function* areaCadastro({ payload }) {
   try {
@@ -43,14 +43,20 @@ export function* updateArea({ payload }) {
 
 export function* empresaCadastro({ payload }) {
   try {
-    const { idFederal, nome, license, UserId } = payload;
+    const { idFederal, nome, license, UserId, first } = payload;
     yield call(api.post, "empresa", {
       idFederal,
       nome,
       license,
       UserId,
     });
-    history.push("/tabelas/general/empresa");
+    if (first == true) {
+      history.push("/cadastro/wizard/fornec");
+    } else {
+      if (first == false) {
+        history.push("/tabelas/general/empresa");
+      }
+    }
   } catch (err) {
     toast.error("Ops! Algo deu errado");
     yield put(requestFailure());
@@ -99,6 +105,7 @@ export function* fornecCadastro({ payload }) {
       banco,
       agencia,
       conta,
+      first
     } = payload;
     yield call(api.post, "fornec", {
       CNPJ,
@@ -118,7 +125,13 @@ export function* fornecCadastro({ payload }) {
       agencia,
       conta,
     });
-    history.push("/tabelas/general/fornec");
+    if (first == false) {
+      history.push("/tabelas/general/fornec");
+    } else {
+      if (first == true) {
+        history.push("/cadastro/wizard/colab");
+      }
+    }
   } catch (err) {
     toast.error("Ops! Algo deu errado");
     yield put(requestFailure());
@@ -325,11 +338,12 @@ export function* updateProdt({ payload }) {
 
 export function* recDespCadastro({ payload }) {
   try {
-    const { EmpresaId, desc, rec_desp } = payload;
+    const { EmpresaId, itmControleId, desc, recDesp } = payload;
     yield call(api.post, "rec_desp", {
       EmpresaId,
+      itmControleId,
       desc,
-      rec_desp
+      recDesp
     });
     history.push("/tabelas/aux/rec_desp");
   } catch (err) {
@@ -339,12 +353,13 @@ export function* recDespCadastro({ payload }) {
 }
 export function* updateRecDesp({ payload }) {
   try {
-    const { id, EmpresaId, desc,rec_desp } = payload;
+    const { id, EmpresaId, itmControleId, desc, recDesp } = payload;
 
     const Colab = Object.assign({
       EmpresaId,
+      itmControleId,
       desc,
-      rec_desp
+      recDesp
     });
 
     const response = yield call(api.put, `rec_desp/${id}`, Colab);
@@ -362,13 +377,17 @@ export function* updateRecDesp({ payload }) {
 
 export function* condPgmtoCadastro({ payload }) {
   try {
-    const { EmpresaId, desc, diasPrazo } = payload;
+    const { EmpresaId, cod, desc, diasPrazo, first } = payload;
     yield call(api.post, "condPgmto", {
       EmpresaId,
+      cod,
       desc,
       diasPrazo,
+      first,
     });
-    history.push("/tabelas/aux/condPgmto");
+    if (first === false) {
+      history.push("/tabelas/aux/condPgmto");
+    }
   } catch (err) {
     toast.error("Ops! Algo deu errado");
     yield put(requestFailure());
@@ -376,10 +395,11 @@ export function* condPgmtoCadastro({ payload }) {
 }
 export function* updateCondPgmto({ payload }) {
   try {
-    const { id, EmpresaId, desc,diasPrazo } = payload;
+    const { id, EmpresaId, cod, desc, diasPrazo } = payload;
 
     const Colab = Object.assign({
       EmpresaId,
+      cod,
       desc,
       diasPrazo,
     });
@@ -399,7 +419,7 @@ export function* updateCondPgmto({ payload }) {
 
 export function* tipoComissCadastro({ payload }) {
   try {
-    const { EmpresaId, desc, prcnt,bsComiss } = payload;
+    const { EmpresaId, desc, prcnt, bsComiss } = payload;
     yield call(api.post, "tipoComiss", {
       EmpresaId,
       desc,
@@ -414,7 +434,7 @@ export function* tipoComissCadastro({ payload }) {
 }
 export function* updateTipoComiss({ payload }) {
   try {
-    const { id, EmpresaId, desc, prcnt ,bsComiss} = payload;
+    const { id, EmpresaId, desc, prcnt, bsComiss } = payload;
 
     const Colab = Object.assign({
       EmpresaId,
@@ -438,13 +458,14 @@ export function* updateTipoComiss({ payload }) {
 
 export function* perfilCadastro({ payload }) {
   try {
-    const { EmpresaId, desc } = payload;
+    const { EmpresaId, desc, first } = payload;
     yield call(api.post, "perfil", {
       EmpresaId,
-
       desc,
     });
-    history.push("/tabelas/aux/perfil");
+    if (first === false) {
+      history.push("/tabelas/aux/perfil");
+    }
   } catch (err) {
     toast.error("Ops! Algo deu errado");
     yield put(requestFailure());

@@ -5,5 +5,6 @@ import user from "./general/reducer";
 import geral from "./general/reducer";
 import cliente from "./Cliente/reducer";
 import colab from "./Colab/reducer";
+import oport from "./oportunidades/reducer";
 
-export default combineReducers({ auth, user, colab, geral, cliente });
+export default combineReducers({ auth, user, colab, geral, cliente, oport });

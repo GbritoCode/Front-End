@@ -1,3 +1,4 @@
+import Axios from "axios";
 import produce from "immer";
 
 const INITIAL_STATE = {
@@ -5,6 +6,7 @@ const INITIAL_STATE = {
   signed: false,
   loading: false,
   empresa: null,
+  user: null,
 };
 
 export default function auth(state = INITIAL_STATE, action) {
@@ -17,6 +19,7 @@ export default function auth(state = INITIAL_STATE, action) {
 
       case "@auth/SIGN_IN_SUCCESS": {
         draft.token = action.payload.token;
+        draft.user = action.payload.user;
         draft.signed = true;
         draft.loading = false;
         draft.empresa = 1;

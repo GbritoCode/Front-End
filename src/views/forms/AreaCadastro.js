@@ -34,6 +34,7 @@ import { areaRequest } from "~/store/modules/general/actions";
 import axios from "axios";
 import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
+import { Link } from "react-router-dom";
 
 export default function CadastroCliente() {
   //--------- colocando no modo claro do template
@@ -208,13 +209,43 @@ export default function CadastroCliente() {
                     ) : null}
                   </FormGroup>
 
+                  <Link to={`/tabelas/general/area`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="form"
+                    >
+                      <i className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

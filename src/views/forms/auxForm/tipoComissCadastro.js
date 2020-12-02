@@ -34,7 +34,8 @@ import { tipoComissRequest } from "~/store/modules/general/actions";
 import { store } from "~/store";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import {normalizeCnpj,normalizeCurrency} from 'normalize.js'
+import { normalizeCnpj, normalizeCurrency } from 'normalize.js'
+import { Link } from "react-router-dom";
 
 export default function TipoComissCadastro() {
   //--------- colocando no modo claro do template
@@ -173,68 +174,99 @@ export default function TipoComissCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md='4'>
-                  <label>Descrição</label>
-                  <FormGroup className={`has-label ${values.desc.error}`}>
-                    <Input
-                      name="desc"
-                      type="text"
-                      onChange={(event) => handleChange(event, "desc", "text")}
-                      value={values.desc.value}
-                    />
-                    {values.desc.error === "has-danger" ? (
-                      <label className="error">{values.desc.message}</label>
-                    ) : null}
-                  </FormGroup>
+                      <label>Descrição</label>
+                      <FormGroup className={`has-label ${values.desc.error}`}>
+                        <Input
+                          name="desc"
+                          type="text"
+                          onChange={(event) => handleChange(event, "desc", "text")}
+                          value={values.desc.value}
+                        />
+                        {values.desc.error === "has-danger" ? (
+                          <label className="error">{values.desc.message}</label>
+                        ) : null}
+                      </FormGroup>
                     </Col><Col md='4'>
-                      
-                  <label>Percentual</label>
-                  <FormGroup className={`has-label ${values.prcnt.error}`}>
-                    <Input
-                      name="prcnt"
-                      type="text"
-                      onChange={(event) => handleChange(event, "prcnt", "prcnt")}
-                      value={values.prcnt.value}
-                    />
-                    {values.prcnt.error === "has-danger" ? (
-                      <label className="error">{values.prcnt.message}</label>
-                    ) : null}
-                  </FormGroup>
-                      </Col>
-                      <Col md='4'>
-                         <label>Base de Comissão</label>
-                          <FormGroup className={`has-label ${values.bsComiss.error}`}>
-                            <Input
-                              name="bsComiss"
-                              type="select"
-                              onChange={(event) =>
-                                handleChange(event, "bsComiss", "text")
-                              }
-                              value={values.bsComiss.value}
-                            >
-                              <option disabled value="">
-                                {" "}
+
+                      <label>Percentual</label>
+                      <FormGroup className={`has-label ${values.prcnt.error}`}>
+                        <Input
+                          name="prcnt"
+                          type="text"
+                          onChange={(event) => handleChange(event, "prcnt", "prcnt")}
+                          value={values.prcnt.value}
+                        />
+                        {values.prcnt.error === "has-danger" ? (
+                          <label className="error">{values.prcnt.message}</label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md='4'>
+                      <label>Base de Comissão</label>
+                      <FormGroup className={`has-label ${values.bsComiss.error}`}>
+                        <Input
+                          name="bsComiss"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "bsComiss", "text")
+                          }
+                          value={values.bsComiss.value}
+                        >
+                          <option disabled value="">
+                            {" "}
                                 Selecione a Comissão{" "}
-                              </option>
-                              <option value="1">Lucro Líquido</option>
-                              <option value="2">Lucro Bruto</option>
-                              <option value="3">Total Projeto</option>
-                              <option value="4">Fixado</option>
-                            </Input>
-                            {values.bsComiss.error === "has-danger" ? (
-                              <label className="error">
-                                {values.bsComiss.message}
-                              </label>
-                            ) : null}
-                          </FormGroup>
-                          </Col>
-                          </Row>
+                          </option>
+                          <option value="1">Lucro Líquido</option>
+                          <option value="2">Lucro Bruto</option>
+                          <option value="3">Total Projeto</option>
+                          <option value="4">Fixado</option>
+                        </Input>
+                        {values.bsComiss.error === "has-danger" ? (
+                          <label className="error">
+                            {values.bsComiss.message}
+                          </label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Link to={`/tabelas/aux/tipoComiss`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                   <Button
-                    style={{ marginTop: 35 }}
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30,
+                    }}
                     className="form"
                     color="info"
                     type="submit"
                   >
-                    Enviar
+                    Enviar{" "}
+                    <i className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3,
+                      }}
+                      size="large"
+                    />
                   </Button>
                 </Form>
               </CardBody>

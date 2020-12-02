@@ -38,7 +38,7 @@ class Notifications extends React.Component {
     super(props);
     this.state = {
       visible: true,
-      modalMini: false,
+      modalMini: true,
       modalClassic: false,
       modalNotice: false,
     };

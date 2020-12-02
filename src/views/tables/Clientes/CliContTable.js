@@ -24,6 +24,8 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 
 import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
 
 class Tabela_Cliente extends Component {
   state = {
@@ -105,34 +107,24 @@ class Tabela_Cliente extends Component {
                 <CardTitle tag="h4">
                   Contato de Cliente
                   <Link to={`/cadastro/cliente/cont/${id}`}>
+                    <Tooltip title="novo" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right",
+                        }}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
+                  </Link>  <Link to={`/cliente_update/${id}/true`}>
                     <Button
                       style={{
                         float: "right",
                         paddingLeft: 15,
                         paddingRight: 15,
                       }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
-                        }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
-                  </Link>  <Link to={`/cliente_update/${id}/true`}>
-                  <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="success"
+                      color="secundary"
                       size="small"
                       className="text-left"
                     >
