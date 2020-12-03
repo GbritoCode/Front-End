@@ -42,7 +42,6 @@ export default function FornecCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-
   let jsonpAdapter = require("axios-jsonp");
   const dispatch = useDispatch();
   const [data, setData] = useState({});

@@ -64,6 +64,20 @@ const id = useParams()
   };
   const [values, setValues] = useState(stateSchema);
 
+  const stateSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    cpf: { value: "", error: "", message: "" },
+    fornecId: { value: "", error: "", message: "" },
+    nome: { value: "", error: "", message: "" },
+    PerfilId: { value: "", error: "", message: "" },
+    dtAdmiss: { value: "", error: "", message: "" },
+    cel: { value: "", error: "", message: "" },
+    skype: { value: "", error: "", message: "" },
+    email: { value: "", error: "", message: "" },
+    espec: { value: "", error: "", message: "" },
+  };
+  const [values, setValues] = useState(stateSchema);
+
   useEffect(() => {
     async function loadData() {
       const response = await axios(`http://localhost:51314/colab/${id.id}`);

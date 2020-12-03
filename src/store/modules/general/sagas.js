@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import history from "~/services/history.js";
 import api from "~/services/api.js";
 
-import { requestFailure, ClienteUpdateSuccess } from "./actions.js";
+import { requestFailure, ClienteUpdateSuccess, condPgmtoRequest } from "./actions.js";
 
 export function* areaCadastro({ payload }) {
   try {

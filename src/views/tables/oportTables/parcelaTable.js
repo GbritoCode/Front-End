@@ -22,12 +22,25 @@ import ReactTable from "react-table-v6";
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import { ArrowBackIos, AttachMoney, Receipt } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 
 class ParametrosTable extends Component {
+=======
+import { normalizeCurrency } from 'normalize'
+import { Link } from "react-router-dom";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
+
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+class condPgmtoTable extends Component {
+=======
+class ParametrosTable extends Component {
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
   state = {
     data: [],
   };
@@ -37,12 +50,30 @@ class ParametrosTable extends Component {
     this.loadClients();
   }
   loadClients = async () => {
+<<<<<<< HEAD
     const id = this.props.match.params.id;
     const response = await api.get(`/parcela/${id}`);
+=======
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+    const response = await api.get("/condPgmto");
+=======
+    const id = this.props.match.params.id;
+    const response = await api.get(`/parcela/${id}`);
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
     this.setState({
       data: response.data.map((parcela, key) => {
         return {
           id: key,
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+          idd: client.id,
+          Empresa: client.Empresa.nome,
+          desc: client.desc,
+          diasPrazo: client.diasPrazo,
+=======
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
           idd: parcela.id,
           oportunidadeId: parcela.oportunidadeId,
           parcela: parcela.parcela,
@@ -54,16 +85,29 @@ class ParametrosTable extends Component {
           situacao: parcela.situacao,
           vlrPago: parcela.vlrPago,
           saldo: parcela.saldo,
+<<<<<<< HEAD
+=======
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
+<<<<<<< HEAD
               <Link to={`/update/oportunidade/parcNota/${parcela.id}`}>
+=======
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+              <Link to={`/update/aux/condPgmto/${client.id}`}>
+=======
+              <Link to={`/update/oportunidade/parcela/${parcela.id}`}>
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                 <Button
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                 >
+<<<<<<< HEAD
                   <Receipt/>
                 </Button>
               </Link>
@@ -77,6 +121,11 @@ class ParametrosTable extends Component {
                 </Button>
               </Link>
               
+=======
+                  <i className="tim-icons icon-pencil" />
+                </Button>
+              </Link>{" "}
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
@@ -115,12 +164,41 @@ class ParametrosTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
+<<<<<<< HEAD
                   Parcelas
                   <Link to={`/cadastro/oportunidade/parcela/${id}`}>
                   <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",
+=======
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+                  Condições de Pagamento
+                  <Link to="/cadastro/aux/condPgmto">
+                    <Tooltip title="Novo" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right",
+=======
+                  Parcelas
+                  <Link to={`/cadastro/oportunidade/parcela/${id}`}>
+                    <Button
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
+                      color="info"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -129,6 +207,7 @@ class ParametrosTable extends Component {
                     </Tooltip>
                   </Link>
                   <Link to={`/tabelas/oportunidade/oport`}>
+<<<<<<< HEAD
                   <Tooltip title="Voltar">
                     <Button
                         style={{
@@ -139,6 +218,28 @@ class ParametrosTable extends Component {
                         <ArrowBackIos  />
                     </Button>
                     </Tooltip>
+=======
+                    <Button
+                      style={{
+                        float: "right",
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 5,
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                   </Link>
                 </CardTitle>
               </CardHeader>
@@ -149,6 +250,21 @@ class ParametrosTable extends Component {
                   resizable={false}
                   columns={[
                     {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+                      Header: "Empresa",
+                      accessor: "Empresa",
+                    },
+                    {
+                      Header: "dias de prazo",
+                      accessor: "diasPrazo",
+                    },
+                    {
+                      Header: "Descrição",
+                      accessor: "desc",
+=======
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                       Header: "Tipo de Cobrança",
                       accessor: "parcela",
                     },
@@ -163,6 +279,10 @@ class ParametrosTable extends Component {
                     {
                       Header: "Valor do desconto",
                       accessor: "dtEmissao",
+<<<<<<< HEAD
+=======
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                     },
                     {
                       Header: "Ações",
@@ -186,4 +306,12 @@ class ParametrosTable extends Component {
   }
 }
 
+<<<<<<< HEAD
 export default ParametrosTable;
+=======
+<<<<<<< HEAD:src/views/tables/auxTables/condPgmtoTable.js
+export default condPgmtoTable;
+=======
+export default ParametrosTable;
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58:src/views/tables/oportTables/parcelaTable.js
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58

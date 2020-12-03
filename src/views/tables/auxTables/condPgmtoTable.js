@@ -1,18 +1,12 @@
 /*!
-
 =========================================================
 * Black Dashboard PRO React - v1.0.0
 =========================================================
-
 * Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
 * Copyright 2019 Creative Tim (https://www.creative-tim.com)
-
 * Coded by Creative Tim
-
 =========================================================
-
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
 */
 import React, { Component } from "react";
 import classNames from "classnames";
@@ -98,7 +92,7 @@ class condPgmtoTable extends Component {
                 <CardTitle tag="h4">
                   Condições de Pagamento
                   <Link to="/cadastro/aux/condPgmto">
-                    <Tooltip title="Novo" placement="top" interactive>
+                    <Tooltip title="novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",

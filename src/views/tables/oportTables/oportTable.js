@@ -14,7 +14,11 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+<<<<<<< HEAD
 import React, {  useEffect, useState } from "react";
+=======
+import React, { Component, useEffect, useState } from "react";
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
@@ -33,7 +37,10 @@ import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircleOutline';
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import { AccountBalance, Done, EditOutlined, Close, AccountCircle } from "@material-ui/icons";
 
+<<<<<<< HEAD
 /*eslint-disable eqeqeq*/
+=======
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
 function OportTable() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
@@ -198,7 +205,11 @@ function OportTable() {
 
     }
     loadData()
+<<<<<<< HEAD
   }, [dispatch, history])
+=======
+  }, [])
+>>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
   const checkFase = (value) => {
     if (value == 1) {
       return "Aberta"

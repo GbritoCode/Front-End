@@ -48,7 +48,6 @@ export default function ParcelaCadastro() {
     oportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" },
-
   };
 
   const [values, setValues] = useState(stateSchema);
