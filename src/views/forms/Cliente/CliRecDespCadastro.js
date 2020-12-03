@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -192,7 +192,7 @@ useEffect(() => {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Cliente</label>
+                <Label>Cliente</Label>
                   <FormGroup className={`has-label ${values.clienteId.error}`}>
                     <Input
                       disabled
@@ -213,12 +213,12 @@ useEffect(() => {
                       </option>
                     </Input>
                     {values.clienteId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.clienteId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Receita</label>
+                  <Label>Receita</Label>
                   <FormGroup
                     className={`has-label ${values.recDespId.error}`}
                   >
@@ -243,12 +243,12 @@ useEffect(() => {
                       ))}
                     </Input>
                     {values.recDespId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.recDespId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Tipo de Cobrança</label>
+                  <Label>Tipo de Cobrança</Label>
                   <FormGroup
                     className={`has-label ${values.tipoCobranca.error}`}
                   >
@@ -272,12 +272,12 @@ useEffect(() => {
                       <option value={6}>Por Pacote</option>
                     </Input>
                     {values.tipoCobranca.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.tipoCobranca.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Valor da Receita</label>
+                  <Label>Valor da Receita</Label>
                   <FormGroup
                     className={`has-label ${values.valorRec.error}`}
                   >
@@ -290,9 +290,9 @@ useEffect(() => {
                       value={values.valorRec.value}
                     />{" "}
                     {values.valorRec.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.valorRec.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Label>Data Inicial</Label>
@@ -306,7 +306,7 @@ useEffect(() => {
                       value={values.dataInic.value}
                     />
                     {values.dataInic.error === "has-danger" ? (
-                      <label className="error">{values.dataInic.message}</label>
+                      <Label className="error">{values.dataInic.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Label>Data Final</Label>
@@ -320,7 +320,7 @@ useEffect(() => {
                       value={values.dataFim.value}
                     />
                     {values.dataFim.error === "has-danger" ? (
-                      <label className="error">{values.dataFim.message}</label>
+                      <Label className="error">{values.dataFim.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/cliente/rec_desp/${values.clienteId.value}`}>

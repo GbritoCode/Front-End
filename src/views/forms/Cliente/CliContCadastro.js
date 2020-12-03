@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect} from "react";
 
 // reactstrap components
 import {
@@ -218,7 +218,7 @@ const dispatch = useDispatch();
               </CardHeader>
               <CardBody>
                 <Form id="RegisterValidation" onSubmit={handleSubmit}>
-                <label>Cliente</label>
+                <Label>Cliente</Label>
                   <FormGroup className={`has-label ${values.clienteId.error}`}>
                     <Input
                       disabled
@@ -239,12 +239,12 @@ const dispatch = useDispatch();
                       </option>
                     </Input>
                     {values.clienteId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.clienteId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Nome</label>
+                  <Label>Nome</Label>
                   <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
                       name="nome"
@@ -253,7 +253,7 @@ const dispatch = useDispatch();
                       value={values.nome.value}
                     />
                     {values.nome.error === "has-danger" ? (
-                      <label className="error">{values.nome.message}</label>
+                      <Label className="error">{values.nome.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
@@ -278,7 +278,7 @@ const dispatch = useDispatch();
                           value={values.cel.value}
                         />
                         {values.cel.error === "has-danger" ? (
-                          <label className="error">{values.cel.message}</label>
+                          <Label className="error">{values.cel.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -303,7 +303,7 @@ const dispatch = useDispatch();
                           value={values.fone.value}
                         />
                         {values.fone.error === "has-danger" ? (
-                          <label className="error">{values.fone.message}</label>
+                          <Label className="error">{values.fone.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -319,14 +319,14 @@ const dispatch = useDispatch();
                           value={optional.aniver.value}
                         />
                         {optional.aniver.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {optional.aniver.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="3">
-                    <label>tipo de Contato</label>
+                    <Label>tipo de Contato</Label>
                       <FormGroup
                         className={`has-label ${values.tipoConta.error}`}
                       >
@@ -346,16 +346,16 @@ const dispatch = useDispatch();
                           <option value={2}>Nota Fiscal</option>
                         </Input>
                         {values.tipoConta.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.tipoConta.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="6">
-                    <label>Skype</label>
+                    <Label>Skype</Label>
                       <FormGroup className={`has-label ${values.skype.error}`}>
                         <Input
                           name="skype"
@@ -366,9 +366,9 @@ const dispatch = useDispatch();
                           value={values.skype.value}
                         />
                         {values.skype.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.skype.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -384,9 +384,9 @@ const dispatch = useDispatch();
                           value={values.email.value}
                         />
                         {values.email.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.email.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

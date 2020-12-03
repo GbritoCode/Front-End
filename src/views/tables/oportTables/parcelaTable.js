@@ -22,9 +22,10 @@ import ReactTable from "react-table-v6";
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import api from "~/services/api";
-import { normalizeCurrency } from 'normalize'
 import { Link } from "react-router-dom";
-import { AttachMoney, Receipt } from "@material-ui/icons";
+import { ArrowBackIos, AttachMoney, Receipt } from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
 
 class ParametrosTable extends Component {
   state = {
@@ -116,48 +117,28 @@ class ParametrosTable extends Component {
                 <CardTitle tag="h4">
                   Parcelas
                   <Link to={`/cadastro/oportunidade/parcela/${id}`}>
-                    <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="info"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-simple-add"
+                  <Tooltip title="Novo" placement="top" interactive>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Novo
-                    </Button>
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <AddIcon fontSize="large" />
+                      </Button>
+                    </Tooltip>
                   </Link>
                   <Link to={`/tabelas/oportunidade/oport`}>
+                  <Tooltip title="Voltar">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <ArrowBackIos  />
                     </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>

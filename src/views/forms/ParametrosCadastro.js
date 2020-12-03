@@ -15,7 +15,6 @@
 
 */
 import React, { useRef, useEffect, useState } from "react";
-import Switch from "react-bootstrap-switch";
 
 // reactstrap components
 import {
@@ -24,6 +23,7 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
+  Label,
   Form,
   Input,
   FormGroup,
@@ -43,9 +43,7 @@ export default function ParametrosCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     impostos: { value: "", error: "", message: "" },
@@ -58,15 +56,14 @@ export default function ParametrosCadastro() {
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const empresa = store.getState().auth.empresa;
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -195,7 +192,7 @@ export default function ParametrosCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -213,15 +210,15 @@ export default function ParametrosCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Impostos</label>
+                      <Label>Impostos</Label>
                       <FormGroup
                         className={`has-label ${values.impostos.error}`}
                       >
@@ -234,15 +231,15 @@ export default function ParametrosCadastro() {
                           value={values.impostos.value}
                         />
                         {values.impostos.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.impostos.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Valor Mínimo da Hora</label>
+                      <Label>Valor Mínimo da Hora</Label>
                       <FormGroup
                         className={`has-label ${values.vlrMinHr.error}`}
                       >
@@ -255,14 +252,14 @@ export default function ParametrosCadastro() {
                           value={values.vlrMinHr.value}
                         />
                         {values.vlrMinHr.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrMinHr.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <label>Valor Base Da Hora</label>
+                    <Label>Valor Base Da Hora</Label>
                       <FormGroup
                         className={`has-label ${values.vlrBsHr.error}`}
                       >
@@ -275,9 +272,9 @@ export default function ParametrosCadastro() {
                           value={values.vlrBsHr.value}
                         />
                         {values.vlrBsHr.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrBsHr.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -285,7 +282,7 @@ export default function ParametrosCadastro() {
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Valor Base da Despesa</label>
+                      <Label>Valor Base da Despesa</Label>
                       <FormGroup
                         className={`has-label ${values.vlrBsDesp.error}`}
                       >
@@ -298,14 +295,14 @@ export default function ParametrosCadastro() {
                           value={values.vlrBsDesp.value}
                         />
                         {values.vlrBsDesp.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrBsDesp.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <label>Adianta Pagamento</label>
+                    <Label>Adianta Pagamento</Label>
                       <FormGroup
                         className={`has-label ${values.adiantaPgmto.error}`}
                       >
@@ -318,15 +315,15 @@ export default function ParametrosCadastro() {
                           value={values.adiantaPgmto.value}
                         />
                         {values.adiantaPgmto.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.adiantaPgmto.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Percentual do Adiantamento</label>
+                      <Label>Percentual do Adiantamento</Label>
                       <FormGroup
                         className={`has-label ${values.percAdiantaPgmto.error}`}
                       >
@@ -339,9 +336,9 @@ export default function ParametrosCadastro() {
                           value={values.percAdiantaPgmto.value}
                         />
                         {values.percAdiantaPgmto.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.percAdiantaPgmto.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

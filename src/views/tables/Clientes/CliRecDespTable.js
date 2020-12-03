@@ -26,6 +26,7 @@ import { normalizeCurrency } from 'normalize'
 import { Link } from "react-router-dom";
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
+import { ArrowBackIos } from "@material-ui/icons";
 
 /*eslint-disable eqeqeq*/
 class Tabela_Cliente extends Component {
@@ -116,7 +117,9 @@ class Tabela_Cliente extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Receita do Cliente
+
                   <Link to={`/cadastro/cliente/rec_desp/${id}`}>
+                  <Tooltip titlle="Novo">
                     <Button
                       style={{
                         float: "right",
@@ -125,29 +128,20 @@ class Tabela_Cliente extends Component {
                     >
                       <AddIcon fontSize="large" />
                     </Button>
+                    </Tooltip>
                   </Link>
 
                   <Link to={`/cliente_update/${id}/true`}>
+                  <Tooltip title="Voltar">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <ArrowBackIos  />
                     </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>

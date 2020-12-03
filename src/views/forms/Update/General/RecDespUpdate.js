@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -57,7 +57,7 @@ const id = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/rec_desp/${id}`);
+      const response = await axios(`http://localhost:51314/rec_desp/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -181,7 +181,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -201,9 +201,9 @@ const id = useParams()
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Label>Item Controle</Label>
@@ -231,12 +231,12 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.itmControleId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.itmControleId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Descrição</label>
+                        <Label>Descrição</Label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="license"
@@ -247,7 +247,7 @@ const id = useParams()
                             value={values.desc.value}
                           />
                           {values.desc.error === "has-danger" ? (
-                            <label className="error">{values.desc.message}</label>
+                            <Label className="error">{values.desc.message}</Label>
                           ) : null}
                         </FormGroup>
 
@@ -273,7 +273,7 @@ const id = useParams()
                     Despesa
                     </Label>
                           {values.recDesp.error === "has-danger" ? (
-                            <label className="error">{values.recDesp.message}</label>
+                            <Label className="error">{values.recDesp.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/aux/rec_desp`}>

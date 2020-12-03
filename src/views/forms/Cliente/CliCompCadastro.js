@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect, Fragment, useRef, useCallback } from "react";
+import React, { useState, useEffect, Fragment, useRef} from "react";
 
 // reactstrap components
 import {
@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   Form,
+  Label,
   Input,
   FormGroup,
   Row,
@@ -44,6 +45,7 @@ export default function CliCompCadastro() {
   const dispatch = useDispatch();
   let jsonpAdapter = require("axios-jsonp");
   const firstRender = useRef(true);
+  let options = useRef()
 
   const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
@@ -89,7 +91,7 @@ export default function CliCompCadastro() {
           },
         }));
 
-        options = {
+        options.current = {
           place: "tr",
           message: (
             <div>
@@ -135,8 +137,8 @@ export default function CliCompCadastro() {
     }
 
     //----------------------- Validações
-  }, [id]);
-  var options = {};
+  }, [id,jsonpAdapter]);
+  options = {};
 
   const notifyElment = useRef(document.getElementById("not"));
   function notify() {
@@ -264,7 +266,7 @@ export default function CliCompCadastro() {
                 </CardHeader>
                 <CardBody>
                   <Form onSubmit={handleSubmit}>
-                  <label>Cliente</label>
+                  <Label>Cliente</Label>
                     <FormGroup
                       className={`has-label ${values.clienteId.error}`}
                     >
@@ -287,14 +289,14 @@ export default function CliCompCadastro() {
                         </option>
                       </Input>
                       {values.clienteId.error === "has-danger" ? (
-                        <label className="error">
+                        <Label className="error">
                           {values.clienteId.message}
-                        </label>
+                        </Label>
                       ) : null}
                     </FormGroup>
                     <Row>
                       <Col md="4">
-                      <label>CEP</label>
+                      <Label>CEP</Label>
                         <FormGroup
                           className={`has-label ${values.cep.error}`}
                         >
@@ -308,14 +310,14 @@ export default function CliCompCadastro() {
                             type="text"
                           />
                           {values.cep.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.cep.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <label>Rua</label>
+                      <Label>Rua</Label>
                         <FormGroup
                           className={`has-label ${values.rua.error}`}
                         >
@@ -329,15 +331,15 @@ export default function CliCompCadastro() {
                             type="text"
                           />
                           {values.rua.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.rua.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
 
                       <Col md="4">
-                      <label>Número</label>
+                      <Label>Número</Label>
                         <FormGroup
                           className={`has-label ${values.numero.error}`}
                         >
@@ -351,14 +353,14 @@ export default function CliCompCadastro() {
                             type="numeric"
                           />
                           {values.numero.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.numero.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
-                    <label>Complemento</label>
+                    <Label>Complemento</Label>
                     <FormGroup
                       className={`has-label ${optional.complemento.error}`}
                     >
@@ -372,14 +374,14 @@ export default function CliCompCadastro() {
                         type="text"
                       />
                       {optional.complemento.error === "has-danger" ? (
-                        <label className="error">
+                        <Label className="error">
                           {optional.complemento.message}
-                        </label>
+                        </Label>
                       ) : null}
                     </FormGroup>
                     <Row>
                       <Col md="4">
-                      <label>Bairro</label>
+                      <Label>Bairro</Label>
                         <FormGroup
                           className={`has-label ${values.bairro.error}`}
                         >
@@ -393,14 +395,14 @@ export default function CliCompCadastro() {
                             type="text"
                           />
                           {values.bairro.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.bairro.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <label>Cidade</label>
+                      <Label>Cidade</Label>
                         <FormGroup
                           className={`has-label ${values.cidade.error}`}
                         >
@@ -414,14 +416,14 @@ export default function CliCompCadastro() {
                             type="text"
                           />
                           {values.cidade.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.cidade.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <label>UF</label>
+                      <Label>UF</Label>
                         <FormGroup className={`has-label ${values.uf.error}`}>
                           <Input
                             disabled
@@ -465,16 +467,16 @@ export default function CliCompCadastro() {
                             <option value="TO">Tocantins</option>
                           </Input>
                           {values.uf.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.uf.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
                       <Col md="4">
-                      <label>Inscrição Municipal</label>
+                      <Label>Inscrição Municipal</Label>
                         <FormGroup
                           className={`has-label ${values.inscMun.error}`}
                         >
@@ -487,14 +489,14 @@ export default function CliCompCadastro() {
                             type="numeric"
                           />
                           {values.inscMun.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.inscMun.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <label>Inscrição Estadual</label>
+                      <Label>Inscrição Estadual</Label>
                         <FormGroup
                           className={`has-label ${values.inscEst.error}`}
                         >
@@ -507,14 +509,14 @@ export default function CliCompCadastro() {
                             type="numeric"
                           />
                           {values.inscEst.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.inscEst.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <label>Condição de Pagamento</label>
+                      <Label>Condição de Pagamento</Label>
                         <FormGroup
                           className={`has-label ${values.CondPgmtoId.error}`}
                         >
@@ -539,9 +541,9 @@ export default function CliCompCadastro() {
                             ))}
                           </Input>
                           {values.CondPgmtoId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.CondPgmtoId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>

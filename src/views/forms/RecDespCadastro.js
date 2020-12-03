@@ -146,7 +146,7 @@ export default function RecDespCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -164,9 +164,9 @@ export default function RecDespCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Label>Item Controle</Label>
@@ -194,12 +194,12 @@ export default function RecDespCadastro() {
                       ))}
                     </Input>
                     {values.itmControleId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.itmControleId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Descrição</label>
+                  <Label>Descrição</Label>
                   <FormGroup className={`has-label ${values.desc.error}`}>
                     <Input
                       name="license"
@@ -208,7 +208,7 @@ export default function RecDespCadastro() {
                       value={values.desc.value}
                     />
                     {values.desc.error === "has-danger" ? (
-                      <label className="error">{values.desc.message}</label>
+                      <Label className="error">{values.desc.message}</Label>
                     ) : null}
                   </FormGroup>
 
@@ -232,7 +232,7 @@ export default function RecDespCadastro() {
                     Despesa
                     </Label>
                     {values.recDesp.error === "has-danger" ? (
-                      <label className="error">{values.recDesp.message}</label>
+                      <Label className="error">{values.recDesp.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/aux/rec_desp`}>

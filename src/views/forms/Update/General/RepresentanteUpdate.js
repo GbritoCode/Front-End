@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
+  Label,
   FormGroup,
   Form,
   Input,
@@ -54,7 +55,7 @@ function RepresentanteUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/representante/${id}`);
+      const response = await axios(`http://localhost:51314/representante/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -164,8 +165,7 @@ function RepresentanteUpdatee() {
       var vlrFixMensdb = values.vlrFixMens.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        RepresentanteUpdate(
-          id,
+        RepresentanteUpdate(id,
           values.empresaId.value,
           values.nome.value,
           values.tipoComiss.value,
@@ -206,7 +206,7 @@ function RepresentanteUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -226,13 +226,13 @@ function RepresentanteUpdatee() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Nome</label>
+                        <Label>Nome</Label>
                         <FormGroup className={`has-label ${values.nome.error}`}>
                           <Input
                             name="nome"
@@ -243,13 +243,13 @@ function RepresentanteUpdatee() {
                             value={values.nome.value}
                           />{" "}
                           {values.nome.error === "has-danger" ? (
-                            <label className="error">{values.nome.message}</label>
+                            <Label className="error">{values.nome.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="6">
                             {" "}
-                            <label>Tipo Comissão</label>
+                            <Label>Tipo Comissão</Label>
                             <FormGroup
                               className={`has-label ${values.tipoComiss.error}`}
                             >
@@ -274,15 +274,15 @@ function RepresentanteUpdatee() {
                                 ))}
                               </Input>
                               {values.tipoComiss.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.tipoComiss.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="6">
                             {" "}
-                            <label>Valor Fixo Mensal</label>
+                            <Label>Valor Fixo Mensal</Label>
                             <FormGroup
                               className={`has-label ${values.vlrFixMens.error}`}
                             >
@@ -295,9 +295,9 @@ function RepresentanteUpdatee() {
                                 value={values.vlrFixMens.value}
                               />{" "}
                               {values.vlrFixMens.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrFixMens.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

@@ -31,10 +31,10 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { cotacaoRequest, oportUpdate, parcelaReqest } from "~/store/modules/oportunidades/actions";
+import { parcelaReqest } from "~/store/modules/oportunidades/actions";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCurrency, normalizeCnpj, normalizeCalcCurrency } from "normalize";
+import { normalizeCurrency} from "normalize";
 import { useParams, Link } from "react-router-dom";
 
 export default function ParcelaCadastro() {
@@ -43,7 +43,6 @@ export default function ParcelaCadastro() {
 
   const { id } = useParams()
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
@@ -55,7 +54,6 @@ export default function ParcelaCadastro() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response1 = await axios(`http://localhost:51314/oportunidade/${id}`);
       setData1(response1.data);
 
@@ -63,10 +61,9 @@ export default function ParcelaCadastro() {
         ...prevState,
         oportunidadeId: { value: response1.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
 
   var options = {};
@@ -187,7 +184,7 @@ export default function ParcelaCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Oportunidade</label>
+                <Label>Oportunidade</Label>
                   <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                     <Input
                       disabled
@@ -209,13 +206,13 @@ export default function ParcelaCadastro() {
                     </Input>
 
                     {values.oportunidadeId.error === "has-danger" ? (
-                      <label className="error">{values.oportunidadeId.message}</label>
+                      <Label className="error">{values.oportunidadeId.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Parcela</label>
+                      <Label>Parcela</Label>
                       <FormGroup
                         className={`has-label ${values.parcela.error}`}
                       >
@@ -228,15 +225,15 @@ export default function ParcelaCadastro() {
                           value={values.parcela.value}
                         />
                         {values.parcela.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.parcela.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Valor da Parcela</label>
+                      <Label>Valor da Parcela</Label>
                       <FormGroup
                         className={`has-label ${values.vlrParcela.error}`}
                       >
@@ -250,9 +247,9 @@ export default function ParcelaCadastro() {
                         />
 
                         {values.vlrParcela.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrParcela.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

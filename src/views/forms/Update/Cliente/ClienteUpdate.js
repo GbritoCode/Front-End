@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -67,7 +67,7 @@ const id = useParams()
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/cliente/${id}`);
+      const response = await axios(`http://localhost:51314/cliente/${id.id}`);
       const response1 = await axios(`http://localhost:51314/tipoComiss`);
       const response2 = await axios(`http://localhost:51314/representante`);
       const response3 = await axios(`http://localhost:51314/empresa/${empresa}`);
@@ -218,7 +218,7 @@ const id = useParams()
   function checkProsp(param) {
     if (param == 'true') {
       return <>
-        <Link to={"/tabelas/cliente/comp/" + id}>
+        <Link to={"/tabelas/cliente/comp/" + id.id}>
           <Tooltip title="Complemento" placement="top" interactive>
             <Button
               style={{ float: "right" }}
@@ -230,7 +230,7 @@ const id = useParams()
             </Button>
           </Tooltip>
         </Link>
-        <Link to={"/tabelas/cliente/rec_desp/" + id}>
+        <Link to={"/tabelas/cliente/rec_desp/" + id.id}>
           <Tooltip title="Receita" placement="top" interactive>
             <Button
               style={{ float: "right" }}
@@ -275,8 +275,7 @@ const id = useParams()
     if (valid && filled) {
 
       dispatch(
-        ClienteUpdate(
-          id,
+        ClienteUpdate(id,
           values.nomeAbv.value,
           values.RepresentanteId.value,
           values.TipoComisseId.value,
@@ -315,7 +314,7 @@ const id = useParams()
                     <CardHeader>
                       {checkProsp(prct)}
 
-                      <Link to={"/tabelas/cliente/cont/" + id}>
+                      <Link to={"/tabelas/cliente/cont/" + id.id}>
                         <Tooltip title="Contato" placement="top" interactive>
                           <Button
                             style={{ float: "right" }}
@@ -351,12 +350,12 @@ const id = useParams()
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>CNPJ</label>
+                        <Label>CNPJ</Label>
                         <FormGroup className={`has-label ${values.cnpj.error}`}>
                           <Input
                             disabled
@@ -373,9 +372,9 @@ const id = useParams()
                             }}
                           />
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Label>Nome Abreviado</Label>
@@ -392,9 +391,9 @@ const id = useParams()
                             value={values.nomeAbv.value}
                           />
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Label>Representante</Label>
@@ -422,9 +421,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Label>Tipo Comissão</Label>
@@ -452,9 +451,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Link to={"/tabelas/cliente/cliente"}>

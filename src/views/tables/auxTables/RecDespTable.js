@@ -97,7 +97,7 @@ class recDespTable extends Component {
                 <CardTitle tag="h4">
                   Receita e Despesa
                   <Link to="/cadastro/geral/rec_desp">
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",

@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -26,6 +26,7 @@ import {
   FormGroup,
   Form,
   Input,
+  Label,
   Row,
   Col,
 } from "reactstrap";
@@ -57,7 +58,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/area/${id}`);
+      const response1 = await axios(`http://localhost:51314/area/${id.id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -156,7 +157,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -176,13 +177,13 @@ const id = useParams()
                             </option>
                           </Input>{" "}
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Descrição Área</label>
+                        <Label>Descrição Área</Label>
                         <FormGroup
                           className={`has-label ${values.descArea.error}`}
                         >
@@ -195,9 +196,9 @@ const id = useParams()
                             value={values.descArea.value}
                           />{" "}
                           {values.descArea.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.descArea.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 

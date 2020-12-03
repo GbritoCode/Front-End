@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   Form,
+  Label,
   Input,
   FormGroup,
   Row,
@@ -186,7 +187,7 @@ export default function SegmentoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -204,15 +205,15 @@ export default function SegmentoCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Unidade de Negócio</label>
+                      <Label>Unidade de Negócio</Label>
                       <FormGroup
                         className={`has-label ${values.UndNegId.error}`}
                       >
@@ -237,15 +238,15 @@ export default function SegmentoCadastro() {
                           ))}
                         </Input>{" "}
                         {values.UndNegId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.UndNegId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Produto</label>
+                      <Label>Produto</Label>
                       <FormGroup
                         className={`has-label ${values.ProdutoId.error}`}
                       >
@@ -270,14 +271,14 @@ export default function SegmentoCadastro() {
                           ))}
                         </Input>
                         {values.ProdutoId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.ProdutoId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <label>Área</label>
+                    <Label>Área</Label>
                       <FormGroup className={`has-label ${values.AreaId.error}`}>
                         <Input
                           name="AreaId"
@@ -297,15 +298,15 @@ export default function SegmentoCadastro() {
                           ))}
                         </Input>{" "}
                         {values.AreaId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.AreaId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
 
-                  <label>Descrição do Segmento</label>
+                  <Label>Descrição do Segmento</Label>
                   <FormGroup className={`has-label ${values.descSegmt.error}`}>
                     <Input
                       name="descSegmt"
@@ -316,9 +317,9 @@ export default function SegmentoCadastro() {
                       value={values.descSegmt.value}
                     />{" "}
                     {values.descSegmt.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.descSegmt.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/general/segmento`}>

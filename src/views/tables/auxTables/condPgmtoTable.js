@@ -98,7 +98,7 @@ class condPgmtoTable extends Component {
                 <CardTitle tag="h4">
                   Condições de Pagamento
                   <Link to="/cadastro/aux/condPgmto">
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",

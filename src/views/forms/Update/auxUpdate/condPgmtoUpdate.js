@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -26,6 +26,7 @@ import {
   FormGroup,
   Form,
   Input,
+  Label,
   Row,
   Col,
 } from "reactstrap";
@@ -59,7 +60,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/condPgmto/${id}`);
+      const response1 = await axios(`http://localhost:51314/condPgmto/${id.id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -192,7 +193,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -212,13 +213,13 @@ const id = useParams()
                             </option>
                           </Input>{" "}
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Código</label>
+                        <Label>Código</Label>
                         <FormGroup className={`has-label ${values.cod.error}`}>
                           <Input
                             name="cod"
@@ -229,11 +230,11 @@ const id = useParams()
                             value={values.cod.value}
                           />{" "}
                           {values.cod.error === "has-danger" ? (
-                            <label className="error">{values.cod.message}</label>
+                            <Label className="error">{values.cod.message}</Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Descrição</label>
+                        <Label>Descrição</Label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="desc"
@@ -244,11 +245,11 @@ const id = useParams()
                             value={values.desc.value}
                           />{" "}
                           {values.desc.error === "has-danger" ? (
-                            <label className="error">{values.desc.message}</label>
+                            <Label className="error">{values.desc.message}</Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Dias de Prazo</label>
+                        <Label>Dias de Prazo</Label>
                         <FormGroup className={`has-label ${values.diasPrazo.error}`}>
                           <Input
                             name="diasPrazo"
@@ -259,7 +260,7 @@ const id = useParams()
                             value={values.diasPrazo.value}
                           />{" "}
                           {values.diasPrazo.error === "has-danger" ? (
-                            <label className="error">{values.diasPrazo.message}</label>
+                            <Label className="error">{values.diasPrazo.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/aux/condPgmto`}>

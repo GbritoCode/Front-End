@@ -102,7 +102,7 @@ class Tabela_Cliente extends Component {
                 <CardTitle tag="h4">
                   Parâmetros
                   <Link to="/cadastro/geral/parametros">
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",

@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -58,7 +59,7 @@ function SegmentoUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/segmento/${id}`);
+      const response = await axios(`http://localhost:51314/segmento/${id.id}`);
       const response1 = await axios(`http://localhost:51314/und_neg/`);
       const response2 = await axios(`http://localhost:51314/prodt/`);
       const response3 = await axios(`http://localhost:51314/area/`);
@@ -169,8 +170,7 @@ function SegmentoUpdatee() {
 
     if (valid && filled) {
       dispatch(
-        SegmentoUpdate(
-          id,
+        SegmentoUpdate(id,
           values.empresaId.value,
           values.UndNegId.value,
           values.ProdutoId.value,
@@ -212,7 +212,7 @@ function SegmentoUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -232,13 +232,13 @@ function SegmentoUpdatee() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Unidade de Negócio</label>
+                        <Label>Unidade de Negócio</Label>
                         <FormGroup
                           className={`has-label ${values.UndNegId.error}`}
                         >
@@ -263,13 +263,13 @@ function SegmentoUpdatee() {
                             ))}
                           </Input>{" "}
                           {values.UndNegId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.UndNegId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Produto</label>
+                        <Label>Produto</Label>
                         <FormGroup
                           className={`has-label ${values.ProdutoId.error}`}
                         >
@@ -294,13 +294,13 @@ function SegmentoUpdatee() {
                             ))}
                           </Input>
                           {values.ProdutoId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.ProdutoId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Área</label>
+                        <Label>Área</Label>
                         <FormGroup className={`has-label ${values.AreaId.error}`}>
                           <Input
                             name="AreaId"
@@ -320,13 +320,13 @@ function SegmentoUpdatee() {
                             ))}
                           </Input>{" "}
                           {values.AreaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.AreaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Descrição do Segmento</label>
+                        <Label>Descrição do Segmento</Label>
                         <FormGroup
                           className={`has-label ${values.descSegmt.error}`}
                         >
@@ -339,9 +339,9 @@ function SegmentoUpdatee() {
                             value={values.descSegmt.value}
                           />{" "}
                           {values.descSegmt.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.descSegmt.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/general/segmento`}>

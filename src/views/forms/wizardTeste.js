@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
+  Label,
   Form,
   Input,
   FormGroup,
@@ -309,7 +310,7 @@ export default function WizardCadastro() {
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md="6">
-                  <label>CNPJ</label>
+                  <Label>CNPJ</Label>
                     <FormGroup className={`has-label ${values.cnpj.error}`}>
                       <Input
                         name="idFederal"
@@ -323,12 +324,12 @@ export default function WizardCadastro() {
                         }}
                       />
                       {values.cnpj.error === "has-danger" ? (
-                        <label className="error">{values.cnpj.message}</label>
+                        <Label className="error">{values.cnpj.message}</Label>
                       ) : null}
                     </FormGroup>
                   </Col>
                   <Col md="6">
-                  <label>Nome</label>
+                  <Label>Nome</Label>
                     <FormGroup className={`has-label ${values.nome.error}`}>
                       <Input
                         name="nome"
@@ -337,14 +338,14 @@ export default function WizardCadastro() {
                         value={values.nome.value}
                       />
                       {values.nome.error === "has-danger" ? (
-                        <label className="error">{values.nome.message}</label>
+                        <Label className="error">{values.nome.message}</Label>
                       ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
                 <Row>
                   <Col md="6">
-                  <label>License</label>
+                  <Label>License</Label>
                     <FormGroup className={`has-label ${values.license.error}`}>
                       <Input
                         name="license"
@@ -355,12 +356,12 @@ export default function WizardCadastro() {
                         value={values.license.value}
                       />
                       {values.license.error === "has-danger" ? (
-                        <label className="error">{values.license.message}</label>
+                        <Label className="error">{values.license.message}</Label>
                       ) : null}
                     </FormGroup>
                   </Col>
                   <Col md="6">
-                  <label>Usuário</label>
+                  <Label>Usuário</Label>
                     <FormGroup className={`has-label ${values.userId.error}`}>
                       <Input
                         name="UserId"
@@ -383,7 +384,7 @@ export default function WizardCadastro() {
                         ))}
                       </Input>{" "}
                       {values.userId.error === "has-danger" ? (
-                        <label className="error">{values.userId.message}</label>
+                        <Label className="error">{values.userId.message}</Label>
                       ) : null}
                     </FormGroup>
 

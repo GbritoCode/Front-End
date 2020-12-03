@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   Form,
+  Label,
   Input,
   FormGroup,
   Row,
@@ -60,7 +61,7 @@ const id = useParams()
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/recurso/aux/${id}`);
+      const response1 = await axios(`http://localhost:51314/recurso/aux/${id.id}`);
       const response2 = await axios(`http://localhost:51314/colab/`);
       const response4 = await axios(`http://localhost:51314/oportunidade/${response1.data.oportunidadeId}`);
       setData1(response1.data);
@@ -188,8 +189,7 @@ const id = useParams()
       var custoPrevdb = values.custoPrev.value.replace(/[.,]+/g, "");
       var colabVlrHrdb = values.colabVlrHr.value.replace(/[.,]+/g, "");
       dispatch(
-        recursoUpdate(
-          id,
+        recursoUpdate(id,
           values.oportunidadeId.value,
           values.colabId.value,
           custoPrevdb,
@@ -228,7 +228,7 @@ const id = useParams()
               <CardBody>
                 <Form onSubmit={handleSubmit}>
 
-                <label>Oportunidade</label>
+                <Label>Oportunidade</Label>
                   <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                     <Input
                       disabled
@@ -250,10 +250,10 @@ const id = useParams()
                     </Input>
 
                     {values.oportunidadeId.error === "has-danger" ? (
-                      <label className="error">{values.oportunidadeId.message}</label>
+                      <Label className="error">{values.oportunidadeId.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <label>Colaborador</label>
+                  <Label>Colaborador</Label>
                   <FormGroup className={`has-label ${values.colabId.error}`}>
                     <Input
                       name="colabId"
@@ -278,10 +278,10 @@ const id = useParams()
                     </Input>
 
                     {values.colabId.error === "has-danger" ? (
-                      <label className="error">{values.colabId.message}</label>
+                      <Label className="error">{values.colabId.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <label>Data de Inclusão</label>
+                  <Label>Data de Inclusão</Label>
                   <FormGroup
                     className={`has-label ${values.dataInclusao.error}`}
                   >
@@ -294,12 +294,12 @@ const id = useParams()
                       value={values.dataInclusao.value}
                     />
                     {values.dataInclusao.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.dataInclusao.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Horas Previstas</label>
+                  <Label>Horas Previstas</Label>
                   <FormGroup className={`has-label ${values.hrsPrevst.error}`}>
                     <Input
                       name="hrsPrevst"
@@ -311,12 +311,12 @@ const id = useParams()
                       value={values.hrsPrevst.value}
                     />
                     {values.hrsPrevst.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.hrsPrevst.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Valor Hora </label>
+                  <Label>Valor Hora </Label>
                   <FormGroup className={`has-label ${values.colabVlrHr.error}`}>
                     <Input
                       disabled
@@ -328,12 +328,12 @@ const id = useParams()
                       value={values.colabVlrHr.value}
                     />
                     {values.colabVlrHr.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.colabVlrHr.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Custo Previsto</label>
+                  <Label>Custo Previsto</Label>
                   <FormGroup className={`has-label ${values.custoPrev.error}`}>
                     <Input
                       disabled
@@ -345,9 +345,9 @@ const id = useParams()
                       value={values.custoPrev.value}
                     />
                     {values.custoPrev.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.custoPrev.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>

@@ -25,6 +25,7 @@ import {
   CardTitle,
   Form,
   Input,
+  Label,
   FormGroup,
   Row,
   Col,
@@ -298,7 +299,7 @@ export default function EmpresaCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>CNPJ</label>
+                <Label>CNPJ</Label>
                   <FormGroup className={`has-label ${values.cnpj.error}`}>
                     <Input
                       name="idFederal"
@@ -312,11 +313,11 @@ export default function EmpresaCadastro() {
                       }}
                     />
                     {values.cnpj.error === "has-danger" ? (
-                      <label className="error">{values.cnpj.message}</label>
+                      <Label className="error">{values.cnpj.message}</Label>
                     ) : null}
                   </FormGroup>
 
-                  <label>Nome</label>
+                  <Label>Nome</Label>
                   <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
                       name="nome"
@@ -325,11 +326,11 @@ export default function EmpresaCadastro() {
                       value={values.nome.value}
                     />
                     {values.nome.error === "has-danger" ? (
-                      <label className="error">{values.nome.message}</label>
+                      <Label className="error">{values.nome.message}</Label>
                     ) : null}
                   </FormGroup>
 
-                  <label> License</label>
+                  <Label> License</Label>
                   <FormGroup className={`has-label ${values.license.error}`}>
                     <Input
                       name="license"
@@ -340,11 +341,11 @@ export default function EmpresaCadastro() {
                       value={values.license.value}
                     />
                     {values.license.error === "has-danger" ? (
-                      <label className="error">{values.license.message}</label>
+                      <Label className="error">{values.license.message}</Label>
                     ) : null}
                   </FormGroup>
 
-                  <label> Usuário</label>
+                  <Label> Usuário</Label>
                   <FormGroup className={`has-label ${values.userId.error}`}>
                     <Input
                       name="UserId"
@@ -367,7 +368,7 @@ export default function EmpresaCadastro() {
                       ))}
                     </Input>{" "}
                     {values.userId.error === "has-danger" ? (
-                      <label className="error">{values.userId.message}</label>
+                      <Label className="error">{values.userId.message}</Label>
                     ) : null}
                   </FormGroup>
 

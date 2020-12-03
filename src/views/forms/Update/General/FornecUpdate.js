@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -73,7 +74,7 @@ function FornecUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/fornec/${id}`);
+      const response = await axios(`http://localhost:51314/fornec/${id.id}`);
       const response1 = await axios(`http://localhost:51314/condPgmto`);
       const response2 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
@@ -301,8 +302,7 @@ function FornecUpdatee() {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
       var fonedb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        FornecUpdate(
-          id,
+        FornecUpdate(id,
           cnpjdb,
           values.empresaId.value,
           values.nome.value,
@@ -354,7 +354,7 @@ function FornecUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -374,13 +374,13 @@ function FornecUpdatee() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>CNPJ</label>
+                        <Label>CNPJ</Label>
                         <FormGroup className={`has-label ${values.cnpj.error}`}>
                           <Input
                             disabled
@@ -397,13 +397,13 @@ function FornecUpdatee() {
                             }}
                           />
                           {values.cnpj.error === "has-danger" ? (
-                            <label className="error">{values.cnpj.message}</label>
+                            <Label className="error">{values.cnpj.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="6">
                             {" "}
-                            <label>Nome</label>
+                            <Label>Nome</Label>
                             <FormGroup
                               className={`has-label ${values.nome.error}`}
                             >
@@ -417,14 +417,14 @@ function FornecUpdatee() {
                                 value={values.nome.value}
                               />
                               {values.nome.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.nome.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="6">
-                          <label>Nome Abreviado</label>
+                          <Label>Nome Abreviado</Label>
                             <FormGroup
                               className={`has-label ${values.nomeConta.error}`}
                             >
@@ -438,9 +438,9 @@ function FornecUpdatee() {
                                 value={values.nomeConta.value}
                               />
                               {values.nomeConta.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.nomeConta.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -448,7 +448,7 @@ function FornecUpdatee() {
 
                         <Row>
                           <Col md="4">
-                          <label>Condição de Pagamento</label>
+                          <Label>Condição de Pagamento</Label>
                             <FormGroup
                               className={`has-label ${values.CondPgmtoId.error}`}
                             >
@@ -473,15 +473,15 @@ function FornecUpdatee() {
                                 ))}
                               </Input>
                               {values.CondPgmtoId.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.CondPgmtoId.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Telefone</label>
+                            <Label>Telefone</Label>
                             <FormGroup
                               className={`has-label ${values.fone.error}`}
                             >
@@ -500,15 +500,15 @@ function FornecUpdatee() {
                                 value={values.fone.value}
                               />
                               {values.fone.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.fone.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>CEP</label>
+                            <Label>CEP</Label>
                             <FormGroup
                               className={`has-label ${values.cep.error}`}
                             >
@@ -522,9 +522,9 @@ function FornecUpdatee() {
                                 value={values.cep.value}
                               />
                               {values.cep.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cep.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -532,7 +532,7 @@ function FornecUpdatee() {
 
                         <Row>
                           <Col md="4">
-                          <label>Rua</label>
+                          <Label>Rua</Label>
                             <FormGroup
                               className={`has-label ${values.rua.error}`}
                             >
@@ -546,14 +546,14 @@ function FornecUpdatee() {
                                 value={values.rua.value}
                               />
                               {values.rua.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.rua.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="2">
-                          <label>Número</label>
+                          <Label>Número</Label>
                             <FormGroup
                               className={`has-label ${values.numero.error}`}
                             >
@@ -567,15 +567,15 @@ function FornecUpdatee() {
                                 value={values.numero.value}
                               />
                               {values.numero.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.numero.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
 
                           <Col md="6">
-                          <label>Complemento</label>
+                          <Label>Complemento</Label>
                             <FormGroup
                               className={`has-label ${optional.complemento.error}`}
                             >
@@ -588,9 +588,9 @@ function FornecUpdatee() {
                                 value={optional.complemento.value}
                               />
                               {optional.complemento.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.complemento.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -598,7 +598,7 @@ function FornecUpdatee() {
 
                         <Row>
                           <Col md="4">
-                          <label>Bairro</label>
+                          <Label>Bairro</Label>
                             <FormGroup
                               className={`has-label ${values.bairro.error}`}
                             >
@@ -612,14 +612,14 @@ function FornecUpdatee() {
                                 value={values.bairro.value}
                               />
                               {values.bairro.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.bairro.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Cidade</label>
+                          <Label>Cidade</Label>
                             <FormGroup
                               className={`has-label ${values.cidade.error}`}
                             >
@@ -633,14 +633,14 @@ function FornecUpdatee() {
                                 value={values.cidade.value}
                               />
                               {values.cidade.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cidade.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>UF</label>
+                          <Label>UF</Label>
                             <FormGroup className={`has-label ${values.uf.error}`}>
                               <Input
                                 disabled
@@ -684,16 +684,16 @@ function FornecUpdatee() {
                                 <option value="TO">Tocantins</option>
                               </Input>
                               {values.uf.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.uf.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Banco</label>
+                          <Label>Banco</Label>
                             <FormGroup
                               className={`has-label ${values.banco.error}`}
                             >
@@ -734,14 +734,14 @@ function FornecUpdatee() {
                               </option>
                               </Input>
                               {values.banco.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.banco.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Agência</label>
+                          <Label>Agência</Label>
                             <FormGroup
                               className={`has-label ${values.agencia.error}`}
                             >
@@ -754,14 +754,14 @@ function FornecUpdatee() {
                                 value={values.agencia.value}
                               />
                               {values.agencia.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.agencia.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Conta</label>
+                          <Label>Conta</Label>
                             <FormGroup
                               className={`has-label ${values.conta.error}`}
                             >
@@ -774,9 +774,9 @@ function FornecUpdatee() {
                                 value={values.conta.value}
                               />
                               {values.conta.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.conta.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

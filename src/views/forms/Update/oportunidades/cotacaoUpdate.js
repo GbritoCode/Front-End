@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -69,7 +69,7 @@ const id = useParams()
   const imposto = 14 / 100
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cotacao/aux/${id}`);
+      const response = await axios(`http://localhost:51314/cotacao/aux/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -270,8 +270,7 @@ const id = useParams()
       var prevLucrodb = values.prevLucro.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        cotacaoUpdate(
-          id,
+        cotacaoUpdate(id,
           values.empresaId.value,
           values.oportunidadeId.value,
           values.probVend.value,
@@ -320,7 +319,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup className={`has-label ${values.empresaId.error}`}>
                           <Input
                             disabled={true}
@@ -338,14 +337,14 @@ const id = useParams()
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="4">
-                          <label>Oportunidade</label>
+                          <Label>Oportunidade</Label>
                             <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                               <Input
                                 disabled
@@ -367,13 +366,13 @@ const id = useParams()
                               </Input>
 
                               {values.oportunidadeId.error === "has-danger" ? (
-                                <label className="error">{values.oportunidadeId.message}</label>
+                                <Label className="error">{values.oportunidadeId.message}</Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Probabilidade de Venda</label>
+                            <Label>Probabilidade de Venda</Label>
                             <FormGroup
                               className={`has-label ${values.probVend.error}`}
                             >
@@ -394,15 +393,15 @@ const id = useParams()
                                 <option value={3}>Baixa</option>
                               </Input>
                               {values.probVend.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.probVend.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Tipo de Cobrança</label>
+                            <Label>Tipo de Cobrança</Label>
                             <FormGroup
                               className={`has-label ${values.tipoCobranca.error}`}
                             >
@@ -425,9 +424,9 @@ const id = useParams()
                                 <option value={2}>Por Projeto</option>
                               </Input>
                               {values.tipoCobranca.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.tipoCobranca.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -435,7 +434,7 @@ const id = useParams()
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Horas Previstas</label>
+                          <Label>Horas Previstas</Label>
                             <FormGroup
                               className={`has-label ${values.hrsPrevst.error}`}
                             >
@@ -454,15 +453,15 @@ const id = useParams()
                                 value={values.hrsPrevst.value}
                               />
                               {values.hrsPrevst.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.hrsPrevst.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Valor da Proposta</label>
+                            <Label>Valor da Proposta</Label>
                             <FormGroup
                               className={`has-label ${values.vlrProp.error}`}
                             >
@@ -476,14 +475,14 @@ const id = useParams()
                                 value={values.vlrProp.value}
                               />
                               {values.vlrProp.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrProp.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Valor Desconto</label>
+                          <Label>Valor Desconto</Label>
                             <FormGroup
                               className={`has-label ${values.vlrDesc.error}`}
                             >
@@ -498,9 +497,9 @@ const id = useParams()
                                 value={values.vlrDesc.value}
                               />
                               {values.vlrDesc.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrDesc.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -509,7 +508,7 @@ const id = useParams()
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Valor Líquido</label>
+                            <Label>Valor Líquido</Label>
                             <FormGroup
                               className={`has-label ${values.vlrLiq.error}`}
                             >
@@ -523,14 +522,14 @@ const id = useParams()
                                 value={values.vlrLiq.value}
                               />
                               {values.vlrLiq.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrLiq.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Receita Líquida</label>
+                          <Label>Receita Líquida</Label>
                             <FormGroup
                               className={`has-label ${values.recLiq.error}`}
                             >
@@ -544,14 +543,14 @@ const id = useParams()
                                 value={values.recLiq.value}
                               />
                               {values.recLiq.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.recLiq.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Previsão de Lucro</label>
+                          <Label>Previsão de Lucro</Label>
                             <FormGroup
                               className={`has-label ${values.prevLucro.error}`}
                             >
@@ -565,9 +564,9 @@ const id = useParams()
                                 value={values.prevLucro.value}
                               />
                               {values.prevLucro.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.prevLucro.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -575,7 +574,7 @@ const id = useParams()
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Número de Parcelas</label>
+                          <Label>Número de Parcelas</Label>
                             <FormGroup
                               className={`has-label ${values.numParcelas.error}`}
                             >
@@ -605,9 +604,9 @@ const id = useParams()
                                 <option value={12}>12</option>
                               </Input>
                               {values.numParcelas.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.numParcelas.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -652,7 +651,7 @@ const id = useParams()
                         </Row>
                         <Row>
                           <Col>
-                          <label>Descrição</label>
+                          <Label>Descrição</Label>
                             <FormGroup
                               className={`has-label ${optional.desc.error}`}
                             >
@@ -665,9 +664,9 @@ const id = useParams()
                                 value={optional.desc.value}
                               />
                               {optional.desc.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.desc.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -57,7 +58,7 @@ function ColabCompUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/comp/1/${id}`);
+      const response = await axios(`http://localhost:51314/colab/comp/1/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/colab/${response.data.ColabId}`
       );
@@ -176,8 +177,7 @@ function ColabCompUpdatee() {
     if (valid && filled) {
       var valordb = values.valor.value.replace(/[^\d]+/g, "");
       dispatch(
-        ColabCompUpdate(
-          id,
+        ColabCompUpdate(id,
           values.colabId.value,
           values.nivel.value,
           values.tipoValor.value,
@@ -222,7 +222,7 @@ function ColabCompUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Colaborador</label>
+                      <Label>Colaborador</Label>
                         <FormGroup
                           className={`has-label ${values.colabId.error}`}
                         >
@@ -246,15 +246,15 @@ function ColabCompUpdatee() {
                           </Input>
 
                           {values.colabId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.colabId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Nível</label>
+                            <Label>Nível</Label>
                             <FormGroup
                               className={`has-label ${values.nivel.error}`}
                             >
@@ -276,15 +276,15 @@ function ColabCompUpdatee() {
                                 <option value={4}>Sênior</option>
                               </Input>
                               {values.nivel.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.nivel.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Tipo de valor</label>
+                            <Label>Tipo de valor</Label>
                             <FormGroup
                               className={`has-label ${values.tipoValor.error}`}
                             >
@@ -304,15 +304,15 @@ function ColabCompUpdatee() {
                                 <option value={2}>Fixo</option>
                               </Input>
                               {values.tipoValor.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.tipoValor.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Valor</label>
+                            <Label>Valor</Label>
                             <FormGroup
                               className={`has-label ${values.valor.error}`}
                             >
@@ -325,9 +325,9 @@ function ColabCompUpdatee() {
                                 value={values.valor.value}
                               />
                               {values.valor.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.valor.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -335,7 +335,7 @@ function ColabCompUpdatee() {
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Data Inicial</label>
+                            <Label>Data Inicial</Label>
                             <FormGroup
                               className={`has-label ${values.dataInic.error}`}
                             >
@@ -348,15 +348,15 @@ function ColabCompUpdatee() {
                                 value={values.dataInic.value}
                               />
                               {values.dataInic.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.dataInic.message}
-                                </label>
+                                </Label>
                               ) : null}{" "}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Data Final</label>
+                            <Label>Data Final</Label>
                             <FormGroup
                               className={`has-label ${values.dataFim.error}`}
                             >
@@ -369,14 +369,14 @@ function ColabCompUpdatee() {
                                 value={values.dataFim.value}
                               />
                               {values.dataFim.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.dataFim.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Tipo de Atendimento</label>
+                          <Label>Tipo de Atendimento</Label>
                             <FormGroup
                               className={`has-label ${values.tipoAtend.error}`}
                             >
@@ -398,9 +398,9 @@ function ColabCompUpdatee() {
                                 <option value={4}>Complementar</option>
                               </Input>
                               {values.tipoAtend.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.tipoAtend.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

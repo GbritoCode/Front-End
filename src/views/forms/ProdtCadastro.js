@@ -25,6 +25,7 @@ import {
   CardTitle,
   Form,
   Input,
+  Label,
   FormGroup,
   Row,
   Col,
@@ -166,7 +167,7 @@ export default function ProdtCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -184,13 +185,13 @@ export default function ProdtCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
 
-                  <label>Descrição do Produto</label>
+                  <Label>Descrição do Produto</Label>
                   <FormGroup className={`has-label ${values.descProdt.error}`}>
                     <Input
                       name="descProdt"
@@ -201,9 +202,9 @@ export default function ProdtCadastro() {
                       value={values.descProdt.value}
                     />
                     {values.descProdt.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.descProdt.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/general/prodt`}>

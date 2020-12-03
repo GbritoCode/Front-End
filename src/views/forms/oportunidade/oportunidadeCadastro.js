@@ -263,13 +263,13 @@ export default function CadastroOport() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Row><Col md="4">
-                  <label>Colaborador</label>
+                  <Label>Colaborador</Label>
                     <FormGroup className={`has-label ${values.colabId.error}`}>
                       <Input
                         disabled
@@ -281,7 +281,7 @@ export default function CadastroOport() {
                         defaultValue={data1.nome}
                       />
                       {values.colabId.error === "has-danger" ? (
-                        <label className="error">{values.colabId.message}</label>
+                        <Label className="error">{values.colabId.message}</Label>
                       ) : null}
                     </FormGroup>
                   </Col>
@@ -297,7 +297,7 @@ export default function CadastroOport() {
                             value={values.data.value}
                           />
                           {values.data.error === "has-danger" ? (
-                            <label className="error">{values.data.message}</label>
+                            <Label className="error">{values.data.message}</Label>
                           ) : null}
                         </FormGroup>
                     </Col>
@@ -335,9 +335,9 @@ export default function CadastroOport() {
                           ))}
                         </Input>
                         {values.clienteId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.clienteId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -367,9 +367,9 @@ export default function CadastroOport() {
                           ))}
                         </Input>
                         {values.contato.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.contato.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -400,9 +400,9 @@ export default function CadastroOport() {
                           ))}
                         </Input>
                         {values.representanteId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.representanteId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -434,9 +434,9 @@ export default function CadastroOport() {
                           ))}
                         </Input>
                         {values.UndNegId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.UndNegId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -466,9 +466,9 @@ export default function CadastroOport() {
                           ))}
                         </Input>
                         {values.itmControleId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.itmControleId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -498,16 +498,16 @@ export default function CadastroOport() {
                           ))}
                         </Input>
                         {values.segmetId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.segmetId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="4">
-                    <label>Código</label>
+                    <Label>Código</Label>
                       <FormGroup className={`has-label ${values.cod.error}`}>
                         <Input
                           disabled
@@ -519,12 +519,12 @@ export default function CadastroOport() {
                           value={values.cod.value}
                         />{" "}
                         {values.cod.error === "has-danger" ? (
-                          <label className="error">{values.cod.message}</label>
+                          <Label className="error">{values.cod.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="8">
-                    <label>Descrição</label>
+                    <Label>Descrição</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           name="desc"
@@ -535,14 +535,14 @@ export default function CadastroOport() {
                           value={values.desc.value}
                         />{" "}
                         {values.desc.error === "has-danger" ? (
-                          <label className="error">{values.desc.message}</label>
+                          <Label className="error">{values.desc.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
                     <Col>
-                    <label>Narrativa</label>
+                    <Label>Narrativa</Label>
                       <FormGroup className={`has-label ${optional.narrativa.error}`}>
                         <Input
                           name="narrativa"
@@ -553,7 +553,7 @@ export default function CadastroOport() {
                           value={optional.narrativa.value}
                         />{" "}
                         {optional.narrativa.error === "has-danger" ? (
-                          <label className="error">{optional.narrativa.message}</label>
+                          <Label className="error">{optional.narrativa.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>

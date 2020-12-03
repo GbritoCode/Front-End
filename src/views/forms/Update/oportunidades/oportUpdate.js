@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState, Fragment, useCallback } from "react";
+import React, { useRef, useEffect, useState, Fragment} from "react";
 
 // reactstrap components
 import {
@@ -87,7 +87,7 @@ const id = useParams()
       const response5 = await axios(`http://localhost:51314/itm_controle/`);
       const response6 = await axios(`http://localhost:51314/segmento/`);
       const response7 = await axios(`http://localhost:51314/representante/`);
-      const response8 = await axios(`http://localhost:51314/oportunidade/${id}`);
+      const response8 = await axios(`http://localhost:51314/oportunidade/${id.id}`);
       const response1 = await axios(`http://localhost:51314/colab/${response8.data.colabId}`);
       const response3 = await axios(`http://localhost:51314/cliente/cont/${response8.data.clienteId}`)
       setData1(response1.data);
@@ -222,7 +222,7 @@ const id = useParams()
 
     if (fase == 4 && firstRender.current) {
 
-      return <Link to={"/tabelas/oportunidade/recurso/" + id}>
+      return <Link to={"/tabelas/oportunidade/recurso/" + id.id}>
         <Tooltip title="Recurso" placement="top" interactive>
           <Button
             style={{ float: "right" }}
@@ -265,8 +265,7 @@ const id = useParams()
 
     if (valid && filled) {
       dispatch(
-        oportUpdate(
-          id,
+        oportUpdate(id,
           values.empresaId.value,
           values.colabId.value,
           values.clienteId.value,
@@ -308,7 +307,7 @@ const id = useParams()
               <Card>
                 <CardHeader>
                   {checkAprovada(values.fase.value)}
-                  <Link to={"/tabelas/oportunidade/cotacao/" + id}>
+                  <Link to={"/tabelas/oportunidade/cotacao/" + id.id}>
                     <Tooltip title="Cotação" placement="top" interactive>
                       <Button
                         style={{ float: "right" }}
@@ -321,7 +320,7 @@ const id = useParams()
                     </Tooltip>
                   </Link>
 
-                  <Link to={"/tabelas/oportunidade/parcela/" + id}>
+                  <Link to={"/tabelas/oportunidade/parcela/" + id.id}>
                     <Tooltip title="Parcelas" placement="top" interactive>
                       <Button
                         style={{ float: "right" }}
@@ -356,13 +355,13 @@ const id = useParams()
                         </option>
                       </Input>
                       {values.empresaId.error === "has-danger" ? (
-                        <label className="error">
+                        <Label className="error">
                           {values.empresaId.message}
-                        </label>
+                        </Label>
                       ) : null}
                     </FormGroup>
                     <Row><Col md="4">
-                    <label>Colaborador</label>
+                    <Label>Colaborador</Label>
                       <FormGroup className={`has-label ${values.colabId.error}`}>
                         <Input
                           disabled
@@ -374,7 +373,7 @@ const id = useParams()
                           defaultValue={data1.nome}
                         />
                         {values.colabId.error === "has-danger" ? (
-                          <label className="error">{values.colabId.message}</label>
+                          <Label className="error">{values.colabId.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -390,7 +389,7 @@ const id = useParams()
                             value={values.data.value}
                           />
                           {values.data.error === "has-danger" ? (
-                            <label className="error">{values.data.message}</label>
+                            <Label className="error">{values.data.message}</Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -418,9 +417,9 @@ const id = useParams()
                             <option value={5}>Reprovada</option>
                           </Input>
                           {values.fase.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.fase.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -453,9 +452,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.clienteId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.clienteId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -485,9 +484,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.contato.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.contato.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -517,9 +516,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.representanteId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.representanteId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -551,9 +550,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.UndNegId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.UndNegId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -583,9 +582,9 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.itmControleId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.itmControleId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
@@ -615,16 +614,16 @@ const id = useParams()
                             ))}
                           </Input>
                           {values.segmetId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.segmetId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
                       <Col md="4">
-                      <label>Código</label>
+                      <Label>Código</Label>
                         <FormGroup className={`has-label ${values.cod.error}`}>
                           <Input
                             disabled
@@ -636,12 +635,12 @@ const id = useParams()
                             value={values.cod.value}
                           />{" "}
                           {values.cod.error === "has-danger" ? (
-                            <label className="error">{values.cod.message}</label>
+                            <Label className="error">{values.cod.message}</Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="8">
-                      <label>Descrição</label>
+                      <Label>Descrição</Label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="desc"
@@ -652,14 +651,14 @@ const id = useParams()
                             value={values.desc.value}
                           />{" "}
                           {values.desc.error === "has-danger" ? (
-                            <label className="error">{values.desc.message}</label>
+                            <Label className="error">{values.desc.message}</Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
                       <Col>
-                      <label>Narrativa</label>
+                      <Label>Narrativa</Label>
                         <FormGroup className={`has-label ${optional.narrativa.error}`}>
                           <Input
                             name="narrativa"
@@ -670,7 +669,7 @@ const id = useParams()
                             value={optional.narrativa.value}
                           />{" "}
                           {optional.narrativa.error === "has-danger" ? (
-                            <label className="error">{optional.narrativa.message}</label>
+                            <Label className="error">{optional.narrativa.message}</Label>
                           ) : null}
                         </FormGroup>
                       </Col>

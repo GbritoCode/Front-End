@@ -110,7 +110,7 @@ class Tabela_Cliente extends Component {
                 <CardTitle tag="h4">
                   Clientes
                   <Link to={`/cliente_cadastro/false`}>
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",

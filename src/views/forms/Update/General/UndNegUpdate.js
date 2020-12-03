@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -52,7 +53,7 @@ function UndNegUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/und_neg/${id}`);
+      const response = await axios(`http://localhost:51314/und_neg/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -181,7 +182,7 @@ function UndNegUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -201,13 +202,13 @@ function UndNegUpdatee() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Descrição da Unidade de Negócio</label>
+                        <Label>Descrição da Unidade de Negócio</Label>
                         <FormGroup
                           className={`has-label ${values.descUndNeg.error}`}
                         >
@@ -220,9 +221,9 @@ function UndNegUpdatee() {
                             value={values.descUndNeg.value}
                           />
                           {values.descUndNeg.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.descUndNeg.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/general/und_neg`}>

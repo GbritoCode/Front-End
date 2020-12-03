@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -65,7 +66,7 @@ const id = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/${id}`);
+      const response = await axios(`http://localhost:51314/colab/${id.id}`);
       const response1 = await axios(`http://localhost:51314/fornec`);
       const response2 = await axios(`http://localhost:51314/perfil`);
       const response3 = await axios(
@@ -271,8 +272,7 @@ const id = useParams()
     if (valid && filled) {
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
       dispatch(
-        ColabUpdate(
-          id,
+        ColabUpdate(id,
           cpfdb,
           values.fornecId.value,
           values.PerfilId.value,
@@ -314,7 +314,7 @@ const id = useParams()
                 <Col md="12">
                   <Card>
                     <CardHeader>
-                      <Link to={"/tables/colab/comp/" + id}>
+                      <Link to={"/tables/colab/comp/" + id.id}>
                         <Tooltip title="Complemento" placement="top" interactive>
                           <Button
                             style={{ float: "right" }}
@@ -330,7 +330,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -350,13 +350,13 @@ const id = useParams()
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        CPF</label>
+                        <Label>CPF</Label>
                         <FormGroup className={`has-label ${values.cpf.error}`}>
                           <Input
                             maxLength={18}
@@ -372,13 +372,13 @@ const id = useParams()
                             }}
                           />
                           {values.cpf.error === "has-danger" ? (
-                            <label className="error">{values.cpf.message}</label>
+                            <Label className="error">{values.cpf.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="4">
                             {" "}
-                            Nome</label>
+                            <Label>Nome</Label>
                             <FormGroup
                               className={`has-label ${values.nome.error}`}
                             >
@@ -391,14 +391,14 @@ const id = useParams()
                                 value={values.nome.value}
                               />
                               {values.nome.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.nome.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            Data de Adimissão</label>
+                          <Label>Data de Adimissão</Label>
                             <FormGroup
                               className={`has-label ${values.dtAdmiss.error}`}
                             >
@@ -411,15 +411,15 @@ const id = useParams()
                                 value={values.dtAdmiss.value}
                               />
                               {values.dtAdmiss.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.dtAdmiss.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            Celular</label>
+                            <Label>Celular</Label>
                             <FormGroup
                               className={`has-label ${values.cel.error}`}
                             >
@@ -439,9 +439,9 @@ const id = useParams()
                                 value={values.cel.value}
                               />
                               {values.cel.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cel.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -449,7 +449,7 @@ const id = useParams()
                         <Row>
                           <Col md="6">
                             {" "}
-                            Fornecedor</label>
+                            <Label>Fornecedor</Label>
                             <FormGroup
                               className={`has-label ${values.fornecId.error}`}
                             >
@@ -474,14 +474,14 @@ const id = useParams()
                                 ))}
                               </Input>
                               {values.fornecId.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.fornecId.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="6">
-                            Perfil</label>
+                          <Label>Perfil</Label>
                             <FormGroup
                               className={`has-label ${values.PerfilId.error}`}
                             >
@@ -506,9 +506,9 @@ const id = useParams()
                                 ))}
                               </Input>
                               {values.PerfilId.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.PerfilId.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -517,7 +517,7 @@ const id = useParams()
                         <Row>
                           <Col md="6">
                             {" "}
-                            Skype</label>
+                            <Label>Skype</Label>
                             <FormGroup
                               className={`has-label ${values.skype.error}`}
                             >
@@ -530,15 +530,15 @@ const id = useParams()
                                 value={values.skype.value}
                               />
                               {values.skype.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.skype.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="6">
                             {" "}
-                            Email</label>
+                            <Label>Email</Label>
                             <FormGroup
                               className={`has-label ${values.email.error}`}
                             >
@@ -551,15 +551,15 @@ const id = useParams()
                                 value={values.email.value}
                               />
                               {values.email.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.email.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                         </Row>
 
-                        Especialidade</label>
+                        <Label>Especialidade</Label>
                         <FormGroup
                           claclassName={`has-label ${values.espec.error}`}
                         >
@@ -572,9 +572,9 @@ const id = useParams()
                             value={values.espec.value}
                           />
                           {values.espec.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.espec.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/colab`}>

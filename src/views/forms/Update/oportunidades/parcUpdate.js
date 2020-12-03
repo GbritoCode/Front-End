@@ -46,6 +46,7 @@ export default function ParcelaUpdate() {
   const { id } = useParams();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
@@ -57,7 +58,7 @@ export default function ParcelaUpdate() {
   const optionalSchema = {
     pedidoCliente: { value: "", error: "", message: "" },
     situacao: { value: "", error: "", message: "" },
-    dtLiquidacao: { value: "", error: "", message: "" },
+    dtLiquidacao: { value: year + "-" + month + "-" + date, error: "", message: "" },
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" },
   }
@@ -126,28 +127,22 @@ export default function ParcelaUpdate() {
     return false;
   };
 
-  const checkPendente = (values) => {
-    if (values.situacao.value == "1") {
-      return true
-    }
-  }
 
-  const checkAberta = (values) => {
-    if (values.situacao.value == "2") {
-      return true
+  const valorPagoChange = (value) => {
+    const vPago = value.replace(/[.,]+/g, "")
+    var parc = document.getElementsByName("vlrParcela")[0].value.replace(/[.,]+/g, "")
+    const saldo = parc - vPago   
+    if (vPago>parc){
+      setOptional((prevState) => ({
+        ...prevState,
+        vlrPago: { error:"has-danger", message:"O valor pago não pode ser maior do que a parcela" },
+      }));
+  return
     }
-  }
-
-  const checkParcial = (values) => {
-    if (values.situacao.value == "3") {
-      return true
-    }
-  }
-
-  const checkLiquidada = (values) => {
-    if (values.situacao.value == "4") {
-      return true
-    }
+    setOptional((prevState) => ({
+        ...prevState,
+        saldo: { value: normalizeCalcCurrency(JSON.stringify((saldo))) },
+      }));
   }
   const handleChange = (event, name, type) => {
     event.persist();
@@ -174,6 +169,12 @@ export default function ParcelaUpdate() {
         setOptional((prevState) => ({
           ...prevState,
           [name]: { value: target },
+        }));
+        break
+        case "currencyOpt":
+        setOptional((prevState) => ({
+          ...prevState,
+          [name]: { value: normalizeCurrency(target) },
         }));
         break
       case "currency":
@@ -228,8 +229,7 @@ export default function ParcelaUpdate() {
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        parcelaUpdate(
-          id,
+        parcelaUpdate(id,
           values.oportunidadeId.value,
           values.parcela.value,
           vlrParceladb,
@@ -276,7 +276,7 @@ export default function ParcelaUpdate() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Oportunidade</label>
+                      <Label>Oportunidade</Label>
                         <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                           <Input
                             disabled
@@ -298,13 +298,13 @@ export default function ParcelaUpdate() {
                           </Input>
 
                           {values.oportunidadeId.error === "has-danger" ? (
-                            <label className="error">{values.oportunidadeId.message}</label>
+                            <Label className="error">{values.oportunidadeId.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Parcela</label>
+                            <Label>Parcela</Label>
                             <FormGroup
                               className={`has-label ${values.parcela.error}`}
                             >
@@ -318,15 +318,15 @@ export default function ParcelaUpdate() {
                                 value={values.parcela.value}
                               />
                               {values.parcela.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.parcela.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Valor da Parcela</label>
+                            <Label>Valor da Parcela</Label>
                             <FormGroup
                               className={`has-label ${values.vlrParcela.error}`}
                             >
@@ -341,15 +341,15 @@ export default function ParcelaUpdate() {
                               />
 
                               {values.vlrParcela.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrParcela.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Data da Emissão</label>
+                            <Label>Data da Emissão</Label>
                             <FormGroup
                               className={`has-label ${values.dtEmissao.error}`}
                             >
@@ -363,9 +363,9 @@ export default function ParcelaUpdate() {
                                 value={values.dtEmissao.value}
                               />
                               {values.dtEmissao.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.dtEmissao.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -373,7 +373,7 @@ export default function ParcelaUpdate() {
 
                         <Row>
                           <Col md="4">
-                          <label>Data de Vencimento</label>
+                          <Label>Data de Vencimento</Label>
                             <FormGroup
                               className={`has-label ${values.dtVencimento.error}`}
                             >
@@ -387,14 +387,14 @@ export default function ParcelaUpdate() {
                                 value={values.dtVencimento.value}
                               />
                               {values.dtVencimento.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.dtVencimento.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Nota Fiscal</label>
+                          <Label>Nota Fiscal</Label>
                             <FormGroup
                               className={`has-label ${values.notaFiscal.error}`}
                             >
@@ -408,14 +408,14 @@ export default function ParcelaUpdate() {
                                 value={values.notaFiscal.value}
                               />
                               {values.notaFiscal.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.notaFiscal.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Pedido Cliente</label>
+                          <Label>Pedido Cliente</Label>
                             <FormGroup
                               className={`has-label ${optional.pedidoCliente.error}`}
                             >
@@ -430,9 +430,9 @@ export default function ParcelaUpdate() {
                                 value={optional.pedidoCliente.value}
                               />
                               {optional.pedidoCliente.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.pedidoCliente.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -440,56 +440,37 @@ export default function ParcelaUpdate() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <Label>situação</Label>
-                            <FormGroup check >
-                              <Label check>
-                                <Input
-                                disabled
-                                  checked={checkPendente(optional)}
-                                  name="situacao"
-                                  type="radio"
-                                  onChange={(event) => handleChange(event, "situacao", "optional")}
-                                  value={1}
-                                />{' '}
-                    Pendente
-                    </Label>
-                              <Label check>
-                                <Input
-                                disabled
-                                checked={checkAberta(optional)}
-                                  name="situacao"
-                                  type="radio"
-                                  onChange={(event) => handleChange(event, "situacao", "optional")}
-                                  value={2}
-                                />
-                    Aberta
-                    </Label>
-                              <Label check>
-                                <Input
-                                disabled
-                                checked={checkParcial(optional)}
-                                  name="situacao"
-                                  type="radio"
-                                  onChange={(event) => handleChange(event, "situacao", "optional")}
-                                  value={3}
-                                />
-                    Parcial
-                    </Label>
-                              <Label check>
-                                <Input
-                                disabled
-                                checked={checkLiquidada(optional)}
-                                  name="situacao"
-                                  type="radio"
-                                  onChange={(event) => handleChange(event, "situacao", "optional")}
-                                  value={4}
-                                />
-                    Liquidada
-                    </Label>
+                            <Label>Situação</Label>
+                            <FormGroup
+                              className={`has-label ${optional.situacao.error}`}
+                            >
+                            <Input
+                                name="situacao"
+                                type="select"
+                                onChange={(event) =>
+                                  handleChange(event, "situacao", "optional")
+                                }
+                                value={optional.situacao.value}
+                              >
+                                <option disabled value="">
+                                  {" "}
+                        Selecione situação{" "}
+                                </option>{" "}
+                                <option value={1}>Pendente</option>
+                                <option value={2}>Aberta</option>
+                                <option value={3}>Parcial</option>
+                                <option value={4}>Liquidada</option>
+                              </Input>
+                              {optional.situacao.error === "has-danger" ? (
+                                <Label className="error">
+                                  {optional.situacao.message}
+                                </Label>
+                              ) : null}
                             </FormGroup>
+
                           </Col>
                           <Col md="4">
-                          <label>Data Liquidação</label>
+                          <Label>Data Liquidação</Label>
                             <FormGroup
                               className={`has-label ${optional.dtLiquidacao.error}`}
                             >
@@ -503,14 +484,14 @@ export default function ParcelaUpdate() {
                                 value={optional.dtLiquidacao.value}
                               />
                               {optional.dtLiquidacao.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.dtLiquidacao.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Valor Pago</label>
+                          <Label>Valor Pago</Label>
                             <FormGroup
                               className={`has-label ${optional.vlrPago.error}`}
                             >
@@ -518,15 +499,16 @@ export default function ParcelaUpdate() {
                                 name="vlrPago"
                                 type="text"
                                 onChange={(event) => {
-                                  handleChange(event, "vlrPago", "optional");
+                                  handleChange(event, "vlrPago", "currencyOpt");
+                                  valorPagoChange(event.target.value)
                                 }
                                 }
                                 value={optional.vlrPago.value}
                               />
                               {optional.vlrPago.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.vlrPago.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -534,7 +516,7 @@ export default function ParcelaUpdate() {
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Saldo</label>
+                          <Label>Saldo</Label>
                             <FormGroup
                               className={`has-label ${optional.saldo.error}`}
                             >
@@ -543,15 +525,15 @@ export default function ParcelaUpdate() {
                                 name="saldo"
                                 type="text"
                                 onChange={(event) => {
-                                  handleChange(event, "saldo", "optional");
+                                  handleChange(event, "saldo", "currencyOpt");
                                 }
                                 }
                                 value={optional.saldo.value}
                               />
                               {optional.saldo.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.saldo.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

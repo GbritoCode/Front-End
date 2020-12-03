@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -56,7 +57,7 @@ const id = useParams()
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/perfil/${id}`);
+      const response1 = await axios(`http://localhost:51314/perfil/${id.id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -177,7 +178,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -197,13 +198,13 @@ const id = useParams()
                             </option>
                           </Input>{" "}
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Descrição Área</label>
+                        <Label>Descrição Área</Label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="desc"
@@ -214,7 +215,7 @@ const id = useParams()
                             value={values.desc.value}
                           />{" "}
                           {values.desc.error === "has-danger" ? (
-                            <label className="error">{values.desc.message}</label>
+                            <Label className="error">{values.desc.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/aux/perfil`}>

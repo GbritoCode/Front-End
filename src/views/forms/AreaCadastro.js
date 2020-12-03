@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -168,7 +169,7 @@ export default function CadastroCliente() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -186,13 +187,13 @@ export default function CadastroCliente() {
                       </option>
                     </Input>{" "}
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
 
-                  <label>Descrição Área</label>
+                  <Label>Descrição Área</Label>
                   <FormGroup className={`has-label ${values.descArea.error}`}>
                     <Input
                       name="descArea"
@@ -203,7 +204,7 @@ export default function CadastroCliente() {
                       value={values.descArea.value}
                     />{" "}
                     {values.descArea.error === "has-danger" ? (
-                      <label className="error">{values.descArea.message}</label>
+                      <Label className="error">{values.descArea.message}</Label>
                     ) : null}
                   </FormGroup>
 

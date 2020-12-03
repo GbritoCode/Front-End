@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Label,
   Form,
   Input,
   Row,
@@ -65,7 +66,7 @@ export default function CliCompUpdatee() {
     async function loadData() {
       setIsLoading(true);
       const response = await axios(
-        `http://localhost:51314/cliente/complem/1/${id}`
+        `http://localhost:51314/cliente/complem/1/${id.id}`
       );
       const response1 = await axios(`http://localhost:51314/condPgmto`);
       const response2 = await axios(
@@ -204,8 +205,7 @@ export default function CliCompUpdatee() {
 
     if (valid && filled) {
       dispatch(
-        CliCompUpdate(
-          id,
+        CliCompUpdate(id,
           values.clienteId.value,
           values.CondPgmtoId.value,
           values.rzSoc.value,
@@ -256,7 +256,7 @@ export default function CliCompUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Cliente</label>
+                      <Label>Cliente</Label>
                         <FormGroup
                           className={`has-label ${values.clienteId.error}`}
                         >
@@ -279,13 +279,13 @@ export default function CliCompUpdatee() {
                             </option>
                           </Input>
                           {values.clienteId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.clienteId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Razão Social</label>
+                        <Label>Razão Social</Label>
                         <FormGroup className={`has-label ${values.rzSoc.error}`}>
                           <Input
                             id="rzSoc"
@@ -297,12 +297,12 @@ export default function CliCompUpdatee() {
                             value={values.rzSoc.value}
                           />
                           {values.rzSoc.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.rzSoc.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Nome Abreviado</label>
+                        <Label>Nome Abreviado</Label>
                         <FormGroup
                           className={`has-label ${values.nomeAbv.error}`}
                         >
@@ -316,12 +316,12 @@ export default function CliCompUpdatee() {
                             type="text"
                           />
                           {values.nomeAbv.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.nomeAbv.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Nome Fantasia</label>
+                        <Label>Nome Fantasia</Label>
                         <FormGroup
                           className={`has-label ${values.fantasia.error}`}
                         >
@@ -334,15 +334,15 @@ export default function CliCompUpdatee() {
                             type="text"
                           />
                           {values.fantasia.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.fantasia.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
                         <Row>
                           <Col md="4">
-                          <label>CEP</label>
+                          <Label>CEP</Label>
                             <FormGroup
                               className={`has-label ${values.cep.error}`}
                             >
@@ -356,14 +356,14 @@ export default function CliCompUpdatee() {
                                 type="text"
                               />
                               {values.cep.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cep.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Rua</label>
+                          <Label>Rua</Label>
                             <FormGroup
                               className={`has-label ${values.rua.error}`}
                             >
@@ -377,15 +377,15 @@ export default function CliCompUpdatee() {
                                 type="text"
                               />
                               {values.rua.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.rua.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
 
                           <Col md="4">
-                          <label>Número</label>
+                          <Label>Número</Label>
                             <FormGroup
                               className={`has-label ${values.numero.error}`}
                             >
@@ -399,16 +399,16 @@ export default function CliCompUpdatee() {
                                 type="numeric"
                               />
                               {values.numero.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.numero.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Bairro</label>
+                          <Label>Bairro</Label>
                             <FormGroup
                               className={`has-label ${values.bairro.error}`}
                             >
@@ -422,14 +422,14 @@ export default function CliCompUpdatee() {
                                 type="text"
                               />
                               {values.bairro.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.bairro.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Cidade</label>
+                          <Label>Cidade</Label>
                             <FormGroup
                               className={`has-label ${values.cidade.error}`}
                             >
@@ -443,14 +443,14 @@ export default function CliCompUpdatee() {
                                 type="text"
                               />
                               {values.cidade.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cidade.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>UF</label>
+                          <Label>UF</Label>
                             <FormGroup className={`has-label ${values.uf.error}`}>
                               <Input
                                 disabled
@@ -494,16 +494,16 @@ export default function CliCompUpdatee() {
                                 <option value="TO">Tocantins</option>
                               </Input>
                               {values.uf.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.uf.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Inscrição Municipal</label>
+                          <Label>Inscrição Municipal</Label>
                             <FormGroup
                               className={`has-label ${values.inscMun.error}`}
                             >
@@ -516,14 +516,14 @@ export default function CliCompUpdatee() {
                                 type="numeric"
                               />
                               {values.inscMun.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.inscMun.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Inscrição Estadual</label>
+                          <Label>Inscrição Estadual</Label>
                             <FormGroup
                               className={`has-label ${values.inscEst.error}`}
                             >
@@ -536,14 +536,14 @@ export default function CliCompUpdatee() {
                                 type="numeric"
                               />
                               {values.inscEst.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.inscEst.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Condição de Pagamento</label>
+                          <Label>Condição de Pagamento</Label>
                             <FormGroup
                               className={`has-label ${values.CondPgmtoId.error}`}
                             >
@@ -568,9 +568,9 @@ export default function CliCompUpdatee() {
                                 ))}
                               </Input>
                               {values.CondPgmtoId.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.CondPgmtoId.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

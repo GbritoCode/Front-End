@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Label,
   Form,
   Input,
   Row,
@@ -59,7 +60,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/tipoComiss/${id}`);
+      const response1 = await axios(`http://localhost:51314/tipoComiss/${id.id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -196,7 +197,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -216,14 +217,14 @@ const id = useParams()
                             </option>
                           </Input>{" "}
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md='4'>
-                          <label>Descrição</label>
+                          <Label>Descrição</Label>
                             <FormGroup className={`has-label ${values.desc.error}`}>
                               <Input
                                 name="desc"
@@ -232,12 +233,12 @@ const id = useParams()
                                 value={values.desc.value}
                               />
                               {values.desc.error === "has-danger" ? (
-                                <label className="error">{values.desc.message}</label>
+                                <Label className="error">{values.desc.message}</Label>
                               ) : null}
                             </FormGroup>
                           </Col><Col md='4'>
 
-                          <label>Percentual</label>
+                          <Label>Percentual</Label>
                             <FormGroup className={`has-label ${values.prcnt.error}`}>
                               <Input
                                 name="prcnt"
@@ -246,12 +247,12 @@ const id = useParams()
                                 value={values.prcnt.value}
                               />
                               {values.prcnt.error === "has-danger" ? (
-                                <label className="error">{values.prcnt.message}</label>
+                                <Label className="error">{values.prcnt.message}</Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md='4'>
-                          <label>Base de Comissão</label>
+                          <Label>Base de Comissão</Label>
                             <FormGroup className={`has-label ${values.bsComiss.error}`}>
                               <Input
                                 name="bsComiss"
@@ -271,9 +272,9 @@ const id = useParams()
                                 <option value="4">Fixado</option>
                               </Input>
                               {values.bsComiss.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.bsComiss.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

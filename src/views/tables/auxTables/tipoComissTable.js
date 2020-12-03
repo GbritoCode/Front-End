@@ -99,7 +99,7 @@ class tipoComissTable extends Component {
                 <CardTitle tag="h4">
                   Tipos de Comissão
                   <Link to="/cadastro/aux/tipoComiss">
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",

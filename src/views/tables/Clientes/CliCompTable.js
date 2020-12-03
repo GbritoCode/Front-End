@@ -26,6 +26,7 @@ import api from "~/services/api";
 import { Link } from "react-router-dom";
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
+import { ArrowBackIos } from "@material-ui/icons";
 
 class Tabela_CliComp extends Component {
   state = {
@@ -109,7 +110,7 @@ class Tabela_CliComp extends Component {
                 <CardTitle tag="h4">
                   Complemento de Cliente
                   <Link to={`/cadastro/cliente/comp/${id}`}>
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",
@@ -121,26 +122,16 @@ class Tabela_CliComp extends Component {
                     </Tooltip>
                   </Link>
                   <Link to={`/cliente_update/${id}/true`}>
+                    <Tooltip title="Voltar">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <ArrowBackIos  />
                     </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>

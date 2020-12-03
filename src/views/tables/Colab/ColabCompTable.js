@@ -26,6 +26,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 
 import { Link } from "react-router-dom";
+import { ArrowBackIos } from "@material-ui/icons";
 
 /*eslint-disable eqeqeq*/
 class ColabCompTable extends Component {
@@ -138,7 +139,7 @@ class ColabCompTable extends Component {
                 <CardTitle tag="h4">
                   Complemento de Colaborador
                     <Link to={`/cadastro/colab/comp/${id}`}>
-                    <Tooltip title="novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
                           float: "right",
@@ -150,26 +151,16 @@ class ColabCompTable extends Component {
                     </Tooltip>
                   </Link>
                   <Link to={`/colab/update/${id}`}>
+                  <Tooltip title="Voltar">
                     <Button
-                      style={{
-                        float: "right",
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 5,
+                          float: "right",
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <ArrowBackIos  />
                     </Button>
+                    </Tooltip>
                   </Link>
                 </CardTitle>
               </CardHeader>

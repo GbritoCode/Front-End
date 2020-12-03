@@ -16,12 +16,7 @@ export const useInput = (initialValue, type) => {
     }
     return false;
   };
-  const verifyLength = (value, length) => {
-    if (value.length >= length) {
-      return true;
-    }
-    return false;
-  };
+  
   // function that verifies if value contains only numbers
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");

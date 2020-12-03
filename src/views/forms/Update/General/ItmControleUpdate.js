@@ -56,7 +56,7 @@ function ItmCtrlUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/itm_controle/${id}`);
+      const response = await axios(`http://localhost:51314/itm_controle/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -186,8 +186,7 @@ function ItmCtrlUpdatee() {
 
     if (valid && filled) {
       dispatch(
-        itmControleUpdate(
-          id,
+        itmControleUpdate(id,
           values.empresaId.value,
           values.descItem.value,
           values.tipoItem.value,
@@ -229,7 +228,7 @@ function ItmCtrlUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -249,12 +248,12 @@ function ItmCtrlUpdatee() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Descrição do Item</label>
+                        <Label>Descrição do Item</Label>
                         <FormGroup
                           className={`has-label ${values.descItem.error}`}
                         >
@@ -267,12 +266,12 @@ function ItmCtrlUpdatee() {
                             value={values.descItem.value}
                           />
                           {values.descItem.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.descItem.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Tipo de Item</label>
+                        <Label>Tipo de Item</Label>
                         <FormGroup
                           className={`has-label ${values.tipoItem.error}`}
                         >
@@ -285,12 +284,12 @@ function ItmCtrlUpdatee() {
                             value={values.tipoItem.value}
                           />
                           {values.tipoItem.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.tipoItem.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Conta Contábil</label>
+                        <Label>Conta Contábil</Label>
                         <FormGroup
                           className={`has-label ${values.contaContabil.error}`}
                         >
@@ -303,12 +302,12 @@ function ItmCtrlUpdatee() {
                             value={values.contaContabil.value}
                           />
                           {values.contaContabil.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.contaContabil.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
-                        <label>Centro de Custo</label>
+                        <Label>Centro de Custo</Label>
                         <FormGroup
                           className={`has-label ${values.centCusto.error}`}
                         >
@@ -321,9 +320,9 @@ function ItmCtrlUpdatee() {
                             value={values.centCusto.value}
                           />
                           {values.centCusto.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.centCusto.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/general/itm_controle`}>

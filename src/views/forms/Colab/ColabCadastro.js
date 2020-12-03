@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   Form,
+  Label,
   Input,
   FormGroup,
   Row,
@@ -277,7 +278,7 @@ export default function ColabCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -295,13 +296,13 @@ export default function ColabCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
 
-                  <label>CPF</label>
+                  <Label>CPF</Label>
                   <FormGroup className={`has-label ${values.cpf.error}`}>
                     <Input
                       maxLength={18}
@@ -315,13 +316,13 @@ export default function ColabCadastro() {
                       }}
                     />
                     {values.cpf.error === "has-danger" ? (
-                      <label className="error">{values.cpf.message}</label>
+                      <Label className="error">{values.cpf.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Nome</label>
+                      <Label>Nome</Label>
                       <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input
                           name="nome"
@@ -332,12 +333,12 @@ export default function ColabCadastro() {
                           value={values.nome.value}
                         />
                         {values.nome.error === "has-danger" ? (
-                          <label className="error">{values.nome.message}</label>
+                          <Label className="error">{values.nome.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <label>Data de Adimissão</label>
+                    <Label>Data de Adimissão</Label>
                       <FormGroup
                         className={`has-label ${values.dtAdmiss.error}`}
                       >
@@ -350,15 +351,15 @@ export default function ColabCadastro() {
                           value={values.dtAdmiss.value}
                         />
                         {values.dtAdmiss.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.dtAdmiss.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Celular</label>
+                      <Label>Celular</Label>
                       <FormGroup className={`has-label ${values.cel.error}`}>
                         <Input
                           maxLength={11}
@@ -378,7 +379,7 @@ export default function ColabCadastro() {
                           value={values.cel.value}
                         />
                         {values.cel.error === "has-danger" ? (
-                          <label className="error">{values.cel.message}</label>
+                          <Label className="error">{values.cel.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -386,7 +387,7 @@ export default function ColabCadastro() {
                   <Row>
                     <Col md="6">
                       {" "}
-                      <label>Fornecedor</label>
+                      <Label>Fornecedor</Label>
                       <FormGroup
                         className={`has-label ${values.fornecId.error}`}
                       >
@@ -408,14 +409,14 @@ export default function ColabCadastro() {
                           ))}
                         </Input>
                         {values.fornecId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.fornecId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="6">
-                    <label>Perfil</label>
+                    <Label>Perfil</Label>
                       <FormGroup
                         className={`has-label ${values.PerfilId.error}`}
                       >
@@ -440,9 +441,9 @@ export default function ColabCadastro() {
                           ))}
                         </Input>
                         {values.PerfilId.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.PerfilId.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -451,7 +452,7 @@ export default function ColabCadastro() {
                   <Row>
                     <Col md="6">
                       {" "}
-                      <label>Skype</label>
+                      <Label>Skype</Label>
                       <FormGroup className={`has-label ${values.skype.error}`}>
                         <Input
                           name="skype"
@@ -462,15 +463,15 @@ export default function ColabCadastro() {
                           value={values.skype.value}
                         />
                         {values.skype.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.skype.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="6">
                       {" "}
-                      <label>Email</label>
+                      <Label>Email</Label>
                       <FormGroup className={`has-label ${values.email.error}`}>
                         <Input
                           name="email"
@@ -481,15 +482,15 @@ export default function ColabCadastro() {
                           value={values.email.value}
                         />
                         {values.email.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.email.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
 
-                  <label>Especialidade</label>
+                  <Label>Especialidade</Label>
                   <FormGroup claclassName={`has-label ${values.espec.error}`}>
                     <Input
                       name="espec"
@@ -498,7 +499,7 @@ export default function ColabCadastro() {
                       value={values.espec.value}
                     />
                     {values.espec.error === "has-danger" ? (
-                      <label className="error">{values.espec.message}</label>
+                      <Label className="error">{values.espec.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/colab`}>

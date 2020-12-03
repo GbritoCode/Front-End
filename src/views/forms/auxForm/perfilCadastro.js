@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   Form,
+  Label,
   Input,
   FormGroup,
   Row,
@@ -166,7 +167,7 @@ export default function PerfilCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -184,12 +185,12 @@ export default function PerfilCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  Descrição</label>
+                  <Label>Descrição</Label>
                   <FormGroup className={`has-label ${values.desc.error}`}>
                     <Input
                       name="license"
@@ -198,7 +199,7 @@ export default function PerfilCadastro() {
                       value={values.desc.value}
                     />
                     {values.desc.error === "has-danger" ? (
-                      <label className="error">{values.desc.message}</label>
+                      <Label className="error">{values.desc.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/aux/perfil`}>

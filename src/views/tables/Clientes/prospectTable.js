@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
@@ -90,18 +90,17 @@ export default function ProspectTable() {
                 {/* use this button to remove the data row */}
                 <Button
                   onClick={() => {
-                    var data = data;
-                    data.find((o, i) => {
+                    var data1 = []
+                    data1.find((o, i) => {
                       if (o.idd === key) {
                         console.log(o.id)
                         axios.delete(`http://localhost:51314/cliente/${o.id}`);
-                        data.splice(i, 1);
+                        data1.splice(i, 1);
 
                         return true;
                       }
                       return false;
                     });
-                    setData({ data: data });
                   }}
                   color="danger"
                   size="sm"
@@ -116,7 +115,7 @@ export default function ProspectTable() {
       );
     }
     loadData()
-  }, [])
+  }, [dispatch])
 
 
 
@@ -129,7 +128,7 @@ export default function ProspectTable() {
               <CardTitle tag="h4">
                 Clientes
                   <Link to={`/cliente_cadastro/true`}>
-                  <Tooltip title="novo" placement="top" interactive>
+                  <Tooltip title="Novo" placement="top" interactive>
                     <Button
                       style={{
                         float: "right",

@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
+import React, { useRef, Fragment, useEffect, useState} from "react";
 
 // reactstrap components
 import {
@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Label,
   Form,
   Input,
   Row,
@@ -51,7 +52,7 @@ const id = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/prodt/${id}`);
+      const response = await axios(`http://localhost:51314/prodt/${id.id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -178,7 +179,7 @@ const id = useParams()
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -198,13 +199,13 @@ const id = useParams()
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Descrição do Produto</label>
+                        <Label>Descrição do Produto</Label>
                         <FormGroup
                           className={`has-label ${values.descProdt.error}`}
                         >
@@ -217,9 +218,9 @@ const id = useParams()
                             value={values.descProdt.value}
                           />
                           {values.descProdt.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.descProdt.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Link to={`/tabelas/general/prodt`}>

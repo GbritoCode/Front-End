@@ -25,6 +25,7 @@ import {
   CardTitle,
   Form,
   Input,
+  Label,
   FormGroup,
   Row,
   Col,
@@ -166,7 +167,7 @@ export default function UndNegCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -184,13 +185,13 @@ export default function UndNegCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
 
-                  <label>Descrição da Unidade de Negócio</label>
+                  <Label>Descrição da Unidade de Negócio</Label>
                   <FormGroup className={`has-label ${values.descUndNeg.error}`}>
                     <Input
                       name="descUndNeg"
@@ -201,9 +202,9 @@ export default function UndNegCadastro() {
                       value={values.descUndNeg.value}
                     />
                     {values.descUndNeg.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.descUndNeg.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/general/und_neg`}>

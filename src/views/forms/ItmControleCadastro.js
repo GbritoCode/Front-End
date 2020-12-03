@@ -26,6 +26,7 @@ import {
   Form,
   Input,
   FormGroup,
+  Label,
   Row,
   Col,
 } from "reactstrap";
@@ -203,7 +204,7 @@ export default function ItmControleCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -221,12 +222,12 @@ export default function ItmControleCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Descrição do Item</label>
+                  <Label>Descrição do Item</Label>
                   <FormGroup className={`has-label ${values.descItem.error}`}>
                     <Input
                       name="descItem"
@@ -237,10 +238,10 @@ export default function ItmControleCadastro() {
                       value={values.descItem.value}
                     />
                     {values.descItem.error === "has-danger" ? (
-                      <label className="error">{values.descItem.message}</label>
+                      <Label className="error">{values.descItem.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <label>Tipo de Item</label>
+                  <Label>Tipo de Item</Label>
                   <FormGroup className={`has-label ${values.tipoItem.error}`}>
                     <Input
                       name="tipoItem"
@@ -251,10 +252,10 @@ export default function ItmControleCadastro() {
                       value={values.tipoItem.value}
                     />
                     {values.tipoItem.error === "has-danger" ? (
-                      <label className="error">{values.tipoItem.message}</label>
+                      <Label className="error">{values.tipoItem.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <label>Conta Contábil</label>
+                  <Label>Conta Contábil</Label>
                   <FormGroup
                     className={`has-label ${values.contaContabil.error}`}
                   >
@@ -267,12 +268,12 @@ export default function ItmControleCadastro() {
                       value={values.contaContabil.value}
                     />
                     {values.contaContabil.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.contaContabil.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Centro de Custo</label>
+                  <Label>Centro de Custo</Label>
                   <FormGroup className={`has-label ${values.centCusto.error}`}>
                     <Input
                       name="centCusto"
@@ -283,9 +284,9 @@ export default function ItmControleCadastro() {
                       value={values.centCusto.value}
                     />
                     {values.centCusto.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.centCusto.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Link to={`/tabelas/general/itm_controle`}>

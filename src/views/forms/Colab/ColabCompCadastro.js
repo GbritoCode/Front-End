@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect} from "react";
 
 // reactstrap components
 import {
@@ -25,6 +25,7 @@ import {
   CardTitle,
   Form,
   Input,
+  Label,
   FormGroup,
   Row,
   Col,
@@ -188,7 +189,7 @@ export default function ColabCompCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Colaborador</label>
+                <Label>Colaborador</Label>
                   <FormGroup className={`has-label ${values.colabId.error}`}>
                     <Input
                       disabled
@@ -210,13 +211,13 @@ export default function ColabCompCadastro() {
                     </Input>
 
                     {values.colabId.error === "has-danger" ? (
-                      <label className="error">{values.colabId.message}</label>
+                      <Label className="error">{values.colabId.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Nível</label>
+                      <Label>Nível</Label>
                       <FormGroup className={`has-label ${values.nivel.error}`}>
                         <Input
                           name="nivel"
@@ -236,15 +237,15 @@ export default function ColabCompCadastro() {
                           <option value={4}>Sênior</option>
                         </Input>
                         {values.nivel.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.nivel.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Tipo de valor</label>
+                      <Label>Tipo de valor</Label>
                       <FormGroup
                         className={`has-label ${values.tipoValor.error}`}
                       >
@@ -264,15 +265,15 @@ export default function ColabCompCadastro() {
                           <option value={2}>Fixo</option>
                         </Input>
                         {values.tipoValor.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.tipoValor.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Valor</label>
+                      <Label>Valor</Label>
                       <FormGroup className={`has-label ${values.valor.error}`}>
                         <Input
                           name="valor"
@@ -283,9 +284,9 @@ export default function ColabCompCadastro() {
                           value={values.valor.value}
                         />
                         {values.valor.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.valor.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -293,7 +294,7 @@ export default function ColabCompCadastro() {
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Data Inicial</label>
+                      <Label>Data Inicial</Label>
                       <FormGroup
                         className={`has-label ${values.dataInic.error}`}
                       >
@@ -306,15 +307,15 @@ export default function ColabCompCadastro() {
                           value={values.dataInic.value}
                         />
                         {values.dataInic.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.dataInic.message}
-                          </label>
+                          </Label>
                         ) : null}{" "}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Data Final</label>
+                      <Label>Data Final</Label>
                       <FormGroup
                         className={`has-label ${values.dataFim.error}`}
                       >
@@ -327,14 +328,14 @@ export default function ColabCompCadastro() {
                           value={values.dataFim.value}
                         />
                         {values.dataFim.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.dataFim.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <label>Tipo de Atendimento</label>
+                    <Label>Tipo de Atendimento</Label>
                       <FormGroup
                         className={`has-label ${values.tipoAtend.error}`}
                       >
@@ -356,9 +357,9 @@ export default function ColabCompCadastro() {
                           <option value={4}>Complementar</option>
                         </Input>
                         {values.tipoAtend.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.tipoAtend.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

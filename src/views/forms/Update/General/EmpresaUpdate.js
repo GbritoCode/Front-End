@@ -25,6 +25,7 @@ import {
   CardTitle,
   FormGroup,
   Form,
+  Label,
   Input,
   Row,
   Col,
@@ -53,7 +54,7 @@ function EmpresaUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${id}`);
+      const response = await axios(`http://localhost:51314/empresa/${id.id}`);
       const response1 = await axios(`http://localhost:51314/users`);
 
       setData1(response1.data);
@@ -247,8 +248,7 @@ function EmpresaUpdatee() {
     if (valid && filled) {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
       dispatch(
-        EmpresaUpdate(
-          id,
+        EmpresaUpdate(id,
           cnpjdb,
           values.nome.value,
           values.license.value,
@@ -288,7 +288,7 @@ function EmpresaUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>CNPJ</label>
+                      <Label>CNPJ</Label>
                         <FormGroup className={`has-label ${values.cnpj.error}`}>
                           <Input
                             name="idFederal"
@@ -303,11 +303,11 @@ function EmpresaUpdatee() {
                             }}
                           />
                           {values.cnpj.error === "has-danger" ? (
-                            <label className="error">{values.cnpj.message}</label>
+                            <Label className="error">{values.cnpj.message}</Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Nome</label>
+                        <Label>Nome</Label>
                         <FormGroup className={`has-label ${values.nome.error}`}>
                           <Input
                             name="nome"
@@ -318,11 +318,11 @@ function EmpresaUpdatee() {
                             value={values.nome.value}
                           />
                           {values.nome.error === "has-danger" ? (
-                            <label className="error">{values.nome.message}</label>
+                            <Label className="error">{values.nome.message}</Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>License</label>
+                        <Label>License</Label>
                         <FormGroup
                           className={`has-label ${values.license.error}`}
                         >
@@ -335,13 +335,13 @@ function EmpresaUpdatee() {
                             value={values.license.value}
                           />
                           {values.license.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.license.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>Usuário</label>
+                        <Label>Usuário</Label>
                         <FormGroup className={`has-label ${values.userId.error}`}>
                           <Input
                             name="UserId"
@@ -364,9 +364,9 @@ function EmpresaUpdatee() {
                             ))}
                           </Input>{" "}
                           {values.userId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.userId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 

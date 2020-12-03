@@ -44,7 +44,6 @@ function ParametrosUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data, setData] = useState();
-  const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -59,13 +58,9 @@ function ParametrosUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
-      const response = await axios(`http://localhost:51314/parametros/${id}`);
-      const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
-      );
+      const response = await axios(`http://localhost:51314/parametros/${id.id}`);
+
       setData(response.data);
-      setData1(response1.data);
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
@@ -97,7 +92,7 @@ function ParametrosUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
@@ -183,8 +178,7 @@ function ParametrosUpdatee() {
       var vlrBsDespdb = values.vlrBsDesp.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        ParametrosUpdate(
-          id,
+        ParametrosUpdate(id,
           values.empresaId.value,
           impostosdb,
           vlrMinHrdb,
@@ -227,7 +221,7 @@ function ParametrosUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -247,15 +241,15 @@ function ParametrosUpdatee() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Impostos</label>
+                            <Label>Impostos</Label>
                             <FormGroup
                               className={`has-label ${values.impostos.error}`}
                             >
@@ -268,15 +262,15 @@ function ParametrosUpdatee() {
                                 value={values.impostos.value}
                               />
                               {values.impostos.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.impostos.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Valor Mínimo da Hora</label>
+                            <Label>Valor Mínimo da Hora</Label>
                             <FormGroup
                               className={`has-label ${values.vlrMinHr.error}`}
                             >
@@ -289,14 +283,14 @@ function ParametrosUpdatee() {
                                 value={values.vlrMinHr.value}
                               />
                               {values.vlrMinHr.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrMinHr.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Valor Base Da Hora</label>
+                          <Label>Valor Base Da Hora</Label>
                             <FormGroup
                               className={`has-label ${values.vlrBsHr.error}`}
                             >
@@ -309,9 +303,9 @@ function ParametrosUpdatee() {
                                 value={values.vlrBsHr.value}
                               />
                               {values.vlrBsHr.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrBsHr.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -319,7 +313,7 @@ function ParametrosUpdatee() {
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Valor Base da Despesa</label>
+                            <Label>Valor Base da Despesa</Label>
                             <FormGroup
                               className={`has-label ${values.vlrBsDesp.error}`}
                             >
@@ -332,14 +326,14 @@ function ParametrosUpdatee() {
                                 value={values.vlrBsDesp.value}
                               />
                               {values.vlrBsDesp.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.vlrBsDesp.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Adianta Pagamento</label>
+                          <Label>Adianta Pagamento</Label>
                             <FormGroup
                               className={`has-label ${values.adiantaPgmto.error}`}
                             >
@@ -352,15 +346,15 @@ function ParametrosUpdatee() {
                                 value={values.adiantaPgmto.value}
                               />
                               {values.adiantaPgmto.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.adiantaPgmto.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Percentual do Adiantamento</label>
+                            <Label>Percentual do Adiantamento</Label>
                             <FormGroup
                               className={`has-label ${values.percAdiantaPgmto.error}`}
                             >
@@ -377,9 +371,9 @@ function ParametrosUpdatee() {
                                 value={values.percAdiantaPgmto.value}
                               />
                               {values.percAdiantaPgmto.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.percAdiantaPgmto.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>

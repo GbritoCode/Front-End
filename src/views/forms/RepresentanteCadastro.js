@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   Form,
+  Label,
   Input,
   FormGroup,
   Row,
@@ -184,7 +185,7 @@ export default function RepresentanteCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -202,13 +203,13 @@ export default function RepresentanteCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
 
-                  <label>Nome</label>
+                  <Label>Nome</Label>
                   <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
                       name="nome"
@@ -217,13 +218,13 @@ export default function RepresentanteCadastro() {
                       value={values.nome.value}
                     />{" "}
                     {values.nome.error === "has-danger" ? (
-                      <label className="error">{values.nome.message}</label>
+                      <Label className="error">{values.nome.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="6">
                       {" "}
-                      <label>Tipo de Comissão</label>
+                      <Label>Tipo de Comissão</Label>
                       <FormGroup
                         className={`has-label ${values.tipoComiss.error}`}
                       >
@@ -248,15 +249,15 @@ export default function RepresentanteCadastro() {
                           ))}
                         </Input>
                         {values.tipoComiss.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.tipoComiss.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="6">
                       {" "}
-                      <label>Valor Fixo Mensal</label>
+                      <Label>Valor Fixo Mensal</Label>
                       <FormGroup
                         className={`has-label ${values.vlrFixMens.error}`}
                       >
@@ -269,9 +270,9 @@ export default function RepresentanteCadastro() {
                           value={values.vlrFixMens.value}
                         />{" "}
                         {values.vlrFixMens.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrFixMens.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

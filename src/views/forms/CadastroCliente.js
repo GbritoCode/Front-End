@@ -321,12 +321,12 @@ export default function CadastroCliente() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>CNPJ</label>
+                  <Label>CNPJ</Label>
                   <FormGroup className={`has-label ${values.cnpj.error}`}>
                     <Input
                       maxLength={18}
@@ -342,10 +342,10 @@ export default function CadastroCliente() {
                     />
 
                     {values.cnpj.error === "has-danger" ? (
-                      <label className="error">{values.cnpj.message}</label>
+                      <Label className="error">{values.cnpj.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <label>Razão Social</label>
+                  <Label>Razão Social</Label>
                   <FormGroup className={`has-label ${values.rzSoc.error}`}>
                     <Input
                       disabled
@@ -358,12 +358,12 @@ export default function CadastroCliente() {
                       value={values.rzSoc.value}
                     />
                     {values.rzSoc.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.rzSoc.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
-                  <label>Nome Fanasia</label>
+                  <Label>Nome Fanasia</Label>
                   <FormGroup
                     className={`has-label ${optional.fantasia.error}`}
                   >
@@ -377,9 +377,9 @@ export default function CadastroCliente() {
                       type="text"
                     />
                     {optional.fantasia.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {optional.fantasia.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Label>Nome Abreviado</Label>
@@ -393,7 +393,7 @@ export default function CadastroCliente() {
                       value={values.nomeAbv.value}
                     />
                     {values.nomeAbv.error === "has-danger" ? (
-                      <label className="error">{values.nomeAbv.message}</label>
+                      <Label className="error">{values.nomeAbv.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
@@ -424,9 +424,9 @@ export default function CadastroCliente() {
                           ))}
                         </Input>
                         {values.representante.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.representante.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -456,9 +456,9 @@ export default function CadastroCliente() {
                           ))}
                         </Input>
                         {values.tipoComiss.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.tipoComiss.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

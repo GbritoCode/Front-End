@@ -15,7 +15,6 @@
 
 */
 import React, { useRef, useEffect, useState } from "react";
-import Switch from "react-bootstrap-switch";
 
 // reactstrap components
 import {
@@ -45,11 +44,9 @@ export default function CotacaoCadastro() {
 
   const { id } = useParams()
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
-  const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     oportunidadeId: { value: "", error: "", message: "" },
@@ -71,10 +68,10 @@ export default function CotacaoCadastro() {
   const [optional, setOptional] = useState(optionalSchema);
   const imposto = 14 / 100
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const empresa = store.getState().auth.empresa;
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/oportunidade/${id}`);
+      const response1 = await axios(`http://localhost:51314/oportunidade/${id.id}`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
@@ -85,10 +82,9 @@ export default function CotacaoCadastro() {
         ...prevState,
         oportunidadeId: { value: response1.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   function getCliData(cobranca) {
     axios(`http://localhost:51314/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`)
@@ -286,7 +282,7 @@ export default function CotacaoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -304,14 +300,14 @@ export default function CotacaoCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                      Oportunidade</label>
+                    <Label>Oportunidade</Label>
                       <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                         <Input
                           disabled
@@ -333,13 +329,13 @@ export default function CotacaoCadastro() {
                         </Input>
 
                         {values.oportunidadeId.error === "has-danger" ? (
-                          <label className="error">{values.oportunidadeId.message}</label>
+                          <Label className="error">{values.oportunidadeId.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      Probabilidade de Venda</label>
+                      <Label>Probabilidade de Venda</Label>
                       <FormGroup
                         className={`has-label ${values.probVend.error}`}
                       >
@@ -360,15 +356,15 @@ export default function CotacaoCadastro() {
                           <option value={3}>Baixa</option>
                         </Input>
                         {values.probVend.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.probVend.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      Tipo de Cobrança</label>
+                      <Label>Tipo de Cobrança</Label>
                       <FormGroup
                         className={`has-label ${values.tipoCobranca.error}`}
                       >
@@ -391,9 +387,9 @@ export default function CotacaoCadastro() {
                           <option value={2}>Por Projeto</option>
                         </Input>
                         {values.tipoCobranca.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.tipoCobranca.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -401,7 +397,7 @@ export default function CotacaoCadastro() {
                   </Row>
                   <Row>
                     <Col md="4">
-                      Horas Previstas</label>
+                    <Label>Horas Previstas</Label>
                       <FormGroup
                         className={`has-label ${values.hrsPrevst.error}`}
                       >
@@ -420,15 +416,15 @@ export default function CotacaoCadastro() {
                           value={values.hrsPrevst.value}
                         />
                         {values.hrsPrevst.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.hrsPrevst.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
-                      Valor da Proposta</label>
+                      <Label>Valor da Proposta</Label>
                       <FormGroup
                         className={`has-label ${values.vlrProp.error}`}
                       >
@@ -442,14 +438,14 @@ export default function CotacaoCadastro() {
                           value={values.vlrProp.value}
                         />
                         {values.vlrProp.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrProp.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      Valor Desconto</label>
+                    <Label>Valor Desconto</Label>
                       <FormGroup
                         className={`has-label ${values.vlrDesc.error}`}
                       >
@@ -464,9 +460,9 @@ export default function CotacaoCadastro() {
                           value={values.vlrDesc.value}
                         />
                         {values.vlrDesc.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrDesc.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -475,7 +471,7 @@ export default function CotacaoCadastro() {
                   <Row>
                     <Col md="4">
                       {" "}
-                      Valor Líquido</label>
+                      <Label>Valor Líquido</Label>
                       <FormGroup
                         className={`has-label ${values.vlrLiq.error}`}
                       >
@@ -489,14 +485,14 @@ export default function CotacaoCadastro() {
                           value={values.vlrLiq.value}
                         />
                         {values.vlrLiq.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.vlrLiq.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      Receita Líquida</label>
+                    <Label>Receita Líquida</Label>
                       <FormGroup
                         className={`has-label ${values.recLiq.error}`}
                       >
@@ -510,14 +506,14 @@ export default function CotacaoCadastro() {
                           value={values.recLiq.value}
                         />
                         {values.recLiq.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.recLiq.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      Previsão de Lucro</label>
+                    <Label>Previsão de Lucro</Label>
                       <FormGroup
                         className={`has-label ${values.prevLucro.error}`}
                       >
@@ -531,9 +527,9 @@ export default function CotacaoCadastro() {
                           value={values.prevLucro.value}
                         />
                         {values.prevLucro.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.prevLucro.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -541,7 +537,7 @@ export default function CotacaoCadastro() {
                   </Row>
                   <Row>
                     <Col md="4">
-                      Número de Parcelas</label>
+                    <Label>Número de Parcelas</Label>
                       <FormGroup
                         className={`has-label ${values.numParcelas.error}`}
                       >
@@ -571,9 +567,9 @@ export default function CotacaoCadastro() {
                           <option value={12}>12</option>
                         </Input>
                         {values.numParcelas.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.numParcelas.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -615,7 +611,7 @@ export default function CotacaoCadastro() {
                   </Row>
                   <Row>
                     <Col>
-                      Descrição</label>
+                    <Label>Descrição</Label>
                       <FormGroup
                         className={`has-label ${optional.desc.error}`}
                       >
@@ -628,9 +624,9 @@ export default function CotacaoCadastro() {
                           value={optional.desc.value}
                         />
                         {optional.desc.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {optional.desc.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

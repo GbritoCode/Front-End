@@ -25,6 +25,7 @@ import {
   CardTitle,
   Form,
   Input,
+  Label,
   FormGroup,
   Row,
   Col,
@@ -148,7 +149,7 @@ export default function TipoComissCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+                <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -166,14 +167,14 @@ export default function TipoComissCadastro() {
                       </option>
                     </Input>
                     {values.empresaId.error === "has-danger" ? (
-                      <label className="error">
+                      <Label className="error">
                         {values.empresaId.message}
-                      </label>
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md='4'>
-                    <label>Descrição</label>
+                    <Label>Descrição</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           name="desc"
@@ -182,12 +183,12 @@ export default function TipoComissCadastro() {
                           value={values.desc.value}
                         />
                         {values.desc.error === "has-danger" ? (
-                          <label className="error">{values.desc.message}</label>
+                          <Label className="error">{values.desc.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col><Col md='4'>
 
-                    <label>Percentual</label>
+                    <Label>Percentual</Label>
                       <FormGroup className={`has-label ${values.prcnt.error}`}>
                         <Input
                           name="prcnt"
@@ -196,12 +197,12 @@ export default function TipoComissCadastro() {
                           value={values.prcnt.value}
                         />
                         {values.prcnt.error === "has-danger" ? (
-                          <label className="error">{values.prcnt.message}</label>
+                          <Label className="error">{values.prcnt.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md='4'>
-                    <label>Base de Comissão</label>
+                    <Label>Base de Comissão</Label>
                       <FormGroup className={`has-label ${values.bsComiss.error}`}>
                         <Input
                           name="bsComiss"
@@ -221,9 +222,9 @@ export default function TipoComissCadastro() {
                           <option value="4">Fixado</option>
                         </Input>
                         {values.bsComiss.error === "has-danger" ? (
-                          <label className="error">
+                          <Label className="error">
                             {values.bsComiss.message}
-                          </label>
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>

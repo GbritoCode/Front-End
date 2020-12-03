@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
+  Label,
   Form,
   Input,
   FormGroup,
@@ -306,7 +307,7 @@ export default function FornecCadastro() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                      <label>Empresa</label>
+                      <Label>Empresa</Label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -326,13 +327,13 @@ export default function FornecCadastro() {
                             </option>
                           </Input>
                           {values.empresaId.error === "has-danger" ? (
-                            <label className="error">
+                            <Label className="error">
                               {values.empresaId.message}
-                            </label>
+                            </Label>
                           ) : null}
                         </FormGroup>
 
-                        <label>CNPJ</label>
+                        <Label>CNPJ</Label>
                         <FormGroup className={`has-label ${values.cnpj.error}`}>
                           <Input
                             maxLength={18}
@@ -349,13 +350,13 @@ export default function FornecCadastro() {
                             }}
                           />
                           {values.cnpj.error === "has-danger" ? (
-                            <label className="error">{values.cnpj.message}</label>
+                            <Label className="error">{values.cnpj.message}</Label>
                           ) : null}
                         </FormGroup>
                         <Row>
                           <Col md="6">
                             {" "}
-                            <label>Nome</label>
+                            <Label>Nome</Label>
                             <FormGroup
                               className={`has-label ${values.nome.error}`}
                             >
@@ -369,14 +370,14 @@ export default function FornecCadastro() {
                                 value={values.nome.value}
                               />
                               {values.nome.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.nome.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="6">
-                          <label>Nome Abreviado</label>
+                          <Label>Nome Abreviado</Label>
                             <FormGroup
                               className={`has-label ${values.nomeConta.error}`}
                             >
@@ -389,9 +390,9 @@ export default function FornecCadastro() {
                                 value={values.nomeConta.value}
                               />
                               {values.nomeConta.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.nomeConta.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -399,7 +400,7 @@ export default function FornecCadastro() {
 
                         <Row>
                           <Col md="4">
-                          <label>Condição de Pagamento</label>
+                          <Label>Condição de Pagamento</Label>
                             <FormGroup
                               className={`has-label ${values.CondPgmtoId.error}`}
                             >
@@ -424,15 +425,15 @@ export default function FornecCadastro() {
                                 ))}
                               </Input>
                               {values.CondPgmtoId.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.CondPgmtoId.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Telefone</label>
+                            <Label>Telefone</Label>
                             <FormGroup
                               className={`has-label ${values.fone.error}`}
                             >
@@ -454,15 +455,15 @@ export default function FornecCadastro() {
                                 value={values.fone.value}
                               />
                               {values.fone.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.fone.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>CEP</label>
+                            <Label>CEP</Label>
                             <FormGroup
                               className={`has-label ${values.cep.error}`}
                             >
@@ -476,9 +477,9 @@ export default function FornecCadastro() {
                                 value={values.cep.value}
                               />
                               {values.cep.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cep.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -486,7 +487,7 @@ export default function FornecCadastro() {
 
                         <Row>
                           <Col md="4">
-                          <label>Rua</label>
+                          <Label>Rua</Label>
                             <FormGroup
                               className={`has-label ${values.rua.error}`}
                             >
@@ -500,14 +501,14 @@ export default function FornecCadastro() {
                                 value={values.rua.value}
                               />
                               {values.rua.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.rua.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="2">
-                          <label>Número</label>
+                          <Label>Número</Label>
                             <FormGroup
                               className={`has-label ${values.numero.error}`}
                             >
@@ -521,15 +522,15 @@ export default function FornecCadastro() {
                                 value={values.numero.value}
                               />
                               {values.numero.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.numero.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
 
                           <Col md="6">
-                          <label>Complemento</label>
+                          <Label>Complemento</Label>
                             <FormGroup
                               className={`has-label ${optional.complemento.error}`}
                             >
@@ -542,9 +543,9 @@ export default function FornecCadastro() {
                                 value={optional.complemento.value}
                               />
                               {optional.complemento.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {optional.complemento.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
@@ -552,7 +553,7 @@ export default function FornecCadastro() {
 
                         <Row>
                           <Col md="4">
-                          <label>Bairro</label>
+                          <Label>Bairro</Label>
                             <FormGroup
                               className={`has-label ${values.bairro.error}`}
                             >
@@ -566,14 +567,14 @@ export default function FornecCadastro() {
                                 value={values.bairro.value}
                               />
                               {values.bairro.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.bairro.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Cidade</label>
+                          <Label>Cidade</Label>
                             <FormGroup
                               className={`has-label ${values.cidade.error}`}
                             >
@@ -587,14 +588,14 @@ export default function FornecCadastro() {
                                 value={values.cidade.value}
                               />
                               {values.cidade.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.cidade.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>UF</label>
+                          <Label>UF</Label>
                             <FormGroup className={`has-label ${values.uf.error}`}>
                               <Input
                                 disabled
@@ -638,16 +639,16 @@ export default function FornecCadastro() {
                                 <option value="TO">Tocantins</option>
                               </Input>
                               {values.uf.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.uf.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                         </Row>
                         <Row>
                           <Col md="4">
-                          <label>Banco</label>
+                          <Label>Banco</Label>
                             <FormGroup
                               className={`has-label ${values.banco.error}`}
                             >
@@ -688,14 +689,14 @@ export default function FornecCadastro() {
                               </option>
                               </Input>
                               {values.banco.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.banco.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>{" "}
                           </Col>
                           <Col md="4">
-                          <label>Agência</label>
+                          <Label>Agência</Label>
                             <FormGroup
                               className={`has-label ${values.agencia.error}`}
                             >
@@ -708,14 +709,14 @@ export default function FornecCadastro() {
                                 value={values.agencia.value}
                               />
                               {values.agencia.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.agencia.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                          <label>Conta</label>
+                          <Label>Conta</Label>
                             <FormGroup
                               className={`has-label ${values.conta.error}`}
                             >
@@ -728,9 +729,9 @@ export default function FornecCadastro() {
                                 value={values.conta.value}
                               />
                               {values.conta.error === "has-danger" ? (
-                                <label className="error">
+                                <Label className="error">
                                   {values.conta.message}
-                                </label>
+                                </Label>
                               ) : null}
                             </FormGroup>
                           </Col>
