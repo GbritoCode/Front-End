@@ -42,9 +42,7 @@ export default function TipoComissCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
@@ -54,15 +52,14 @@ export default function TipoComissCadastro() {
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const empresa = store.getState().auth.empresa;
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -82,7 +79,9 @@ export default function TipoComissCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -100,7 +99,7 @@ export default function TipoComissCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -108,7 +107,7 @@ export default function TipoComissCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -149,7 +148,7 @@ export default function TipoComissCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                <label>Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -174,7 +173,7 @@ export default function TipoComissCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md='4'>
-                      <label>Descrição</label>
+                    <label>Descrição</label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           name="desc"
@@ -188,7 +187,7 @@ export default function TipoComissCadastro() {
                       </FormGroup>
                     </Col><Col md='4'>
 
-                      <label>Percentual</label>
+                    <label>Percentual</label>
                       <FormGroup className={`has-label ${values.prcnt.error}`}>
                         <Input
                           name="prcnt"
@@ -202,7 +201,7 @@ export default function TipoComissCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md='4'>
-                      <label>Base de Comissão</label>
+                    <label>Base de Comissão</label>
                       <FormGroup className={`has-label ${values.bsComiss.error}`}>
                         <Input
                           name="bsComiss"

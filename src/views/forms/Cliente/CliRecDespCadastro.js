@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -56,9 +56,8 @@ export default function CliRecDespCadastro() {
   const [values, setValues] = useState(stateSchema);
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-  const id = useParams();
-
-  useEffect(() => {
+const id = useParams()  
+useEffect(() => {
     async function loadData() {
       const response = await axios(`http://localhost:51314/cliente/${id.id}`);
       const response1 = await axios(`http://localhost:51314/rec_desp/?rec=true`);
@@ -71,7 +70,7 @@ export default function CliRecDespCadastro() {
     }
 
     loadData();
-  }, []);
+  }, [id]);
 
   var options = {};
 
@@ -120,6 +119,8 @@ export default function CliRecDespCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
 
@@ -132,7 +133,7 @@ export default function CliRecDespCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -140,7 +141,7 @@ export default function CliRecDespCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -191,7 +192,7 @@ export default function CliRecDespCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Cliente</label>
+                <label>Cliente</label>
                   <FormGroup className={`has-label ${values.clienteId.error}`}>
                     <Input
                       disabled

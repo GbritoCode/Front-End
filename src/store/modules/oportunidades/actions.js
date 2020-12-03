@@ -202,3 +202,71 @@ export function recursoUpdate(
     },
   };
 }
+
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+export function parcelaReqest(
+  oportunidadeId,
+  parcela,
+  vlrParcela,
+  dtEmissao,
+  dtVencimento,
+  notaFiscal,
+  pedidoCliente,
+  situacao,
+  dtLiquidacao,
+  vlrPago,
+  saldo,
+) {
+  return {
+    type: "@cadastro/PARCELA_REQUEST",
+    payload: {
+      oportunidadeId,
+      parcela,
+      vlrParcela,
+      dtEmissao,
+      dtVencimento,
+      notaFiscal,
+      pedidoCliente,
+      situacao,
+      dtLiquidacao,
+      vlrPago,
+      saldo,
+    }
+  }
+}
+
+export function parcelaUpdate(
+  id,
+  oportunidadeId,
+parcela,
+vlrParcela,
+dtEmissao,
+dtVencimento,
+notaFiscal,
+pedidoCliente,
+situacao,
+dtLiquidacao,
+vlrPago,
+saldo,
+) {
+  return {
+    type: "@update/PARCELA_REQUEST",
+    payload: {
+      id,
+      oportunidadeId,
+      parcela,
+      vlrParcela,
+      dtEmissao,
+      dtVencimento,
+      notaFiscal,
+      pedidoCliente,
+      situacao,
+      dtLiquidacao,
+      vlrPago,
+      saldo,
+    },
+  };
+}

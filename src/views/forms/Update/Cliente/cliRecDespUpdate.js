@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -41,8 +41,8 @@ export default function CliRecDespUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams();
-  const stateSchema = {
+const id = useParams()  
+const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
     recDespId: { value: "", error: "", message: "" },
     tipoCobranca: { value: "", error: "", message: "" },
@@ -50,7 +50,6 @@ export default function CliRecDespUpdatee() {
     dataFim: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +66,6 @@ export default function CliRecDespUpdatee() {
       );
       const response2 = await axios(`http://localhost:51314/rec_desp/?rec=true`);
 
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
 
@@ -94,7 +92,8 @@ export default function CliRecDespUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
+
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -136,7 +135,9 @@ export default function CliRecDespUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -154,7 +155,7 @@ export default function CliRecDespUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -162,7 +163,7 @@ export default function CliRecDespUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -219,7 +220,7 @@ export default function CliRecDespUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Cliente</label>
+                      <label>Cliente</label>
                         <FormGroup
                           className={`has-label ${values.clienteId.error}`}
                         >

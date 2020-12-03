@@ -36,13 +36,13 @@ import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeCnpj, normalizeFone } from "normalize";
 
+/*eslint-disable eqeqeq*/
 function FornecUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -73,13 +73,11 @@ function FornecUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/fornec/${id}`);
       const response1 = await axios(`http://localhost:51314/condPgmto`);
       const response2 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -150,7 +148,7 @@ function FornecUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   function validarCNPJ(cnpj) {
     cnpj = cnpj.replace(/[^\d]+/g, "");
@@ -262,7 +260,9 @@ function FornecUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -280,7 +280,7 @@ function FornecUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -288,7 +288,7 @@ function FornecUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -354,7 +354,7 @@ function FornecUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -424,7 +424,7 @@ function FornecUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="6">
-                            <label>Nome Abreviado</label>
+                          <label>Nome Abreviado</label>
                             <FormGroup
                               className={`has-label ${values.nomeConta.error}`}
                             >
@@ -448,7 +448,7 @@ function FornecUpdatee() {
 
                         <Row>
                           <Col md="4">
-                            <label>Condição de Pagamento</label>
+                          <label>Condição de Pagamento</label>
                             <FormGroup
                               className={`has-label ${values.CondPgmtoId.error}`}
                             >
@@ -532,7 +532,7 @@ function FornecUpdatee() {
 
                         <Row>
                           <Col md="4">
-                            <label>Rua</label>
+                          <label>Rua</label>
                             <FormGroup
                               className={`has-label ${values.rua.error}`}
                             >
@@ -553,7 +553,7 @@ function FornecUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="2">
-                            <label>Número</label>
+                          <label>Número</label>
                             <FormGroup
                               className={`has-label ${values.numero.error}`}
                             >
@@ -575,7 +575,7 @@ function FornecUpdatee() {
                           </Col>
 
                           <Col md="6">
-                            <label>Complemento</label>
+                          <label>Complemento</label>
                             <FormGroup
                               className={`has-label ${optional.complemento.error}`}
                             >
@@ -598,7 +598,7 @@ function FornecUpdatee() {
 
                         <Row>
                           <Col md="4">
-                            <label>Bairro</label>
+                          <label>Bairro</label>
                             <FormGroup
                               className={`has-label ${values.bairro.error}`}
                             >
@@ -619,7 +619,7 @@ function FornecUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Cidade</label>
+                          <label>Cidade</label>
                             <FormGroup
                               className={`has-label ${values.cidade.error}`}
                             >
@@ -640,7 +640,7 @@ function FornecUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>UF</label>
+                          <label>UF</label>
                             <FormGroup className={`has-label ${values.uf.error}`}>
                               <Input
                                 disabled
@@ -693,7 +693,7 @@ function FornecUpdatee() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <label>Banco</label>
+                          <label>Banco</label>
                             <FormGroup
                               className={`has-label ${values.banco.error}`}
                             >
@@ -741,7 +741,7 @@ function FornecUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Agência</label>
+                          <label>Agência</label>
                             <FormGroup
                               className={`has-label ${values.agencia.error}`}
                             >
@@ -761,7 +761,7 @@ function FornecUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Conta</label>
+                          <label>Conta</label>
                             <FormGroup
                               className={`has-label ${values.conta.error}`}
                             >

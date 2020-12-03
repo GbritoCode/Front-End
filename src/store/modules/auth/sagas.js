@@ -31,7 +31,7 @@ export function* signUp({ payload }) {
       password,
       provider: true
     });
-    if (colab == false) {
+    if (colab === false) {
       history.push("/login");
     }
   } catch (err) {

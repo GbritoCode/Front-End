@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -41,7 +41,7 @@ export default function CliContUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams();
+const id = useParams()
   const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
@@ -53,7 +53,6 @@ export default function CliContUpdatee() {
     tipoConta: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -67,7 +66,6 @@ export default function CliContUpdatee() {
       const response1 = await axios(
         `http://localhost:51314/cliente/${response.data.ClienteId}`
       );
-      setData(response.data);
       setData1(response1.data);
 
       setValues((prevState) => ({
@@ -105,7 +103,7 @@ export default function CliContUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -165,6 +163,8 @@ export default function CliContUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
   var options = {};
@@ -183,7 +183,7 @@ export default function CliContUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -191,7 +191,7 @@ export default function CliContUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -247,7 +247,7 @@ export default function CliContUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form id="RegisterValidation" onSubmit={handleSubmit}>
-                        <label>Cliente</label>
+                      <label>Cliente</label>
                         <FormGroup
                           className={`has-label ${values.clienteId.error}`}
                         >
@@ -366,7 +366,7 @@ export default function CliContUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="3">
-                            <label>tipo de Contato</label>
+                          <label>tipo de Contato</label>
                             <FormGroup
                               className={`has-label ${values.tipoConta.error}`}
                             >
@@ -395,7 +395,7 @@ export default function CliContUpdatee() {
                         </Row>
                         <Row>
                           <Col md="6">
-                            <label>Skype</label>
+                          <label>Skype</label>
                             <FormGroup
                               className={`has-label ${values.skype.error}`}
                             >

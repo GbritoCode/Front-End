@@ -139,7 +139,9 @@ function ParametrosUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -157,7 +159,7 @@ function ParametrosUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -165,7 +167,7 @@ function ParametrosUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -225,7 +227,7 @@ function ParametrosUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -294,7 +296,7 @@ function ParametrosUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Valor Base Da Hora</label>
+                          <label>Valor Base Da Hora</label>
                             <FormGroup
                               className={`has-label ${values.vlrBsHr.error}`}
                             >
@@ -337,7 +339,7 @@ function ParametrosUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Adianta Pagamento</label>
+                          <label>Adianta Pagamento</label>
                             <FormGroup
                               className={`has-label ${values.adiantaPgmto.error}`}
                             >

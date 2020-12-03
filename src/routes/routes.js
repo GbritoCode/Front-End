@@ -163,10 +163,10 @@ import prospectTable from "../views/tables/Clientes/prospectTable";
 import WizardCadastro from "~/views/forms/wizardTeste";
 import WizardFornec from "~/views/forms/wizardFornec";
 import WizardColab from "~/views/forms/wizardColab";
-import ParcelaUpdate from "~/views/forms/Update/oportunidades/parcelaUpdate";
 import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
 import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
-
+import parcUpdate from '~/views/forms/Update/oportunidades/parcUpdate'
+import parcNotaFiscal from '~/views/forms/Update/oportunidades/parcNotaFiscal'
 
 const routes = [
   {
@@ -697,12 +697,21 @@ const routes = [
         layout: "/admin",
       },
       {
-        path: "/update/oportunidade/parcela/:id",
+        path: "/update/oportunidade/parc/:id",
         name: "Oportunidades",
         rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
-        component: ParcelaUpdate,
+        component: parcUpdate,
+        layout: "/admin",
+      },
+      {
+        path: "/update/oportunidade/parcNota/:id",
+        name: "Oportunidades",
+        rtlName: "أشكال عادية",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: parcNotaFiscal,
         layout: "/admin",
       },
       {

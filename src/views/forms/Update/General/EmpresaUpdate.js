@@ -35,6 +35,7 @@ import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 
+/*eslint-disable eqeqeq*/
 function EmpresaUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
@@ -42,7 +43,6 @@ function EmpresaUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
   const stateSchema = {
     cnpj: { value: "", error: "", message: "" },
@@ -53,11 +53,9 @@ function EmpresaUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${id}`);
       const response1 = await axios(`http://localhost:51314/users`);
 
-      setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
         ...prevState,
@@ -79,7 +77,7 @@ function EmpresaUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
   var options = {};
 
   const notifyElment = useRef(null);
@@ -215,7 +213,9 @@ function EmpresaUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -227,7 +227,7 @@ function EmpresaUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -235,7 +235,7 @@ function EmpresaUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -288,7 +288,7 @@ function EmpresaUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>CNPJ</label>
+                      <label>CNPJ</label>
                         <FormGroup className={`has-label ${values.cnpj.error}`}>
                           <Input
                             name="idFederal"

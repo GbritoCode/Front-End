@@ -41,7 +41,6 @@ function SegmentoUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState();
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -66,7 +65,6 @@ function SegmentoUpdatee() {
       const response4 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -94,7 +92,7 @@ function SegmentoUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const normalizeInput = (value, previousValue) => {
     if (!value) return value;
@@ -132,7 +130,9 @@ function SegmentoUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -150,7 +150,7 @@ function SegmentoUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -158,7 +158,7 @@ function SegmentoUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -212,7 +212,7 @@ function SegmentoUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >

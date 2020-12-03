@@ -44,11 +44,11 @@ export default function ClienteCadastro() {
               </CardHeader>
               <CardBody>
                 <Form action="#">
-                  <label>Email address</label>
+                  Email address</label>
                   <FormGroup>
                     <Input type="email" />
                   </FormGroup>
-                  <label>Password</label>
+                  Password</label>
                   <FormGroup>
                     <Input type="password" autoComplete="off" />
                   </FormGroup>

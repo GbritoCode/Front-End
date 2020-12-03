@@ -43,7 +43,6 @@ function ItmCtrlUpdatee() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -61,7 +60,6 @@ function ItmCtrlUpdatee() {
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
-      setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
         ...prevState,
@@ -86,7 +84,7 @@ function ItmCtrlUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const normalizeInput = (value) => {
     if (!value) return value;
@@ -149,7 +147,9 @@ function ItmCtrlUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -167,7 +167,7 @@ function ItmCtrlUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -175,7 +175,7 @@ function ItmCtrlUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -229,7 +229,7 @@ function ItmCtrlUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >

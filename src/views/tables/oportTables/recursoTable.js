@@ -25,6 +25,7 @@ import api from "~/services/api";
 import { normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
 
+/*eslint-disable eqeqeq*/
 class RecursoTable extends Component {
   state = {
     data: [],

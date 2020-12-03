@@ -35,6 +35,7 @@ import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+/*eslint-disable eqeqeq*/
 export default function EmpresaCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
@@ -50,15 +51,12 @@ export default function EmpresaCadastro() {
   };
   const [values, setValues] = useState(stateSchema);
 
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/users`);
       setData(response.data);
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -198,7 +196,9 @@ export default function EmpresaCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
@@ -242,7 +242,7 @@ export default function EmpresaCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -250,7 +250,7 @@ export default function EmpresaCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -298,7 +298,7 @@ export default function EmpresaCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>CNPJ</label>
+                <label>CNPJ</label>
                   <FormGroup className={`has-label ${values.cnpj.error}`}>
                     <Input
                       name="idFederal"
@@ -329,7 +329,7 @@ export default function EmpresaCadastro() {
                     ) : null}
                   </FormGroup>
 
-                  <label>License</label>
+                  <label> License</label>
                   <FormGroup className={`has-label ${values.license.error}`}>
                     <Input
                       name="license"
@@ -344,7 +344,7 @@ export default function EmpresaCadastro() {
                     ) : null}
                   </FormGroup>
 
-                  <label>Usuário</label>
+                  <label> Usuário</label>
                   <FormGroup className={`has-label ${values.userId.error}`}>
                     <Input
                       name="UserId"

@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, { useState, useEffect, Fragment, useRef, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -64,7 +64,6 @@ export default function CliCompCadastro() {
   const [data1, setData1] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
@@ -128,7 +127,6 @@ export default function CliCompCadastro() {
           uf: { value: response2.data.uf },
         }));
       }
-      setIsLoading(false);
     }
     if (firstRender.current) {
       firstRender.current = false;
@@ -137,7 +135,7 @@ export default function CliCompCadastro() {
     }
 
     //----------------------- Validações
-  }, []);
+  }, [id]);
   var options = {};
 
   const notifyElment = useRef(document.getElementById("not"));
@@ -186,7 +184,9 @@ export default function CliCompCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -197,7 +197,7 @@ export default function CliCompCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -205,7 +205,7 @@ export default function CliCompCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -264,7 +264,7 @@ export default function CliCompCadastro() {
                 </CardHeader>
                 <CardBody>
                   <Form onSubmit={handleSubmit}>
-                    <label>Cliente</label>
+                  <label>Cliente</label>
                     <FormGroup
                       className={`has-label ${values.clienteId.error}`}
                     >
@@ -294,7 +294,7 @@ export default function CliCompCadastro() {
                     </FormGroup>
                     <Row>
                       <Col md="4">
-                        <label>CEP</label>
+                      <label>CEP</label>
                         <FormGroup
                           className={`has-label ${values.cep.error}`}
                         >
@@ -315,7 +315,7 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                        <label>Rua</label>
+                      <label>Rua</label>
                         <FormGroup
                           className={`has-label ${values.rua.error}`}
                         >
@@ -337,7 +337,7 @@ export default function CliCompCadastro() {
                       </Col>
 
                       <Col md="4">
-                        <label>Número</label>
+                      <label>Número</label>
                         <FormGroup
                           className={`has-label ${values.numero.error}`}
                         >
@@ -379,7 +379,7 @@ export default function CliCompCadastro() {
                     </FormGroup>
                     <Row>
                       <Col md="4">
-                        <label>Bairro</label>
+                      <label>Bairro</label>
                         <FormGroup
                           className={`has-label ${values.bairro.error}`}
                         >
@@ -400,7 +400,7 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                        <label>Cidade</label>
+                      <label>Cidade</label>
                         <FormGroup
                           className={`has-label ${values.cidade.error}`}
                         >
@@ -421,7 +421,7 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                        <label>UF</label>
+                      <label>UF</label>
                         <FormGroup className={`has-label ${values.uf.error}`}>
                           <Input
                             disabled
@@ -474,7 +474,7 @@ export default function CliCompCadastro() {
                     </Row>
                     <Row>
                       <Col md="4">
-                        <label>Inscrição Municipal</label>
+                      <label>Inscrição Municipal</label>
                         <FormGroup
                           className={`has-label ${values.inscMun.error}`}
                         >
@@ -494,7 +494,7 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                        <label>Inscrição Estadual</label>
+                      <label>Inscrição Estadual</label>
                         <FormGroup
                           className={`has-label ${values.inscEst.error}`}
                         >
@@ -514,7 +514,7 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                        <label>Condição de Pagamento</label>
+                      <label>Condição de Pagamento</label>
                         <FormGroup
                           className={`has-label ${values.CondPgmtoId.error}`}
                         >

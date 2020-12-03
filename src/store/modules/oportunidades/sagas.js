@@ -232,6 +232,85 @@ export function* updateRecurso({ payload }) {
   }
 }
 //---------
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
+
+export function* parcelaCadastro({ payload }) {
+  try {
+    const {
+      oportunidadeId,
+parcela,
+vlrParcela,
+dtEmissao,
+dtVencimento,
+notaFiscal,
+pedidoCliente,
+situacao,
+dtLiquidacao,
+vlrPago,
+saldo,
+    } = payload;
+    yield call(api.post, "parcela", {
+      oportunidadeId,
+      parcela,
+      vlrParcela,
+      dtEmissao,
+      dtVencimento,
+      notaFiscal,
+      pedidoCliente,
+      situacao,
+      dtLiquidacao,
+      vlrPago,
+      saldo,
+    });
+    history.push(`/tabelas/oportunidade/parcela/${oportunidadeId}`);
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
+export function* updateParcela({ payload }) {
+  try {
+    const {
+      id,
+      oportunidadeId,
+parcela,
+vlrParcela,
+dtEmissao,
+dtVencimento,
+notaFiscal,
+pedidoCliente,
+situacao,
+dtLiquidacao,
+vlrPago,
+saldo,
+    } = payload;
+
+    const recurso = Object.assign({
+      oportunidadeId,
+parcela,
+vlrParcela,
+dtEmissao,
+dtVencimento,
+notaFiscal,
+pedidoCliente,
+situacao,
+dtLiquidacao,
+vlrPago,
+saldo,
+    });
+
+    const response = yield call(api.put, `parcela/${id}`, recurso);
+    history.push(`/tabelas/oportunidade/parcela/${oportunidadeId}`);
+    toast.success("cliente atualizado");
+    yield put(UpdateSuccess(response.data));
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
+
 
 export default all([
   takeLatest("@cadastro/OPORT_REQUEST", oportCadastro),
@@ -240,4 +319,6 @@ export default all([
   takeLatest("@update/COTACAO_REQUEST", updateCotacao),
   takeLatest("@cadastro/RECURSO_REQUEST", recursoCadastro),
   takeLatest("@update/RECURSO_REQUEST", updateRecurso),
+  takeLatest("@cadastro/PARCELA_REQUEST", parcelaCadastro),
+  takeLatest("@update/PARCELA_REQUEST", updateParcela),
 ]);

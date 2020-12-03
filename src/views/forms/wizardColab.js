@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -31,25 +31,23 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { colabRequest } from "~/store/modules/Colab/actions";
-import { signUpRequest } from "~/store/modules/auth/actions";
 import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeFone, normalizeCpf, normalizeCnpj } from "normalize";
-import { Link } from "react-router-dom";
 import { perfilRequest } from "~/store/modules/general/actions";
 
+/*eslint-disable eqeqeq*/
 export default function ColabCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
+
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const empresa = store.getState().auth.empresa;
-
+  
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -63,8 +61,9 @@ export default function ColabCadastro() {
     espec: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-
+  
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     axios("http://localhost:51314/users").then((result) => {
       setValues((prevState) => ({
         ...prevState,
@@ -78,7 +77,6 @@ export default function ColabCadastro() {
       })
     })
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/fornec`);
       const response2 = await axios(`http://localhost:51314/perfil`);
@@ -90,10 +88,9 @@ export default function ColabCadastro() {
         empresaId: { value: response.data.id },
       }));
 
-      setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [dispatch]);
 
   var options = {};
 
@@ -119,7 +116,7 @@ export default function ColabCadastro() {
     if (Resto != parseInt(cpf.substring(9, 10))) return false;
 
     Soma = 0;
-    for (var i = 1; i <= 10; i++)
+    for (i = 1; i <= 10; i++)
       Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
 
@@ -209,6 +206,8 @@ export default function ColabCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
 
@@ -221,7 +220,7 @@ export default function ColabCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -229,7 +228,7 @@ export default function ColabCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -291,7 +290,7 @@ export default function ColabCadastro() {
             </CardHeader>
             <CardBody>
               <Form onSubmit={handleSubmit}>
-                <label>Empresa</label>
+              <label>Empresa</label>
                 <FormGroup className={`has-label ${values.empresaId.error}`}>
                   <Input
                     disabled={true}
@@ -315,7 +314,8 @@ export default function ColabCadastro() {
                   ) : null}
                 </FormGroup>
                 <Row>
-                  <Col md="4">  <label>CPF</label>
+                  <Col md="4">  
+                  <label>CPF</label>
                     <FormGroup className={`has-label ${values.cpf.error}`}>
                       <Input
                         maxLength={18}
@@ -332,7 +332,8 @@ export default function ColabCadastro() {
                         <label className="error">{values.cpf.message}</label>
                       ) : null}
                     </FormGroup></Col>
-                  <Col md="4">  <label>Nome</label>
+                  <Col md="4">  
+                  <label>Nome</label>
                     <FormGroup className={`has-label ${values.nome.error}`}>
                       <Input
                         name="nome"
@@ -346,7 +347,8 @@ export default function ColabCadastro() {
                         <label className="error">{values.nome.message}</label>
                       ) : null}
                     </FormGroup></Col>
-                  <Col md="4">    <label>Data de Adimissão</label>
+                  <Col md="4">    
+                  <label>Data de Adimissão</label>
                     <FormGroup
                       className={`has-label ${values.dtAdmiss.error}`}
                     >
@@ -368,7 +370,7 @@ export default function ColabCadastro() {
 
                 <Row>
                   <Col md="4">
-                    <label>Fornecedor</label>
+                  <label>Fornecedor</label>
                     <FormGroup
                       className={`has-label ${values.fornecId.error}`}
                     >
@@ -398,7 +400,7 @@ export default function ColabCadastro() {
 
                   </Col>
                   <Col md="4">
-                    <label>Perfil</label>
+                  <label>Perfil</label>
                     <FormGroup
                       className={`has-label ${values.PerfilId.error}`}
                     >
@@ -458,7 +460,7 @@ export default function ColabCadastro() {
                 </Row>
                 <Row>
                   <Col md="4">
-                    <label>Skype</label>
+                  <label>Skype</label>
                     <FormGroup className={`has-label ${values.skype.error}`}>
                       <Input
                         name="skype"
@@ -496,7 +498,7 @@ export default function ColabCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="4">
-                    <label>Especialidade</label>
+                  <label>Especialidade</label>
                     <FormGroup claclassName={`has-label ${values.espec.error}`}>
                       <Input
                         name="espec"

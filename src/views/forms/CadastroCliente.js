@@ -38,6 +38,7 @@ import axios from "axios";
 import { normalizeCnpj } from "normalize.js";
 import { Link, useParams } from "react-router-dom";
 
+/*eslint-disable eqeqeq*/
 export default function CadastroCliente() {
   //--------- colocando no modo claro do template
   const { prospect } = useParams()
@@ -47,8 +48,6 @@ export default function CadastroCliente() {
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
@@ -62,10 +61,10 @@ export default function CadastroCliente() {
   }
   const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
-
+  
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/tipoComiss/`);
       const response2 = await axios(`http://localhost:51314/representante/`);
@@ -77,7 +76,6 @@ export default function CadastroCliente() {
         empresaId: { value: response.data.id },
       }));
 
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -231,6 +229,8 @@ export default function CadastroCliente() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
 
@@ -243,7 +243,7 @@ export default function CadastroCliente() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -251,7 +251,7 @@ export default function CadastroCliente() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -266,6 +266,8 @@ export default function CadastroCliente() {
         ClienteRequest(
           cnpjdb,
           values.nomeAbv.value,
+          values.rzSoc.value,
+          optional.fantasia.value,
           values.representante.value,
           values.tipoComiss.value,
           values.empresaId.value,

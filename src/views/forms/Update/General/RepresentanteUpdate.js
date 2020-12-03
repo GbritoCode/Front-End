@@ -43,7 +43,6 @@ function RepresentanteUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const stateSchema = {
@@ -55,13 +54,11 @@ function RepresentanteUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/representante/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
       const response2 = await axios(`http://localhost:51314/tipoComiss/`);
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -84,7 +81,7 @@ function RepresentanteUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
@@ -126,7 +123,9 @@ function RepresentanteUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -144,7 +143,7 @@ function RepresentanteUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -152,7 +151,7 @@ function RepresentanteUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -207,7 +206,7 @@ function RepresentanteUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >

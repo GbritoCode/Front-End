@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -43,7 +43,7 @@ export default function CliContCadastro() {
 
   const [data, setData] = useState({});
   const id = useParams();
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
   const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
@@ -69,7 +69,7 @@ export default function CliContCadastro() {
       }));
     }
     loadData();
-  }, []);
+  }, [id]);
 
   var options = {};
 
@@ -143,7 +143,9 @@ export default function CliContCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -155,7 +157,7 @@ export default function CliContCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -163,7 +165,7 @@ export default function CliContCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+  filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -216,7 +218,7 @@ export default function CliContCadastro() {
               </CardHeader>
               <CardBody>
                 <Form id="RegisterValidation" onSubmit={handleSubmit}>
-                  <label>Cliente</label>
+                <label>Cliente</label>
                   <FormGroup className={`has-label ${values.clienteId.error}`}>
                     <Input
                       disabled
@@ -324,7 +326,7 @@ export default function CliContCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="3">
-                      <label>tipo de Contato</label>
+                    <label>tipo de Contato</label>
                       <FormGroup
                         className={`has-label ${values.tipoConta.error}`}
                       >
@@ -353,7 +355,7 @@ export default function CliContCadastro() {
                   </Row>
                   <Row>
                     <Col md="6">
-                      <label>Skype</label>
+                    <label>Skype</label>
                       <FormGroup className={`has-label ${values.skype.error}`}>
                         <Input
                           name="skype"

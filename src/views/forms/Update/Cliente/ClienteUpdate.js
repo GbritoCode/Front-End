@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -42,15 +42,15 @@ import Tooltip from '@material-ui/core/Tooltip';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import { AttachMoney, Contacts } from "@material-ui/icons";
 
+/*eslint-disable eqeqeq*/
 function ClienteUpdatee(props) {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
-  const { id, prct } = useParams();
+  const {  prct } = useParams();
+const id = useParams()
   console.log(props)
   const [isLoading, setIsLoading] = useState(true);
-  const empresa = store.getState().auth.empresa;
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
   const [data3, setData3] = useState({});
@@ -62,15 +62,15 @@ function ClienteUpdatee(props) {
     TipoComisseId: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-
+  
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/cliente/${id}`);
       const response1 = await axios(`http://localhost:51314/tipoComiss`);
       const response2 = await axios(`http://localhost:51314/representante`);
       const response3 = await axios(`http://localhost:51314/empresa/${empresa}`);
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -98,7 +98,7 @@ function ClienteUpdatee(props) {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
   function validarCNPJ(cnpj) {
     cnpj = cnpj.replace(/[^\d]+/g, "");
 
@@ -204,6 +204,8 @@ function ClienteUpdatee(props) {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
   var options = {};
@@ -253,7 +255,7 @@ function ClienteUpdatee(props) {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -261,7 +263,7 @@ function ClienteUpdatee(props) {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },

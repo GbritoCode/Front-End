@@ -41,12 +41,10 @@ export default function SegmentoCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
-  const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     UndNegId: { value: "", error: "", message: "" },
@@ -57,8 +55,8 @@ export default function SegmentoCadastro() {
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const empresa = store.getState().auth.empresa;
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/und_neg/`);
       const response2 = await axios(`http://localhost:51314/prodt/`);
@@ -71,7 +69,6 @@ export default function SegmentoCadastro() {
         ...prevState,
         empresaId: { value: response.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -119,7 +116,9 @@ export default function SegmentoCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -131,7 +130,7 @@ export default function SegmentoCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -139,7 +138,7 @@ export default function SegmentoCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -187,7 +186,7 @@ export default function SegmentoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                <label>Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -278,7 +277,7 @@ export default function SegmentoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Área</label>
+                    <label>Área</label>
                       <FormGroup className={`has-label ${values.AreaId.error}`}>
                         <Input
                           name="AreaId"

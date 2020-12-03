@@ -27,6 +27,7 @@ import { Link } from "react-router-dom";
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 
+/*eslint-disable eqeqeq*/
 class Tabela_Cliente extends Component {
   state = {
     data: [],

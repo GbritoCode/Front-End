@@ -42,7 +42,6 @@ function ColabCompUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
@@ -58,12 +57,10 @@ function ColabCompUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/colab/comp/1/${id}`);
       const response1 = await axios(
         `http://localhost:51314/colab/${response.data.ColabId}`
       );
-      setData(response.data);
       setData1(response1.data);
 
       setValues((prevState) => ({
@@ -98,7 +95,7 @@ function ColabCompUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
@@ -133,12 +130,15 @@ function ColabCompUpdatee() {
           ...prevState,
           [name]: { value: normalizeCurrency(target) },
         }));
+        break
       case "text":
         setValues((prevState) => ({
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -156,7 +156,7 @@ function ColabCompUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -164,7 +164,7 @@ function ColabCompUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -222,7 +222,7 @@ function ColabCompUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Colaborador</label>
+                      <label>Colaborador</label>
                         <FormGroup
                           className={`has-label ${values.colabId.error}`}
                         >
@@ -376,7 +376,7 @@ function ColabCompUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Tipo de Atendimento</label>
+                          <label>Tipo de Atendimento</label>
                             <FormGroup
                               className={`has-label ${values.tipoAtend.error}`}
                             >

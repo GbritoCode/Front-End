@@ -118,7 +118,9 @@ export default function ParametrosCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -130,7 +132,7 @@ export default function ParametrosCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -138,7 +140,7 @@ export default function ParametrosCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -193,7 +195,7 @@ export default function ParametrosCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                <label>Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -260,7 +262,7 @@ export default function ParametrosCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Valor Base Da Hora</label>
+                    <label>Valor Base Da Hora</label>
                       <FormGroup
                         className={`has-label ${values.vlrBsHr.error}`}
                       >
@@ -303,7 +305,7 @@ export default function ParametrosCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Adianta Pagamento</label>
+                    <label>Adianta Pagamento</label>
                       <FormGroup
                         className={`has-label ${values.adiantaPgmto.error}`}
                       >

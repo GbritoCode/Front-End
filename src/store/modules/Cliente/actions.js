@@ -7,26 +7,32 @@ export function signFailure() {
 export function ClienteRequest(
   CNPJ,
   nomeAbv,
+  rzSoc,
+  fantasia,
   RepresentanteId,
   TipoComisseId,
   EmpresaId
 ) {
   return {
     type: "@cadastro/CADASTRO_REQUEST",
-    payload: { CNPJ, nomeAbv, RepresentanteId, TipoComisseId, EmpresaId },
+    payload: { CNPJ, nomeAbv,  rzSoc,
+      fantasia, RepresentanteId, TipoComisseId, EmpresaId },
   };
 }
 
 export function ClienteUpdate(
   id,
   nomeAbv,
+  rzSoc,
+  fantasia,
   RepresentanteId,
   TipoComisseId,
   prospect
 ) {
   return {
     type: "@update/CLIENTE_REQUEST",
-    payload: { id, nomeAbv, RepresentanteId, TipoComisseId, prospect },
+    payload: { id, nomeAbv,  rzSoc,
+      fantasia, RepresentanteId, TipoComisseId, prospect },
   };
 }
 export function ClienteUpdateSuccess(profile) {

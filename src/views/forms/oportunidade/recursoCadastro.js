@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -41,17 +41,12 @@ export default function RecursoCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams()
-
+const id = useParams() 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
-  const [data3, setData3] = useState([]);
-  const empresa = store.getState().auth.empresa;
   let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
-
+  
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
     colabId: { value: "", error: "", message: "" },
@@ -61,14 +56,13 @@ export default function RecursoCadastro() {
     colabVlrHr: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-
+  
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/oportunidade/${id}`);
       const response2 = await axios(`http://localhost:51314/colab/`);
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -79,10 +73,9 @@ export default function RecursoCadastro() {
         ...prevState,
         oportunidadeId: { value: response1.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   function getColabHr(colab) {
     axios(`http://localhost:51314/colab/comp/${colab}`).then((result) => {
@@ -101,7 +94,6 @@ export default function RecursoCadastro() {
         };
         notify()
       } else {
-        setData3(result.data)
         setValues((prevState) => ({
           ...prevState,
           colabVlrHr: { value: normalizeCurrency(JSON.stringify(result.data[0].valor)) },
@@ -167,7 +159,9 @@ export default function RecursoCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -179,7 +173,7 @@ export default function RecursoCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -187,7 +181,7 @@ export default function RecursoCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -239,7 +233,7 @@ export default function RecursoCadastro() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
 
-                  <label>Oportunidade</label>
+                <label>Oportunidade</label>
                   <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                     <Input
                       disabled

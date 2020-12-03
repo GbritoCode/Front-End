@@ -41,9 +41,7 @@ export default function CadastroCliente() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  const empresa = store.getState().auth.empresa;
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -52,8 +50,8 @@ export default function CadastroCliente() {
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const empresa = store.getState().auth.empresa;
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       setData(response.data);
       setValues((prevState) => ({
@@ -61,7 +59,6 @@ export default function CadastroCliente() {
         empresaId: { value: response.data.id },
       }));
 
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -104,13 +101,14 @@ export default function CadastroCliente() {
     event.persist();
     let target = event.target.value;
     switch (type) {
-      case "text":
+            case "text":
         setValues((prevState) => ({
           ...prevState,
           [name]: { value: target },
         }));
-        break;
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -170,7 +168,7 @@ export default function CadastroCliente() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                <label>Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}

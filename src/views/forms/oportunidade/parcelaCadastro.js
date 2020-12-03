@@ -15,7 +15,6 @@
 
 */
 import React, { useRef, useEffect, useState } from "react";
-import Switch from "react-bootstrap-switch";
 
 // reactstrap components
 import {
@@ -32,7 +31,7 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { cotacaoRequest, oportUpdate } from "~/store/modules/oportunidades/actions";
+import { cotacaoRequest, oportUpdate, parcelaReqest } from "~/store/modules/oportunidades/actions";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { normalizeCurrency, normalizeCnpj, normalizeCalcCurrency } from "normalize";
@@ -46,19 +45,11 @@ export default function ParcelaCadastro() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
-  const [data2, setData2] = useState({});
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" },
-    dtEmissao: { value: "", error: "", message: "" },
-    dtVencimento: { value: "", error: "", message: "" },
-    notaFiscal: { value: "", error: "", message: "" },
-    pedidoCliente: { value: "", error: "", message: "" },
-    situacao: { value: "", error: "", message: "" },
-    dtLiquidacao: { value: "", error: "", message: "" },
-    vlrPago: { value: "", error: "", message: "" },
-    saldo: { value: "", error: "", message: "" },
+
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -126,7 +117,9 @@ export default function ParcelaCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -138,7 +131,7 @@ export default function ParcelaCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -146,7 +139,7 @@ export default function ParcelaCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -159,7 +152,7 @@ export default function ParcelaCadastro() {
       var vlrParceladb = values.vlrParcela.value.replace(/[.,]+/g, "");
 
       dispatch(
-        cotacaoRequest(
+        parcelaReqest(
           values.oportunidadeId.value,
           values.parcela.value,
           vlrParceladb,
@@ -194,7 +187,7 @@ export default function ParcelaCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Oportunidade</label>
+                <label>Oportunidade</label>
                   <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                     <Input
                       disabled

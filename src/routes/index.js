@@ -132,8 +132,8 @@ import WizardFornec from "~/views/forms/wizardFornec";
 import WizardColab from "~/views/forms/wizardColab";
 import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
 import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
-import ParcelaUpdate from "~/views/forms/Update/oportunidades/parcelaUpdate";
-
+import parcUpdate from '~/views/forms/Update/oportunidades/parcUpdate'
+import parcNotaFiscal from '~/views/forms/Update/oportunidades/parcNotaFiscal'
 export default function Routes() {
   return (
     <Switch>
@@ -472,9 +472,14 @@ export default function Routes() {
         component={ParcelaCadastro}
         isPrivate
       />
-      <Routes
-        path="/update/oportunidade/parcela/:id"
-        component={ParcelaUpdate}
+      <Route
+        path="/update/oportunidade/parc/:id"
+        component={parcUpdate}
+        isPrivate
+      />
+            <Route
+        path="/update/oportunidade/parcNota/:id"
+        component={parcNotaFiscal}
         isPrivate
       />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

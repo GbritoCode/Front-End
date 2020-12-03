@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -36,13 +36,14 @@ import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeCnpj } from 'normalize'
+
+/*eslint-disable eqeqeq*/
 function RecDespUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const [data, setData] = useState({});
+const id = useParams()   
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,13 +57,11 @@ function RecDespUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/rec_desp/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
       const response2 = await axios(`http://localhost:51314/itm_controle/`);
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -84,7 +83,7 @@ function RecDespUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
 
   const handleChange = (event, name, type) => {
@@ -96,6 +95,8 @@ function RecDespUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
   var options = {};
@@ -126,7 +127,7 @@ function RecDespUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -134,7 +135,7 @@ function RecDespUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -180,7 +181,7 @@ function RecDespUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >

@@ -33,6 +33,7 @@ import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircleOutline';
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import { AccountBalance, Done, EditOutlined, Close, AccountCircle } from "@material-ui/icons";
 
+/*eslint-disable eqeqeq*/
 function OportTable() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");

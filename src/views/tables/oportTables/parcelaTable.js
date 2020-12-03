@@ -24,6 +24,7 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 import api from "~/services/api";
 import { normalizeCurrency } from 'normalize'
 import { Link } from "react-router-dom";
+import { AttachMoney, Receipt } from "@material-ui/icons";
 
 class ParametrosTable extends Component {
   state = {
@@ -56,15 +57,25 @@ class ParametrosTable extends Component {
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/update/oportunidade/parcela/${parcela.id}`}>
+              <Link to={`/update/oportunidade/parcNota/${parcela.id}`}>
                 <Button
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                 >
-                  <i className="tim-icons icon-pencil" />
+                  <Receipt/>
                 </Button>
-              </Link>{" "}
+              </Link>
+              <Link to={`/update/oportunidade/parc/${parcela.id}`}>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                >
+                  <AttachMoney/>
+                </Button>
+              </Link>
+              
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {

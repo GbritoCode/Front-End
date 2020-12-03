@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState, Fragment } from "react";
+import React, { useRef, useEffect, useState, Fragment, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -42,12 +42,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { AssignmentInd, CreditCard } from "@material-ui/icons";
 
+/* eslint-disable eqeqeq */
 export default function UpdateOport() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const firstRender = useRef(true)
-  const { id } = useParams()
-
+const id = useParams()
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
@@ -57,10 +57,7 @@ export default function UpdateOport() {
   const [data5, setData5] = useState([]);
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
-  const [data8, setData8] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const empresa = store.getState().auth.empresa;
-  const codAux = new Date()
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     colabId: { value: "", error: "", message: "" },
@@ -72,8 +69,7 @@ export default function UpdateOport() {
     contato: { value: "", error: "", message: "" },
     data: { value: "", error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
-    //    cod: { value: JSON.stringify(codAux.getMonth()) + JSON.stringify(codAux.getFullYear()) + " - " + JSON.stringify(Math.floor(Math.random() * (100000 - 10000) + 10000)), error: "", message: "" },
-    cod: { value: 1234, error: "", message: "" },
+    cod: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
   };
   const optionalSchema = {
@@ -82,6 +78,7 @@ export default function UpdateOport() {
   const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
@@ -100,7 +97,6 @@ export default function UpdateOport() {
       setData5(response5.data);
       setData6(response6.data);
       setData7(response7.data);
-      setData8(response8.data);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -160,7 +156,7 @@ export default function UpdateOport() {
       firstRender.current = false
     }
     loadData();
-  }, []);
+  }, [id]);
 
   function getContato(cliente) {
     axios(`http://localhost:51314/cliente/cont/${cliente}`).then((result) => { setData3(result.data); })
@@ -217,6 +213,8 @@ export default function UpdateOport() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
 
@@ -248,7 +246,7 @@ export default function UpdateOport() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -256,7 +254,7 @@ export default function UpdateOport() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -364,7 +362,7 @@ export default function UpdateOport() {
                       ) : null}
                     </FormGroup>
                     <Row><Col md="4">
-                      <label>Colaborador</label>
+                    <label>Colaborador</label>
                       <FormGroup className={`has-label ${values.colabId.error}`}>
                         <Input
                           disabled
@@ -626,7 +624,7 @@ export default function UpdateOport() {
                     </Row>
                     <Row>
                       <Col md="4">
-                        <label>Código</label>
+                      <label>Código</label>
                         <FormGroup className={`has-label ${values.cod.error}`}>
                           <Input
                             disabled
@@ -643,7 +641,7 @@ export default function UpdateOport() {
                         </FormGroup>
                       </Col>
                       <Col md="8">
-                        <label>Descrição</label>
+                      <label>Descrição</label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="desc"
@@ -661,7 +659,7 @@ export default function UpdateOport() {
                     </Row>
                     <Row>
                       <Col>
-                        <label>Narrativa</label>
+                      <label>Narrativa</label>
                         <FormGroup className={`has-label ${optional.narrativa.error}`}>
                           <Input
                             name="narrativa"

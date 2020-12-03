@@ -38,7 +38,6 @@ import axios from "axios";
 export default function CliCompUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
-  const [data, setData] = useState();
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -72,7 +71,6 @@ export default function CliCompUpdatee() {
       const response2 = await axios(
         `http://localhost:51314/cliente/${response.data.ClienteId}`
       );
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
 
@@ -131,7 +129,7 @@ export default function CliCompUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const verifyNumber = (value) => {
     var numberRex = new RegExp("^[0-9]+$");
@@ -167,7 +165,9 @@ export default function CliCompUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -185,7 +185,7 @@ export default function CliCompUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -193,7 +193,7 @@ export default function CliCompUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -256,7 +256,7 @@ export default function CliCompUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Cliente</label>
+                      <label>Cliente</label>
                         <FormGroup
                           className={`has-label ${values.clienteId.error}`}
                         >
@@ -342,7 +342,7 @@ export default function CliCompUpdatee() {
 
                         <Row>
                           <Col md="4">
-                            <label>CEP</label>
+                          <label>CEP</label>
                             <FormGroup
                               className={`has-label ${values.cep.error}`}
                             >
@@ -363,7 +363,7 @@ export default function CliCompUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Rua</label>
+                          <label>Rua</label>
                             <FormGroup
                               className={`has-label ${values.rua.error}`}
                             >
@@ -385,7 +385,7 @@ export default function CliCompUpdatee() {
                           </Col>
 
                           <Col md="4">
-                            <label>Número</label>
+                          <label>Número</label>
                             <FormGroup
                               className={`has-label ${values.numero.error}`}
                             >
@@ -408,7 +408,7 @@ export default function CliCompUpdatee() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <label>Bairro</label>
+                          <label>Bairro</label>
                             <FormGroup
                               className={`has-label ${values.bairro.error}`}
                             >
@@ -429,7 +429,7 @@ export default function CliCompUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Cidade</label>
+                          <label>Cidade</label>
                             <FormGroup
                               className={`has-label ${values.cidade.error}`}
                             >
@@ -450,7 +450,7 @@ export default function CliCompUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>UF</label>
+                          <label>UF</label>
                             <FormGroup className={`has-label ${values.uf.error}`}>
                               <Input
                                 disabled
@@ -503,7 +503,7 @@ export default function CliCompUpdatee() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <label>Inscrição Municipal</label>
+                          <label>Inscrição Municipal</label>
                             <FormGroup
                               className={`has-label ${values.inscMun.error}`}
                             >
@@ -523,7 +523,7 @@ export default function CliCompUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Inscrição Estadual</label>
+                          <label>Inscrição Estadual</label>
                             <FormGroup
                               className={`has-label ${values.inscEst.error}`}
                             >
@@ -543,7 +543,7 @@ export default function CliCompUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Condição de Pagamento</label>
+                          <label>Condição de Pagamento</label>
                             <FormGroup
                               className={`has-label ${values.CondPgmtoId.error}`}
                             >

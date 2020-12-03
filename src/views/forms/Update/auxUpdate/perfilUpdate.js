@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -41,26 +41,23 @@ function AreaUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams();
+const id = useParams()  
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  const [data1, setData1] = useState({});
-  const empresa = store.getState().auth.empresa;
-
+  
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-
+  
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/perfil/${id}`);
       setData(response.data);
-      setData1(response1.data);
 
       setValues((prevState) => ({
         ...prevState,
@@ -75,19 +72,20 @@ function AreaUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const handleChange = (event, name, type) => {
     event.persist();
     let target = event.target.value;
     switch (type) {
-      case "text":
+            case "text":
         setValues((prevState) => ({
           ...prevState,
           [name]: { value: target },
         }));
-        break;
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -179,7 +177,7 @@ function AreaUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >

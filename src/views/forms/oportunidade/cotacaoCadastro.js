@@ -162,7 +162,9 @@ export default function CotacaoCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   const descontoChange = (descont) => {
     const value = descont.replace(/[.,]+/g, "")
@@ -197,7 +199,7 @@ export default function CotacaoCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -205,7 +207,7 @@ export default function CotacaoCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -284,7 +286,7 @@ export default function CotacaoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                  Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -309,7 +311,7 @@ export default function CotacaoCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                      <label>Oportunidade</label>
+                      Oportunidade</label>
                       <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                         <Input
                           disabled
@@ -337,7 +339,7 @@ export default function CotacaoCadastro() {
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Probabilidade de Venda</label>
+                      Probabilidade de Venda</label>
                       <FormGroup
                         className={`has-label ${values.probVend.error}`}
                       >
@@ -366,7 +368,7 @@ export default function CotacaoCadastro() {
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Tipo de Cobrança</label>
+                      Tipo de Cobrança</label>
                       <FormGroup
                         className={`has-label ${values.tipoCobranca.error}`}
                       >
@@ -399,7 +401,7 @@ export default function CotacaoCadastro() {
                   </Row>
                   <Row>
                     <Col md="4">
-                      <label>Horas Previstas</label>
+                      Horas Previstas</label>
                       <FormGroup
                         className={`has-label ${values.hrsPrevst.error}`}
                       >
@@ -426,7 +428,7 @@ export default function CotacaoCadastro() {
                     </Col>
                     <Col md="4">
                       {" "}
-                      <label>Valor da Proposta</label>
+                      Valor da Proposta</label>
                       <FormGroup
                         className={`has-label ${values.vlrProp.error}`}
                       >
@@ -447,7 +449,7 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Valor Desconto</label>
+                      Valor Desconto</label>
                       <FormGroup
                         className={`has-label ${values.vlrDesc.error}`}
                       >
@@ -473,7 +475,7 @@ export default function CotacaoCadastro() {
                   <Row>
                     <Col md="4">
                       {" "}
-                      <label>Valor Líquido</label>
+                      Valor Líquido</label>
                       <FormGroup
                         className={`has-label ${values.vlrLiq.error}`}
                       >
@@ -494,7 +496,7 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Receita Líquida</label>
+                      Receita Líquida</label>
                       <FormGroup
                         className={`has-label ${values.recLiq.error}`}
                       >
@@ -515,7 +517,7 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Previsão de Lucro</label>
+                      Previsão de Lucro</label>
                       <FormGroup
                         className={`has-label ${values.prevLucro.error}`}
                       >
@@ -539,7 +541,7 @@ export default function CotacaoCadastro() {
                   </Row>
                   <Row>
                     <Col md="4">
-                      <label>Número de Parcelas</label>
+                      Número de Parcelas</label>
                       <FormGroup
                         className={`has-label ${values.numParcelas.error}`}
                       >
@@ -613,7 +615,7 @@ export default function CotacaoCadastro() {
                   </Row>
                   <Row>
                     <Col>
-                      <label>Descrição</label>
+                      Descrição</label>
                       <FormGroup
                         className={`has-label ${optional.desc.error}`}
                       >

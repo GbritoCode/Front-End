@@ -31,21 +31,21 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { cotacaoUpdate } from "~/store/modules/oportunidades/actions";
+import {  parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeCnpj, normalizeCurrency, normalizeCalcCurrency } from "normalize";
+import {  normalizeCurrency, normalizeCalcCurrency } from "normalize";
 
+/*eslint-disable eqeqeq*/
 export default function ParcelaUpdate() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState();
   const [data1, setData1] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
@@ -67,8 +67,8 @@ export default function ParcelaUpdate() {
     async function loadData() {
       const response = await axios(`http://localhost:51314/parcela/aux/${id}`);
       const response1 = await axios(`http://localhost:51314/oportunidade/${response.data.oportunidadeId}`);
-      setData(response.data);
       setData1(response1.data);
+      console.log(response.data)
       setValues((prevState) => ({
         ...prevState,
         oportunidadeId: { value: response.data.oportunidadeId },
@@ -116,7 +116,7 @@ export default function ParcelaUpdate() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
 
   const verifyNumber = (value) => {
@@ -188,14 +188,17 @@ export default function ParcelaUpdate() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
-
+  console.log(values)
+  console.log(optional)
   const handleSubmit = (evt) => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -205,7 +208,7 @@ export default function ParcelaUpdate() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -213,7 +216,7 @@ export default function ParcelaUpdate() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -223,21 +226,21 @@ export default function ParcelaUpdate() {
     }
 
     if (valid && filled) {
-      var vlrParceladb = values.vlrParcela.values.replace(/[^\d]+/g, "");
+      var vlrParceladb = values.vlrParcela.value.replace(/[^\d]+/g, "");
       var vlrPagodb = optional.vlrPago.value.replace(/[^\d]+/g, "");
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        cotacaoUpdate(
+        parcelaUpdate(
           id,
           values.oportunidadeId.value,
           values.parcela.value,
           vlrParceladb,
-          values.dtEmissao.values,
-          values.dtVencimento.values,
-          values.notaFiscal.values,
+          values.dtEmissao.value,
+          values.dtVencimento.value,
+          values.notaFiscal.value,
           optional.pedidoCliente.value,
-          optional.situacao.value,
+          2,
           optional.dtLiquidacao.value,
           vlrPagodb,
           saldodb,
@@ -276,7 +279,7 @@ export default function ParcelaUpdate() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Oportunidade</label>
+                      <label>Oportunidade</label>
                         <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                           <Input
                             disabled
@@ -309,6 +312,7 @@ export default function ParcelaUpdate() {
                               className={`has-label ${values.parcela.error}`}
                             >
                               <Input
+                              disabled
                                 name="parcela"
                                 type="text"
                                 onChange={(event) =>
@@ -330,7 +334,8 @@ export default function ParcelaUpdate() {
                               className={`has-label ${values.vlrParcela.error}`}
                             >
                               <Input
-                                name="vlrParcela"
+                              disabled
+                              name="vlrParcela"
                                 type="text"
                                 onChange={(event) =>
                                   handleChange(event, "vlrParcela", "currency")
@@ -371,7 +376,7 @@ export default function ParcelaUpdate() {
 
                         <Row>
                           <Col md="4">
-                            <label>Data de Vencimento</label>
+                          <label>Data de Vencimento</label>
                             <FormGroup
                               className={`has-label ${values.dtVencimento.error}`}
                             >
@@ -392,13 +397,13 @@ export default function ParcelaUpdate() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Nota Fiscal</label>
+                          <label>Nota Fiscal</label>
                             <FormGroup
                               className={`has-label ${values.notaFiscal.error}`}
                             >
                               <Input
                                 name="notaFiscal"
-                                type="date"
+                                type="text"
                                 onChange={(event) =>
                                   handleChange(event, "notaFiscal", "text")
                                 }
@@ -412,7 +417,7 @@ export default function ParcelaUpdate() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Pedido Cliente</label>
+                          <label>Pedido Cliente</label>
                             <FormGroup
                               className={`has-label ${optional.pedidoCliente.error}`}
                             >
@@ -436,145 +441,59 @@ export default function ParcelaUpdate() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <Label>Motivo Orçamento/Revisão</Label>
-                            <FormGroup check >
+                            <Label>Situação</Label>
+                            <FormGroup style={{marginBottom: 25}} check >
                               <Label check>
                                 <Input
-                                  checked={checkPendente(optional)}
+                                disabled
+                                checked={checkPendente(optional)}
                                   name="situacao"
                                   type="radio"
                                   onChange={(event) => handleChange(event, "situacao", "optional")}
                                   value={1}
                                 />{' '}
-                    Orçamento
+                    Pendente
                     </Label>
                               <Label check>
                                 <Input
-                                  checked={checkAberta(optional)}
+                                disabled
+                                checked={checkAberta(optional)}
                                   name="situacao"
                                   type="radio"
                                   onChange={(event) => handleChange(event, "situacao", "optional")}
                                   value={2}
                                 />
-                    Desconto
+                    Aberta
                     </Label>
                               <Label check>
                                 <Input
-                                  checked={checkParcial(optional)}
+                                disabled
+                                checked={checkParcial(optional)}
                                   name="situacao"
                                   type="radio"
                                   onChange={(event) => handleChange(event, "situacao", "optional")}
                                   value={3}
                                 />
-                    Escopo
+                    Parcial
                     </Label>
                               <Label check>
                                 <Input
-                                  checked={checkLiquidada(optional)}
+                                disabled
+                                checked={checkLiquidada(optional)}
                                   name="situacao"
                                   type="radio"
                                   onChange={(event) => handleChange(event, "situacao", "optional")}
                                   value={4}
                                 />
-                    Escopo
+                    Liquidada
                     </Label>
                             </FormGroup>
                           </Col>
-                          <Col md="4">
-                            <label>Data Liquidação</label>
-                            <FormGroup
-                              className={`has-label ${optional.dtLiquidacao.error}`}
-                            >
-                              <Input
-                                name="dtLiquidacao"
-                                type="date"
-                                onChange={(event) => {
-                                  handleChange(event, "dtLiquidacao", "optional");
-                                }
-                                }
-                                value={optional.dtLiquidacao.value}
-                              />
-                              {optional.dtLiquidacao.error === "has-danger" ? (
-                                <label className="error">
-                                  {optional.dtLiquidacao.message}
-                                </label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <label>Valor Pago</label>
-                            <FormGroup
-                              className={`has-label ${optional.vlrPago.error}`}
-                            >
-                              <Input
-                                name="vlrPago"
-                                type="text"
-                                onChange={(event) => {
-                                  handleChange(event, "vlrPago", "optional");
-                                }
-                                }
-                                value={optional.vlrPago.value}
-                              />
-                              {optional.vlrPago.error === "has-danger" ? (
-                                <label className="error">
-                                  {optional.vlrPago.message}
-                                </label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-
+                         
+                        
                         </Row>
-                        <Row>
-                          <Col md="4">
-                            <label>Saldo</label>
-                            <FormGroup
-                              className={`has-label ${optional.saldo.error}`}
-                            >
-                              <Input
-                                name="saldo"
-                                type="text"
-                                onChange={(event) => {
-                                  handleChange(event, "saldo", "optional");
-                                }
-                                }
-                                value={optional.saldo.value}
-                              />
-                              {optional.saldo.error === "has-danger" ? (
-                                <label className="error">
-                                  {optional.saldo.message}
-                                </label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-
-                          <Col md="4">
-
-                          </Col>
-
-                        </Row>
-                        <Row>
-                          <Col>
-                            <label>Descrição</label>
-                            <FormGroup
-                              className={`has-label ${optional.desc.error}`}
-                            >
-                              <Input
-                                name="desc"
-                                type="textarea"
-                                onChange={(event) =>
-                                  handleChange(event, "desc", "optional")
-                                }
-                                value={optional.desc.value}
-                              />
-                              {optional.desc.error === "has-danger" ? (
-                                <label className="error">
-                                  {optional.desc.message}
-                                </label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Link to={`/tabelas/oportunidade/cotacao/${data1.id}`}>
+                    
+                        <Link to={`/tabelas/oportunidade/parcela/${data1.id}`}>
                           <Button
                             style={{
                               paddingLeft: 32,

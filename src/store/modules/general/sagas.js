@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import history from "~/services/history.js";
 import api from "~/services/api.js";
 
-import { requestFailure, ClienteUpdateSuccess, condPgmtoRequest } from "./actions.js";
+import { requestFailure, ClienteUpdateSuccess } from "./actions.js";
 
 export function* areaCadastro({ payload }) {
   try {
@@ -50,10 +50,10 @@ export function* empresaCadastro({ payload }) {
       license,
       UserId,
     });
-    if (first == true) {
+    if (first === true) {
       history.push("/cadastro/wizard/fornec");
     } else {
-      if (first == false) {
+      if (first === false) {
         history.push("/tabelas/general/empresa");
       }
     }
@@ -125,10 +125,10 @@ export function* fornecCadastro({ payload }) {
       agencia,
       conta,
     });
-    if (first == false) {
+    if (first === false) {
       history.push("/tabelas/general/fornec");
     } else {
-      if (first == true) {
+      if (first === true) {
         history.push("/cadastro/wizard/colab");
       }
     }

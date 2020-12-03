@@ -37,10 +37,8 @@ import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeCnpj } from "normalize.js";
 import { Link } from "react-router-dom";
-import TextField from '@material-ui/core/TextField';
 export default function CadastroOport() {
   //--------- colocando no modo claro do template
-  let jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [data, setData] = useState({});
@@ -51,10 +49,6 @@ export default function CadastroOport() {
   const [data5, setData5] = useState([]);
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const empresa = store.getState().auth.empresa;
-  const email = store.getState().auth.user.email;
-  const codAux = new Date()
 
   let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
 
@@ -70,7 +64,6 @@ export default function CadastroOport() {
     data: { value: year + "-" + month + "-" + date, error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
     cod: { value: "", error: "", message: "" },
-    //cod: { value: 1234, error: "", message: "" },
     desc: { value: "", error: "", message: "" },
   };
   const optionalSchema = {
@@ -79,8 +72,11 @@ export default function CadastroOport() {
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const codAux = new Date(),
+   empresa = store.getState().auth.empresa,
+   email = store.getState().auth.user.email;
+
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/colab/?email=${email}`);
       const response2 = await axios(`http://localhost:51314/cliente/`);
@@ -99,7 +95,7 @@ export default function CadastroOport() {
       if (response8.data.length !== 0) {
         var zerofilled = ('0000' + (response8.data[0].id + 1)).slice(-4);
       } else {
-        var zerofilled = ('0000' + 1).slice(-4);
+        zerofilled = ('0000' + 1).slice(-4);
       }
       setValues((prevState) => ({
         ...prevState,
@@ -113,7 +109,6 @@ export default function CadastroOport() {
         ...prevState,
         cod: { value: "A" + JSON.stringify(codAux.getYear()) + JSON.stringify(codAux.getMonth() + 1) + "-" + zerofilled },
       }));
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -172,7 +167,9 @@ export default function CadastroOport() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -183,7 +180,7 @@ export default function CadastroOport() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -191,7 +188,7 @@ export default function CadastroOport() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -272,7 +269,7 @@ export default function CadastroOport() {
                     ) : null}
                   </FormGroup>
                   <Row><Col md="4">
-                    <label>Colaborador</label>
+                  <label>Colaborador</label>
                     <FormGroup className={`has-label ${values.colabId.error}`}>
                       <Input
                         disabled
@@ -289,20 +286,20 @@ export default function CadastroOport() {
                     </FormGroup>
                   </Col>
                     <Col md="4">
-                      <Label>Data</Label>
-                      <FormGroup className={`has-label ${values.data.error}`}>
-                        <TextField
-                          id="date"
-                          type="date"
-                          onChange={(event) =>
-                            handleChange(event, "data", "text")
-                          }
-                          value={values.data.value}
-                        />
-                        {values.data.error === "has-danger" ? (
-                          <label className="error">{values.data.message}</label>
-                        ) : null}
-                      </FormGroup>
+                    <Label>Data</Label>
+                        <FormGroup className={`has-label ${values.data.error}`}>
+                          <Input
+                            name="name_abv"
+                            type="date"
+                            onChange={(event) =>
+                              handleChange(event, "data", "text")
+                            }
+                            value={values.data.value}
+                          />
+                          {values.data.error === "has-danger" ? (
+                            <label className="error">{values.data.message}</label>
+                          ) : null}
+                        </FormGroup>
                     </Col>
                     <Col md="4">
                       <p style={{ paddingTop: 27, paddingLeft: 47, fontSize: 20, fontStyle: "sans-serif" }}>Aberta</p>
@@ -510,7 +507,7 @@ export default function CadastroOport() {
                   </Row>
                   <Row>
                     <Col md="4">
-                      <label>Código</label>
+                    <label>Código</label>
                       <FormGroup className={`has-label ${values.cod.error}`}>
                         <Input
                           disabled
@@ -527,7 +524,7 @@ export default function CadastroOport() {
                       </FormGroup>
                     </Col>
                     <Col md="8">
-                      <label>Descrição</label>
+                    <label>Descrição</label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           name="desc"
@@ -545,7 +542,7 @@ export default function CadastroOport() {
                   </Row>
                   <Row>
                     <Col>
-                      <label>Narrativa</label>
+                    <label>Narrativa</label>
                       <FormGroup className={`has-label ${optional.narrativa.error}`}>
                         <Input
                           name="narrativa"

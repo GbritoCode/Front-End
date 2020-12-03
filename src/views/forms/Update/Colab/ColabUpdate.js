@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -38,18 +38,17 @@ import { normalizeCpf, normalizeFone } from "normalize";
 import classNames from "classnames";
 import Tooltip from '@material-ui/core/Tooltip';
 
+/*eslint-disable eqeqeq*/
 function ColabUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { id } = useParams();
-
+const id = useParams()  
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -66,14 +65,12 @@ function ColabUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/colab/${id}`);
       const response1 = await axios(`http://localhost:51314/fornec`);
       const response2 = await axios(`http://localhost:51314/perfil`);
       const response3 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -128,7 +125,7 @@ function ColabUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, "");
@@ -147,7 +144,7 @@ function ColabUpdatee() {
     if (Resto != parseInt(cpf.substring(9, 10))) return false;
 
     Soma = 0;
-    for (var i = 1; i <= 10; i++)
+    for ( i = 1; i <= 10; i++)
       Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
 
@@ -235,7 +232,9 @@ function ColabUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -252,7 +251,7 @@ function ColabUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -260,7 +259,7 @@ function ColabUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -331,7 +330,7 @@ function ColabUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                        Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >
@@ -357,7 +356,7 @@ function ColabUpdatee() {
                           ) : null}
                         </FormGroup>
 
-                        <label>CPF</label>
+                        CPF</label>
                         <FormGroup className={`has-label ${values.cpf.error}`}>
                           <Input
                             maxLength={18}
@@ -379,7 +378,7 @@ function ColabUpdatee() {
                         <Row>
                           <Col md="4">
                             {" "}
-                            <label>Nome</label>
+                            Nome</label>
                             <FormGroup
                               className={`has-label ${values.nome.error}`}
                             >
@@ -399,7 +398,7 @@ function ColabUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Data de Adimissão</label>
+                            Data de Adimissão</label>
                             <FormGroup
                               className={`has-label ${values.dtAdmiss.error}`}
                             >
@@ -420,7 +419,7 @@ function ColabUpdatee() {
                           </Col>
                           <Col md="4">
                             {" "}
-                            <label>Celular</label>
+                            Celular</label>
                             <FormGroup
                               className={`has-label ${values.cel.error}`}
                             >
@@ -450,7 +449,7 @@ function ColabUpdatee() {
                         <Row>
                           <Col md="6">
                             {" "}
-                            <label>Fornecedor</label>
+                            Fornecedor</label>
                             <FormGroup
                               className={`has-label ${values.fornecId.error}`}
                             >
@@ -482,7 +481,7 @@ function ColabUpdatee() {
                             </FormGroup>
                           </Col>
                           <Col md="6">
-                            <label>Perfil</label>
+                            Perfil</label>
                             <FormGroup
                               className={`has-label ${values.PerfilId.error}`}
                             >
@@ -518,7 +517,7 @@ function ColabUpdatee() {
                         <Row>
                           <Col md="6">
                             {" "}
-                            <label>Skype</label>
+                            Skype</label>
                             <FormGroup
                               className={`has-label ${values.skype.error}`}
                             >
@@ -539,7 +538,7 @@ function ColabUpdatee() {
                           </Col>
                           <Col md="6">
                             {" "}
-                            <label>Email</label>
+                            Email</label>
                             <FormGroup
                               className={`has-label ${values.email.error}`}
                             >
@@ -560,7 +559,7 @@ function ColabUpdatee() {
                           </Col>
                         </Row>
 
-                        <label>Especialidade</label>
+                        Especialidade</label>
                         <FormGroup
                           claclassName={`has-label ${values.espec.error}`}
                         >

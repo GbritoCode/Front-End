@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, Fragment, useEffect, useState, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -37,13 +37,13 @@ import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { normalizeCnpj, normalizeCurrency, normalizeCalcCurrency } from "normalize";
 
+/*eslint-disable eqeqeq*/
 function CotacaoUpdate() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const [data, setData] = useState();
+const id = useParams()   
   const [data1, setData1] = useState();
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState();
@@ -69,13 +69,11 @@ function CotacaoUpdate() {
   const imposto = 14 / 100
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/cotacao/aux/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
       const response2 = await axios(`http://localhost:51314/oportunidade/${response.data.oportunidadeId}`);
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -133,7 +131,7 @@ function CotacaoUpdate() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   function getCliData(cobranca) {
     axios(`http://localhost:51314/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`)
@@ -227,7 +225,9 @@ function CotacaoUpdate() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
   var options = {};
 
@@ -245,7 +245,7 @@ function CotacaoUpdate() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -253,7 +253,7 @@ function CotacaoUpdate() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -320,7 +320,7 @@ function CotacaoUpdate() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup className={`has-label ${values.empresaId.error}`}>
                           <Input
                             disabled={true}
@@ -345,7 +345,7 @@ function CotacaoUpdate() {
                         </FormGroup>
                         <Row>
                           <Col md="4">
-                            <label>Oportunidade</label>
+                          <label>Oportunidade</label>
                             <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
                               <Input
                                 disabled
@@ -435,7 +435,7 @@ function CotacaoUpdate() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <label>Horas Previstas</label>
+                          <label>Horas Previstas</label>
                             <FormGroup
                               className={`has-label ${values.hrsPrevst.error}`}
                             >
@@ -483,7 +483,7 @@ function CotacaoUpdate() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Valor Desconto</label>
+                          <label>Valor Desconto</label>
                             <FormGroup
                               className={`has-label ${values.vlrDesc.error}`}
                             >
@@ -530,7 +530,7 @@ function CotacaoUpdate() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Receita Líquida</label>
+                          <label>Receita Líquida</label>
                             <FormGroup
                               className={`has-label ${values.recLiq.error}`}
                             >
@@ -551,7 +551,7 @@ function CotacaoUpdate() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            <label>Previsão de Lucro</label>
+                          <label>Previsão de Lucro</label>
                             <FormGroup
                               className={`has-label ${values.prevLucro.error}`}
                             >
@@ -575,7 +575,7 @@ function CotacaoUpdate() {
                         </Row>
                         <Row>
                           <Col md="4">
-                            <label>Número de Parcelas</label>
+                          <label>Número de Parcelas</label>
                             <FormGroup
                               className={`has-label ${values.numParcelas.error}`}
                             >
@@ -652,7 +652,7 @@ function CotacaoUpdate() {
                         </Row>
                         <Row>
                           <Col>
-                            <label>Descrição</label>
+                          <label>Descrição</label>
                             <FormGroup
                               className={`has-label ${optional.desc.error}`}
                             >

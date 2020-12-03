@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 
 // reactstrap components
 import {
@@ -41,7 +41,7 @@ export default function ColabCompCadastro() {
   document.body.classList.add("white-content");
 
   const id = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const stateSchema = {
     colabId: { value: "", error: "", message: "" },
     nivel: { value: "", error: "", message: "" },
@@ -66,7 +66,7 @@ export default function ColabCompCadastro() {
       }));
     }
     loadData();
-  }, []);
+  }, [id]);
 
   var options = {};
 
@@ -115,6 +115,8 @@ export default function ColabCompCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
 
@@ -127,7 +129,7 @@ export default function ColabCompCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -135,7 +137,7 @@ export default function ColabCompCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -186,7 +188,7 @@ export default function ColabCompCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Colaborador</label>
+                <label>Colaborador</label>
                   <FormGroup className={`has-label ${values.colabId.error}`}>
                     <Input
                       disabled
@@ -332,7 +334,7 @@ export default function ColabCompCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Tipo de Atendimento</label>
+                    <label>Tipo de Atendimento</label>
                       <FormGroup
                         className={`has-label ${values.tipoAtend.error}`}
                       >

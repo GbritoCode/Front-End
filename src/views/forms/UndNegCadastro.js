@@ -41,9 +41,7 @@ export default function UndNegCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  const empresa = store.getState().auth.empresa;
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     descUndNeg: { value: "", error: "", message: "" },
@@ -51,15 +49,14 @@ export default function UndNegCadastro() {
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+  const empresa = store.getState().auth.empresa;
+  async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
         empresaId: { value: response.data.id },
       }));
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -107,7 +104,9 @@ export default function UndNegCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-    }
+        break
+        default:
+      }
   };
 
   const handleSubmit = (evt) => {
@@ -119,7 +118,7 @@ export default function UndNegCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -127,7 +126,7 @@ export default function UndNegCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -167,7 +166,7 @@ export default function UndNegCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                <label>Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}

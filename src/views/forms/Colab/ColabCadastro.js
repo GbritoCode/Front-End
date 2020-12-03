@@ -38,6 +38,7 @@ import axios from "axios";
 import { normalizeFone, normalizeCpf, normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
 
+/*eslint-disable eqeqeq*/
 export default function ColabCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
@@ -46,9 +47,7 @@ export default function ColabCadastro() {
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const empresa = store.getState().auth.empresa;
-
+  
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -62,10 +61,10 @@ export default function ColabCadastro() {
     espec: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-
+  
   useEffect(() => {
+    const empresa = store.getState().auth.empresa;
     async function loadData() {
-      setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:51314/fornec`);
       const response2 = await axios(`http://localhost:51314/perfil`);
@@ -77,7 +76,6 @@ export default function ColabCadastro() {
         empresaId: { value: response.data.id },
       }));
 
-      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -106,7 +104,7 @@ export default function ColabCadastro() {
     if (Resto != parseInt(cpf.substring(9, 10))) return false;
 
     Soma = 0;
-    for (var i = 1; i <= 10; i++)
+    for ( i = 1; i <= 10; i++)
       Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
 
@@ -196,6 +194,8 @@ export default function ColabCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
 
@@ -209,7 +209,7 @@ export default function ColabCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -217,7 +217,7 @@ export default function ColabCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -277,7 +277,7 @@ export default function ColabCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <label>Empresa</label>
+                <label>Empresa</label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
                       disabled={true}
@@ -337,7 +337,7 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <label>Data de Adimissão</label>
+                    <label>Data de Adimissão</label>
                       <FormGroup
                         className={`has-label ${values.dtAdmiss.error}`}
                       >
@@ -415,7 +415,7 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="6">
-                      <label>Perfil</label>
+                    <label>Perfil</label>
                       <FormGroup
                         className={`has-label ${values.PerfilId.error}`}
                       >

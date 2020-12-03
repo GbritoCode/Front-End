@@ -42,7 +42,6 @@ function UndNegUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data, setData] = useState({});
-  const [data1, setData1] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -70,7 +69,7 @@ function UndNegUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const normalizeInput = (value, previousValue) => {
     if (!value) return value;
@@ -108,6 +107,8 @@ function UndNegUpdatee() {
           ...prevState,
           [name]: { value: target },
         }));
+        break
+        default:
     }
   };
   var options = {};
@@ -126,7 +127,7 @@ function UndNegUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false
         break;
       }
     }
@@ -134,7 +135,7 @@ function UndNegUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -180,7 +181,7 @@ function UndNegUpdatee() {
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
-                        <label>Empresa</label>
+                      <label>Empresa</label>
                         <FormGroup
                           className={`has-label ${values.empresaId.error}`}
                         >

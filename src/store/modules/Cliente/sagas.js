@@ -11,6 +11,8 @@ export function* clienteCadastro({ payload }) {
     const {
       CNPJ,
       nomeAbv,
+      rzSoc,
+      fantasia,
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
@@ -19,6 +21,8 @@ export function* clienteCadastro({ payload }) {
     yield call(api.post, "cliente", {
       CNPJ,
       nomeAbv,
+      rzSoc,
+      fantasia,
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
@@ -33,10 +37,13 @@ export function* clienteCadastro({ payload }) {
 
 export function* updateCliente({ payload }) {
   try {
-    const { id, nomeAbv, RepresentanteId, TipoComisseId, prospect } = payload;
+    const { id, nomeAbv,  rzSoc,
+      fantasia, RepresentanteId, TipoComisseId, prospect } = payload;
 
     const Cliente = Object.assign({
       nomeAbv,
+      rzSoc,
+      fantasia,
       RepresentanteId,
       TipoComisseId,
       prospect,

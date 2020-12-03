@@ -1,3 +1,4 @@
+/*eslint-disable eqeqeq*/
 export function normalizeCpf(value) {
   if (!value) return value;
   value = JSON.stringify(value)
