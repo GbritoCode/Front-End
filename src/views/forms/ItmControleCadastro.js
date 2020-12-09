@@ -227,7 +227,9 @@ export default function ItmControleCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Descrição do Item</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>Descrição do Item</Label>
                   <FormGroup className={`has-label ${values.descItem.error}`}>
                     <Input
                       name="descItem"
@@ -241,7 +243,9 @@ export default function ItmControleCadastro() {
                       <Label className="error">{values.descItem.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Tipo de Item</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Tipo de Item</Label>
                   <FormGroup className={`has-label ${values.tipoItem.error}`}>
                     <Input
                       name="tipoItem"
@@ -255,6 +259,9 @@ export default function ItmControleCadastro() {
                       <Label className="error">{values.tipoItem.message}</Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                    <Col md="4">
+                        
                   <Label>Conta Contábil</Label>
                   <FormGroup
                     className={`has-label ${values.contaContabil.error}`}
@@ -273,7 +280,11 @@ export default function ItmControleCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Centro de Custo</Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                    <Label>Centro de Custo</Label>
                   <FormGroup className={`has-label ${values.centCusto.error}`}>
                     <Input
                       name="centCusto"
@@ -289,6 +300,17 @@ export default function ItmControleCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      
+                    </Col>
+                    <Col md="4">
+                      
+                    </Col>
+                  </Row>
+             
+                
+                 
                   <Link to={`/tabelas/general/itm_controle`}>
                     <Button
                       style={{

@@ -41,7 +41,7 @@ export default function CliContUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const id = useParams()
+const{ id} = useParams()
   const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
@@ -61,7 +61,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(
-        `http://localhost:51314/cliente/cont/1/${id.id}`
+        `http://localhost:51314/cliente/cont/1/${id}`
       );
       const response1 = await axios(
         `http://localhost:51314/cliente/${response.data.ClienteId}`

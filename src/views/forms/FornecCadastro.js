@@ -232,7 +232,7 @@ export default function FornecCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -240,7 +240,7 @@ export default function FornecCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        var filled = false;
+        filled = false;
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -250,7 +250,7 @@ export default function FornecCadastro() {
     }
     for (let j = 0; j < tamanho; j++) {
       if (aux[j][1].value !== "") {
-        var filled = true;
+        filled = true;
       } else {
         filled = false;
         setValues((prevState) => ({
@@ -344,8 +344,9 @@ export default function FornecCadastro() {
                             </Label>
                           ) : null}
                         </FormGroup>
-
-                        <Label>CNPJ</Label>
+                        <Row>
+                          <Col md="4">
+                          <Label>CNPJ</Label>
                         <FormGroup className={`has-label ${values.cnpj.error}`}>
                           <Input
                             maxLength={18}
@@ -365,10 +366,9 @@ export default function FornecCadastro() {
                             <Label className="error">{values.cnpj.message}</Label>
                           ) : null}
                         </FormGroup>
-                        <Row>
-                          <Col md="6">
-                            {" "}
-                            <Label>Nome</Label>
+                          </Col>
+                          <Col md="4">
+                          <Label>Nome</Label>
                             <FormGroup
                               className={`has-label ${values.nome.error}`}
                             >
@@ -388,7 +388,7 @@ export default function FornecCadastro() {
                               ) : null}
                             </FormGroup>
                           </Col>
-                          <Col md="6">
+                          <Col md="4">
                           <Label>Nome Abreviado</Label>
                             <FormGroup
                               className={`has-label ${values.nomeConta.error}`}
@@ -409,43 +409,10 @@ export default function FornecCadastro() {
                             </FormGroup>
                           </Col>
                         </Row>
-
                         <Row>
+                          
                           <Col md="4">
-                          <Label>Condição de Pagamento</Label>
-                            <FormGroup
-                              className={`has-label ${values.CondPgmtoId.error}`}
-                            >
-                              <Input
-                                name="CondPgmtoId"
-                                type="select"
-                                onChange={(event) =>
-                                  handleChange(event, "CondPgmtoId", "text")
-                                }
-                                value={values.CondPgmtoId.value}
-                              >
-                                {" "}
-                                <option disabled value="">
-                                  {" "}
-                                Selecione a condição de pagamento{" "}
-                                </option>
-                                {data1.map((condPgmto) => (
-                                  <option value={condPgmto.id}>
-                                    {" "}
-                                    {condPgmto.id} - {condPgmto.desc}{" "}
-                                  </option>
-                                ))}
-                              </Input>
-                              {values.CondPgmtoId.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.CondPgmtoId.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            {" "}
-                            <Label>Telefone</Label>
+                          <Label>Telefone</Label>
                             <FormGroup
                               className={`has-label ${values.fone.error}`}
                             >
@@ -474,8 +441,7 @@ export default function FornecCadastro() {
                             </FormGroup>
                           </Col>
                           <Col md="4">
-                            {" "}
-                            <Label>CEP</Label>
+                          <Label>CEP</Label>
                             <FormGroup
                               className={`has-label ${values.cep.error}`}
                             >
@@ -495,9 +461,6 @@ export default function FornecCadastro() {
                               ) : null}
                             </FormGroup>
                           </Col>
-                        </Row>
-
-                        <Row>
                           <Col md="4">
                           <Label>Rua</Label>
                             <FormGroup
@@ -519,7 +482,9 @@ export default function FornecCadastro() {
                               ) : null}
                             </FormGroup>
                           </Col>
-                          <Col md="2">
+                        </Row>
+                        <Row>
+                          <Col md="4">
                           <Label>Número</Label>
                             <FormGroup
                               className={`has-label ${values.numero.error}`}
@@ -541,7 +506,7 @@ export default function FornecCadastro() {
                             </FormGroup>
                           </Col>
 
-                          <Col md="6">
+                          <Col md="8">
                           <Label>Complemento</Label>
                             <FormGroup
                               className={`has-label ${optional.complemento.error}`}
@@ -746,6 +711,48 @@ export default function FornecCadastro() {
                                 </Label>
                               ) : null}
                             </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                          <Label>Condição de Pagamento</Label>
+                            <FormGroup
+                              className={`has-label ${values.CondPgmtoId.error}`}
+                            >
+                              <Input
+                                name="CondPgmtoId"
+                                type="select"
+                                onChange={(event) =>
+                                  handleChange(event, "CondPgmtoId", "text")
+                                }
+                                value={values.CondPgmtoId.value}
+                              >
+                                {" "}
+                                <option disabled value="">
+                                  {" "}
+                                Selecione a condição de pagamento{" "}
+                                </option>
+                                {data1.map((condPgmto) => (
+                                  <option value={condPgmto.id}>
+                                    {" "}
+                                    {condPgmto.id} - {condPgmto.desc}{" "}
+                                  </option>
+                                ))}
+                              </Input>
+                              {values.CondPgmtoId.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.CondPgmtoId.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                            
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                           
                           </Col>
                         </Row>
                         <Link to={`/tabelas/general/fornec`}>

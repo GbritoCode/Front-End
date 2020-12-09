@@ -56,7 +56,7 @@ function ItmCtrlUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/itm_controle/${id.id}`);
+      const response = await axios(`http://localhost:51314/itm_controle/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );

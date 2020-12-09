@@ -301,8 +301,9 @@ export default function ColabCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label>CPF</Label>
+<Row>
+  <Col md="4">
+  <Label>CPF</Label>
                   <FormGroup className={`has-label ${values.cpf.error}`}>
                     <Input
                       maxLength={18}
@@ -319,10 +320,9 @@ export default function ColabCadastro() {
                       <Label className="error">{values.cpf.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <Row>
-                    <Col md="4">
-                      {" "}
-                      <Label>Nome</Label>
+  </Col>
+  <Col md="4">
+  <Label>Nome</Label>
                       <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input
                           name="nome"
@@ -336,9 +336,9 @@ export default function ColabCadastro() {
                           <Label className="error">{values.nome.message}</Label>
                         ) : null}
                       </FormGroup>
-                    </Col>
-                    <Col md="4">
-                    <Label>Data de Adimissão</Label>
+  </Col>
+  <Col md="4">
+  <Label>Data de Adimissão</Label>
                       <FormGroup
                         className={`has-label ${values.dtAdmiss.error}`}
                       >
@@ -356,7 +356,10 @@ export default function ColabCadastro() {
                           </Label>
                         ) : null}
                       </FormGroup>
-                    </Col>
+  </Col>
+</Row>
+                  
+                  <Row>
                     <Col md="4">
                       {" "}
                       <Label>Celular</Label>
@@ -383,11 +386,8 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col md="6">
-                      {" "}
-                      <Label>Fornecedor</Label>
+                    <Col md="4">
+                    <Label>Fornecedor</Label>
                       <FormGroup
                         className={`has-label ${values.fornecId.error}`}
                       >
@@ -415,8 +415,9 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="6">
-                    <Label>Perfil</Label>
+                    <Col md="4">
+                      {" "}
+                      <Label>Perfil</Label>
                       <FormGroup
                         className={`has-label ${values.PerfilId.error}`}
                       >
@@ -448,9 +449,8 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-
                   <Row>
-                    <Col md="6">
+                    <Col md="4">
                       {" "}
                       <Label>Skype</Label>
                       <FormGroup className={`has-label ${values.skype.error}`}>
@@ -469,9 +469,8 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="6">
-                      {" "}
-                      <Label>Email</Label>
+                    <Col md="4">
+                    <Label>Email</Label>
                       <FormGroup className={`has-label ${values.email.error}`}>
                         <Input
                           name="email"
@@ -488,9 +487,15 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
+                    <Col md="4">
+                    
+                    </Col>
                   </Row>
 
-                  <Label>Especialidade</Label>
+                  <Row>
+                    <Col md="6">
+                      {" "}
+                      <Label>Especialidade</Label>
                   <FormGroup claclassName={`has-label ${values.espec.error}`}>
                     <Input
                       name="espec"
@@ -502,6 +507,11 @@ export default function ColabCadastro() {
                       <Label className="error">{values.espec.message}</Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                  
+                  </Row>
+
+                  
                   <Link to={`/tabelas/colab`}>
                     <Button
                       style={{

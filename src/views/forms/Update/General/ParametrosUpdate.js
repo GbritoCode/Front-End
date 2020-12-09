@@ -58,7 +58,7 @@ function ParametrosUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/parametros/${id.id}`);
+      const response = await axios(`http://localhost:51314/parametros/${id}`);
 
       setData(response.data);
       setValues((prevState) => ({

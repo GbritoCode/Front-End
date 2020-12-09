@@ -14,11 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-<<<<<<< HEAD
 import React, {  useEffect, useState } from "react";
-=======
-import React, { Component, useEffect, useState } from "react";
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
@@ -35,18 +31,15 @@ import { useDispatch } from "react-redux";
 import Tooltip from '@material-ui/core/Tooltip';
 import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircleOutline';
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
-import { AccountBalance, Done, EditOutlined, Close, AccountCircle } from "@material-ui/icons";
+import { AccountBalance, Done, EditOutlined, Close, AccountCircle, ErrorOutline, Message, Check, MonetizationOnOutlined, CheckCircleOutline, RadioButtonCheckedOutlined } from "@material-ui/icons";
 
-<<<<<<< HEAD
 /*eslint-disable eqeqeq*/
-=======
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
 function OportTable() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch()
   const [data, setData] = useState();
-  const [modalMini, setModalMini] = useState(false);
+  const [modalMini, setModalMini] = useState(true);
   const history = useHistory();
 
   useEffect(() => {
@@ -100,10 +93,22 @@ function OportTable() {
                       history.push(`/cadastro/oportunidade/cotacao/${oport.id}`)
                     }}
                   >
-                    <AccountBalance />
+                    <MonetizationOnOutlined />
                   </Button>
                 </Tooltip>
-
+                <Tooltip title="revisar">
+                  <Button
+                    disabled={oport.fase > 3 ? true : false}
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => {
+                      history.push(`/cadastro/oportunidade/cotacao/${oport.id}`)
+                    }}
+                  >
+                    <ErrorOutline />
+                  </Button>
+                </Tooltip>
                 <Tooltip title="Aprovar">
                   <Button
                     disabled={oport.fase >= 4 ? true : false}
@@ -129,14 +134,14 @@ function OportTable() {
                           oport.narrativa
                         )
                       );
-                      history.push(`/cadastro/oportunidade/recurso/${oport.id}`)
+                      history.push(`/cadastro/oportunidade/parcela/${oport.id}`)
                     }}
                   >
-                    <Done />
+                    <CheckCircleOutline />
                   </Button>
                 </Tooltip>
-
-                <Tooltip title="Reprovar">
+                { oport.fase !=4 ?(
+                  <Tooltip title="Reprovar">
                   <Button
                     color="default"
                     size="sm"
@@ -165,7 +170,40 @@ function OportTable() {
                   >
                     <RemoveCircleSharpIcon />
                   </Button>
+                </Tooltip>): (
+                  <Tooltip title="Finalizar">
+                  <Button
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => {
+                      history.go(0)
+                      dispatch(
+                        oportUpdate(
+                          oport.id,
+                          oport.EmpresaId,
+                          oport.ColabId,
+                          oport.clienteId,
+                          oport.UndNegId,
+                          oport.itmControleId,
+                          oport.SegmentoId,
+                          oport.RepresentanteId,
+                          oport.contato,
+                          oport.data,
+                          5,
+                          oport.cod,
+                          oport.desc,
+                          oport.narrativa
+                        )
+                      );
+                    }}
+                  >
+                    <RadioButtonCheckedOutlined />
+                  </Button>
                 </Tooltip>
+                )
+                }
+                
                 {/* use this button to add a edit kind of action */}
                 <Link to={`/update/oportunidade/oport/${oport.id}`}>
                   <Button
@@ -205,11 +243,7 @@ function OportTable() {
 
     }
     loadData()
-<<<<<<< HEAD
   }, [dispatch, history])
-=======
-  }, [])
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
   const checkFase = (value) => {
     if (value == 1) {
       return "Aberta"
@@ -275,11 +309,11 @@ function OportTable() {
                     <Close />
                   </button>
                   <div>
-                    <AccountCircle fontSize="large" />
+                    <Message fontSize="large" />
                   </div>
                 </div>
                 <ModalBody className="text-center">
-                  <p>Always have an access to your profile</p>
+                  <p>Você quer mesmo reprovar/aprovar</p>
                 </ModalBody>
                 <div className="modal-footer">
                   <Button
@@ -342,6 +376,7 @@ function OportTable() {
                     accessor: "actions",
                     sortable: false,
                     filterable: false,
+                    minWidth: 212,
                   },
                 ]}
                 defaultPageSize={10}

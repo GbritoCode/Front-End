@@ -170,7 +170,7 @@ class Dashboard extends React.Component {
                 </CardBody>
               </Card>
             </Col>
-            <Col lg="3" md="6">
+            <Col lg="4" md="6">
               <Card className="card-stats">
                 <CardBody>
                   <Row>
@@ -195,7 +195,7 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-            <Col lg="3" md="6">
+            <Col lg="4" md="6">
               <Card className="card-stats">
                 <CardBody>
                   <Row>
@@ -220,7 +220,7 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-            <Col lg="3" md="6">
+            <Col lg="4" md="6">
               <Card className="card-stats">
                 <CardBody>
                   <Row>
@@ -245,32 +245,7 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-            <Col lg="3" md="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col xs="5">
-                      <div className="info-icon text-center icon-danger">
-                        <i className="tim-icons icon-molecule-40" />
-                      </div>
-                    </Col>
-                    <Col xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Errors</p>
-                        <CardTitle tag="h3">12</CardTitle>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="tim-icons icon-watch-time" /> In the last
-                    hours
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
+           
             <Col lg="4">
               <Card className="card-chart">
                 <CardHeader>

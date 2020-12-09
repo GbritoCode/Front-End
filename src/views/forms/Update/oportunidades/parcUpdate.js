@@ -272,7 +272,7 @@ export default function ParcelaUpdate() {
                 <Col md="12">
                   <Card>
                     <CardHeader>
-                      <CardTitle tag="h4">Edição de Cotação</CardTitle>
+                      <CardTitle tag="h4">Liquidação de Parcela</CardTitle>
                     </CardHeader>
                     <CardBody>
                       <Form onSubmit={handleSubmit}>
@@ -538,17 +538,8 @@ export default function ParcelaUpdate() {
                             </FormGroup>
                           </Col>
 
-                          <Col md="4">
-
-                          </Col>
-
                         </Row>
-                        <Row>
-                          <Col>
-                          
-                          </Col>
-                        </Row>
-                        <Link to={`/tabelas/oportunidade/cotacao/${data1.id}`}>
+                        <Link to={`/tabelas/oportunidade/parcela/${data1.id}`}>
                           <Button
                             style={{
                               paddingLeft: 32,

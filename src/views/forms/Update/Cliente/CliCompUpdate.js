@@ -66,7 +66,7 @@ export default function CliCompUpdatee() {
     async function loadData() {
       setIsLoading(true);
       const response = await axios(
-        `http://localhost:51314/cliente/complem/1/${id.id}`
+        `http://localhost:51314/cliente/complem/1/${id}`
       );
       const response1 = await axios(`http://localhost:51314/condPgmto`);
       const response2 = await axios(

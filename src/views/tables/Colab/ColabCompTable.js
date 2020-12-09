@@ -169,6 +169,17 @@ class ColabCompTable extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
+                  defaultFilterMethod={(filter, row, column) => {
+                    const id = filter.pivotId || filter.id
+                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  }}
+                  previousText="Anterior"
+                  nextText="Próximo"
+                  loadingText="Carregando"
+                  noDataText="Dados não encontrados"
+                  pageText="Página"
+                  ofText="de"
+                  rowsText="Linhas"
                   columns={[
                     {
                       Header: "Colaborador",

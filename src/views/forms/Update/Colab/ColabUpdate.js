@@ -49,21 +49,7 @@ function ColabUpdatee() {
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-const id = useParams()  
-  const stateSchema = {
-    empresaId: { value: "", error: "", message: "" },
-    cpf: { value: "", error: "", message: "" },
-    fornecId: { value: "", error: "", message: "" },
-    nome: { value: "", error: "", message: "" },
-    PerfilId: { value: "", error: "", message: "" },
-    dtAdmiss: { value: "", error: "", message: "" },
-    cel: { value: "", error: "", message: "" },
-    skype: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" },
-    espec: { value: "", error: "", message: "" },
-  };
-  const [values, setValues] = useState(stateSchema);
-
+const {id} = useParams()  
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -80,7 +66,7 @@ const id = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/${id.id}`);
+      const response = await axios(`http://localhost:51314/colab/${id}`);
       const response1 = await axios(`http://localhost:51314/fornec`);
       const response2 = await axios(`http://localhost:51314/perfil`);
       const response3 = await axios(
@@ -328,7 +314,7 @@ const id = useParams()
                 <Col md="12">
                   <Card>
                     <CardHeader>
-                      <Link to={"/tables/colab/comp/" + id.id}>
+                      <Link to={"/tables/colab/comp/" + id}>
                         <Tooltip title="Complemento" placement="top" interactive>
                           <Button
                             style={{ float: "right" }}

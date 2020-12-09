@@ -42,7 +42,7 @@ export default function RecursoCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const id = useParams() 
+const {id} = useParams() 
   const dispatch = useDispatch();
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
@@ -61,7 +61,7 @@ const id = useParams()
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/recurso/aux/${id.id}`);
+      const response1 = await axios(`http://localhost:51314/recurso/aux/${id}`);
       const response2 = await axios(`http://localhost:51314/colab/`);
       const response4 = await axios(`http://localhost:51314/oportunidade/${response1.data.oportunidadeId}`);
       setData1(response1.data);

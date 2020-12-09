@@ -1,4 +1,3 @@
-import Axios from "axios";
 import produce from "immer";
 
 const INITIAL_STATE = {

@@ -305,8 +305,9 @@ export default function SegmentoCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-
-                  <Label>Descrição do Segmento</Label>
+                  <Row>
+                    <Col md="8">
+                    <Label>Descrição do Segmento</Label>
                   <FormGroup className={`has-label ${values.descSegmt.error}`}>
                     <Input
                       name="descSegmt"
@@ -322,6 +323,9 @@ export default function SegmentoCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                  </Row>
+                  
                   <Link to={`/tabelas/general/segmento`}>
                     <Button
                       style={{

@@ -24,6 +24,7 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
+  Label,
   Form,
   Input,
   Row,
@@ -41,7 +42,7 @@ function AreaUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const id = useParams()  
+const {id} = useParams()  
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
@@ -57,7 +58,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/area/${id.id}`);
+      const response1 = await axios(`http://localhost:51314/area/${id}`);
       setData(response.data);
 
       setValues((prevState) => ({

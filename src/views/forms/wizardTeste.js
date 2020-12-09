@@ -23,10 +23,7 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-<<<<<<< HEAD
   Label,
-=======
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
   Form,
   Input,
   FormGroup,
@@ -34,22 +31,12 @@ import {
   Col,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-<<<<<<< HEAD
 import {  empresaRequest } from "~/store/modules/general/actions";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import api from "~/services/api";
 
 /*eslint-disable eqeqeq*/
-=======
-import { condPgmtoRequest, empresaRequest } from "~/store/modules/general/actions";
-import NotificationAlert from "react-notification-alert";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import history from "~/services/history";
-import api from "~/services/api";
-
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
 export default function WizardCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
@@ -65,23 +52,12 @@ export default function WizardCadastro() {
   };
   const [values, setValues] = useState(stateSchema);
 
-<<<<<<< HEAD
-=======
-  const [isLoading, setIsLoading] = useState(true);
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
   const [data, setData] = useState([]);
 
   useEffect(() => {
     async function loadData() {
-<<<<<<< HEAD
       const response = await axios(`http://localhost:51314/users`);
       setData(response.data);
-=======
-      setIsLoading(true);
-      const response = await axios(`http://localhost:51314/users`);
-      setData(response.data);
-      setIsLoading(false);
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
     }
     loadData();
   }, []);
@@ -221,13 +197,9 @@ export default function WizardCadastro() {
           ...prevState,
           [name]: { value: target },
         }));
-<<<<<<< HEAD
         break
         default:
       }
-=======
-    }
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
   };
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
@@ -271,11 +243,7 @@ export default function WizardCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-<<<<<<< HEAD
         valid = false
-=======
-        var valid = false;
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
         break;
       }
     }
@@ -283,11 +251,7 @@ export default function WizardCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-<<<<<<< HEAD
         filled = false;
-=======
-        var filled = false;
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
         setValues((prevState) => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
@@ -346,11 +310,7 @@ export default function WizardCadastro() {
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md="6">
-<<<<<<< HEAD
                   <Label>CNPJ</Label>
-=======
-                    <label>CNPJ</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                     <FormGroup className={`has-label ${values.cnpj.error}`}>
                       <Input
                         name="idFederal"
@@ -364,20 +324,12 @@ export default function WizardCadastro() {
                         }}
                       />
                       {values.cnpj.error === "has-danger" ? (
-<<<<<<< HEAD
                         <Label className="error">{values.cnpj.message}</Label>
-=======
-                        <label className="error">{values.cnpj.message}</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                       ) : null}
                     </FormGroup>
                   </Col>
                   <Col md="6">
-<<<<<<< HEAD
                   <Label>Nome</Label>
-=======
-                    <label>Nome</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                     <FormGroup className={`has-label ${values.nome.error}`}>
                       <Input
                         name="nome"
@@ -386,22 +338,14 @@ export default function WizardCadastro() {
                         value={values.nome.value}
                       />
                       {values.nome.error === "has-danger" ? (
-<<<<<<< HEAD
                         <Label className="error">{values.nome.message}</Label>
-=======
-                        <label className="error">{values.nome.message}</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                       ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
                 <Row>
                   <Col md="6">
-<<<<<<< HEAD
                   <Label>License</Label>
-=======
-                    <label>License</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                     <FormGroup className={`has-label ${values.license.error}`}>
                       <Input
                         name="license"
@@ -412,20 +356,12 @@ export default function WizardCadastro() {
                         value={values.license.value}
                       />
                       {values.license.error === "has-danger" ? (
-<<<<<<< HEAD
                         <Label className="error">{values.license.message}</Label>
-=======
-                        <label className="error">{values.license.message}</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                       ) : null}
                     </FormGroup>
                   </Col>
                   <Col md="6">
-<<<<<<< HEAD
                   <Label>Usuário</Label>
-=======
-                    <label>Usuário</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                     <FormGroup className={`has-label ${values.userId.error}`}>
                       <Input
                         name="UserId"
@@ -448,11 +384,7 @@ export default function WizardCadastro() {
                         ))}
                       </Input>{" "}
                       {values.userId.error === "has-danger" ? (
-<<<<<<< HEAD
                         <Label className="error">{values.userId.message}</Label>
-=======
-                        <label className="error">{values.userId.message}</label>
->>>>>>> 8dedeee1c463de829a994544aa5125e99b4fae58
                       ) : null}
                     </FormGroup>
 

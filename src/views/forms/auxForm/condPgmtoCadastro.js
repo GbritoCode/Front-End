@@ -166,8 +166,9 @@ export default function CondPgmtoCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label>Código</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>Código</Label>
                   <FormGroup className={`has-label ${values.cod.error}`}>
                     <Input
                       name="license"
@@ -179,8 +180,9 @@ export default function CondPgmtoCadastro() {
                       <Label className="error">{values.cod.message}</Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label>Descrição</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Descrição</Label>
                   <FormGroup className={`has-label ${values.desc.error}`}>
                     <Input
                       name="license"
@@ -192,8 +194,9 @@ export default function CondPgmtoCadastro() {
                       <Label className="error">{values.desc.message}</Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label>Dias de Prazo</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Dias de Prazo</Label>
                   <FormGroup className={`has-label ${values.diasPrazo.error}`}>
                     <Input
                       name="diasPrazo"
@@ -207,6 +210,8 @@ export default function CondPgmtoCadastro() {
                       <Label className="error">{values.diasPrazo.message}</Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                  </Row>
                   <Link to={`/tabelas/aux/condPgmto`}>
                     <Button
                       style={{

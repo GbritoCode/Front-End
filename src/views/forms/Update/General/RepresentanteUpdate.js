@@ -55,7 +55,7 @@ function RepresentanteUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/representante/${id.id}`);
+      const response = await axios(`http://localhost:51314/representante/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );

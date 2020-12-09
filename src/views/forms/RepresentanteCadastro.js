@@ -208,8 +208,9 @@ export default function RepresentanteCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label>Nome</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>Nome</Label>
                   <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
                       name="nome"
@@ -221,8 +222,8 @@ export default function RepresentanteCadastro() {
                       <Label className="error">{values.nome.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <Row>
-                    <Col md="6">
+                    </Col>
+                    <Col md="4">
                       {" "}
                       <Label>Tipo de Comissão</Label>
                       <FormGroup
@@ -255,7 +256,7 @@ export default function RepresentanteCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="6">
+                    <Col md="4">
                       {" "}
                       <Label>Valor Fixo Mensal</Label>
                       <FormGroup

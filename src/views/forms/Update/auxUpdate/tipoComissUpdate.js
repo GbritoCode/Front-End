@@ -42,7 +42,7 @@ function AreaUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const id = useParams()
+const {id} = useParams()
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
@@ -60,7 +60,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/tipoComiss/${id.id}`);
+      const response1 = await axios(`http://localhost:51314/tipoComiss/${id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -171,28 +171,7 @@ const id = useParams()
                 <Col md="12">
                   <Card>
                     <CardHeader>
-                      <Link to="/cadastro/aux/tipoComiss">
-                        <Button
-                          style={{
-                            float: "right",
-                            paddingLeft: 15,
-                            paddingRight: 15,
-                          }}
-                          color="info"
-                          size="small"
-                          className="text-center"
-                        >
-                          <i
-                            className="tim-icons icon-simple-add"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 10,
-                            }}
-                            size="large"
-                          />{" "}
-                        Novo
-                      </Button>
-                      </Link>
+                      
                       <CardTitle tag="h4">Edição de Tipo de Comissão</CardTitle>
                     </CardHeader>
                     <CardBody>

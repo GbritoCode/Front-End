@@ -43,7 +43,7 @@ function RecDespUpdatee() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-const id = useParams()   
+const {id} = useParams()   
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +57,7 @@ const id = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/rec_desp/${id.id}`);
+      const response = await axios(`http://localhost:51314/rec_desp/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );
@@ -206,7 +206,9 @@ const id = useParams()
                             </Label>
                           ) : null}
                         </FormGroup>
-                        <Label>Item Controle</Label>
+                        <Row>
+                          <Col md="4">
+                          <Label>Item Controle</Label>
                         <FormGroup
                           className={`has-label ${values.itmControleId.error}`}
                         >
@@ -236,7 +238,9 @@ const id = useParams()
                             </Label>
                           ) : null}
                         </FormGroup>
-                        <Label>Descrição</Label>
+                          </Col>
+                          <Col md="4">
+                          <Label>Descrição</Label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="license"
@@ -251,7 +255,10 @@ const id = useParams()
                           ) : null}
                         </FormGroup>
 
-                        <FormGroup style={{ marginBottom: 20 }} check className={`has-label ${values.recDesp.error}`}>
+                          </Col>
+                          <Col md="4">
+                            <Label>Rec/Desp</Label>
+                          <FormGroup check className={`has-label ${values.recDesp.error}`}>
                           <Label check>
                             <Input
                               checked={checkRec(values)}
@@ -276,6 +283,11 @@ const id = useParams()
                             <Label className="error">{values.recDesp.message}</Label>
                           ) : null}
                         </FormGroup>
+                          </Col>
+                          
+                        </Row>
+                        
+                       
                         <Link to={`/tabelas/aux/rec_desp`}>
                           <Button
                             style={{

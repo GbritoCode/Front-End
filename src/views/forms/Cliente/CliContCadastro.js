@@ -42,7 +42,7 @@ export default function CliContCadastro() {
   document.body.classList.add("white-content");
 
   const [data, setData] = useState({});
-  const id = useParams();
+  const {id} = useParams();
 const dispatch = useDispatch();
   const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
@@ -61,7 +61,7 @@ const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cliente/${id.id}`);
+      const response = await axios(`http://localhost:51314/cliente/${id}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
@@ -244,7 +244,9 @@ const dispatch = useDispatch();
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Nome</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>Nome</Label>
                   <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
                       name="nome"
@@ -256,9 +258,9 @@ const dispatch = useDispatch();
                       <Label className="error">{values.nome.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <Row>
-                    <Col md="3">
-                      <Label>Celular</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Celular</Label>
                       <FormGroup className={`has-label ${values.cel.error}`}>
                         <Input
                           minLength={10}
@@ -282,8 +284,8 @@ const dispatch = useDispatch();
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="3">
-                      <Label>Telefone</Label>
+                    <Col md="4">
+                    <Label>Telefone</Label>
                       <FormGroup className={`has-label ${values.fone.error}`}>
                         <Input
                           minLength={10}
@@ -307,7 +309,10 @@ const dispatch = useDispatch();
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="3">
+                  </Row>
+                 
+                  <Row>
+                    <Col md="4">
                       <FormGroup className={`has-label ${optional.aniver.error}`}>
                         <Label>Aniversário </Label>
                         <Input
@@ -325,7 +330,7 @@ const dispatch = useDispatch();
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="3">
+                    <Col md="4">
                     <Label>tipo de Contato</Label>
                       <FormGroup
                         className={`has-label ${values.tipoConta.error}`}
@@ -352,9 +357,7 @@ const dispatch = useDispatch();
                         ) : null}
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col md="6">
+                    <Col md="4">
                     <Label>Skype</Label>
                       <FormGroup className={`has-label ${values.skype.error}`}>
                         <Input
@@ -371,8 +374,10 @@ const dispatch = useDispatch();
                           </Label>
                         ) : null}
                       </FormGroup>
-                    </Col>
-                    <Col md="6">
+                      </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
                       <Label>Email</Label>
                       <FormGroup className={`has-label ${values.email.error}`}>
                         <Input

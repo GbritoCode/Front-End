@@ -169,7 +169,9 @@ export default function RecDespCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Item Controle</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>Item Controle</Label>
                   <FormGroup
                     className={`has-label ${values.itmControleId.error}`}
                   >
@@ -199,7 +201,9 @@ export default function RecDespCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Descrição</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Descrição</Label>
                   <FormGroup className={`has-label ${values.desc.error}`}>
                     <Input
                       name="license"
@@ -212,7 +216,10 @@ export default function RecDespCadastro() {
                     ) : null}
                   </FormGroup>
 
-                  <FormGroup style={{ marginBottom: 20 }} check className={`has-label ${values.recDesp.error}`}>
+                    </Col>
+                    <Col md="4">
+                      <Label>Rec/Desp</Label>
+                    <FormGroup  check className={`has-label ${values.recDesp.error}`}>
                     <Label check>
                       <Input
                         name="rec/desp"
@@ -235,6 +242,11 @@ export default function RecDespCadastro() {
                       <Label className="error">{values.recDesp.message}</Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                  </Row>
+               
+                 
+                  
                   <Link to={`/tabelas/aux/rec_desp`}>
                     <Button
                       style={{

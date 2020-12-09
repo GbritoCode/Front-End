@@ -40,14 +40,14 @@ import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import Tooltip from '@material-ui/core/Tooltip';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import { AssignmentInd, CreditCard } from "@material-ui/icons";
+import { AssignmentInd, CreditCard, LocalOffer } from "@material-ui/icons";
 
 /* eslint-disable eqeqeq */
 export default function UpdateOport() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const firstRender = useRef(true)
-const id = useParams()
+const {id} = useParams()
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
@@ -87,7 +87,7 @@ const id = useParams()
       const response5 = await axios(`http://localhost:51314/itm_controle/`);
       const response6 = await axios(`http://localhost:51314/segmento/`);
       const response7 = await axios(`http://localhost:51314/representante/`);
-      const response8 = await axios(`http://localhost:51314/oportunidade/${id.id}`);
+      const response8 = await axios(`http://localhost:51314/oportunidade/${id}`);
       const response1 = await axios(`http://localhost:51314/colab/${response8.data.colabId}`);
       const response3 = await axios(`http://localhost:51314/cliente/cont/${response8.data.clienteId}`)
       setData1(response1.data);
@@ -222,7 +222,8 @@ const id = useParams()
 
     if (fase == 4 && firstRender.current) {
 
-      return <Link to={"/tabelas/oportunidade/recurso/" + id.id}>
+      return <>
+      <Link to={"/tabelas/oportunidade/recurso/" + id}>
         <Tooltip title="Recurso" placement="top" interactive>
           <Button
             style={{ float: "right" }}
@@ -234,6 +235,20 @@ const id = useParams()
           </Button>
         </Tooltip>
       </Link>
+      
+      <Link to={"/tabelas/oportunidade/parcela/" + id}>
+      <Tooltip title="Parcelas" placement="top" interactive>
+        <Button
+          style={{ float: "right" }}
+          color="default"
+          size="sm"
+          className={classNames("btn-icon btn-link like")}
+        >
+          <CreditCard />
+        </Button>
+      </Tooltip>
+    </Link>
+    </>
     }
   }
 
@@ -307,7 +322,8 @@ const id = useParams()
               <Card>
                 <CardHeader>
                   {checkAprovada(values.fase.value)}
-                  <Link to={"/tabelas/oportunidade/cotacao/" + id.id}>
+
+                  <Link to={"/tabelas/oportunidade/cotacao/" + id}>
                     <Tooltip title="Cotação" placement="top" interactive>
                       <Button
                         style={{ float: "right" }}
@@ -315,20 +331,7 @@ const id = useParams()
                         size="sm"
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <AccountBalanceIcon />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-
-                  <Link to={"/tabelas/oportunidade/parcela/" + id.id}>
-                    <Tooltip title="Parcelas" placement="top" interactive>
-                      <Button
-                        style={{ float: "right" }}
-                        color="default"
-                        size="sm"
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <CreditCard />
+                        <LocalOffer />
                       </Button>
                     </Tooltip>
                   </Link>

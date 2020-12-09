@@ -59,7 +59,7 @@ function SegmentoUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/segmento/${id.id}`);
+      const response = await axios(`http://localhost:51314/segmento/${id}`);
       const response1 = await axios(`http://localhost:51314/und_neg/`);
       const response2 = await axios(`http://localhost:51314/prodt/`);
       const response3 = await axios(`http://localhost:51314/area/`);

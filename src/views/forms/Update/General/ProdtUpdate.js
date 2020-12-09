@@ -41,7 +41,7 @@ function ProdtUpdatee() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-const id = useParams()
+const {id} = useParams()
   const [data1, setData1] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
@@ -52,7 +52,7 @@ const id = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/prodt/${id.id}`);
+      const response = await axios(`http://localhost:51314/prodt/${id}`);
       const response1 = await axios(
         `http://localhost:51314/empresa/${response.data.EmpresaId}`
       );

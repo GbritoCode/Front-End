@@ -56,10 +56,10 @@ export default function CliRecDespCadastro() {
   const [values, setValues] = useState(stateSchema);
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-const id = useParams()  
+const {id} = useParams()  
 useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cliente/${id.id}`);
+      const response = await axios(`http://localhost:51314/cliente/${id}`);
       const response1 = await axios(`http://localhost:51314/rec_desp/?rec=true`);
       setData(response.data);
       setData1(response1.data);
@@ -218,7 +218,9 @@ useEffect(() => {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Receita</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>Receita</Label>
                   <FormGroup
                     className={`has-label ${values.recDespId.error}`}
                   >
@@ -248,7 +250,9 @@ useEffect(() => {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Tipo de Cobrança</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Tipo de Cobrança</Label>
                   <FormGroup
                     className={`has-label ${values.tipoCobranca.error}`}
                   >
@@ -277,7 +281,9 @@ useEffect(() => {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Valor da Receita</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Valor da Receita</Label>
                   <FormGroup
                     className={`has-label ${values.valorRec.error}`}
                   >
@@ -295,7 +301,12 @@ useEffect(() => {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Data Inicial</Label>
+                  
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                    <Label>Data Inicial</Label>
                   <FormGroup className={`has-label ${values.dataInic.error}`}>
                     <Input
                       name="dataInic"
@@ -309,7 +320,9 @@ useEffect(() => {
                       <Label className="error">{values.dataInic.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <Label>Data Final</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Data Final</Label>
                   <FormGroup className={`has-label ${values.dataFim.error}`}>
                     <Input
                       name="dataFim"
@@ -323,6 +336,12 @@ useEffect(() => {
                       <Label className="error">{values.dataFim.message}</Label>
                     ) : null}
                   </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      
+                    </Col>
+                  </Row>
+                  
                   <Link to={`/tabelas/cliente/rec_desp/${values.clienteId.value}`}>
                     <Button
                       style={{

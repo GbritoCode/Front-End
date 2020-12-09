@@ -48,7 +48,7 @@ function ClienteUpdatee(props) {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const {  prct } = useParams();
-const id = useParams()
+const {id} = useParams()
   console.log(props)
   const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
@@ -57,17 +57,22 @@ const id = useParams()
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
+    rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
-    RepresentanteId: { value: "", error: "", message: "" },
-    TipoComisseId: { value: "", error: "", message: "" },
+    representante: { value: "", error: "", message: "" },
+    tipoComiss: { value: "", error: "", message: "" },
   };
+  const optionalSchema = {
+    fantasia: { value: "", error: "", message: "" },
+  }
+  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
   
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/cliente/${id.id}`);
+      const response = await axios(`http://localhost:51314/cliente/${id}`);
       const response1 = await axios(`http://localhost:51314/tipoComiss`);
       const response2 = await axios(`http://localhost:51314/representante`);
       const response3 = await axios(`http://localhost:51314/empresa/${empresa}`);
@@ -88,12 +93,21 @@ const id = useParams()
       }));
       setValues((prevState) => ({
         ...prevState,
-        RepresentanteId: { value: response.data.RepresentanteId },
+        representante: { value: response.data.RepresentanteId },
       }));
       setValues((prevState) => ({
         ...prevState,
-        TipoComisseId: { value: response.data.TipoComisseId },
+        tipoComiss: { value: response.data.TipoComisseId },
       }));
+      setValues((prevState) => ({
+        ...prevState,
+        rzSoc: { value: response.data.rzSoc },
+      }));
+      setOptional((prevState) => ({
+        ...prevState,
+        fantasia: { value: response.data.fantasia },
+      }));
+
 
       setIsLoading(false);
     }
@@ -199,6 +213,12 @@ const id = useParams()
           cnpj: { value: normalizeCnpj(target) },
         }));
         break;
+        case "optional":
+          setOptional((prevState) => ({
+            ...prevState,
+            [name]: { value: target },
+          }));
+          break
       case "text":
         setValues((prevState) => ({
           ...prevState,
@@ -218,7 +238,7 @@ const id = useParams()
   function checkProsp(param) {
     if (param == 'true') {
       return <>
-        <Link to={"/tabelas/cliente/comp/" + id.id}>
+        <Link to={"/tabelas/cliente/comp/" + id}>
           <Tooltip title="Complemento" placement="top" interactive>
             <Button
               style={{ float: "right" }}
@@ -230,7 +250,7 @@ const id = useParams()
             </Button>
           </Tooltip>
         </Link>
-        <Link to={"/tabelas/cliente/rec_desp/" + id.id}>
+        <Link to={"/tabelas/cliente/rec_desp/" + id}>
           <Tooltip title="Receita" placement="top" interactive>
             <Button
               style={{ float: "right" }}
@@ -277,9 +297,11 @@ const id = useParams()
       dispatch(
         ClienteUpdate(id,
           values.nomeAbv.value,
-          values.RepresentanteId.value,
-          values.TipoComisseId.value,
-          values.empresaId.value
+          values.rzSoc.value,
+          optional.fantasia.value,
+          values.representante.value,
+          values.tipoComiss.value,
+          values.empresaId.value,
         )
       );
     } else {
@@ -314,7 +336,7 @@ const id = useParams()
                     <CardHeader>
                       {checkProsp(prct)}
 
-                      <Link to={"/tabelas/cliente/cont/" + id.id}>
+                      <Link to={"/tabelas/cliente/cont/" + id}>
                         <Tooltip title="Contato" placement="top" interactive>
                           <Button
                             style={{ float: "right" }}
@@ -355,107 +377,154 @@ const id = useParams()
                             </Label>
                           ) : null}
                         </FormGroup>
-                        <Label>CNPJ</Label>
-                        <FormGroup className={`has-label ${values.cnpj.error}`}>
-                          <Input
-                            disabled
-                            maxLength={18}
-                            name="cnpj"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "cnpj", "cnpj")
-                            }
-                            value={values.cnpj.value}
-                            onBlur={(e) => {
-                              let value = e.target.value;
-                              renderCnpjState(value);
-                            }}
-                          />
-                          {values.empresaId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.empresaId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Nome Abreviado</Label>
-                        <FormGroup
-                          className={`has-label ${values.nomeAbv.error}`}
+                        <Row>
+                    <Col md="4">
+                    <Label>CNPJ</Label>
+                  <FormGroup className={`has-label ${values.cnpj.error}`}>
+                    <Input
+                    disabled
+                      maxLength={18}
+                      name="cnpj"
+                      type="text"
+                      onChange={(event) => handleChange(event, "cnpj", "cnpj")}
+                      value={values.cnpj.value}
+                      onBlur={(e) => {
+                        let value = e.target.value;
+                        renderCnpjState(value);
+                      }}
+                    />
+
+                    {values.cnpj.error === "has-danger" ? (
+                      <Label className="error">{values.cnpj.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                    </Col>
+                    <Col md="4">
+                    <Label>Razão Social</Label>
+                  <FormGroup className={`has-label ${values.rzSoc.error}`}>
+                    <Input
+                      disabled
+                      id="rzSoc"
+                      name="rzSoc"
+                      type="text"
+                      onChange={(event) =>
+                        handleChange(event, "rzSoc", "text")
+                      }
+                      value={values.rzSoc.value}
+                    />
+                    {values.rzSoc.error === "has-danger" ? (
+                      <Label className="error">
+                        {values.rzSoc.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                    </Col>
+                    <Col md="4">
+                    <Label>Nome Fanasia</Label>
+                  <FormGroup
+                    className={`has-label ${optional.fantasia.error}`}
+                  >
+                    <Input
+                      disabled
+                      onChange={(event) =>
+                        handleChange(event, "fantasia", "optional")
+                      }
+                      value={optional.fantasia.value}
+                      name="nomeAbv"
+                      type="text"
+                    />
+                    {optional.fantasia.error === "has-danger" ? (
+                      <Label className="error">
+                        {optional.fantasia.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                    </Col>
+                  </Row>
+                 
+                 <Row>
+                   <Col md="4">
+                   <Label>Nome Abreviado</Label>
+                  <FormGroup className={`has-label ${values.nomeAbv.error}`}>
+                    <Input
+                    disabled
+                      name="name_abv"
+                      type="text"
+                      onChange={(event) =>
+                        handleChange(event, "nomeAbv", "text")
+                      }
+                      value={values.nomeAbv.value}
+                    />
+                    {values.nomeAbv.error === "has-danger" ? (
+                      <Label className="error">{values.nomeAbv.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                   </Col>
+                   <Col md="4">
+                   <Label>Representante</Label>
+                      <FormGroup
+                        className={`has-label ${values.representante.error}`}
+                      >
+                        <Input
+                          name="representante"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "representante", "text")
+                          }
+                          value={values.representante.value}
                         >
-                          <Input
-                            disabled
-                            name="name_abv"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "nomeAbv", "text")
-                            }
-                            value={values.nomeAbv.value}
-                          />
-                          {values.empresaId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.empresaId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Representante</Label>
-                        <FormGroup
-                          className={`has-label ${values.RepresentanteId.error}`}
-                        >
-                          <Input
-                            name="RepresentanteId"
-                            type="select"
-                            onChange={(event) =>
-                              handleChange(event, "RepresentanteId", "text")
-                            }
-                            value={values.RepresentanteId.value}
-                          >
+                          {" "}
+                          <option disabled value="">
                             {" "}
-                            <option disabled value="">
-                              {" "}
                             Selecione o representante{" "}
-                            </option>
-                            {data2.map((representante) => (
-                              <option value={representante.id}>
-                                {" "}
-                                {representante.nome}{" "}
-                              </option>
-                            ))}
-                          </Input>
-                          {values.empresaId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.empresaId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Tipo Comissão</Label>
-                        <FormGroup
-                          className={`has-label ${values.TipoComisseId.error}`}
-                        >
-                          <Input
-                            name="TipoComisseId"
-                            type="select"
-                            onChange={(event) =>
-                              handleChange(event, "TipoComisseId", "text")
-                            }
-                            value={values.TipoComisseId.value}
-                          >
-                            {" "}
-                            <option disabled value="">
+                          </option>
+                          {data2.map((representante) => (
+                            <option value={representante.id}>
                               {" "}
-                            Selecione o tipo de comissão{" "}
+                              {representante.nome}{" "}
                             </option>
-                            {data1.map((tipoComiss) => (
-                              <option value={tipoComiss.id}>
-                                {" "}
-                                {tipoComiss.id} -{tipoComiss.desc}{" "}
-                              </option>
-                            ))}
-                          </Input>
-                          {values.empresaId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.empresaId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
+                          ))}
+                        </Input>
+                        {values.representante.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.representante.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                   </Col>
+                   <Col md="4">
+                   <Label>Tipo Comissão</Label>
+                      <FormGroup
+                        className={`has-label ${values.tipoComiss.error}`}
+                      >
+                        <Input
+                          name="tipoComiss"
+                          type="select"
+                          onChange={(event) =>
+                            handleChange(event, "tipoComiss", "text")
+                          }
+                          value={values.tipoComiss.value}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o tipo de comissão{" "}
+                          </option>
+                          {data1.map((tipoComiss) => (
+                            <option value={tipoComiss.id}>
+                              {" "}
+                              {tipoComiss.id} - {tipoComiss.desc}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.tipoComiss.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.tipoComiss.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                   </Col>
+                 </Row>       
                         <Link to={"/tabelas/cliente/cliente"}>
                           <Button
                             style={{

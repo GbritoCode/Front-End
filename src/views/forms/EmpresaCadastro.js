@@ -243,7 +243,7 @@ export default function EmpresaCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
+        valid = false;
         break;
       }
     }
@@ -299,7 +299,9 @@ export default function EmpresaCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>CNPJ</Label>
+                  <Row>
+                    <Col md="4">
+                    <Label>CNPJ</Label>
                   <FormGroup className={`has-label ${values.cnpj.error}`}>
                     <Input
                       name="idFederal"
@@ -316,8 +318,9 @@ export default function EmpresaCadastro() {
                       <Label className="error">{values.cnpj.message}</Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label>Nome</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label>Nome</Label>
                   <FormGroup className={`has-label ${values.nome.error}`}>
                     <Input
                       name="nome"
@@ -329,8 +332,9 @@ export default function EmpresaCadastro() {
                       <Label className="error">{values.nome.message}</Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label> License</Label>
+                    </Col>
+                    <Col md="4">
+                    <Label> License</Label>
                   <FormGroup className={`has-label ${values.license.error}`}>
                     <Input
                       name="license"
@@ -344,8 +348,11 @@ export default function EmpresaCadastro() {
                       <Label className="error">{values.license.message}</Label>
                     ) : null}
                   </FormGroup>
-
-                  <Label> Usuário</Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                    <Label> Usuário</Label>
                   <FormGroup className={`has-label ${values.userId.error}`}>
                     <Input
                       name="UserId"
@@ -371,7 +378,14 @@ export default function EmpresaCadastro() {
                       <Label className="error">{values.userId.message}</Label>
                     ) : null}
                   </FormGroup>
-
+                    </Col>
+                    <Col md="4">
+                      
+                    </Col>
+                    <Col md="4">
+                      
+                    </Col>
+                  </Row>
                   <Link to={`/tabelas/general/empresa`}>
                     <Button
                       style={{

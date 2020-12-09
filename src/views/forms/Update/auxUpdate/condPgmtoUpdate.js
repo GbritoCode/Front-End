@@ -42,7 +42,7 @@ function AreaUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const id = useParams()   
+const {id} = useParams()   
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
@@ -60,7 +60,7 @@ const id = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/condPgmto/${id.id}`);
+      const response1 = await axios(`http://localhost:51314/condPgmto/${id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -218,51 +218,52 @@ const id = useParams()
                             </Label>
                           ) : null}
                         </FormGroup>
-
-                        <Label>Código</Label>
-                        <FormGroup className={`has-label ${values.cod.error}`}>
-                          <Input
-                            name="cod"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "cod", "text")
-                            }
-                            value={values.cod.value}
-                          />{" "}
-                          {values.cod.error === "has-danger" ? (
-                            <Label className="error">{values.cod.message}</Label>
-                          ) : null}
-                        </FormGroup>
-
-                        <Label>Descrição</Label>
-                        <FormGroup className={`has-label ${values.desc.error}`}>
-                          <Input
-                            name="desc"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "desc", "text")
-                            }
-                            value={values.desc.value}
-                          />{" "}
-                          {values.desc.error === "has-danger" ? (
-                            <Label className="error">{values.desc.message}</Label>
-                          ) : null}
-                        </FormGroup>
-
-                        <Label>Dias de Prazo</Label>
-                        <FormGroup className={`has-label ${values.diasPrazo.error}`}>
-                          <Input
-                            name="diasPrazo"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "diasPrazo", "text")
-                            }
-                            value={values.diasPrazo.value}
-                          />{" "}
-                          {values.diasPrazo.error === "has-danger" ? (
-                            <Label className="error">{values.diasPrazo.message}</Label>
-                          ) : null}
-                        </FormGroup>
+                        <Row>
+                    <Col md="4">
+                    <Label>Código</Label>
+                  <FormGroup className={`has-label ${values.cod.error}`}>
+                    <Input
+                      name="license"
+                      type="text"
+                      onChange={(event) => handleChange(event, "cod", "text")}
+                      value={values.cod.value}
+                    />
+                    {values.cod.error === "has-danger" ? (
+                      <Label className="error">{values.cod.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                    </Col>
+                    <Col md="4">
+                    <Label>Descrição</Label>
+                  <FormGroup className={`has-label ${values.desc.error}`}>
+                    <Input
+                      name="license"
+                      type="text"
+                      onChange={(event) => handleChange(event, "desc", "text")}
+                      value={values.desc.value}
+                    />
+                    {values.desc.error === "has-danger" ? (
+                      <Label className="error">{values.desc.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                    </Col>
+                    <Col md="4">
+                    <Label>Dias de Prazo</Label>
+                  <FormGroup className={`has-label ${values.diasPrazo.error}`}>
+                    <Input
+                      name="diasPrazo"
+                      type="text"
+                      onChange={(event) =>
+                        handleChange(event, "diasPrazo", "text")
+                      }
+                      value={values.diasPrazo.value}
+                    />{" "}
+                    {values.diasPrazo.error === "has-danger" ? (
+                      <Label className="error">{values.diasPrazo.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                    </Col>
+                  </Row>
                         <Link to={`/tabelas/aux/condPgmto`}>
                           <Button
                             style={{

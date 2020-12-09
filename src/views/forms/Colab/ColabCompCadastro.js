@@ -41,7 +41,7 @@ export default function ColabCompCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const id = useParams();
+  const {id} = useParams();
   const dispatch = useDispatch()
   const stateSchema = {
     colabId: { value: "", error: "", message: "" },
@@ -59,7 +59,7 @@ export default function ColabCompCadastro() {
   useEffect(() => {
     //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/${id.id}`);
+      const response = await axios(`http://localhost:51314/colab/${id}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
@@ -130,19 +130,7 @@ export default function ColabCompCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        var valid = false;
-        break;
-      }
-    }
-    for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        var filled = false;
-        setValues((prevState) => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
-        }));
+        valid = false;
         break;
       }
     }
@@ -158,7 +146,7 @@ export default function ColabCompCadastro() {
         break;
       }
     }
-
+   
     if (valid && filled) {
       var valordb = values.valor.value.replace(/[^\d]+/g, "");
       dispatch(

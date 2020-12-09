@@ -58,7 +58,7 @@ function ColabCompUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/comp/1/${id.id}`);
+      const response = await axios(`http://localhost:51314/colab/comp/1/${id}`);
       const response1 = await axios(
         `http://localhost:51314/colab/${response.data.ColabId}`
       );

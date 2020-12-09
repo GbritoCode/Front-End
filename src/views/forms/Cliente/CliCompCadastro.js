@@ -41,7 +41,7 @@ export default function CliCompCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const id = useParams();
+  const {id} = useParams();
   const dispatch = useDispatch();
   let jsonpAdapter = require("axios-jsonp");
   const firstRender = useRef(true);
@@ -70,7 +70,7 @@ export default function CliCompCadastro() {
   useEffect(() => {
     //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cliente/${id.id}`);
+      const response = await axios(`http://localhost:51314/cliente/${id}`);
       const response1 = await axios(`http://localhost:51314/condPgmto`);
       setData(response.data);
       setValues((prevState) => ({
@@ -360,12 +360,14 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                     </Row>
-                    <Label>Complemento</Label>
+                   
+                    <Row>
+                      <Col md="8">
+                      <Label>Complemento</Label>
                     <FormGroup
                       className={`has-label ${optional.complemento.error}`}
                     >
                       <Input
-                        disabled
                         onChange={(event) =>
                           handleChange(event, "complemento", "optional")
                         }
@@ -379,7 +381,7 @@ export default function CliCompCadastro() {
                         </Label>
                       ) : null}
                     </FormGroup>
-                    <Row>
+                      </Col>
                       <Col md="4">
                       <Label>Bairro</Label>
                         <FormGroup
@@ -401,7 +403,10 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
-                      <Col md="4">
+                     
+                    </Row>
+                    <Row>
+                    <Col md="4">
                       <Label>Cidade</Label>
                         <FormGroup
                           className={`has-label ${values.cidade.error}`}
@@ -473,8 +478,6 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
-                    </Row>
-                    <Row>
                       <Col md="4">
                       <Label>Inscrição Municipal</Label>
                         <FormGroup
@@ -495,7 +498,9 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
-                      <Col md="4">
+                    </Row>
+                    <Row>
+                    <Col md="4">
                       <Label>Inscrição Estadual</Label>
                         <FormGroup
                           className={`has-label ${values.inscEst.error}`}
@@ -547,7 +552,11 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
+                      <Col md="4">
+
+                      </Col>
                     </Row>
+                          
                     <Link to={`/tabelas/cliente/comp/${values.clienteId.value}`}>
                       <Button
                         style={{
