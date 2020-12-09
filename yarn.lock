@@ -99,6 +99,15 @@
     jsesc "^2.5.1"
     source-map "^0.5.0"
 
+"@babel/generator@^7.12.5":
+  version "7.12.5"
+  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.12.5.tgz#a2c50de5c8b6d708ab95be5e6053936c1884a4de"
+  integrity sha512-m16TQQJ8hPt7E+OS/XVQg/7U184MLXtvuGbCdA7na61vha+ImkyyNM/9DDA0unYCVZn3ZOhng+qz48/KBOT96A==
+  dependencies:
+    "@babel/types" "^7.12.5"
+    jsesc "^2.5.1"
+    source-map "^0.5.0"
+
 "@babel/helper-annotate-as-pure@^7.0.0", "@babel/helper-annotate-as-pure@^7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.10.4.tgz#5bf0d495a3f757ac3bda48b5bf3b3ba309c72ba3"
@@ -327,6 +336,11 @@
   version "7.11.5"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.11.5.tgz#c7ff6303df71080ec7a4f5b8c003c58f1cf51037"
   integrity sha512-X9rD8qqm695vgmeaQ4fvz/o3+Wk4ZzQvSHkDBgpYKxpD4qTAUm88ZKtHkVqIOsYFFbIQ6wQYhC6q7pjqVK0E0Q==
+
+"@babel/parser@^7.12.7", "@babel/parser@^7.7.0":
+  version "7.12.7"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.12.7.tgz#fee7b39fe809d0e73e5b25eecaf5780ef3d73056"
+  integrity sha512-oWR02Ubp4xTLCAqPRiNIuMVgNO5Aif/xpXtabhzW2HWUD47XJsAB4Zd/Rg30+XeQA3juXigV7hlquOTmwqLiwg==
 
 "@babel/plugin-proposal-async-generator-functions@^7.10.4", "@babel/plugin-proposal-async-generator-functions@^7.8.3":
   version "7.10.5"
@@ -1167,10 +1181,34 @@
     globals "^11.1.0"
     lodash "^4.17.19"
 
+"@babel/traverse@^7.7.0":
+  version "7.12.9"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.12.9.tgz#fad26c972eabbc11350e0b695978de6cc8e8596f"
+  integrity sha512-iX9ajqnLdoU1s1nHt36JDI9KG4k+vmI8WgjK5d+aDTwQbL2fUnzedNedssA645Ede3PM2ma1n8Q4h2ohwXgMXw==
+  dependencies:
+    "@babel/code-frame" "^7.10.4"
+    "@babel/generator" "^7.12.5"
+    "@babel/helper-function-name" "^7.10.4"
+    "@babel/helper-split-export-declaration" "^7.11.0"
+    "@babel/parser" "^7.12.7"
+    "@babel/types" "^7.12.7"
+    debug "^4.1.0"
+    globals "^11.1.0"
+    lodash "^4.17.19"
+
 "@babel/types@^7.0.0", "@babel/types@^7.10.4", "@babel/types@^7.10.5", "@babel/types@^7.11.0", "@babel/types@^7.11.5", "@babel/types@^7.3.0", "@babel/types@^7.4.0", "@babel/types@^7.4.4", "@babel/types@^7.8.3", "@babel/types@^7.9.0":
   version "7.11.5"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.11.5.tgz#d9de577d01252d77c6800cee039ee64faf75662d"
   integrity sha512-bvM7Qz6eKnJVFIn+1LPtjlBFPVN5jNDc1XmN15vWe7Q3DPBufWWsLiIvUu7xW87uTG6QoggpIDnUgLQvPheU+Q==
+  dependencies:
+    "@babel/helper-validator-identifier" "^7.10.4"
+    lodash "^4.17.19"
+    to-fast-properties "^2.0.0"
+
+"@babel/types@^7.12.5", "@babel/types@^7.12.7", "@babel/types@^7.7.0":
+  version "7.12.7"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.12.7.tgz#6039ff1e242640a29452c9ae572162ec9a8f5d13"
+  integrity sha512-MNyI92qZq6jrQkXvtIiykvl4WtoRrVV9MPn+ZfsoEENjiWcBQ3ZSHrkxnJWgWtLX3XXqX5hrSQ+X69wkmesXuQ==
   dependencies:
     "@babel/helper-validator-identifier" "^7.10.4"
     lodash "^4.17.19"
@@ -2621,6 +2659,18 @@ babel-eslint@10.0.3:
     "@babel/parser" "^7.0.0"
     "@babel/traverse" "^7.0.0"
     "@babel/types" "^7.0.0"
+    eslint-visitor-keys "^1.0.0"
+    resolve "^1.12.0"
+
+babel-eslint@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-10.1.0.tgz#6968e568a910b78fb3779cdd8b6ac2f479943232"
+  integrity sha512-ifWaTHQ0ce+448CYop8AdrQiBsGrnC+bMgfyKFdi6EsPLTAWG+QfyDeM6OH+FmWnKvEq5NnBMLvlBUPKQZoDSg==
+  dependencies:
+    "@babel/code-frame" "^7.0.0"
+    "@babel/parser" "^7.7.0"
+    "@babel/traverse" "^7.7.0"
+    "@babel/types" "^7.7.0"
     eslint-visitor-keys "^1.0.0"
     resolve "^1.12.0"
 
@@ -4143,6 +4193,11 @@ date-arithmetic@^4.0.1:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/date-arithmetic/-/date-arithmetic-4.1.0.tgz#e5d6434e9deb71f79760a37b729e4a515e730ddf"
   integrity sha512-QWxYLR5P/6GStZcdem+V1xoto6DMadYWpMXU82ES3/RfR3Wdwr3D0+be7mgOJ+Ov0G9D5Dmb9T17sNLQYj9XOg==
+
+date-fns@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
+  integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"

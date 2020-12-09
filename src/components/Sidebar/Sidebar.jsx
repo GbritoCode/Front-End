@@ -63,7 +63,6 @@ class Sidebar extends React.Component {
   }
   // this function creates the links and collapses that appear in the sidebar (left menu)
   createLinks = (routes) => {
-    const { rtlActive } = this.props;
     return routes.map((prop, key) => {
       if (prop.redirect) {
         return null;
@@ -90,17 +89,17 @@ class Sidebar extends React.Component {
                 <>
                   <i className={prop.icon} />
                   <p>
-                    {rtlActive ? prop.rtlName : prop.name}
+                    {prop.name}
                     <b className="caret" />
                   </p>
                 </>
               ) : (
                 <>
                   <span className="sidebar-mini-icon">
-                    {rtlActive ? prop.rtlMini : prop.mini}
+                    {prop.mini}
                   </span>
                   <span className="sidebar-normal">
-                    {rtlActive ? prop.rtlName : prop.name}
+                    {prop.name}
                     <b className="caret" />
                   </span>
                 </>
@@ -122,15 +121,15 @@ class Sidebar extends React.Component {
             {prop.icon !== undefined ? (
               <>
                 <i className={prop.icon} />
-                <p>{rtlActive ? prop.rtlName : prop.name}</p>
+                <p>{prop.name}</p>
               </>
             ) : (
               <>
                 <span className="sidebar-mini-icon">
-                  {rtlActive ? prop.rtlMini : prop.mini}
+                  {prop.mini}
                 </span>
                 <span className="sidebar-normal">
-                  {rtlActive ? prop.rtlName : prop.name}
+                  {prop.name}
                 </span>
               </>
             )}
@@ -227,7 +226,6 @@ class Sidebar extends React.Component {
 
 Sidebar.propTypes = {
   activeColor: PropTypes.oneOf(["primary", "blue", "green", "orange", "red"]),
-  rtlActive: PropTypes.bool,
   routes: PropTypes.array.isRequired,
   logo: PropTypes.oneOfType([
     PropTypes.shape({

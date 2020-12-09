@@ -28,21 +28,28 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { cotacaoRequest, oportUpdate } from "~/store/modules/oportunidades/actions";
-import { store } from "~/store";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCurrency, normalizeCnpj, normalizeCalcCurrency } from "normalize";
 import { useParams, Link } from "react-router-dom";
+import {
+  normalizeCurrency,
+  normalizeCnpj,
+  normalizeCalcCurrency
+} from "~/normalize";
+import { store } from "~/store";
+import {
+  cotacaoRequest,
+  oportUpdate
+} from "~/store/modules/oportunidades/actions";
 
 export default function CotacaoCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams()
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
@@ -59,61 +66,67 @@ export default function CotacaoCadastro() {
     recLiq: { value: "", error: "", message: "" },
     prevLucro: { value: "", error: "", message: "" },
     numParcelas: { value: "", error: "", message: "" },
-    motivo: { value: 1, error: "", message: "" },
+    motivo: { value: 1, error: "", message: "" }
   };
   const optionalSchema = {
-    desc: { value: "", error: "", message: "" },
-  }
+    desc: { value: "", error: "", message: "" }
+  };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-  const imposto = 14 / 100
+  const imposto = 14 / 100;
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  async function loadData() {
+    const { empresa } = store.getState().auth;
+    async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/oportunidade/${id}`);
+      const response1 = await axios(
+        `http://localhost:51314/oportunidade/${id}`
+      );
       setData(response.data);
       setData1(response1.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        oportunidadeId: { value: response1.data.id },
+        oportunidadeId: { value: response1.data.id }
       }));
     }
     loadData();
   }, [id]);
-
-  function getCliData(cobranca) {
-    axios(`http://localhost:51314/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`)
-      .then((result) => {
-        if (result.data === null) {
-          options = {
-            place: "tr",
-            message: (
-              <div>
-                <div>Ops! Parece que não há uma receita cadastrada para o caso dessa oportunidade, casdastre uma!</div>
-              </div>
-            ),
-            type: "danger",
-            icon: "tim-icons icon-alert-circle-exc",
-            autoDismiss: 7,
-          };
-          notify()
-        } else {
-          setData2(result.data)
-        }
-      })
-  }
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
-  console.log(data2)
-  const verifyNumber = (value) => {
+  function getCliData(cobranca) {
+    axios(
+      `http://localhost:51314/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`
+    ).then(result => {
+      if (result.data === null) {
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>
+                Ops! Parece que não há uma receita cadastrada para o caso dessa
+                oportunidade, casdastre uma!
+              </div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      } else {
+        setData2(result.data);
+      }
+    });
+  }
+
+  console.log(data2);
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -122,71 +135,71 @@ export default function CotacaoCadastro() {
   };
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
         break;
       case "optional":
-        setOptional((prevState) => ({
+        setOptional(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
-  const descontoChange = (descont) => {
-    const value = descont.replace(/[.,]+/g, "")
+  const descontoChange = descont => {
+    const value = descont.replace(/[.,]+/g, "");
     if (value >= 100) {
-      const vHr = data2.valorRec
-      var prop = document.getElementsByName("hrsPrevst")[0].value * vHr
-      const hr = document.getElementsByName("hrsPrevst")[0].value
-      const vLiq = prop - value
-      const rLiq = vLiq - vLiq * imposto
-      const lucro = rLiq - hr * 6000
-      setValues((prevState) => ({
+      const vHr = data2.valorRec;
+      var prop = document.getElementsByName("hrsPrevst")[0].value * vHr;
+      const hr = document.getElementsByName("hrsPrevst")[0].value;
+      const vLiq = prop - value;
+      const rLiq = vLiq - vLiq * imposto;
+      const lucro = rLiq - hr * 6000;
+      setValues(prevState => ({
         ...prevState,
-        vlrLiq: { value: normalizeCalcCurrency(JSON.stringify((vLiq))) },
+        vlrLiq: { value: normalizeCalcCurrency(JSON.stringify(vLiq)) }
       }));
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        recLiq: { value: normalizeCalcCurrency(JSON.stringify((rLiq))) },
+        recLiq: { value: normalizeCalcCurrency(JSON.stringify(rLiq)) }
       }));
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        prevLucro: { value: normalizeCalcCurrency(JSON.stringify((lucro))) },
+        prevLucro: { value: normalizeCalcCurrency(JSON.stringify(lucro)) }
       }));
     }
-  }
+  };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -195,7 +208,7 @@ export default function CotacaoCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -203,10 +216,10 @@ export default function CotacaoCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -233,8 +246,9 @@ export default function CotacaoCadastro() {
           prevLucrodb,
           values.numParcelas.value,
           values.motivo.value,
-          optional.desc.value,
-        ));
+          optional.desc.value
+        )
+      );
       dispatch(
         oportUpdate(
           data1.id,
@@ -250,9 +264,9 @@ export default function CotacaoCadastro() {
           3,
           data1.cod,
           data1.desc,
-          data1.narrativa,
-        ))
-
+          data1.narrativa
+        )
+      );
     } else {
       options = {
         place: "tr",
@@ -263,7 +277,7 @@ export default function CotacaoCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -282,13 +296,13 @@ export default function CotacaoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -307,12 +321,14 @@ export default function CotacaoCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                    <Label>Oportunidade</Label>
-                      <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
+                      <Label>Oportunidade</Label>
+                      <FormGroup
+                        className={`has-label ${values.oportunidadeId.error}`}
+                      >
                         <Input
                           disabled
                           name="oportunidadeId"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "oportunidadeId", "text")
                           }
                           value={values.oportunidadeId.value}
@@ -320,16 +336,15 @@ export default function CotacaoCadastro() {
                         >
                           <option disabled value="">
                             {" "}
-                        Selecione a Oportunidade{" "}
+                            Selecione a Oportunidade{" "}
                           </option>{" "}
-                          <option value={data1.id}>
-                            {" "}
-                            {data1.desc}
-                          </option>
+                          <option value={data1.id}> {data1.desc}</option>
                         </Input>
 
                         {values.oportunidadeId.error === "has-danger" ? (
-                          <Label className="error">{values.oportunidadeId.message}</Label>
+                          <Label className="error">
+                            {values.oportunidadeId.message}
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -342,7 +357,7 @@ export default function CotacaoCadastro() {
                         <Input
                           name="probVend"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "probVend", "text")
                           }
                           value={values.probVend.value}
@@ -371,10 +386,10 @@ export default function CotacaoCadastro() {
                         <Input
                           name="tipoCobranca"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "tipoCobranca", "text")
                           }
-                          onChangeCapture={(e) => {
+                          onChangeCapture={e => {
                             getCliData(e.target.value);
                           }}
                           value={values.tipoCobranca.value}
@@ -393,26 +408,32 @@ export default function CotacaoCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-
                   </Row>
                   <Row>
                     <Col md="4">
-                    <Label>Horas Previstas</Label>
+                      <Label>Horas Previstas</Label>
                       <FormGroup
                         className={`has-label ${values.hrsPrevst.error}`}
                       >
                         <Input
                           name="hrsPrevst"
                           type="numeric"
-                          onChange={(event) => {
+                          onChange={event => {
                             handleChange(event, "hrsPrevst", "number");
-                            setValues((prevState) => ({
+                            setValues(prevState => ({
                               ...prevState,
-                              vlrProp: { value: normalizeCalcCurrency(JSON.stringify(event.target.value * data2.valorRec)) },
+                              vlrProp: {
+                                value: normalizeCalcCurrency(
+                                  JSON.stringify(
+                                    event.target.value * data2.valorRec
+                                  )
+                                )
+                              }
                             }));
-                            descontoChange(document.getElementsByName("vlrDesc")[0].value)
-                          }
-                          }
+                            descontoChange(
+                              document.getElementsByName("vlrDesc")[0].value
+                            );
+                          }}
                           value={values.hrsPrevst.value}
                         />
                         {values.hrsPrevst.error === "has-danger" ? (
@@ -432,7 +453,7 @@ export default function CotacaoCadastro() {
                           disabled
                           name="vlrProp"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "vlrProp", "currency")
                           }
                           value={values.vlrProp.value}
@@ -445,18 +466,17 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Valor Desconto</Label>
+                      <Label>Valor Desconto</Label>
                       <FormGroup
                         className={`has-label ${values.vlrDesc.error}`}
                       >
                         <Input
                           name="vlrDesc"
                           type="text"
-                          onChange={(event) => {
+                          onChange={event => {
                             handleChange(event, "vlrDesc", "currency");
-                            descontoChange(event.target.value)
-                          }
-                          }
+                            descontoChange(event.target.value);
+                          }}
                           value={values.vlrDesc.value}
                         />
                         {values.vlrDesc.error === "has-danger" ? (
@@ -466,20 +486,17 @@ export default function CotacaoCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-
                   </Row>
                   <Row>
                     <Col md="4">
                       {" "}
                       <Label>Valor Líquido</Label>
-                      <FormGroup
-                        className={`has-label ${values.vlrLiq.error}`}
-                      >
+                      <FormGroup className={`has-label ${values.vlrLiq.error}`}>
                         <Input
                           disabled
                           name="vlrLiq"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "vlrLiq", "currency")
                           }
                           value={values.vlrLiq.value}
@@ -492,15 +509,13 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Receita Líquida</Label>
-                      <FormGroup
-                        className={`has-label ${values.recLiq.error}`}
-                      >
+                      <Label>Receita Líquida</Label>
+                      <FormGroup className={`has-label ${values.recLiq.error}`}>
                         <Input
                           disabled
                           name="recLiq"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "recLiq", "currency")
                           }
                           value={values.recLiq.value}
@@ -513,7 +528,7 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Previsão de Lucro</Label>
+                      <Label>Previsão de Lucro</Label>
                       <FormGroup
                         className={`has-label ${values.prevLucro.error}`}
                       >
@@ -521,7 +536,7 @@ export default function CotacaoCadastro() {
                           disabled
                           name="prevLucro"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "prevLucro", "currency")
                           }
                           value={values.prevLucro.value}
@@ -533,25 +548,24 @@ export default function CotacaoCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-
                   </Row>
                   <Row>
                     <Col md="4">
-                    <Label>Número de Parcelas</Label>
+                      <Label>Número de Parcelas</Label>
                       <FormGroup
                         className={`has-label ${values.numParcelas.error}`}
                       >
                         <Input
                           name="numParcelas"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "numParcelas", "text")
                           }
                           value={values.numParcelas.value}
                         >
                           <option disabled value="">
                             {" "}
-                        Selecione a quantidade de parcelas{" "}
+                            Selecione a quantidade de parcelas{" "}
                           </option>{" "}
                           <option value={1}>1</option>
                           <option value={2}>2</option>
@@ -575,50 +589,52 @@ export default function CotacaoCadastro() {
                     </Col>
                     <Col md="4">
                       <Label>Motivo Orçamento/Revisão</Label>
-                      <FormGroup check >
+                      <FormGroup check>
                         <Label check>
                           <Input
                             defaultChecked
                             name="motivo"
                             type="radio"
-                            onChange={(event) => handleChange(event, "motivo", "text")}
+                            onChange={event =>
+                              handleChange(event, "motivo", "text")
+                            }
                             value={1}
-                          />{' '}
-                    Orçamento
-                    </Label>
+                          />{" "}
+                          Orçamento
+                        </Label>
                         <Label check>
                           <Input
                             name="motivo"
                             type="radio"
-                            onChange={(event) => handleChange(event, "motivo", "text")}
+                            onChange={event =>
+                              handleChange(event, "motivo", "text")
+                            }
                             value={2}
                           />
-                    Desconto
-                    </Label>
+                          Desconto
+                        </Label>
                         <Label check>
                           <Input
                             name="motivo"
                             type="radio"
-                            onChange={(event) => handleChange(event, "motivo", "text")}
+                            onChange={event =>
+                              handleChange(event, "motivo", "text")
+                            }
                             value={3}
                           />
-                    Escopo
-                    </Label>
-
+                          Escopo
+                        </Label>
                       </FormGroup>
                     </Col>
-
                   </Row>
                   <Row>
                     <Col>
-                    <Label>Descrição</Label>
-                      <FormGroup
-                        className={`has-label ${optional.desc.error}`}
-                      >
+                      <Label>Descrição</Label>
+                      <FormGroup className={`has-label ${optional.desc.error}`}>
                         <Input
                           name="desc"
                           type="textarea"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "desc", "optional")
                           }
                           value={optional.desc.value}
@@ -631,20 +647,21 @@ export default function CotacaoCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tabelas/oportunidade/oport`}>
+                  <Link to="/tabelas/oportunidade/oport">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -654,17 +671,18 @@ export default function CotacaoCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

@@ -28,17 +28,18 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { oportRequest } from "~/store/modules/oportunidades/actions";
-import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeCnpj } from "normalize.js";
 import { Link } from "react-router-dom";
+import { normalizeCnpj } from "~/normalize";
+import { store } from "~/store";
+import { oportRequest } from "~/store/modules/oportunidades/actions";
+
 export default function CadastroOport() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [data, setData] = useState({});
@@ -50,7 +51,7 @@ export default function CadastroOport() {
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
 
-  let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
+  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -61,30 +62,34 @@ export default function CadastroOport() {
     segmetId: { value: "", error: "", message: "" },
     representanteId: { value: "", error: "", message: "" },
     contato: { value: "", error: "", message: "" },
-    data: { value: year + "-" + month + "-" + date, error: "", message: "" },
+    data: { value: `${year}-${month}-${date}`, error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
     cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" },
+    desc: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
-    narrativa: { value: "", error: "", message: "" },
-  }
+    narrativa: { value: "", error: "", message: "" }
+  };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
-  const codAux = new Date(),
-   empresa = store.getState().auth.empresa,
-   email = store.getState().auth.user.email;
+    const codAux = new Date();
+    const { empresa } = store.getState().auth;
+    const { email } = store.getState().auth.user;
 
-  async function loadData() {
+    async function loadData() {
       const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/colab/?email=${email}`);
+      const response1 = await axios(
+        `http://localhost:51314/colab/?email=${email}`
+      );
       const response2 = await axios(`http://localhost:51314/cliente/`);
       const response4 = await axios(`http://localhost:51314/und_neg/`);
       const response5 = await axios(`http://localhost:51314/itm_controle/`);
       const response6 = await axios(`http://localhost:51314/segmento/`);
       const response7 = await axios(`http://localhost:51314/representante/`);
-      const response8 = await axios(`http://localhost:51314/oportunidade/?one=true`)
+      const response8 = await axios(
+        `http://localhost:51314/oportunidade/?one=true`
+      );
       setData1(response1.data);
       setData2(response2.data);
       setData4(response4.data);
@@ -93,33 +98,39 @@ export default function CadastroOport() {
       setData7(response7.data);
       setData(response.data);
       if (response8.data.length !== 0) {
-        var zerofilled = ('0000' + (response8.data[0].id + 1)).slice(-4);
+        var zerofilled = `0000${response8.data[0].id + 1}`.slice(-4);
       } else {
-        zerofilled = ('0000' + 1).slice(-4);
+        zerofilled = `0000${1}`.slice(-4);
       }
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        colabId: { value: response1.data.id },
+        colabId: { value: response1.data.id }
       }));
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cod: { value: "A" + JSON.stringify(codAux.getYear()) + JSON.stringify(codAux.getMonth() + 1) + "-" + zerofilled },
+        cod: {
+          value: `A${JSON.stringify(codAux.getYear())}${JSON.stringify(
+            codAux.getMonth() + 1
+          )}-${zerofilled}`
+        }
       }));
     }
     loadData();
   }, []);
   function getCliData(cliente) {
-    axios(`http://localhost:51314/cliente/cont/${cliente}`).then((result) => { setData3(result.data); })
-    axios(`http://localhost:51314/cliente/${cliente}`).then((result) => {
-      setValues((prevState) => ({
+    axios(`http://localhost:51314/cliente/cont/${cliente}`).then(result => {
+      setData3(result.data);
+    });
+    axios(`http://localhost:51314/cliente/${cliente}`).then(result => {
+      setValues(prevState => ({
         ...prevState,
-        representanteId: { value: result.data.RepresentanteId },
+        representanteId: { value: result.data.RepresentanteId }
       }));
-    })
+    });
   }
 
   var options = {};
@@ -128,7 +139,7 @@ export default function CadastroOport() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -137,41 +148,41 @@ export default function CadastroOport() {
   };
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "optional":
-        setOptional((prevState) => ({
+        setOptional(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -180,7 +191,7 @@ export default function CadastroOport() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -188,10 +199,10 @@ export default function CadastroOport() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -212,7 +223,7 @@ export default function CadastroOport() {
           values.fase.value,
           values.cod.value,
           values.desc.value,
-          optional.narrativa.value,
+          optional.narrativa.value
         )
       );
     } else {
@@ -225,7 +236,7 @@ export default function CadastroOport() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -240,7 +251,6 @@ export default function CadastroOport() {
           <Col md="12">
             <Card>
               <CardHeader>
-
                 <CardTitle tag="h4">Oportunidade</CardTitle>
               </CardHeader>
               <CardBody>
@@ -248,10 +258,10 @@ export default function CadastroOport() {
                   <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -268,41 +278,55 @@ export default function CadastroOport() {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Row><Col md="4">
-                  <Label>Colaborador</Label>
-                    <FormGroup className={`has-label ${values.colabId.error}`}>
-                      <Input
-                        disabled
-                        name="colabId"
-                        type="text"
-                        onChange={(event) =>
-                          handleChange(event, "colabId", "text")
-                        }
-                        defaultValue={data1.nome}
-                      />
-                      {values.colabId.error === "has-danger" ? (
-                        <Label className="error">{values.colabId.message}</Label>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
+                  <Row>
                     <Col md="4">
-                    <Label>Data</Label>
-                        <FormGroup className={`has-label ${values.data.error}`}>
-                          <Input
-                            name="name_abv"
-                            type="date"
-                            onChange={(event) =>
-                              handleChange(event, "data", "text")
-                            }
-                            value={values.data.value}
-                          />
-                          {values.data.error === "has-danger" ? (
-                            <Label className="error">{values.data.message}</Label>
-                          ) : null}
-                        </FormGroup>
+                      <Label>Colaborador</Label>
+                      <FormGroup
+                        className={`has-label ${values.colabId.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="colabId"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "colabId", "text")
+                          }
+                          defaultValue={data1.nome}
+                        />
+                        {values.colabId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.colabId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-                      <p style={{ paddingTop: 27, paddingLeft: 47, fontSize: 20, fontStyle: "sans-serif" }}>Aberta</p>
+                      <Label>Data</Label>
+                      <FormGroup className={`has-label ${values.data.error}`}>
+                        <Input
+                          name="name_abv"
+                          type="date"
+                          onChange={event =>
+                            handleChange(event, "data", "text")
+                          }
+                          value={values.data.value}
+                        />
+                        {values.data.error === "has-danger" ? (
+                          <Label className="error">{values.data.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <p
+                        style={{
+                          paddingTop: 27,
+                          paddingLeft: 47,
+                          fontSize: 20,
+                          fontStyle: "sans-serif"
+                        }}
+                      >
+                        Aberta
+                      </p>
                     </Col>
                   </Row>
                   <Row>
@@ -314,11 +338,11 @@ export default function CadastroOport() {
                         <Input
                           name="clienteId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "clienteId", "text")
                           }
                           value={values.clienteId.value}
-                          onChangeCapture={(e) => {
+                          onChangeCapture={e => {
                             getCliData(e.target.value);
                           }}
                         >
@@ -327,10 +351,11 @@ export default function CadastroOport() {
                             {" "}
                             Selecione o cliente{" "}
                           </option>
-                          {data2.map((clienteId) => (
+                          {data2.map(clienteId => (
                             <option value={clienteId.id}>
                               {" "}
-                              {clienteId.nomeAbv} - {normalizeCnpj(clienteId.CNPJ)}{" "}
+                              {clienteId.nomeAbv} -{" "}
+                              {normalizeCnpj(clienteId.CNPJ)}{" "}
                             </option>
                           ))}
                         </Input>
@@ -349,7 +374,7 @@ export default function CadastroOport() {
                         <Input
                           name="contato"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "contato", "text")
                           }
                           value={values.contato.value}
@@ -359,7 +384,7 @@ export default function CadastroOport() {
                             {" "}
                             Selecione o contato{" "}
                           </option>
-                          {data3.map((contato) => (
+                          {data3.map(contato => (
                             <option value={contato.id}>
                               {" "}
                               {contato.nome} - {contato.email}{" "}
@@ -374,7 +399,6 @@ export default function CadastroOport() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-
                       <Label>Representante</Label>
                       <FormGroup
                         className={`has-label ${values.representanteId.error}`}
@@ -382,7 +406,7 @@ export default function CadastroOport() {
                         <Input
                           name="representanteId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "representanteId", "text")
                           }
                           value={values.representanteId.value}
@@ -392,7 +416,7 @@ export default function CadastroOport() {
                             {" "}
                             Selecione o representante{" "}
                           </option>
-                          {data7.map((representanteId) => (
+                          {data7.map(representanteId => (
                             <option value={representanteId.id}>
                               {" "}
                               {representanteId.id} - {representanteId.nome}{" "}
@@ -416,7 +440,7 @@ export default function CadastroOport() {
                         <Input
                           name="UndNegId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "UndNegId", "text")
                           }
                           value={values.UndNegId.value}
@@ -426,7 +450,7 @@ export default function CadastroOport() {
                             {" "}
                             Selecione a unidade de negócio{" "}
                           </option>
-                          {data4.map((UndNegId) => (
+                          {data4.map(UndNegId => (
                             <option value={UndNegId.id}>
                               {" "}
                               {UndNegId.id} - {UndNegId.descUndNeg}{" "}
@@ -448,7 +472,7 @@ export default function CadastroOport() {
                         <Input
                           name="itmControleId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "itmControleId", "text")
                           }
                           value={values.itmControleId.value}
@@ -458,7 +482,7 @@ export default function CadastroOport() {
                             {" "}
                             Selecione o item controle{" "}
                           </option>
-                          {data5.map((itmControleId) => (
+                          {data5.map(itmControleId => (
                             <option value={itmControleId.id}>
                               {" "}
                               {itmControleId.id} - {itmControleId.descItem}{" "}
@@ -480,7 +504,7 @@ export default function CadastroOport() {
                         <Input
                           name="segmetId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "segmetId", "text")
                           }
                           value={values.segmetId.value}
@@ -490,7 +514,7 @@ export default function CadastroOport() {
                             {" "}
                             Selecione o segmento{" "}
                           </option>
-                          {data6.map((segmetId) => (
+                          {data6.map(segmetId => (
                             <option value={segmetId.id}>
                               {" "}
                               {segmetId.id} - {segmetId.descSegmt}{" "}
@@ -507,15 +531,13 @@ export default function CadastroOport() {
                   </Row>
                   <Row>
                     <Col md="4">
-                    <Label>Código</Label>
+                      <Label>Código</Label>
                       <FormGroup className={`has-label ${values.cod.error}`}>
                         <Input
                           disabled
                           name="cod"
                           type="text"
-                          onChange={(event) =>
-                            handleChange(event, "cod", "text")
-                          }
+                          onChange={event => handleChange(event, "cod", "text")}
                           value={values.cod.value}
                         />{" "}
                         {values.cod.error === "has-danger" ? (
@@ -524,12 +546,12 @@ export default function CadastroOport() {
                       </FormGroup>
                     </Col>
                     <Col md="8">
-                    <Label>Descrição</Label>
+                      <Label>Descrição</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           name="desc"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "desc", "text")
                           }
                           value={values.desc.value}
@@ -542,36 +564,41 @@ export default function CadastroOport() {
                   </Row>
                   <Row>
                     <Col>
-                    <Label>Narrativa</Label>
-                      <FormGroup className={`has-label ${optional.narrativa.error}`}>
+                      <Label>Narrativa</Label>
+                      <FormGroup
+                        className={`has-label ${optional.narrativa.error}`}
+                      >
                         <Input
                           name="narrativa"
                           type="textarea"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "narrativa", "optional")
                           }
                           value={optional.narrativa.value}
                         />{" "}
                         {optional.narrativa.error === "has-danger" ? (
-                          <Label className="error">{optional.narrativa.message}</Label>
+                          <Label className="error">
+                            {optional.narrativa.message}
+                          </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tabelas/oportunidade/oport`}>
+                  <Link to="/tabelas/oportunidade/oport">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -581,17 +608,18 @@ export default function CadastroOport() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

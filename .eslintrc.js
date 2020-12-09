@@ -1,4 +1,5 @@
 module.exports = {
+  parser: "babel-eslint",
   env: {
     es6: true,
     jest: true,
@@ -12,7 +13,8 @@ module.exports = {
   },
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
+      "experimentalObjectRestSpread": true
     },
     ecmaVersion: 2018,
     sourceType: "module"
@@ -33,8 +35,14 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "block-scoped-var":"off",
-    "no-var":"off"
-    "vars-on-top":"off"
+    "no-var":"off",
+    "vars-on-top":"off",
+    "no-plusplus":"off",
+    "react/state-in-constructor":"off",
+    "no-console":"off",
+    "react/destructuring-assignment":"off",
+    "consistent-return":"off",
+    "import/no-extraneous-dependencies":"off"
   },
   settings: {
     "import/resolver": {

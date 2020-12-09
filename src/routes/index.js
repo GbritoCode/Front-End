@@ -8,9 +8,6 @@ import singUp from "~/pages/signUp";
 
 import Dashboard from "~/pages/dashboard";
 
-import VectorMap from "~/views/maps/VectorMap.jsx";
-import GoogleMaps from "~/views/maps/GoogleMaps.jsx";
-import FullScreenMap from "~/views/maps/FullScreenMap.jsx";
 import RegularTables from "~/views/tables/RegularTables.jsx";
 import ExtendedTables from "~/views/tables/ExtendedTables.jsx";
 import Wizard from "~/views/forms/Wizard.jsx";
@@ -100,23 +97,6 @@ import perfilTable from "~/views/tables/auxTables/perfilTable.js";
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 
-import Calendar from "~/views/Calendar.jsx";
-import Widgets from "~/views/Widgets.jsx";
-import Charts from "~/views/Charts.jsx";
-
-import Buttons from "~/views/components/Buttons.jsx";
-import SweetAlert from "~/views/components/SweetAlert.jsx";
-import Notifications from "~/views/components/Notifications.jsx";
-import Grid from "~/views/components/Grid.jsx";
-import Typography from "~/views/components/Typography.jsx";
-import Panels from "~/views/components/Panels.jsx";
-import Icons from "~/views/components/Icons.jsx";
-import Pricing from "~/views/pages/Pricing.jsx";
-
-import Timeline from "~/views/pages/Timeline.jsx";
-import User from "~/views/pages/User.jsx";
-
-import Lock from "~/views/pages/Lock.jsx";
 import OportTable from "~/views/tables/oportTables/oportTable";
 import cotacaoTable from "~/views/tables/oportTables/cotacaoTable";
 import CadastroOport from "~/views/forms/oportunidade/oportunidadeCadastro";
@@ -134,15 +114,15 @@ import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
 import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
 import parcUpdate from '~/views/forms/Update/oportunidades/parcUpdate'
 import parcNotaFiscal from '~/views/forms/Update/oportunidades/parcNotaFiscal'
+import ApontTable from "~/views/tables/apontamentos/tabelaApont";
+import HorasCadastro from "~/views/forms/apontamentos/apontamentoHoras";
+
 export default function Routes() {
   return (
     <Switch>
       <Route path="/login" exact component={signIn} />
       <Route path="/register" component={singUp} />
       <Route path="/dashboard" component={Dashboard} isPrivate />
-      <Route path="/vector-map" component={VectorMap} isPrivate />
-      <Route path="/google-maps" component={GoogleMaps} isPrivate />
-      <Route path="/full-screen-map" component={FullScreenMap} isPrivate />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -246,6 +226,11 @@ export default function Routes() {
       <Route
         path="/tabelas/oportunidade/cotacao/:id"
         component={cotacaoTable}
+        isPrivate
+      />
+        <Route
+        path="/tabelas/apontamentos/oportunidades/"
+        component={ApontTable}
         isPrivate
       />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -482,24 +467,21 @@ export default function Routes() {
         component={parcNotaFiscal}
         isPrivate
       />
+
+      <Route
+        path="/cadastro/apontamentos/horas/:id"
+        component={HorasCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/oportunidade/recurso/:id"
+        component={RecursoUpdate}
+        isPrivate
+      />
       {/*//---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------*/}
-      <Route path="/widgets" component={Widgets} isPrivate />
-      <Route path="/calendar" component={Calendar} isPrivate />
-      <Route path="/charts" component={Charts} isPrivate />
-      <Route path="/buttons" component={Buttons} isPrivate />
-      <Route path="/notifications" component={Notifications} isPrivate />
-      <Route path="/grid-system" component={Grid} isPrivate />
-      <Route path="/typography" component={Typography} isPrivate />
-      <Route path="/panels" component={Panels} isPrivate />
-      <Route path="/icons" component={Icons} isPrivate />
-      <Route path="/pricing" component={Pricing} />
-      <Route path="/timeline" component={Timeline} isPrivate />
-      <Route path="/user-profile" component={User} isPrivate />
-      <Route path="/sweet-alert" component={SweetAlert} isPrivate />
-      <Route path="/lock-screen" component={Lock} />
       <Redirect from="/" to="/login" />
     </Switch>
   );

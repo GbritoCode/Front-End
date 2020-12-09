@@ -22,9 +22,6 @@ import SignUp from "~/pages/signUp";
 
 //----
 
-import VectorMap from "~/views/maps/VectorMap.jsx";
-import GoogleMaps from "~/views/maps/GoogleMaps.jsx";
-import FullScreenMap from "~/views/maps/FullScreenMap.jsx";
 import RegularTables from "~/views/tables/RegularTables.jsx";
 import ExtendedTables from "~/views/tables/ExtendedTables.jsx";
 import Wizard from "~/views/forms/Wizard.jsx";
@@ -134,24 +131,6 @@ import perfilTable from "~/views/tables/auxTables/perfilTable.js";
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 //-------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
 
-import Calendar from "~/views/Calendar.jsx";
-import Widgets from "~/views/Widgets.jsx";
-import Charts from "~/views/Charts.jsx";
-
-import Buttons from "~/views/components/Buttons.jsx";
-import SweetAlert from "~/views/components/SweetAlert.jsx";
-import Notifications from "~/views/components/Notifications.jsx";
-import Grid from "~/views/components/Grid.jsx";
-import Typography from "~/views/components/Typography.jsx";
-import Panels from "~/views/components/Panels.jsx";
-import Icons from "~/views/components/Icons.jsx";
-import Pricing from "~/views/pages/Pricing.jsx";
-
-import Timeline from "~/views/pages/Timeline.jsx";
-import User from "~/views/pages/User.jsx";
-
-import Rtl from "~/views/pages/Rtl.jsx";
-import Lock from "~/views/pages/Lock.jsx";
 import OportTable from "~/views/tables/oportTables/oportTable";
 import cotacaoTable from "~/views/tables/oportTables/cotacaoTable";
 
@@ -167,170 +146,34 @@ import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
 import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
 import parcUpdate from '~/views/forms/Update/oportunidades/parcUpdate'
 import parcNotaFiscal from '~/views/forms/Update/oportunidades/parcNotaFiscal'
+import ApontCadastro from "~/views/forms/apontamentos/apontamentoHoras";
+import ApontTable from "~/views/tables/apontamentos/tabelaApont";
 
 const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
     icon: "tim-icons icon-chart-pie-36",
     component: Dashboard,
     layout: "/admin",
   },
   {
-    collapse: true,
-    name: "Pages",
-    rtlName: "صفحات",
-    icon: "tim-icons icon-image-02",
-    state: "pagesCollapse",
-    views: [
-      {
-        path: "/pricing",
-        name: "Pricing",
-        rtlName: "عالتسعير",
-        mini: "P",
-        rtlMini: "ع",
-        component: Pricing,
-        layout: "/auth",
-      },
-      {
-        path: "/rtl-support",
-        name: "RTL Support",
-        rtlName: "صودعم رتل",
-        mini: "RS",
-        rtlMini: "صو",
-        component: Rtl,
-        layout: "/rtl",
-      },
-      {
-        path: "/timeline",
-        name: "Timeline",
-        rtlName: "تيالجدول الزمني",
-        mini: "T",
-        rtlMini: "تي",
-        component: Timeline,
-        layout: "/admin",
-      },
-      {
-        path: "/login",
-        name: "Login",
-        rtlName: "هعذاتسجيل الدخول",
-        mini: "L",
-        rtlMini: "هعذا",
-        component: signIn,
-        layout: "/auth",
-      },
-      {
-        path: "/register",
-        name: "Register",
-        rtlName: "تسجيل",
-        mini: "R",
-        rtlMini: "صع",
-        component: SignUp,
-        layout: "/auth",
-      },
-      {
-        path: "/lock-screen",
-        name: "Lock Screen",
-        rtlName: "اقفل الشاشة",
-        mini: "LS",
-        rtlMini: "هذاع",
-        component: Lock,
-        layout: "/auth",
-      },
-      {
-        path: "/user-profile",
-        name: "User Profile",
-        rtlName: "ملف تعريفي للمستخدم",
-        mini: "UP",
-        rtlMini: "شع",
-        component: User,
-        layout: "/admin",
-      },
-    ],
+    path: "/login",
+    name: "Login",
+    mini: "L",
+    rtlMini: "هعذا",
+    component: signIn,
+    layout: "/auth",
+    invisible:true
   },
   {
-    collapse: true,
-    name: "Components",
-    rtlName: "المكونات",
-    icon: "tim-icons icon-molecule-40",
-    state: "componentsCollapse",
-    views: [
-      {
-        collapse: true,
-        name: "Multi Level Collapse",
-        rtlName: "انهيار متعدد المستويات",
-        mini: "MLT",
-        rtlMini: "ر",
-        state: "multiCollapse",
-        views: [
-          {
-            path: "/buttons",
-            name: "Buttons",
-            rtlName: "وصفت",
-            mini: "B",
-            rtlMini: "ب",
-            component: Buttons,
-            layout: "/admin",
-          },
-          {
-            path: "/grid-system",
-            name: "Grid System",
-            rtlName: "نظام الشبكة",
-            mini: "GS",
-            rtlMini: "زو",
-            component: Grid,
-            layout: "/admin",
-          },
-        ],
-      },
-
-      {
-        path: "/panels",
-        name: "Panels",
-        rtlName: "لوحات",
-        mini: "P",
-        rtlMini: "ع",
-        component: Panels,
-        layout: "/admin",
-      },
-      {
-        path: "/sweet-alert",
-        name: "Sweet Alert",
-        rtlName: "الحلو تنبيه",
-        mini: "SA",
-        rtlMini: "ومن",
-        component: SweetAlert,
-        layout: "/admin",
-      },
-      {
-        path: "/notifications",
-        name: "Notifications",
-        rtlName: "إخطارات",
-        mini: "N",
-        rtlMini: "ن",
-        component: Notifications,
-        layout: "/admin",
-      },
-      {
-        path: "/icons",
-        name: "Icons",
-        rtlName: "الرموز",
-        mini: "I",
-        rtlMini: "و",
-        component: Icons,
-        layout: "/admin",
-      },
-      {
-        path: "/typography",
-        name: "Typography",
-        rtlName: "طباعة",
-        mini: "T",
-        rtlMini: "ر",
-        component: Typography,
-        layout: "/admin",
-      },
-    ],
+    path: "/register",
+    name: "Register",
+    mini: "R",
+    rtlMini: "صع",
+    component: SignUp,
+    layout: "/auth",
+    invisible:true
   },
   //------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   //------------Cadastros-----------------------------------------------------------------------------------------------------------------------
@@ -340,7 +183,6 @@ const routes = [
   {
     collapse: true,
     name: "Páginas de cadastro invisíveis",
-    rtlName: "إستمارات",
     icon: "tim-icons icon-notes",
     state: "formsCollapse",
     invisible: true,
@@ -348,7 +190,6 @@ const routes = [
       {
         path: "/cliente_cadastro/:prospect",
         name: "Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CadastroCliente,
@@ -357,7 +198,6 @@ const routes = [
       {
         path: "/cliente_update/:id/:prct?",
         name: "Atualizar Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ClienteUpdate,
@@ -366,7 +206,6 @@ const routes = [
       {
         path: "/cliente/cont_update/:id",
         name: "Atualizar Continuação do Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliContUpdate,
@@ -375,7 +214,6 @@ const routes = [
       {
         path: "/cliente/comp_update/:id",
         name: "Atualizar Complemento do Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliCompUpdate,
@@ -384,7 +222,6 @@ const routes = [
       {
         path: "/cadastro/cliente/comp/:id",
         name: "Complemento de Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliCompCadastro,
@@ -393,7 +230,6 @@ const routes = [
       {
         path: "/cadastro/cliente/cont/:id",
         name: "Continuação do Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliContCadastro,
@@ -402,7 +238,6 @@ const routes = [
       {
         path: "/cadastro/cliente/rec_desp/:id",
         name: "Receitas/Despesas do Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliRecDespCadastro,
@@ -411,7 +246,6 @@ const routes = [
       {
         path: "/update/cliente/rec_desp/:id",
         name: "Receitas/Despesas do Cliente",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: CliRecDespUpdate,
@@ -420,7 +254,6 @@ const routes = [
       {
         path: "/cadastro/colab/colab",
         name: "Colaborador",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ColabCadastro,
@@ -429,7 +262,6 @@ const routes = [
       {
         path: "/colab/update/:id",
         name: "Editar Colaborador",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ColabUpdate,
@@ -438,7 +270,6 @@ const routes = [
       {
         path: "/cadastro/colab/comp/:id",
         name: "Complemento de Colaborador",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ColabCompCadastro,
@@ -447,7 +278,6 @@ const routes = [
       {
         path: "/colab/comp/update/:id",
         name: "Editar Complemento do Colaborador",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ColabCompUpdate,
@@ -456,7 +286,6 @@ const routes = [
       {
         path: "/cadastro/geral/area",
         name: "Área",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: AreaCadastro,
@@ -465,7 +294,6 @@ const routes = [
       {
         path: "/update/general/area/:id",
         name: "Editar Area",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: AreaUpdate,
@@ -474,7 +302,6 @@ const routes = [
       {
         path: "/cadastro/geral/empresa",
         name: "Empresa",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: EmpresaCadastro,
@@ -483,7 +310,6 @@ const routes = [
       {
         path: "/update/general/empresa/:id",
         name: "Editar Empresa",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: EmpresaUpdate,
@@ -492,7 +318,6 @@ const routes = [
       {
         path: "/cadastro/geral/Fornec",
         name: "Fornecedor",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: FornecCadastro,
@@ -501,7 +326,6 @@ const routes = [
       {
         path: "/update/general/fornec/:id",
         name: "Editar Fornecedor",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: FornecUpdate,
@@ -510,7 +334,6 @@ const routes = [
       {
         path: "/cadastro/geral/itm_controle",
         name: "Cadastro de Item Controle",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ItmControleCadastro,
@@ -519,7 +342,6 @@ const routes = [
       {
         path: "/update/general/itm_controle/:id",
         name: "Editar Item Controle",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ItmControleUpdate,
@@ -528,7 +350,6 @@ const routes = [
       {
         path: "/cadastro/geral/parametros",
         name: "Parametros",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ParametrosCadastro,
@@ -537,7 +358,6 @@ const routes = [
       {
         path: "/update/general/parametros/:id",
         name: "Editar Parâmetros",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ParametrosUpdate,
@@ -546,7 +366,6 @@ const routes = [
       {
         path: "/cadastro/geral/prodt",
         name: "Produto",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ProdtCadastro,
@@ -555,7 +374,6 @@ const routes = [
       {
         path: "/update/general/prodt/:id",
         name: "Editar Produto",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: ProdtUpdate,
@@ -564,7 +382,6 @@ const routes = [
       {
         path: "/cadastro/geral/rec_desp",
         name: "Receitas/Despesas",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: RecDespCadastro,
@@ -573,7 +390,6 @@ const routes = [
       {
         path: "/update/general/rec_desp/:id",
         name: "Editar Receita/Despesa",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: RecDespUpdate,
@@ -582,7 +398,6 @@ const routes = [
       {
         path: "/cadastro/aux/condPgmto",
         name: "Condições de pagamento",
-        rtlName: "أشكال عادية",
         mini: "CPG",
         rtlMini: "صو",
         component: condPgmtoCadastro,
@@ -591,7 +406,6 @@ const routes = [
       {
         path: "/update/aux/condPgmto/:id",
         name: "Condições de pagamento",
-        rtlName: "أشكال عادية",
         mini: "CPG",
         rtlMini: "صو",
         component: condPgmtoUpdate,
@@ -600,7 +414,6 @@ const routes = [
       {
         path: "/cadastro/aux/tipoComiss",
         name: "Tipos de Comissão",
-        rtlName: "أشكال عادية",
         mini: "CMS",
         rtlMini: "صو",
         component: tipoComissCadastro,
@@ -609,7 +422,6 @@ const routes = [
       {
         path: "/update/aux/tipoComiss/:id",
         name: "Tipos de Comissão",
-        rtlName: "أشكال عادية",
         mini: "CMS",
         rtlMini: "صو",
         component: tipoComissUpdate,
@@ -618,7 +430,6 @@ const routes = [
       {
         path: "/cadastro/aux/perfil",
         name: "Perfis",
-        rtlName: "أشكال عادية",
         mini: "PRF",
         rtlMini: "صو",
         component: perfilCadastro,
@@ -627,7 +438,6 @@ const routes = [
       {
         path: "/update/aux/perfil/:id",
         name: "Perfis",
-        rtlName: "أشكال عادية",
         mini: "PRF",
         rtlMini: "صو",
         component: perfilUpdate,
@@ -636,7 +446,6 @@ const routes = [
       {
         path: "/cadastro/oportunidade/oport",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: CadastroOport,
@@ -645,7 +454,6 @@ const routes = [
       {
         path: "/update/oportunidade/oport/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: UpdateOport,
@@ -654,7 +462,6 @@ const routes = [
       {
         path: "/cadastro/oportunidade/cotacao/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: CotacaoCadastro,
@@ -663,7 +470,6 @@ const routes = [
       {
         path: "/update/oportunidade/cotacao/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: cotacaoUpdate,
@@ -672,7 +478,6 @@ const routes = [
       {
         path: "/cadastro/oportunidade/recurso/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: RecursoCadastro,
@@ -681,7 +486,6 @@ const routes = [
       {
         path: "/update/oportunidade/recurso/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: RecursoUpdate,
@@ -690,7 +494,6 @@ const routes = [
       {
         path: "/cadastro/oportunidade/parcela/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: ParcelaCadastro,
@@ -699,7 +502,6 @@ const routes = [
       {
         path: "/update/oportunidade/parc/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: parcUpdate,
@@ -708,7 +510,6 @@ const routes = [
       {
         path: "/update/oportunidade/parcNota/:id",
         name: "Oportunidades",
-        rtlName: "أشكال عادية",
         mini: "OPT",
         rtlMini: "صو",
         component: parcNotaFiscal,
@@ -717,7 +518,6 @@ const routes = [
       {
         path: "/cadastro/geral/represent",
         name: "Representante",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: RepresentanteCadastro,
@@ -726,7 +526,6 @@ const routes = [
       {
         path: "/update/general/represent/:id",
         name: "Editar Representante",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: RepresentanteUpdate,
@@ -735,7 +534,6 @@ const routes = [
       {
         path: "/cadastro/geral/sgmet",
         name: "Segmento",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: SegmentoCadastro,
@@ -744,7 +542,6 @@ const routes = [
       {
         path: "/update/general/segmento/:id",
         name: "Editar Segmento",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: SegmentoUpdate,
@@ -753,7 +550,6 @@ const routes = [
       {
         path: "/cadastro/geral/und_neg",
         name: "Cadastro de Unidade de Negócio",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: UndNegCadastro,
@@ -762,10 +558,17 @@ const routes = [
       {
         path: "/update/general/und_neg/:id",
         name: "Editar Unidade de Negócio",
-        rtlName: "أشكال عادية",
         mini: "RF",
         rtlMini: "صو",
         component: UndNegUpdate,
+        layout: "/admin",
+      },
+      {
+        path: "/cadastro/apontamentos/horas/:id",
+        name: "Horas",
+        mini: "OPT",
+        rtlMini: "صو",
+        component: ApontCadastro,
         layout: "/admin",
       },
       //Cadastros Fim---------------------------------------------------------------------------------------------------------------------
@@ -776,7 +579,6 @@ const routes = [
       {
         path: "/extended-forms",
         name: "Extended Forms",
-        rtlName: "نماذج موسعة",
         mini: "EF",
         rtlMini: "هوو",
         component: ExtendedForms,
@@ -785,7 +587,6 @@ const routes = [
       {
         path: "/validation-forms",
         name: "Validation Forms",
-        rtlName: "نماذج التحقق من الصحة",
         mini: "VF",
         rtlMini: "تو",
         component: ValidationForms,
@@ -794,7 +595,6 @@ const routes = [
       {
         path: "/wizard",
         name: "Wizard",
-        rtlName: "ساحر",
         mini: "W",
         rtlMini: "ث",
         component: Wizard,
@@ -811,14 +611,12 @@ const routes = [
   {
     collapse: true,
     name: "Administrador",
-    rtlName: "المكونات",
     icon: "tim-icons icon-molecule-40",
     state: "AdministradorCollapse",
     views: [
       {
         path: "/tabelas/aux/perfil",
         name: "Perfis",
-        rtlName: "طاولات عادية",
         mini: "PRF",
         rtlMini: "صر",
         component: perfilTable,
@@ -828,15 +626,29 @@ const routes = [
   },
   {
     collapse: true,
+    name: "Apontamentos",
+    icon: "tim-icons icon-molecule-40",
+    state: "ApontamentosCollapse",
+    views: [
+      {
+        path: "/tabelas/apontamentos/oportunidades/",
+        name: "Oportunidades",
+        mini: "OPT",
+        rtlMini: "صر",
+        component: ApontTable,
+        layout: "/admin",
+      }
+    ]
+  },
+  {
+    collapse: true,
     name: "Oportunidades",
-    rtlName: "المكونات",
     icon: "tim-icons icon-molecule-40",
     state: "OportunidadeCollapse",
     views: [
       {
         path: "/tabelas/oportunidade/oport",
         name: "Oportunidades",
-        rtlName: "طاولات عادية",
         mini: "OPT",
         rtlMini: "صر",
         component: OportTable,
@@ -845,7 +657,6 @@ const routes = [
       {
         path: "/tabelas/oportunidade/cotacao/:id",
         name: "Cotacao",
-        rtlName: "طاولات عادية",
         mini: "OPT",
         rtlMini: "صر",
         component: cotacaoTable,
@@ -855,7 +666,6 @@ const routes = [
       {
         path: "/tabelas/oportunidade/recurso/:id",
         name: "Recursos",
-        rtlName: "أشكال عادية",
         mini: "rec",
         rtlMini: "صو",
         component: RecursoTable,
@@ -865,7 +675,6 @@ const routes = [
       {
         path: "/tabelas/oportunidade/parcela/:id",
         name: "Recursos",
-        rtlName: "أشكال عادية",
         mini: "rec",
         rtlMini: "صو",
         component: ParcelaTable,
@@ -877,14 +686,12 @@ const routes = [
   {
     collapse: true,
     name: "Cadastros",
-    rtlName: "الجداول",
     icon: "tim-icons icon-puzzle-10",
     state: "tablesCollapse",
     views: [
       {
         path: "/tabelas/aux/condPgmto",
         name: "Condição de Pagamento",
-        rtlName: "طاولات عادية",
         mini: "CPG",
         rtlMini: "صر",
         component: condPgmtoTable,
@@ -893,7 +700,6 @@ const routes = [
       {
         path: "/tabelas/aux/tipoComiss",
         name: "Tipos de Comissão",
-        rtlName: "طاولات عادية",
         mini: "CMS",
         rtlMini: "صر",
         component: tipoComissTable,
@@ -903,7 +709,6 @@ const routes = [
       {
         path: "/tabelas/aux/rec_desp",
         name: "Receita e Despesa",
-        rtlName: "رد فعل الطاولة",
         mini: "RDP",
         rtlMini: "در",
         component: RecDespTable,
@@ -913,7 +718,6 @@ const routes = [
       {
         path: "/regular-tables",
         name: "Regular Tables",
-        rtlName: "طاولات عادية",
         mini: "RT",
         rtlMini: "صر",
         component: RegularTables,
@@ -922,7 +726,6 @@ const routes = [
       {
         path: "/extended-tables",
         name: "Extended Tables",
-        rtlName: "جداول ممتدة",
         mini: "ET",
         rtlMini: "هور",
         component: ExtendedTables,
@@ -931,7 +734,6 @@ const routes = [
       {
         path: "/tabelas/cliente/cliente",
         name: "Clientes",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: Tabela_Cliente,
@@ -940,7 +742,6 @@ const routes = [
       {
         path: "/cadastro/wizard/empresa",
         name: "wizard",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: WizardCadastro,
@@ -949,7 +750,6 @@ const routes = [
       {
         path: "/cadastro/wizard/fornec",
         name: "wizardFornec",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: WizardFornec,
@@ -958,7 +758,6 @@ const routes = [
       {
         path: "/cadastro/wizard/colab",
         name: "wizardColab",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: WizardColab,
@@ -967,7 +766,6 @@ const routes = [
       {
         path: "/tabelas/cliente/prospect",
         name: "Prospects",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: prospectTable,
@@ -976,7 +774,6 @@ const routes = [
       {
         path: "/tabelas/cliente/comp/:id",
         name: "Complemento de Clientes",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         invisible: true,
@@ -986,7 +783,6 @@ const routes = [
       {
         path: "/tabelas/cliente/cont/:id",
         name: "Continuação Cliente",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         invisible: true,
@@ -996,7 +792,6 @@ const routes = [
       {
         path: "/tabelas/cliente/rec_desp/:id",
         name: "Receita e Despesa de Cliente",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         invisible: true,
@@ -1006,7 +801,6 @@ const routes = [
       {
         path: "/tabelas/colab",
         name: "Colaborador",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: ColabTable,
@@ -1015,7 +809,6 @@ const routes = [
       {
         path: "/tables/colab/comp/:id",
         name: "Complemento de Colaborador",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         invisible: true,
@@ -1025,7 +818,6 @@ const routes = [
       {
         path: "/tabelas/general/area",
         name: "Area",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: AreaTable,
@@ -1034,7 +826,6 @@ const routes = [
       {
         path: "/tabelas/general/empresa",
         name: "Empresa",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: EmpresaTable,
@@ -1043,7 +834,6 @@ const routes = [
       {
         path: "/tabelas/general/fornec",
         name: "Fornecedor",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: FornecTable,
@@ -1052,7 +842,6 @@ const routes = [
       {
         path: "/tabelas/general/itm_controle",
         name: "Item Controle",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: ItmControleTable,
@@ -1061,7 +850,6 @@ const routes = [
       {
         path: "/tabelas/general/parametros",
         name: "Parametros",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: ParametrosTable,
@@ -1070,7 +858,6 @@ const routes = [
       {
         path: "/tabelas/general/prodt",
         name: "Produto",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: ProdtTable,
@@ -1079,7 +866,6 @@ const routes = [
       {
         path: "/tabelas/general/representante",
         name: "Representante",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: RepresentanteTable,
@@ -1088,7 +874,6 @@ const routes = [
       {
         path: "/tabelas/general/segmento",
         name: "Segmento",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: SegmentoTable,
@@ -1097,7 +882,6 @@ const routes = [
       {
         path: "/tabelas/general/und_neg",
         name: "Unidade de Negócio",
-        rtlName: "رد فعل الطاولة",
         mini: "RT",
         rtlMini: "در",
         component: UndNegTable,
@@ -1111,66 +895,6 @@ const routes = [
   //-------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
   //-------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
 
-  {
-    collapse: true,
-    name: "Maps",
-    rtlName: "خرائط",
-    icon: "tim-icons icon-pin",
-    state: "mapsCollapse",
-    views: [
-      {
-        path: "/google-maps",
-        name: "Google Maps",
-        rtlName: "خرائط جوجل",
-        mini: "GM",
-        rtlMini: "زم",
-        component: GoogleMaps,
-        layout: "/admin",
-      },
-      {
-        path: "/full-screen-map",
-        name: "Full Screen Map",
-        rtlName: "خريطة كاملة الشاشة",
-        mini: "FSM",
-        rtlMini: "ووم",
-        component: FullScreenMap,
-        layout: "/admin",
-      },
-      {
-        path: "/vector-map",
-        name: "Vector Map",
-        rtlName: "خريطة المتجه",
-        mini: "VM",
-        rtlMini: "تم",
-        component: VectorMap,
-        layout: "/admin",
-      },
-    ],
-  },
-  {
-    path: "/widgets",
-    name: "Widgets",
-    rtlName: "الحاجيات",
-    icon: "tim-icons icon-settings",
-    component: Widgets,
-    layout: "/admin",
-  },
-  {
-    path: "/charts",
-    name: "Charts",
-    rtlName: "الرسوم البيانية",
-    icon: "tim-icons icon-chart-bar-32",
-    component: Charts,
-    layout: "/admin",
-  },
-  {
-    path: "/calendar",
-    name: "Calendar",
-    rtlName: "التقويم",
-    icon: "tim-icons icon-time-alarm",
-    component: Calendar,
-    layout: "/admin",
-  },
 ];
 
 export default routes;
