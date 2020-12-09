@@ -39,7 +39,6 @@ import { normalizeCnpj } from "normalize.js";
 import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import Tooltip from '@material-ui/core/Tooltip';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { AssignmentInd, CreditCard, LocalOffer } from "@material-ui/icons";
 
 /* eslint-disable eqeqeq */
@@ -235,7 +234,7 @@ const {id} = useParams()
           </Button>
         </Tooltip>
       </Link>
-      
+
       <Link to={"/tabelas/oportunidade/parcela/" + id}>
       <Tooltip title="Parcelas" placement="top" interactive>
         <Button

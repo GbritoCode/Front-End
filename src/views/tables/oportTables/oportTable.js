@@ -31,7 +31,7 @@ import { useDispatch } from "react-redux";
 import Tooltip from '@material-ui/core/Tooltip';
 import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircleOutline';
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
-import { AccountBalance, Done, EditOutlined, Close, AccountCircle, ErrorOutline, Message, Check, MonetizationOnOutlined, CheckCircleOutline, RadioButtonCheckedOutlined } from "@material-ui/icons";
+import {   EditOutlined, Close,  ErrorOutline, Message,  MonetizationOnOutlined, CheckCircleOutline, RadioButtonCheckedOutlined } from "@material-ui/icons";
 
 /*eslint-disable eqeqeq*/
 function OportTable() {
@@ -203,7 +203,7 @@ function OportTable() {
                 </Tooltip>
                 )
                 }
-                
+
                 {/* use this button to add a edit kind of action */}
                 <Link to={`/update/oportunidade/oport/${oport.id}`}>
                   <Button
