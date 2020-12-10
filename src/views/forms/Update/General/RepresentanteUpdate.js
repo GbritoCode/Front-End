@@ -55,11 +55,11 @@ function RepresentanteUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/representante/${id}`);
+      const response = await axios(`http://localhost:5140/representante/${id}`);
       const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
-      const response2 = await axios(`http://localhost:51314/tipoComiss/`);
+      const response2 = await axios(`http://localhost:5140/tipoComiss/`);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({

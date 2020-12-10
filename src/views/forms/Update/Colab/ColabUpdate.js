@@ -49,7 +49,7 @@ function ColabUpdatee() {
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-const {id} = useParams()  
+const {id} = useParams()
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -66,11 +66,11 @@ const {id} = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/${id}`);
-      const response1 = await axios(`http://localhost:51314/fornec`);
-      const response2 = await axios(`http://localhost:51314/perfil`);
+      const response = await axios(`http://localhost:5140/colab/${id}`);
+      const response1 = await axios(`http://localhost:5140/fornec`);
+      const response2 = await axios(`http://localhost:5140/perfil`);
       const response3 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
       setData2(response2.data);

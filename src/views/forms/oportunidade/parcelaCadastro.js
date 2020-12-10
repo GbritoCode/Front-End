@@ -53,7 +53,7 @@ export default function ParcelaCadastro() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response1 = await axios(`http://localhost:51314/oportunidade/${id}`);
+      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
       setData1(response1.data);
 
       setValues((prevState) => ({

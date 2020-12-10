@@ -42,7 +42,7 @@ import {
   Table,
   Row,
   Col,
-  UncontrolledTooltip,
+  UncontrolledTooltip
 } from "reactstrap";
 
 // core components
@@ -50,8 +50,8 @@ import {
   chartExample1,
   chartExample2,
   chartExample3,
-  chartExample4,
-} from "~/variables/charts.js";
+  chartExample4
+} from "~/variables/charts";
 
 var mapData = {
   AU: 760,
@@ -64,26 +64,28 @@ var mapData = {
   IN: 200,
   RO: 600,
   RU: 300,
-  US: 2920,
+  US: 2920
 };
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bigChartData: "data1",
+      bigChartData: "data1"
     };
   }
+
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
   }
 
-  setBgChartData = (name) => {
+  setBgChartData = name => {
     this.setState({
-      bigChartData: name,
+      bigChartData: name
     });
   };
+
   render() {
     return (
       <>
@@ -108,7 +110,7 @@ class Dashboard extends React.Component {
                           size="sm"
                           tag="label"
                           className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data1",
+                            active: this.state.bigChartData === "data1"
                           })}
                           onClick={() => this.setBgChartData("data1")}
                         >
@@ -126,7 +128,7 @@ class Dashboard extends React.Component {
                           size="sm"
                           tag="label"
                           className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data2",
+                            active: this.state.bigChartData === "data2"
                           })}
                           onClick={() => this.setBgChartData("data2")}
                         >
@@ -144,7 +146,7 @@ class Dashboard extends React.Component {
                           size="sm"
                           tag="label"
                           className={classNames("btn-simple", {
-                            active: this.state.bigChartData === "data3",
+                            active: this.state.bigChartData === "data3"
                           })}
                           onClick={() => this.setBgChartData("data3")}
                         >
@@ -245,7 +247,7 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-           
+
             <Col lg="4">
               <Card className="card-chart">
                 <CardHeader>
@@ -322,19 +324,19 @@ class Dashboard extends React.Component {
                     <DropdownMenu right>
                       <DropdownItem
                         href="#pablo"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={e => e.preventDefault()}
                       >
                         Action
                       </DropdownItem>
                       <DropdownItem
                         href="#pablo"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={e => e.preventDefault()}
                       >
                         Another action
                       </DropdownItem>
                       <DropdownItem
                         href="#pablo"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={e => e.preventDefault()}
                       >
                         Something else
                       </DropdownItem>
@@ -582,26 +584,26 @@ class Dashboard extends React.Component {
                       <DropdownMenu right>
                         <DropdownItem
                           href="#pablo"
-                          onClick={(e) => e.preventDefault()}
+                          onClick={e => e.preventDefault()}
                         >
                           Action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={(e) => e.preventDefault()}
+                          onClick={e => e.preventDefault()}
                         >
                           Another action
                         </DropdownItem>
                         <DropdownItem
                           href="#pablo"
-                          onClick={(e) => e.preventDefault()}
+                          onClick={e => e.preventDefault()}
                         >
                           Something else
                         </DropdownItem>
                         <DropdownItem
                           className="text-danger"
                           href="#pablo"
-                          onClick={(e) => e.preventDefault()}
+                          onClick={e => e.preventDefault()}
                         >
                           Remove Data
                         </DropdownItem>
@@ -625,12 +627,7 @@ class Dashboard extends React.Component {
                     <tbody>
                       <tr>
                         <td className="text-center">
-                          <div className="photo">
-                            <img
-                              alt="..."
-                              src={require("~/assets/img/tania.jpg")}
-                            />
-                          </div>
+                          <div className="photo" />
                         </td>
                         <td>Tania Mike</td>
                         <td>Develop</td>
@@ -680,12 +677,7 @@ class Dashboard extends React.Component {
                       </tr>
                       <tr>
                         <td className="text-center">
-                          <div className="photo">
-                            <img
-                              alt="..."
-                              src={require("~/assets/img/robi.jpg")}
-                            />
-                          </div>
+                          <div className="photo" />
                         </td>
                         <td>John Doe</td>
                         <td>CEO</td>
@@ -735,12 +727,7 @@ class Dashboard extends React.Component {
                       </tr>
                       <tr>
                         <td className="text-center">
-                          <div className="photo">
-                            <img
-                              alt="..."
-                              src={require("~/assets/img/lora.jpg")}
-                            />
-                          </div>
+                          <div className="photo" />
                         </td>
                         <td>Alexa Mike</td>
                         <td>Design</td>
@@ -790,12 +777,7 @@ class Dashboard extends React.Component {
                       </tr>
                       <tr>
                         <td className="text-center">
-                          <div className="photo">
-                            <img
-                              alt="..."
-                              src={require("~/assets/img/jana.jpg")}
-                            />
-                          </div>
+                          <div className="photo" />
                         </td>
                         <td>Jana Monday</td>
                         <td>Marketing</td>
@@ -845,12 +827,7 @@ class Dashboard extends React.Component {
                       </tr>
                       <tr>
                         <td className="text-center">
-                          <div className="photo">
-                            <img
-                              alt="..."
-                              src={require("~/assets/img/mike.jpg")}
-                            />
-                          </div>
+                          <div className="photo" />
                         </td>
                         <td>Paul Dickens</td>
                         <td>Develop</td>
@@ -900,12 +877,7 @@ class Dashboard extends React.Component {
                       </tr>
                       <tr>
                         <td className="text-center">
-                          <div className="photo">
-                            <img
-                              alt="..."
-                              src={require("~/assets/img/emilyz.jpg")}
-                            />
-                          </div>
+                          <div className="photo" />
                         </td>
                         <td>Manuela Rico</td>
                         <td>Manager</td>
@@ -973,12 +945,7 @@ class Dashboard extends React.Component {
                         <tbody>
                           <tr>
                             <td>
-                              <div className="flag">
-                                <img
-                                  alt="..."
-                                  src={require("~/assets/img/US.png")}
-                                />
-                              </div>
+                              <div className="flag" />
                             </td>
                             <td>USA</td>
                             <td className="text-right">2.920</td>
@@ -986,12 +953,7 @@ class Dashboard extends React.Component {
                           </tr>
                           <tr>
                             <td>
-                              <div className="flag">
-                                <img
-                                  alt="..."
-                                  src={require("~/assets/img/DE.png")}
-                                />
-                              </div>
+                              <div className="flag" />
                             </td>
                             <td>Germany</td>
                             <td className="text-right">1.300</td>
@@ -999,12 +961,7 @@ class Dashboard extends React.Component {
                           </tr>
                           <tr>
                             <td>
-                              <div className="flag">
-                                <img
-                                  alt="..."
-                                  src={require("~/assets/img/AU.png")}
-                                />
-                              </div>
+                              <div className="flag" />
                             </td>
                             <td>Australia</td>
                             <td className="text-right">760</td>
@@ -1012,12 +969,7 @@ class Dashboard extends React.Component {
                           </tr>
                           <tr>
                             <td>
-                              <div className="flag">
-                                <img
-                                  alt="..."
-                                  src={require("~/assets/img/GB.png")}
-                                />
-                              </div>
+                              <div className="flag" />
                             </td>
                             <td>United Kingdom</td>
                             <td className="text-right">690</td>
@@ -1025,12 +977,7 @@ class Dashboard extends React.Component {
                           </tr>
                           <tr>
                             <td>
-                              <div className="flag">
-                                <img
-                                  alt="..."
-                                  src={require("~/assets/img/RO.png")}
-                                />
-                              </div>
+                              <div className="flag" />
                             </td>
                             <td>Romania</td>
                             <td className="text-right">600</td>
@@ -1038,12 +985,7 @@ class Dashboard extends React.Component {
                           </tr>
                           <tr>
                             <td>
-                              <div className="flag">
-                                <img
-                                  alt="..."
-                                  src={require("~/assets/img/BR.png")}
-                                />
-                              </div>
+                              <div className="flag" />
                             </td>
                             <td>Brasil</td>
                             <td className="text-right">550</td>
@@ -1054,12 +996,12 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col className="ml-auto mr-auto" md="6">
                       <VectorMap
-                        map={"world_mill"}
+                        map="world_mill"
                         backgroundColor="transparent"
                         zoomOnScroll={false}
                         containerStyle={{
                           width: "100%",
-                          height: "300px",
+                          height: "300px"
                         }}
                         regionStyle={{
                           initial: {
@@ -1067,17 +1009,17 @@ class Dashboard extends React.Component {
                             "fill-opacity": 0.9,
                             stroke: "none",
                             "stroke-width": 0,
-                            "stroke-opacity": 0,
-                          },
+                            "stroke-opacity": 0
+                          }
                         }}
                         series={{
                           regions: [
                             {
                               values: mapData,
                               scale: ["#AAAAAA", "#444444"],
-                              normalizeFunction: "polynomial",
-                            },
-                          ],
+                              normalizeFunction: "polynomial"
+                            }
+                          ]
                         }}
                       />
                     </Col>

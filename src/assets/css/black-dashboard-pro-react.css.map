@@ -144,7 +144,6 @@
 		"../scss/black-dashboard-pro-react/custom/_fixed-plugin.scss",
 		"../scss/black-dashboard-pro-react/custom/_sidebar-and-main-panel.scss",
 		"../scss/black-dashboard-pro-react/custom/_misc.scss",
-		"../scss/black-dashboard-pro-react/custom/_rtl.scss",
 		"../scss/black-dashboard-pro-react/custom/_timeline.scss",
 		"../scss/black-dashboard-pro-react/custom/vendor/_plugin-datetimepicker.scss",
 		"../scss/black-dashboard-pro-react/custom/vendor/_plugin-nouislider.scss",
@@ -191,7 +190,6 @@
 		"../scss/black-dashboard-pro-react/react/plugins/_plugin-react-tagsinput.scss",
 		"../scss/black-dashboard-pro-react/react/_alerts.scss",
 		"../scss/black-dashboard-pro-react/react/_badges.scss",
-		"../scss/black-dashboard-pro-react/react/_bootstrap-rtl.scss",
 		"../scss/black-dashboard-pro-react/react/_buttons.scss",
 		"../scss/black-dashboard-pro-react/react/_cards.scss",
 		"../scss/black-dashboard-pro-react/react/_checkboxes-radio.scss",
@@ -202,7 +200,6 @@
 		"../scss/black-dashboard-pro-react/react/_inputs.scss",
 		"../scss/black-dashboard-pro-react/react/_modals.scss",
 		"../scss/black-dashboard-pro-react/react/_navbar.scss",
-		"../scss/black-dashboard-pro-react/react/_rtl.scss",
 		"../scss/black-dashboard-pro-react/react/_sidebar-and-main-panel.scss",
 		"../scss/black-dashboard-pro-react/react/_spinners.scss",
 		"../scss/black-dashboard-pro-react/react/_white-content.scss"

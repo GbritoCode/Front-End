@@ -56,7 +56,7 @@ export default function EmpresaCadastro() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/users`);
+      const response = await axios(`http://localhost:5140/users`);
       setData(response.data);
     }
     loadData();
@@ -380,10 +380,10 @@ export default function EmpresaCadastro() {
                   </FormGroup>
                     </Col>
                     <Col md="4">
-                      
+
                     </Col>
                     <Col md="4">
-                      
+
                     </Col>
                   </Row>
                   <Link to={`/tabelas/general/empresa`}>

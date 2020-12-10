@@ -42,12 +42,12 @@ export default function RecursoCadastro() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const {id} = useParams() 
+const {id} = useParams()
   const dispatch = useDispatch();
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
-  
+
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
     colabId: { value: "", error: "", message: "" },
@@ -57,13 +57,13 @@ const {id} = useParams()
     colabVlrHr: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  
+
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/oportunidade/${id}`);
-      const response2 = await axios(`http://localhost:51314/colab/`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
+      const response2 = await axios(`http://localhost:5140/colab/`);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -79,7 +79,7 @@ const {id} = useParams()
   }, [id]);
 
   function getColabHr(colab) {
-    axios(`http://localhost:51314/colab/comp/${colab}`).then((result) => {
+    axios(`http://localhost:5140/colab/comp/${colab}`).then((result) => {
       console.log(result)
       if (result.data.length === 0) {
         options = {

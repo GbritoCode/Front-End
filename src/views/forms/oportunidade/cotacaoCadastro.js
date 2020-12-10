@@ -77,9 +77,9 @@ export default function CotacaoCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(
-        `http://localhost:51314/oportunidade/${id}`
+        `http://localhost:5140/oportunidade/${id}`
       );
       setData(response.data);
       setData1(response1.data);
@@ -101,7 +101,7 @@ export default function CotacaoCadastro() {
   }
   function getCliData(cobranca) {
     axios(
-      `http://localhost:51314/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`
+      `http://localhost:5140/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`
     ).then(result => {
       if (result.data === null) {
         options = {

@@ -59,11 +59,7 @@
 }
 
 /* Offset direction
- */
-html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
-  left: auto;
-  right: 0;
-}
+
 /* Give origins 0 height/width so they don't interfere with clicking the
  * connect elements.
  */
@@ -114,11 +110,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
   left: -6px;
   top: -17px;
 }
-html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
-  right: -15px;
-  left: auto;
-	outline: none;
-}
+
 /* Styling;
  * Giving the connect element a border radius causes issues with using transform: scale
  */
@@ -227,10 +219,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-transform: translate(-50%, 50%,0);
   transform: translate(-50%, 50%,0);
 }
-.noUi-rtl .noUi-value-horizontal {
-  -webkit-transform: translate(50%, 50%);
-  transform: translate(50%, 50%);
-}
 .noUi-marker-horizontal.noUi-marker {
   margin-left: -1px;
   width: 2px;
@@ -255,10 +243,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   -webkit-transform: translate3d(0,50%,0);
   transform: translate3d(0,50%,0);
   padding-left: 25px;
-}
-.noUi-rtl .noUi-value-vertical {
-  -webkit-transform: translate(0, 50%);
-  transform: translate(0, 50%);
 }
 .noUi-marker-vertical.noUi-marker {
   width: 5px;

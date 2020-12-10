@@ -41,7 +41,7 @@ export default function CliRecDespUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const {id} = useParams()  
+const {id} = useParams()
 const stateSchema = {
     clienteId: { value: "", error: "", message: "" },
     recDespId: { value: "", error: "", message: "" },
@@ -59,12 +59,12 @@ const stateSchema = {
     async function loadData() {
       setIsLoading(true);
       const response = await axios(
-        `http://localhost:51314/cliente/rec_desp/1/${id}`
+        `http://localhost:5140/cliente/rec_desp/1/${id}`
       );
       const response1 = await axios(
-        `http://localhost:51314/cliente/${response.data.ClienteId}`
+        `http://localhost:5140/cliente/${response.data.ClienteId}`
       );
-      const response2 = await axios(`http://localhost:51314/rec_desp/?rec=true`);
+      const response2 = await axios(`http://localhost:5140/rec_desp/?rec=true`);
 
       setData1(response1.data);
       setData2(response2.data);

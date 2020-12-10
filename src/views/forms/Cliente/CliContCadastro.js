@@ -61,7 +61,7 @@ const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cliente/${id}`);
+      const response = await axios(`http://localhost:5140/cliente/${id}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
@@ -310,7 +310,7 @@ const dispatch = useDispatch();
                       </FormGroup>
                     </Col>
                   </Row>
-                 
+
                   <Row>
                     <Col md="4">
                       <FormGroup className={`has-label ${optional.aniver.error}`}>

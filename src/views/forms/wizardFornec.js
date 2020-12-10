@@ -73,7 +73,7 @@ export default function FornecCadastro() {
 
   useEffect(() => {
   const empresa = store.getState().auth.empresa;
-  axios("http://localhost:51314/empresa").then((result) => {
+  axios("http://localhost:5140/empresa").then((result) => {
       setValues((prevState) => ({
         ...prevState,
         cnpj: { value: normalizeCnpj(result.data[0].idFederal) },
@@ -87,8 +87,8 @@ export default function FornecCadastro() {
       dispatch(condPgmtoRequest(idEmpresa, cod, desc, diasPrazo, first))
     })
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/condPgmto`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/condPgmto`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
@@ -321,7 +321,7 @@ export default function FornecCadastro() {
                   className={`has-label ${values.empresaId.error}`}
                 >
                   <Input
-                  
+
                     disabled={true}
                     name="EmpresaId"
                     type="select"

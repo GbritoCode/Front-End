@@ -59,7 +59,7 @@ export default function ColabCompCadastro() {
   useEffect(() => {
     //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await axios(`http://localhost:51314/colab/${id}`);
+      const response = await axios(`http://localhost:5140/colab/${id}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
@@ -146,7 +146,7 @@ export default function ColabCompCadastro() {
         break;
       }
     }
-   
+
     if (valid && filled) {
       var valordb = values.valor.value.replace(/[^\d]+/g, "");
       dispatch(

@@ -46,7 +46,7 @@ const {id} = useParams()
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  
+
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
@@ -54,13 +54,13 @@ const {id} = useParams()
     bsComiss: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  
+
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/tipoComiss/${id}`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/tipoComiss/${id}`);
       setData(response.data);
 
       setValues((prevState) => ({
@@ -171,7 +171,7 @@ const {id} = useParams()
                 <Col md="12">
                   <Card>
                     <CardHeader>
-                      
+
                       <CardTitle tag="h4">Edição de Tipo de Comissão</CardTitle>
                     </CardHeader>
                     <CardBody>

@@ -78,17 +78,17 @@ export default function CadastroOport() {
     const { email } = store.getState().auth.user;
 
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(
-        `http://localhost:51314/colab/?email=${email}`
+        `http://localhost:5140/colab/?email=${email}`
       );
-      const response2 = await axios(`http://localhost:51314/cliente/`);
-      const response4 = await axios(`http://localhost:51314/und_neg/`);
-      const response5 = await axios(`http://localhost:51314/itm_controle/`);
-      const response6 = await axios(`http://localhost:51314/segmento/`);
-      const response7 = await axios(`http://localhost:51314/representante/`);
+      const response2 = await axios(`http://localhost:5140/cliente/`);
+      const response4 = await axios(`http://localhost:5140/und_neg/`);
+      const response5 = await axios(`http://localhost:5140/itm_controle/`);
+      const response6 = await axios(`http://localhost:5140/segmento/`);
+      const response7 = await axios(`http://localhost:5140/representante/`);
       const response8 = await axios(
-        `http://localhost:51314/oportunidade/?one=true`
+        `http://localhost:5140/oportunidade/?one=true`
       );
       setData1(response1.data);
       setData2(response2.data);
@@ -122,10 +122,10 @@ export default function CadastroOport() {
     loadData();
   }, []);
   function getCliData(cliente) {
-    axios(`http://localhost:51314/cliente/cont/${cliente}`).then(result => {
+    axios(`http://localhost:5140/cliente/cont/${cliente}`).then(result => {
       setData3(result.data);
     });
-    axios(`http://localhost:51314/cliente/${cliente}`).then(result => {
+    axios(`http://localhost:5140/cliente/${cliente}`).then(result => {
       setValues(prevState => ({
         ...prevState,
         representanteId: { value: result.data.RepresentanteId }

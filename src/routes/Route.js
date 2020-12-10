@@ -13,7 +13,7 @@ export default function RouteWrapper({
 }) {
   const signed = store.getState().auth.signed;
   /*
-    Axios("http://localhost:51314/empresa").then((result) => {
+    Axios("http://localhost:5140/empresa").then((result) => {
       if (signed && result.data.length === 0) {
         //      history.push("/cadastro/wizard/empresa");
         return <Redirect to={{ pathname: "/login" }} />;

@@ -43,7 +43,7 @@ function RecDespUpdatee() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-const {id} = useParams()   
+const {id} = useParams()
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,11 +57,11 @@ const {id} = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/rec_desp/${id}`);
+      const response = await axios(`http://localhost:5140/rec_desp/${id}`);
       const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
-      const response2 = await axios(`http://localhost:51314/itm_controle/`);
+      const response2 = await axios(`http://localhost:5140/itm_controle/`);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -284,10 +284,10 @@ const {id} = useParams()
                           ) : null}
                         </FormGroup>
                           </Col>
-                          
+
                         </Row>
-                        
-                       
+
+
                         <Link to={`/tabelas/aux/rec_desp`}>
                           <Button
                             style={{

@@ -42,23 +42,23 @@ function AreaUpdatee() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const {id} = useParams()  
+const {id} = useParams()
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
-  
+
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     descArea: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  
+
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/area/${id}`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/area/${id}`);
       setData(response.data);
 
       setValues((prevState) => ({

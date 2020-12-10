@@ -52,9 +52,9 @@ const {id} = useParams()
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/prodt/${id}`);
+      const response = await axios(`http://localhost:5140/prodt/${id}`);
       const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
       setValues((prevState) => ({

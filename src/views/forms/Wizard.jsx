@@ -68,7 +68,7 @@ class Wizard extends React.Component {
       CODIGO_EMP,
     });
     axios
-      .post("http://localhost:51314/cliente", {
+      .post("http://localhost:5140/cliente", {
         NOME_ABV,
         CNPJ,
         REPRESENTANTE,

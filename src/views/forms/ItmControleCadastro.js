@@ -56,7 +56,7 @@ export default function ItmControleCadastro() {
   const empresa = store.getState().auth.empresa;
   async function loadData() {
 
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
@@ -261,7 +261,7 @@ export default function ItmControleCadastro() {
                   </FormGroup>
                     </Col>
                     <Col md="4">
-                        
+
                   <Label>Conta Contábil</Label>
                   <FormGroup
                     className={`has-label ${values.contaContabil.error}`}
@@ -302,15 +302,15 @@ export default function ItmControleCadastro() {
                   </FormGroup>
                     </Col>
                     <Col md="4">
-                      
+
                     </Col>
                     <Col md="4">
-                      
+
                     </Col>
                   </Row>
-             
-                
-                 
+
+
+
                   <Link to={`/tabelas/general/itm_controle`}>
                     <Button
                       style={{

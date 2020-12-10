@@ -59,12 +59,12 @@ function SegmentoUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/segmento/${id}`);
-      const response1 = await axios(`http://localhost:51314/und_neg/`);
-      const response2 = await axios(`http://localhost:51314/prodt/`);
-      const response3 = await axios(`http://localhost:51314/area/`);
+      const response = await axios(`http://localhost:5140/segmento/${id}`);
+      const response1 = await axios(`http://localhost:5140/und_neg/`);
+      const response2 = await axios(`http://localhost:5140/prodt/`);
+      const response3 = await axios(`http://localhost:5140/area/`);
       const response4 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
       setData2(response2.data);

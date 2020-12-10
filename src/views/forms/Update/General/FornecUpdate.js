@@ -74,10 +74,10 @@ function FornecUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/fornec/${id}`);
-      const response1 = await axios(`http://localhost:51314/condPgmto`);
+      const response = await axios(`http://localhost:5140/fornec/${id}`);
+      const response1 = await axios(`http://localhost:5140/condPgmto`);
       const response2 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
       setData2(response2.data);

@@ -6,9 +6,7 @@
   text-align: left;
 }
 
-.fc-rtl {
-  text-align: right;
-}
+
 
 body .fc {
   /* extra precedence to overcome jqui */
@@ -51,9 +49,6 @@ body .fc {
   padding: 2px 4px;
 }
 
-.fc-rtl .fc-popover .fc-header {
-  flex-direction: row-reverse;
-}
 
 .fc-popover .fc-header .fc-title {
   margin: 0 2px;
@@ -281,10 +276,7 @@ temporary rendered events).
         background-color: $brand-danger;
 		// @include shadow-big-color($brand-danger);
     }
-	&.event-rose{
-		// background-color: $brand-rose;
-		// @include shadow-big-color($brand-rose);
-	}
+
 	&.event-default{
 		background-color: $default;
 		// @include shadow-big-color($gray-light);
@@ -410,42 +402,10 @@ temporary rendered events).
 }
 
 /* events that are continuing to/from another week. kill rounded corners and butt up against edge */
-.fc-ltr .fc-h-event.fc-not-start,
-.fc-rtl .fc-h-event.fc-not-end {
-  margin-left: 0;
-  border-left-width: 0;
-  padding-left: 1px;
-  /* replace the border with padding */
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
 
-.fc-ltr .fc-h-event.fc-not-end,
-.fc-rtl .fc-h-event.fc-not-start {
-  margin-right: 0;
-  border-right-width: 0;
-  padding-right: 1px;
-  /* replace the border with padding */
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
 
 /* resizer (cursor AND touch devices) */
 /* left resizer  */
-.fc-ltr .fc-h-event .fc-start-resizer,
-.fc-rtl .fc-h-event .fc-end-resizer {
-  cursor: w-resize;
-  left: -1px;
-  /* overcome border */
-}
-
-/* right resizer */
-.fc-ltr .fc-h-event .fc-end-resizer,
-.fc-rtl .fc-h-event .fc-start-resizer {
-  cursor: e-resize;
-  right: -1px;
-  /* overcome border */
-}
 
 /* resizer (mouse devices) */
 .fc-h-event.fc-allow-mouse-resize .fc-resizer {
@@ -472,18 +432,7 @@ temporary rendered events).
 }
 
 /* left resizer  */
-.fc-ltr .fc-h-event.fc-selected .fc-start-resizer,
-.fc-rtl .fc-h-event.fc-selected .fc-end-resizer {
-  margin-left: -4px;
-  /* centers the 8x8 dot on the left edge */
-}
 
-/* right resizer */
-.fc-ltr .fc-h-event.fc-selected .fc-end-resizer,
-.fc-rtl .fc-h-event.fc-selected .fc-start-resizer {
-  margin-right: -4px;
-  /* centers the 8x8 dot on the right edge */
-}
 
 /* DayGrid events
 ----------------------------------------------------------------------------------------------------
@@ -530,16 +479,6 @@ tr:first-child > td > .fc-day-grid-event {
 /* resizer (cursor devices) */
 
 /* left resizer  */
-.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer,
-.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer {
-	margin-left: -2px; /* to the day cell's edge */
-}
-
-/* right resizer */
-.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer,
-.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer {
-	margin-right: -2px; /* to the day cell's edge */
-}
 
 .fc-mirror-skeleton tr:first-child > td > .fc-day-grid-event {
   margin-top: 0;
@@ -558,18 +497,7 @@ tr:first-child > td > .fc-day-grid-event {
 
 /* resizer (cursor devices) */
 /* left resizer  */
-.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer,
-.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer {
-  margin-left: -2px;
-  /* to the day cell's edge */
-}
 
-/* right resizer */
-.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer,
-.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer {
-  margin-right: -2px;
-  /* to the day cell's edge */
-}
 
 /* Event Limiting
 --------------------------------------------------------------------------------------------------*/
@@ -679,7 +607,6 @@ from https://feathericons.com/ and built with IcoMoon
 .fc-icon {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "fcicons" !important;
-  speak: none;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -1239,18 +1166,9 @@ tr:first-child>td>.fc-day-grid-event {
   float: right;
 }
 
-.fc-rtl .fc-dayGrid-view .fc-day-top .fc-day-number {
-  float: left;
-}
-
 .fc-ltr .fc-dayGrid-view .fc-day-top .fc-week-number {
   float: left;
   border-radius: 0 0 3px 0;
-}
-
-.fc-rtl .fc-dayGrid-view .fc-day-top .fc-week-number {
-  float: right;
-  border-radius: 0 0 0 3px;
 }
 
 .fc-dayGrid-view .fc-day-top .fc-week-number {
@@ -1300,10 +1218,6 @@ tr:first-child>td>.fc-day-grid-event {
 
 .fc-ltr .fc-axis {
   text-align: right;
-}
-
-.fc-rtl .fc-axis {
-  text-align: left;
 }
 
 /* TimeGrid Structure
@@ -1412,11 +1326,6 @@ tr:first-child>td>.fc-day-grid-event {
 .fc-ltr .fc-time-grid .fc-event-container {
   /* space on the sides of events for LTR (default) */
   margin: 0 2.5% 0 2px;
-}
-
-.fc-rtl .fc-time-grid .fc-event-container {
-  /* space on the sides of events for RTL */
-  margin: 0 2px 0 2.5%;
 }
 
 .fc-time-grid .fc-event,
@@ -1568,14 +1477,6 @@ be a descendant of the grid when it is being dragged.
   left: 0;
   /* triangle pointing right... */
   border-width: 5px 0 5px 6px;
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-}
-
-.fc-rtl .fc-time-grid .fc-now-indicator-arrow {
-  right: 0;
-  /* triangle pointing left... */
-  border-width: 5px 6px 5px 0;
   border-top-color: transparent;
   border-bottom-color: transparent;
 }

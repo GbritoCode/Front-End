@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import classnames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { useInput } from "hooks.js";
 import {
   Button,
   Card,
@@ -15,13 +14,14 @@ import {
   InputGroupText,
   InputGroup,
   Container,
-  Col,
+  Col
 } from "reactstrap";
+import { useInput } from "~/hooks";
 
 import { signUpRequest } from "~/store/modules/auth/actions";
 
 export default function SignUp() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -31,18 +31,18 @@ export default function SignUp() {
   const [emailFocus, setEmailFocus] = useState("");
   const [nameFocus, setNameFocus] = useState("");
   const [passFocus, setPassFocus] = useState("");
-  const loading = useSelector((state) => state.auth.loading);
+  const loading = useSelector(state => state.auth.loading);
 
   const errorCheckAux = [bindName, bindEmail, bindPassword];
-  const colab = false
-  const handleSubmit = (evt) => {
+  const colab = false;
+  const handleSubmit = evt => {
     evt.preventDefault();
 
     var tamanho = errorCheckAux.length;
     console.log(errorCheckAux.length);
     for (var j = 0; j < tamanho; j++) {
       if (
-        !(errorCheckAux[j].valueerror === "has-danger") &
+        !(errorCheckAux[j].valueerror === "has-danger") &&
         !(errorCheckAux[j].value === "")
       ) {
         var valid = true;
@@ -69,7 +69,7 @@ export default function SignUp() {
                 <CardBody>
                   <InputGroup
                     className={classnames({
-                      "input-group-focus": nameFocus,
+                      "input-group-focus": nameFocus
                     })}
                   >
                     <InputGroupAddon addonType="prepend">
@@ -78,10 +78,10 @@ export default function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      onBlur={(e) => {
+                      onBlur={() => {
                         setNameFocus(false);
                       }}
-                      onFocus={(e) => {
+                      onFocus={() => {
                         setNameFocus(true);
                       }}
                       name="name"
@@ -92,7 +92,7 @@ export default function SignUp() {
                   </InputGroup>
                   <InputGroup
                     className={classnames({
-                      "input-group-focus": emailFocus,
+                      "input-group-focus": emailFocus
                     })}
                   >
                     <InputGroupAddon addonType="prepend">
@@ -101,10 +101,10 @@ export default function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      onBlur={(e) => {
+                      onBlur={() => {
                         setEmailFocus(false);
                       }}
-                      onFocus={(e) => {
+                      onFocus={() => {
                         setEmailFocus(true);
                       }}
                       name="email"
@@ -115,7 +115,7 @@ export default function SignUp() {
                   </InputGroup>
                   <InputGroup
                     className={classnames({
-                      "input-group-focus": passFocus,
+                      "input-group-focus": passFocus
                     })}
                   >
                     <InputGroupAddon addonType="prepend">
@@ -124,10 +124,10 @@ export default function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      onBlur={(e) => {
+                      onBlur={() => {
                         setPassFocus(false);
                       }}
-                      onFocus={(e) => {
+                      onFocus={() => {
                         setPassFocus(true);
                       }}
                       name="password"
@@ -159,7 +159,7 @@ export default function SignUp() {
                       <a
                         className="link footer-link"
                         href="#pablo"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={e => e.preventDefault()}
                       >
                         Need Help?
                       </a>

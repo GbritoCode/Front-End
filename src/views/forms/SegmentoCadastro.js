@@ -58,10 +58,10 @@ export default function SegmentoCadastro() {
   useEffect(() => {
   const empresa = store.getState().auth.empresa;
   async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/und_neg/`);
-      const response2 = await axios(`http://localhost:51314/prodt/`);
-      const response3 = await axios(`http://localhost:51314/area/`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/und_neg/`);
+      const response2 = await axios(`http://localhost:5140/prodt/`);
+      const response3 = await axios(`http://localhost:5140/area/`);
       setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
@@ -325,7 +325,7 @@ export default function SegmentoCadastro() {
                   </FormGroup>
                     </Col>
                   </Row>
-                  
+
                   <Link to={`/tabelas/general/segmento`}>
                     <Button
                       style={{

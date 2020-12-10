@@ -78,7 +78,7 @@ class Tabela_Cliente extends Component {
                   data.find((o, i) => {
                     if (o.idd === key) {
                       console.log(o.id)
-                      axios.delete(`http://localhost:51314/cliente/${o.id}`);
+                      axios.delete(`http://localhost:5140/cliente/${o.id}`);
                       data.splice(i, 1);
 
                       return true;

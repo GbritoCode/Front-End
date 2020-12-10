@@ -61,10 +61,10 @@ const{ id} = useParams()
     async function loadData() {
       setIsLoading(true);
       const response = await axios(
-        `http://localhost:51314/cliente/cont/1/${id}`
+        `http://localhost:5140/cliente/cont/1/${id}`
       );
       const response1 = await axios(
-        `http://localhost:51314/cliente/${response.data.ClienteId}`
+        `http://localhost:5140/cliente/${response.data.ClienteId}`
       );
       setData1(response1.data);
 

@@ -94,7 +94,7 @@ export default function ProspectTable() {
                     data1.find((o, i) => {
                       if (o.idd === key) {
                         console.log(o.id)
-                        axios.delete(`http://localhost:51314/cliente/${o.id}`);
+                        axios.delete(`http://localhost:5140/cliente/${o.id}`);
                         data1.splice(i, 1);
 
                         return true;

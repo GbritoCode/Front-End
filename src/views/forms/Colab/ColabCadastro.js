@@ -48,7 +48,7 @@ export default function ColabCadastro() {
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
-  
+
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -62,13 +62,13 @@ export default function ColabCadastro() {
     espec: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  
+
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/fornec`);
-      const response2 = await axios(`http://localhost:51314/perfil`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/fornec`);
+      const response2 = await axios(`http://localhost:5140/perfil`);
       setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
@@ -358,7 +358,7 @@ export default function ColabCadastro() {
                       </FormGroup>
   </Col>
 </Row>
-                  
+
                   <Row>
                     <Col md="4">
                       {" "}
@@ -488,7 +488,7 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    
+
                     </Col>
                   </Row>
 
@@ -508,10 +508,10 @@ export default function ColabCadastro() {
                     ) : null}
                   </FormGroup>
                     </Col>
-                  
+
                   </Row>
 
-                  
+
                   <Link to={`/tabelas/colab`}>
                     <Button
                       style={{

@@ -66,8 +66,8 @@ export default function ParcelaUpdate() {
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/parcela/aux/${id}`);
-      const response1 = await axios(`http://localhost:51314/oportunidade/${response.data.oportunidadeId}`);
+      const response = await axios(`http://localhost:5140/parcela/aux/${id}`);
+      const response1 = await axios(`http://localhost:5140/oportunidade/${response.data.oportunidadeId}`);
       setData1(response1.data);
       setValues((prevState) => ({
         ...prevState,
@@ -131,7 +131,7 @@ export default function ParcelaUpdate() {
   const valorPagoChange = (value) => {
     const vPago = value.replace(/[.,]+/g, "")
     var parc = document.getElementsByName("vlrParcela")[0].value.replace(/[.,]+/g, "")
-    const saldo = parc - vPago   
+    const saldo = parc - vPago
     if (vPago>parc){
       setOptional((prevState) => ({
         ...prevState,

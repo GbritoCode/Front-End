@@ -67,15 +67,15 @@ const {id} = useParams()
   }
   const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
-  
+
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/cliente/${id}`);
-      const response1 = await axios(`http://localhost:51314/tipoComiss`);
-      const response2 = await axios(`http://localhost:51314/representante`);
-      const response3 = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response = await axios(`http://localhost:5140/cliente/${id}`);
+      const response1 = await axios(`http://localhost:5140/tipoComiss`);
+      const response2 = await axios(`http://localhost:5140/representante`);
+      const response3 = await axios(`http://localhost:5140/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -441,7 +441,7 @@ const {id} = useParams()
                   </FormGroup>
                     </Col>
                   </Row>
-                 
+
                  <Row>
                    <Col md="4">
                    <Label>Nome Abreviado</Label>
@@ -524,7 +524,7 @@ const {id} = useParams()
                         ) : null}
                       </FormGroup>
                    </Col>
-                 </Row>       
+                 </Row>
                         <Link to={"/tabelas/cliente/cliente"}>
                           <Button
                             style={{

@@ -43,7 +43,7 @@ function CotacaoUpdate() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-const {id} = useParams()   
+const {id} = useParams()
   const [data1, setData1] = useState();
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState();
@@ -69,11 +69,11 @@ const {id} = useParams()
   const imposto = 14 / 100
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cotacao/aux/${id}`);
+      const response = await axios(`http://localhost:5140/cotacao/aux/${id}`);
       const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
-      const response2 = await axios(`http://localhost:51314/oportunidade/${response.data.oportunidadeId}`);
+      const response2 = await axios(`http://localhost:5140/oportunidade/${response.data.oportunidadeId}`);
       setData1(response1.data);
       setData2(response2.data);
       setValues((prevState) => ({
@@ -134,7 +134,7 @@ const {id} = useParams()
   }, [id]);
 
   function getCliData(cobranca) {
-    axios(`http://localhost:51314/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`)
+    axios(`http://localhost:5140/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`)
       .then((result) => { setData3(result.data) })
   }
 

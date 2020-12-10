@@ -80,15 +80,15 @@ const {id} = useParams()
     const empresa = store.getState().auth.empresa;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response2 = await axios(`http://localhost:51314/cliente/`);
-      const response4 = await axios(`http://localhost:51314/und_neg/`);
-      const response5 = await axios(`http://localhost:51314/itm_controle/`);
-      const response6 = await axios(`http://localhost:51314/segmento/`);
-      const response7 = await axios(`http://localhost:51314/representante/`);
-      const response8 = await axios(`http://localhost:51314/oportunidade/${id}`);
-      const response1 = await axios(`http://localhost:51314/colab/${response8.data.colabId}`);
-      const response3 = await axios(`http://localhost:51314/cliente/cont/${response8.data.clienteId}`)
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response2 = await axios(`http://localhost:5140/cliente/`);
+      const response4 = await axios(`http://localhost:5140/und_neg/`);
+      const response5 = await axios(`http://localhost:5140/itm_controle/`);
+      const response6 = await axios(`http://localhost:5140/segmento/`);
+      const response7 = await axios(`http://localhost:5140/representante/`);
+      const response8 = await axios(`http://localhost:5140/oportunidade/${id}`);
+      const response1 = await axios(`http://localhost:5140/colab/${response8.data.colabId}`);
+      const response3 = await axios(`http://localhost:5140/cliente/cont/${response8.data.clienteId}`)
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -158,8 +158,8 @@ const {id} = useParams()
   }, [id]);
 
   function getContato(cliente) {
-    axios(`http://localhost:51314/cliente/cont/${cliente}`).then((result) => { setData3(result.data); })
-    axios(`http://localhost:51314/cliente/${cliente}`).then((result) => {
+    axios(`http://localhost:5140/cliente/cont/${cliente}`).then((result) => { setData3(result.data); })
+    axios(`http://localhost:5140/cliente/${cliente}`).then((result) => {
       setValues((prevState) => ({
         ...prevState,
         representanteId: { value: result.data.RepresentanteId },

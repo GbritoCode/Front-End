@@ -56,8 +56,8 @@ export default function RecDespCadastro() {
   useEffect(() => {
   const empresa = store.getState().auth.empresa;
   async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/itm_controle/`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/itm_controle/`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
@@ -244,9 +244,9 @@ export default function RecDespCadastro() {
                   </FormGroup>
                     </Col>
                   </Row>
-               
-                 
-                  
+
+
+
                   <Link to={`/tabelas/aux/rec_desp`}>
                     <Button
                       style={{

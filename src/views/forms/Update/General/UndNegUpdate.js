@@ -53,9 +53,9 @@ function UndNegUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/und_neg/${id}`);
+      const response = await axios(`http://localhost:5140/und_neg/${id}`);
       const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData(response.data);
       setData(response1.data);

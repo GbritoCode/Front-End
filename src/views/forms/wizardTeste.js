@@ -56,7 +56,7 @@ export default function WizardCadastro() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/users`);
+      const response = await axios(`http://localhost:5140/users`);
       setData(response.data);
     }
     loadData();

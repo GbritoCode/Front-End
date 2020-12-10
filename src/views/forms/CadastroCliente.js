@@ -65,9 +65,9 @@ export default function CadastroCliente() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/tipoComiss/`);
-      const response2 = await axios(`http://localhost:51314/representante/`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/tipoComiss/`);
+      const response2 = await axios(`http://localhost:5140/representante/`);
       setData1(response1.data);
       setData2(response2.data);
       setData(response.data);

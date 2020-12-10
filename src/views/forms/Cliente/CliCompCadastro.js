@@ -70,8 +70,8 @@ export default function CliCompCadastro() {
   useEffect(() => {
     //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cliente/${id}`);
-      const response1 = await axios(`http://localhost:51314/condPgmto`);
+      const response = await axios(`http://localhost:5140/cliente/${id}`);
+      const response1 = await axios(`http://localhost:5140/condPgmto`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,
@@ -360,7 +360,7 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                     </Row>
-                   
+
                     <Row>
                       <Col md="8">
                       <Label>Complemento</Label>
@@ -403,7 +403,7 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
-                     
+
                     </Row>
                     <Row>
                     <Col md="4">
@@ -556,7 +556,7 @@ export default function CliCompCadastro() {
 
                       </Col>
                     </Row>
-                          
+
                     <Link to={`/tabelas/cliente/comp/${values.clienteId.value}`}>
                       <Button
                         style={{

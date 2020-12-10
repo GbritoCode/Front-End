@@ -65,8 +65,8 @@ export default function ParcelaUpdate() {
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/parcela/aux/${id}`);
-      const response1 = await axios(`http://localhost:51314/oportunidade/${response.data.oportunidadeId}`);
+      const response = await axios(`http://localhost:5140/parcela/aux/${id}`);
+      const response1 = await axios(`http://localhost:5140/oportunidade/${response.data.oportunidadeId}`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({

@@ -55,7 +55,7 @@ export default function TipoComissCadastro() {
   useEffect(() => {
   const empresa = store.getState().auth.empresa;
   async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       setData(response.data);
       setValues((prevState) => ({
         ...prevState,

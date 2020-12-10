@@ -56,8 +56,8 @@ export default function RepresentanteCadastro() {
   useEffect(() => {
   const empresa = store.getState().auth.empresa;
   async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/tipoComiss/`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/tipoComiss/`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({

@@ -56,9 +56,9 @@ function ItmCtrlUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/itm_controle/${id}`);
+      const response = await axios(`http://localhost:5140/itm_controle/${id}`);
       const response1 = await axios(
-        `http://localhost:51314/empresa/${response.data.EmpresaId}`
+        `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
       setValues((prevState) => ({

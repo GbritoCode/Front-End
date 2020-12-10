@@ -48,7 +48,7 @@ export default function ColabCadastro() {
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
-  
+
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -62,15 +62,15 @@ export default function ColabCadastro() {
     espec: { value: "", error: "", message: "" },
   };
   const [values, setValues] = useState(stateSchema);
-  
+
   useEffect(() => {
     const empresa = store.getState().auth.empresa;
-    axios("http://localhost:51314/users").then((result) => {
+    axios("http://localhost:5140/users").then((result) => {
       setValues((prevState) => ({
         ...prevState,
         email: { value: result.data[0].email },
       }));
-      axios("http://localhost:51314/empresa").then((result) => {
+      axios("http://localhost:5140/empresa").then((result) => {
         const idEmpresa = result.data[0].id,
           desc = "Admnistrador",
           first = true;
@@ -78,9 +78,9 @@ export default function ColabCadastro() {
       })
     })
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/fornec`);
-      const response2 = await axios(`http://localhost:51314/perfil`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/fornec`);
+      const response2 = await axios(`http://localhost:5140/perfil`);
       setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
@@ -315,7 +315,7 @@ export default function ColabCadastro() {
                   ) : null}
                 </FormGroup>
                 <Row>
-                  <Col md="4">  
+                  <Col md="4">
                   <Label>CPF</Label>
                     <FormGroup className={`has-label ${values.cpf.error}`}>
                       <Input
@@ -333,7 +333,7 @@ export default function ColabCadastro() {
                         <Label className="error">{values.cpf.message}</Label>
                       ) : null}
                     </FormGroup></Col>
-                  <Col md="4">  
+                  <Col md="4">
                   <Label>Nome</Label>
                     <FormGroup className={`has-label ${values.nome.error}`}>
                       <Input
@@ -348,7 +348,7 @@ export default function ColabCadastro() {
                         <Label className="error">{values.nome.message}</Label>
                       ) : null}
                     </FormGroup></Col>
-                  <Col md="4">    
+                  <Col md="4">
                   <Label>Data de Adimissão</Label>
                     <FormGroup
                       className={`has-label ${values.dtAdmiss.error}`}

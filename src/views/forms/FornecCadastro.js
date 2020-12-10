@@ -76,8 +76,8 @@ export default function FornecCadastro() {
   const empresa = store.getState().auth.empresa;
   async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:51314/condPgmto`);
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/condPgmto`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
@@ -410,7 +410,7 @@ export default function FornecCadastro() {
                           </Col>
                         </Row>
                         <Row>
-                          
+
                           <Col md="4">
                           <Label>Telefone</Label>
                             <FormGroup
@@ -748,11 +748,11 @@ export default function FornecCadastro() {
                           </Col>
                           <Col md="4">
                             {" "}
-                            
+
                           </Col>
                           <Col md="4">
                             {" "}
-                           
+
                           </Col>
                         </Row>
                         <Link to={`/tabelas/general/fornec`}>

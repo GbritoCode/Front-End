@@ -56,11 +56,11 @@ export default function CliRecDespCadastro() {
   const [values, setValues] = useState(stateSchema);
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-const {id} = useParams()  
+const {id} = useParams()
 useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:51314/cliente/${id}`);
-      const response1 = await axios(`http://localhost:51314/rec_desp/?rec=true`);
+      const response = await axios(`http://localhost:5140/cliente/${id}`);
+      const response1 = await axios(`http://localhost:5140/rec_desp/?rec=true`);
       setData(response.data);
       setData1(response1.data);
       setValues((prevState) => ({
@@ -301,7 +301,7 @@ useEffect(() => {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  
+
                     </Col>
                   </Row>
                   <Row>
@@ -338,10 +338,10 @@ useEffect(() => {
                   </FormGroup>
                     </Col>
                     <Col md="4">
-                      
+
                     </Col>
                   </Row>
-                  
+
                   <Link to={`/tabelas/cliente/rec_desp/${values.clienteId.value}`}>
                     <Button
                       style={{

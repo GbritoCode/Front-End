@@ -64,7 +64,7 @@ export default function HorasCadastro() {
     horaFim: { value: "", error: "", message: "" },
     dataLancamento: { value: "", error: "", message: "" },
     totalApont: { value: "", error: "", message: "" },
-    totalAcum: { value: "", error: "", message: "" },
+    totalAcum: { value: "10:00", error: "", message: "" },
     solicitante: { value: "", error: "", message: "" },
     AreaId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" }
@@ -74,10 +74,8 @@ export default function HorasCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:51314/empresa/${empresa}`);
-      const response1 = await axios(
-        `http://localhost:51314/oportunidade/${id}`
-      );
+      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
       setData1(response1.data);
       setValues(prevState => ({
@@ -113,8 +111,9 @@ export default function HorasCadastro() {
     }
     return false;
   };
-
   const horasChange = (hrInic, hrFim, hrIntvrl) => {
+    const acum = values.totalAcum.value.split(":");
+
     if (hrInic && hrFim && hrIntvrl) {
       const inicAux = hrInic.split(":");
       var inic = new Date();
@@ -136,10 +135,22 @@ export default function HorasCadastro() {
         const apontBruto = differenceInMinutes(fimParsed, inicParsed);
         const apontHr = `0${Math.trunc(apontBruto / 60)}`.slice(-2);
         const apontMin = `0${Math.trunc(apontBruto % 60)}`.slice(-2);
+        const acumMin = `0${Math.trunc((acum[1] + apontMin) % 60)}`.slice(-2);
+        const acumHr = `0${parseInt(acum[0], 10) +
+          parseInt(apontHr, 10) +
+          Math.trunc(
+            (parseInt(acum[1], 10) + parseInt(apontMin, 10)) / 60
+          )}`.slice(-2);
+
+        console.log(
+          Math.trunc((parseInt(acum[1], 10) + parseInt(apontMin, 10)) / 60)
+        );
+        // const acumMin = `0${Math.trunc(acum % 60)}`.slice(-2);
 
         setValues(prevState => ({
           ...prevState,
-          totalApont: { value: `${apontHr}:${apontMin}` }
+          totalApont: { value: `${apontHr}:${apontMin}` },
+          totalAcum: { value: `${acumHr}:${acumMin}` }
         }));
       } else if (differenceInMinutes(fimParsed, inicParsed) < 0) {
         setValues(prevState => ({
@@ -229,16 +240,22 @@ export default function HorasCadastro() {
     }
 
     if (valid && filled) {
-      var custoPrevdb = values.custoPrev.value.replace(/[.,]+/g, "");
-      var colabVlrHrdb = values.colabVlrHr.value.replace(/[.,]+/g, "");
       dispatch(
         recursoReqest(
+          values.oportunidadeId.value,
           values.oportunidadeCod.value,
-          values.colabId.value,
-          custoPrevdb,
+          values.oportunidadeDesc.value,
+          values.Cliente.value,
           values.dataInclusao.value,
-          values.hrsPrevst.value,
-          colabVlrHrdb
+          values.horaInic.value,
+          values.horaIntrv.value,
+          values.horaFim.value,
+          values.dataLancamento.value,
+          values.totalApont.value,
+          values.totalAcum.value,
+          values.solicitante.value,
+          values.AreaId.value,
+          values.desc.value
         )
       );
     } else {
@@ -266,7 +283,7 @@ export default function HorasCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Recurso</CardTitle>
+                <CardTitle tag="h4">Horas</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
@@ -467,7 +484,7 @@ export default function HorasCadastro() {
                       >
                         <Input
                           disabled
-                          type="time"
+                          type="text"
                           name="totalAcum"
                           placeholder="time placeholder"
                           onChange={event =>
