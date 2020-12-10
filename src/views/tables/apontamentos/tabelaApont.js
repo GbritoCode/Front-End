@@ -56,7 +56,7 @@ class HorasTable extends Component {
 
   loadCliente = async () => {
     const { id } = store.getState().auth.user;
-    const response = await api.get(`/horas/${id}`);
+    const response = await api.get(`/horas/2`);
     this.setState({
       data: response.data.map((recurso, key) => {
         return {

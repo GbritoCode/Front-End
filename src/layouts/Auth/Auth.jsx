@@ -27,7 +27,7 @@ class Pages extends React.Component {
     document.documentElement.classList.remove("nav-open");
   }
 
-  getRoutes = () => {
+  getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
@@ -39,7 +39,7 @@ class Pages extends React.Component {
     });
   };
 
-  getActiveRoute = () => {
+  getActiveRoute = routes => {
     const activeRoute = "Default Brand Text";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
@@ -54,7 +54,7 @@ class Pages extends React.Component {
     return activeRoute;
   };
 
-  getFullPageName = () => {
+  getFullPageName = routes => {
     const pageName = this.getActiveRoute(routes);
     switch (pageName) {
       case "Pricing":
