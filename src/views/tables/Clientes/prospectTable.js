@@ -14,26 +14,25 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
-import api from "~/services/api";
-import { ClienteUpdate } from "~/store/modules/Cliente/actions";
-
-import { normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
-import axios from "axios"
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
+import axios from "axios";
+import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
 import { useDispatch } from "react-redux";
+import { normalizeCnpj } from "~/normalize";
+import { ClienteUpdate } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 export default function ProspectTable() {
   document.body.classList.add("white-content");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -49,7 +48,7 @@ export default function ProspectTable() {
             RepresentanteId: client.RepresentanteId,
             Representante: client.Representante.nome,
             TipoComisseId: client.TipoComisseId,
-            TipoComiss: client.tipoComisse.desc,
+            TipoComiss: client.TipoComisse.desc,
             EmpresaId: client.EmpresaId,
             prospect: client.prospect,
             actions: (
@@ -76,7 +75,6 @@ export default function ProspectTable() {
                     <i className="tim-icons icon-check-2" />
                   </Button>
                 </Tooltip>
-
                 {/* use this button to add a edit kind of action */}
                 <Link to={`/cliente_update/${client.id}/false`}>
                   <Button
@@ -90,10 +88,9 @@ export default function ProspectTable() {
                 {/* use this button to remove the data row */}
                 <Button
                   onClick={() => {
-                    var data1 = []
+                    var data1 = [];
                     data1.find((o, i) => {
                       if (o.idd === key) {
-                        console.log(o.id)
                         axios.delete(`http://localhost:5140/cliente/${o.id}`);
                         data1.splice(i, 1);
 
@@ -109,15 +106,13 @@ export default function ProspectTable() {
                   <i className="tim-icons icon-simple-remove" />
                 </Button>{" "}
               </div>
-            ),
+            )
           };
-        }),
+        })
       );
     }
-    loadData()
-  }, [dispatch])
-
-
+    loadData();
+  }, [dispatch]);
 
   return (
     <>
@@ -127,11 +122,11 @@ export default function ProspectTable() {
             <CardHeader>
               <CardTitle tag="h4">
                 Clientes
-                  <Link to={`/cliente_cadastro/true`}>
+                <Link to="/cliente_cadastro/true">
                   <Tooltip title="Novo" placement="top" interactive>
                     <Button
                       style={{
-                        float: "right",
+                        float: "right"
                       }}
                       className={classNames("btn-icon btn-link like")}
                     >
@@ -146,9 +141,13 @@ export default function ProspectTable() {
                 data={data}
                 filterable
                 resizable={false}
-                defaultFilterMethod={(filter, row, column) => {
-                  const id = filter.pivotId || filter.id
-                  return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .startsWith(filter.value.toLowerCase())
+                    : true;
                 }}
                 previousText="Anterior"
                 nextText="Próximo"
@@ -160,31 +159,31 @@ export default function ProspectTable() {
                 columns={[
                   {
                     Header: "CNPJ",
-                    accessor: "CNPJ",
+                    accessor: "CNPJ"
                   },
                   {
                     Header: "Nome Abreviado",
-                    accessor: "nomeAbv",
+                    accessor: "nomeAbv"
                   },
                   {
                     Header: "Representante",
-                    accessor: "Representante",
+                    accessor: "Representante"
                   },
                   {
                     Header: "Tipo de comissão",
-                    accessor: "TipoComiss",
+                    accessor: "TipoComiss"
                   },
                   {
                     Header: "Ações",
                     accessor: "actions",
                     sortable: false,
-                    filterable: false,
-                  },
+                    filterable: false
+                  }
                 ]}
                 defaultPageSize={10}
-                showPagination={true}
-                showPageJump={true}
-                showPaginationBottom={true}
+                showPagination
+                showPageJump
+                showPaginationBottom
                 className="-striped -highlight"
               />
             </CardBody>
@@ -193,6 +192,4 @@ export default function ProspectTable() {
       </div>
     </>
   );
-
 }
-

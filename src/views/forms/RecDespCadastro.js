@@ -47,7 +47,7 @@ export default function RecDespCadastro() {
   const [data1, setData1] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    itmControleId: { value: "", error: "", message: "" },
+    ItmControleId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
     recDesp: { value: "", error: "", message: "" },
   };
@@ -116,7 +116,7 @@ export default function RecDespCadastro() {
     }
 
     if (valid && filled) {
-      dispatch(recDespRequest(values.empresaId.value, values.itmControleId.value, values.desc.value, values.recDesp.value));
+      dispatch(recDespRequest(values.empresaId.value, values.ItmControleId.value, values.desc.value, values.recDesp.value));
     } else {
       options = {
         place: "tr",
@@ -173,15 +173,15 @@ export default function RecDespCadastro() {
                     <Col md="4">
                     <Label>Item Controle</Label>
                   <FormGroup
-                    className={`has-label ${values.itmControleId.error}`}
+                    className={`has-label ${values.ItmControleId.error}`}
                   >
                     <Input
-                      name="itmControleId"
+                      name="ItmControleId"
                       type="select"
                       onChange={(event) =>
-                        handleChange(event, "itmControleId", "text")
+                        handleChange(event, "ItmControleId", "text")
                       }
-                      value={values.itmControleId.value}
+                      value={values.ItmControleId.value}
                     >
                       {" "}
                       <option disabled value="">
@@ -195,9 +195,9 @@ export default function RecDespCadastro() {
                         </option>
                       ))}
                     </Input>
-                    {values.itmControleId.error === "has-danger" ? (
+                    {values.ItmControleId.error === "has-danger" ? (
                       <Label className="error">
-                        {values.itmControleId.message}
+                        {values.ItmControleId.message}
                       </Label>
                     ) : null}
                   </FormGroup>

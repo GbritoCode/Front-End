@@ -18,7 +18,7 @@ export function* colabCadastro({ payload }) {
       PerfilId,
       skype,
       email,
-      espec,
+      espec
     } = payload;
     yield call(api.post, "colab", {
       CPF,
@@ -30,7 +30,7 @@ export function* colabCadastro({ payload }) {
       PerfilId,
       skype,
       email,
-      espec,
+      espec
     });
     history.push("/tabelas/colab");
   } catch (err) {
@@ -51,10 +51,10 @@ export function* updateColab({ payload }) {
       cel,
       skype,
       email,
-      espec,
+      espec
     } = payload;
 
-    const Colab = Object.assign({
+    const Colab = {
       CPF,
       FornecId,
       PerfilId,
@@ -63,11 +63,10 @@ export function* updateColab({ payload }) {
       cel,
       skype,
       email,
-      espec,
-    });
+      espec
+    };
 
     const response = yield call(api.put, `colab/${id}`, Colab);
-    console.log(Colab + "       sada     " + response);
     history.push("/tabelas/colab");
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
@@ -87,7 +86,7 @@ export function* colabCompCadastro({ payload }) {
       valor,
       dataInic,
       dataFim,
-      tipoAtend,
+      tipoAtend
     } = payload;
     yield call(api.post, "colab/comp", {
       ColabId,
@@ -96,7 +95,7 @@ export function* colabCompCadastro({ payload }) {
       valor,
       dataInic,
       dataFim,
-      tipoAtend,
+      tipoAtend
     });
     history.push(`/tables/colab/comp/${ColabId}`);
   } catch (err) {
@@ -114,18 +113,18 @@ export function* updateColabComp({ payload }) {
       valor,
       dataInic,
       dataFim,
-      tipoAtend,
+      tipoAtend
     } = payload;
 
-    const Colab = Object.assign({
+    const Colab = {
       ColabId,
       nivel,
       tipoValor,
       valor,
       dataInic,
       dataFim,
-      tipoAtend,
-    });
+      tipoAtend
+    };
 
     const response = yield call(api.put, `colab/comp/${id}`, Colab);
 
@@ -143,5 +142,5 @@ export default all([
   takeLatest("@cadastro/CADASTRO_COLAB_REQUEST", colabCadastro),
   takeLatest("@update/COLAB_REQUEST", updateColab),
   takeLatest("@cadastro/CADASTRO_COLAB_COMP_REQUEST", colabCompCadastro),
-  takeLatest("@update/COLAB_COMP_REQUEST", updateColabComp),
+  takeLatest("@update/COLAB_COMP_REQUEST", updateColabComp)
 ]);

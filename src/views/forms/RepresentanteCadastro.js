@@ -28,18 +28,18 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { representanteRequest } from "~/store/modules/general/actions";
-import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeCnpj, normalizeCurrency } from "normalize";
 import { Link } from "react-router-dom";
+import { normalizeCnpj, normalizeCurrency } from "~/normalize";
+import { store } from "~/store";
+import { representanteRequest } from "~/store/modules/general/actions";
 
 export default function RepresentanteCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -49,20 +49,20 @@ export default function RepresentanteCadastro() {
     empresaId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     tipoComiss: { value: "", error: "", message: "" },
-    vlrFixMens: { value: "", error: "", message: "" },
+    vlrFixMens: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  async function loadData() {
+    const { empresa } = store.getState().auth;
+    async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:5140/tipoComiss/`);
       setData(response.data);
       setData1(response1.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
     }
     loadData();
@@ -74,7 +74,7 @@ export default function RepresentanteCadastro() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -84,42 +84,42 @@ export default function RepresentanteCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -128,7 +128,7 @@ export default function RepresentanteCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -137,9 +137,9 @@ export default function RepresentanteCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -166,7 +166,7 @@ export default function RepresentanteCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -185,13 +185,13 @@ export default function RepresentanteCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -210,18 +210,20 @@ export default function RepresentanteCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                    <Label>Nome</Label>
-                  <FormGroup className={`has-label ${values.nome.error}`}>
-                    <Input
-                      name="nome"
-                      type="text"
-                      onChange={(event) => handleChange(event, "nome", "text")}
-                      value={values.nome.value}
-                    />{" "}
-                    {values.nome.error === "has-danger" ? (
-                      <Label className="error">{values.nome.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Nome</Label>
+                      <FormGroup className={`has-label ${values.nome.error}`}>
+                        <Input
+                          name="nome"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "nome", "text")
+                          }
+                          value={values.nome.value}
+                        />{" "}
+                        {values.nome.error === "has-danger" ? (
+                          <Label className="error">{values.nome.message}</Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
                       {" "}
@@ -232,7 +234,7 @@ export default function RepresentanteCadastro() {
                         <Input
                           name="tipoComiss"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "tipoComiss", "text")
                           }
                           value={values.tipoComiss.value}
@@ -242,7 +244,7 @@ export default function RepresentanteCadastro() {
                             {" "}
                             Selecione o tipo de comissão{" "}
                           </option>
-                          {data1.map((tipoComiss) => (
+                          {data1.map(tipoComiss => (
                             <option value={tipoComiss.id}>
                               {" "}
                               {tipoComiss.id} - {tipoComiss.desc}{" "}
@@ -265,7 +267,7 @@ export default function RepresentanteCadastro() {
                         <Input
                           name="vlrFixMens"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "vlrFixMens", "currency")
                           }
                           value={values.vlrFixMens.value}
@@ -278,20 +280,21 @@ export default function RepresentanteCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tabelas/general/representante`}>
+                  <Link to="/tabelas/general/representante">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -301,17 +304,18 @@ export default function RepresentanteCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

@@ -21,37 +21,41 @@ import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
-import api from "~/services/api";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import { ArrowBackIos } from "@material-ui/icons";
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from "@material-ui/icons/Add";
+import api from "~/services/api";
 
-/*eslint-disable eqeqeq*/
+/* eslint-disable eqeqeq */
 class RecursoTable extends Component {
   state = {
-    data: [],
+    data: []
   };
 
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
     this.loadCliente();
   }
-  checkFase = (value) => {
+
+  checkFase = value => {
     if (value == 1) {
-      return "Aberta"
-    } else if (value == 2) {
-      return "Em Cotação"
-    } else if (value == 3) {
-      return "Cotada"
-    } else if (value == 4) {
-      return "Aprovada"
+      return "Aberta";
     }
-  }
+    if (value == 2) {
+      return "Em Cotação";
+    }
+    if (value == 3) {
+      return "Cotada";
+    }
+    if (value == 4) {
+      return "Aprovada";
+    }
+  };
 
   loadCliente = async () => {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     const response = await api.get(`/recurso/${id}`);
     this.setState({
       data: response.data.map((recurso, key) => {
@@ -59,7 +63,7 @@ class RecursoTable extends Component {
           idd: key,
           id: recurso.id,
           oportunidadeId: recurso.Oportunidade.desc,
-          colabId: recurso.Colab.nome,
+          ColabId: recurso.Colab.nome,
           custoPrev: recurso.custoPrev,
           dataInclusao: recurso.dataInclusao,
           hrsPrevst: recurso.hrsPrevst,
@@ -67,7 +71,6 @@ class RecursoTable extends Component {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-
               {/* use this button to add a edit kind of action */}
               <Link to={`/update/oportunidade/recurso/${recurso.id}`}>
                 <Button
@@ -81,17 +84,16 @@ class RecursoTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var data = this.state.data;
+                  var { data } = this.state;
                   data.find((o, i) => {
                     if (o.idd === key) {
-                      console.log(o.id)
                       data.splice(i, 1);
 
                       return true;
                     }
                     return false;
                   });
-                  this.setState({ data: data });
+                  this.setState({ data });
                 }}
                 color="danger"
                 size="sm"
@@ -100,14 +102,14 @@ class RecursoTable extends Component {
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          ),
+          )
         };
-      }),
+      })
     });
   };
 
   render() {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -117,10 +119,10 @@ class RecursoTable extends Component {
                 <CardTitle tag="h4">
                   Recursos
                   <Link to={`/cadastro/oportunidade/recurso/${id}`}>
-                  <Tooltip title="Novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -128,16 +130,16 @@ class RecursoTable extends Component {
                       </Button>
                     </Tooltip>
                   </Link>
-                  <Link to={`/tabelas/oportunidade/oport`}>
-                  <Tooltip title="Voltar">
-                    <Button
+                  <Link to="/tabelas/oportunidade/oport">
+                    <Tooltip title="Voltar">
+                      <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos  />
-                    </Button>
+                        <ArrowBackIos />
+                      </Button>
                     </Tooltip>
                   </Link>
                 </CardTitle>
@@ -147,9 +149,13 @@ class RecursoTable extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
-                  defaultFilterMethod={(filter, row, column) => {
-                    const id = filter.pivotId || filter.id
-                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return row[id] !== undefined
+                      ? String(row[id])
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
+                      : true;
                   }}
                   previousText="Anterior"
                   nextText="Próximo"
@@ -161,27 +167,27 @@ class RecursoTable extends Component {
                   columns={[
                     {
                       Header: "Oportunidade",
-                      accessor: "oportunidadeId",
+                      accessor: "oportunidadeId"
                     },
                     {
                       Header: "Colaborador",
-                      accessor: "colabId",
+                      accessor: "ColabId"
                     },
                     {
                       Header: "Horas Previstas",
-                      accessor: "hrsPrevst",
+                      accessor: "hrsPrevst"
                     },
                     {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,
-                      filterable: false,
-                    },
+                      filterable: false
+                    }
                   ]}
                   defaultPageSize={10}
-                  showPagination={true}
-                  showPageJump={true}
-                  showPaginationBottom={true}
+                  showPagination
+                  showPageJump
+                  showPaginationBottom
                   className="-striped -highlight"
                 />
               </CardBody>

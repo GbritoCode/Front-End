@@ -28,35 +28,35 @@ import {
   Label,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { undNegRequest } from "~/store/modules/general/actions";
-import { store } from "~/store";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
+import { store } from "~/store";
+import { undNegRequest } from "~/store/modules/general/actions";
 
 export default function UndNegCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    descUndNeg: { value: "", error: "", message: "" },
+    descUndNeg: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  async function loadData() {
+    const { empresa } = store.getState().auth;
+    async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       setData(response.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
     }
     loadData();
@@ -98,19 +98,19 @@ export default function UndNegCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -119,7 +119,7 @@ export default function UndNegCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -128,9 +128,9 @@ export default function UndNegCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -148,7 +148,7 @@ export default function UndNegCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -167,13 +167,13 @@ export default function UndNegCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -196,7 +196,7 @@ export default function UndNegCadastro() {
                     <Input
                       name="descUndNeg"
                       type="text"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "descUndNeg", "text")
                       }
                       value={values.descUndNeg.value}
@@ -207,20 +207,21 @@ export default function UndNegCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-                  <Link to={`/tabelas/general/und_neg`}>
+                  <Link to="/tabelas/general/und_neg">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -230,17 +231,18 @@ export default function UndNegCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

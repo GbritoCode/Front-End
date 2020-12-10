@@ -59,12 +59,12 @@ const {id} = useParams()
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    colabId: { value: "", error: "", message: "" },
-    clienteId: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" },
+    ClienteId: { value: "", error: "", message: "" },
     UndNegId: { value: "", error: "", message: "" },
-    itmControleId: { value: "", error: "", message: "" },
+    ItmControleId: { value: "", error: "", message: "" },
     segmetId: { value: "", error: "", message: "" },
-    representanteId: { value: "", error: "", message: "" },
+    RepresentanteId: { value: "", error: "", message: "" },
     contato: { value: "", error: "", message: "" },
     data: { value: "", error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
@@ -87,8 +87,8 @@ const {id} = useParams()
       const response6 = await axios(`http://localhost:5140/segmento/`);
       const response7 = await axios(`http://localhost:5140/representante/`);
       const response8 = await axios(`http://localhost:5140/oportunidade/${id}`);
-      const response1 = await axios(`http://localhost:5140/colab/${response8.data.colabId}`);
-      const response3 = await axios(`http://localhost:5140/cliente/cont/${response8.data.clienteId}`)
+      const response1 = await axios(`http://localhost:5140/colab/${response8.data.ColabId}`);
+      const response3 = await axios(`http://localhost:5140/cliente/cont/${response8.data.ClienteId}`)
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -104,7 +104,7 @@ const {id} = useParams()
       }));
       setValues((prevState) => ({
         ...prevState,
-        colabId: { value: response8.data.colabId },
+        ColabId: { value: response8.data.ColabId },
       }));
       setValues((prevState) => ({
         ...prevState,
@@ -116,7 +116,7 @@ const {id} = useParams()
       }));
       setValues((prevState) => ({
         ...prevState,
-        clienteId: { value: response8.data.clienteId },
+        ClienteId: { value: response8.data.ClienteId },
       }));
       setValues((prevState) => ({
         ...prevState,
@@ -132,7 +132,7 @@ const {id} = useParams()
       }));
       setValues((prevState) => ({
         ...prevState,
-        itmControleId: { value: response8.data.itmControleId },
+        ItmControleId: { value: response8.data.ItmControleId },
       }));
       setValues((prevState) => ({
         ...prevState,
@@ -140,7 +140,7 @@ const {id} = useParams()
       }));
       setValues((prevState) => ({
         ...prevState,
-        representanteId: { value: response8.data.representanteId },
+        RepresentanteId: { value: response8.data.RepresentanteId },
       }));
       setValues((prevState) => ({
         ...prevState,
@@ -162,7 +162,7 @@ const {id} = useParams()
     axios(`http://localhost:5140/cliente/${cliente}`).then((result) => {
       setValues((prevState) => ({
         ...prevState,
-        representanteId: { value: result.data.RepresentanteId },
+        RepresentanteId: { value: result.data.RepresentanteId },
       }));
     })
   }
@@ -281,12 +281,12 @@ const {id} = useParams()
       dispatch(
         oportUpdate(id,
           values.empresaId.value,
-          values.colabId.value,
-          values.clienteId.value,
+          values.ColabId.value,
+          values.ClienteId.value,
           values.UndNegId.value,
-          values.itmControleId.value,
+          values.ItmControleId.value,
           values.segmetId.value,
-          values.representanteId.value,
+          values.RepresentanteId.value,
           values.contato.value,
           values.data.value,
           values.fase.value,
@@ -364,18 +364,18 @@ const {id} = useParams()
                     </FormGroup>
                     <Row><Col md="4">
                     <Label>Colaborador</Label>
-                      <FormGroup className={`has-label ${values.colabId.error}`}>
+                      <FormGroup className={`has-label ${values.ColabId.error}`}>
                         <Input
                           disabled
-                          name="colabId"
+                          name="ColabId"
                           type="text"
                           onChange={(event) =>
-                            handleChange(event, "colabId", "text")
+                            handleChange(event, "ColabId", "text")
                           }
                           defaultValue={data1.nome}
                         />
-                        {values.colabId.error === "has-danger" ? (
-                          <Label className="error">{values.colabId.message}</Label>
+                        {values.ColabId.error === "has-danger" ? (
+                          <Label className="error">{values.ColabId.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -430,15 +430,15 @@ const {id} = useParams()
                       <Col md="4">
                         <Label>Cliente</Label>
                         <FormGroup
-                          className={`has-label ${values.clienteId.error}`}
+                          className={`has-label ${values.ClienteId.error}`}
                         >
                           <Input
-                            name="clienteId"
+                            name="ClienteId"
                             type="select"
                             onChange={(event) =>
-                              handleChange(event, "clienteId", "text")
+                              handleChange(event, "ClienteId", "text")
                             }
-                            value={values.clienteId.value}
+                            value={values.ClienteId.value}
                             onChangeCapture={(e) => getContato(e.target.value)}
                           >
                             {" "}
@@ -446,16 +446,16 @@ const {id} = useParams()
                               {" "}
                             Selecione o cliente{" "}
                             </option>
-                            {data2.map((clienteId) => (
-                              <option value={clienteId.id}>
+                            {data2.map((ClienteId) => (
+                              <option value={ClienteId.id}>
                                 {" "}
-                                {clienteId.nomeAbv} - {normalizeCnpj(clienteId.CNPJ)}{" "}
+                                {ClienteId.nomeAbv} - {normalizeCnpj(ClienteId.CNPJ)}{" "}
                               </option>
                             ))}
                           </Input>
-                          {values.clienteId.error === "has-danger" ? (
+                          {values.ClienteId.error === "has-danger" ? (
                             <Label className="error">
-                              {values.clienteId.message}
+                              {values.ClienteId.message}
                             </Label>
                           ) : null}
                         </FormGroup>
@@ -495,31 +495,31 @@ const {id} = useParams()
                       <Col md="4">
                         <Label>Representante</Label>
                         <FormGroup
-                          className={`has-label ${values.representanteId.error}`}
+                          className={`has-label ${values.RepresentanteId.error}`}
                         >
                           <Input
-                            name="representanteId"
+                            name="RepresentanteId"
                             type="select"
                             onChange={(event) =>
-                              handleChange(event, "representanteId", "text")
+                              handleChange(event, "RepresentanteId", "text")
                             }
-                            value={values.representanteId.value}
+                            value={values.RepresentanteId.value}
                           >
                             {" "}
                             <option disabled value="">
                               {" "}
                             Selecione o representante{" "}
                             </option>
-                            {data7.map((representanteId) => (
-                              <option value={representanteId.id}>
+                            {data7.map((RepresentanteId) => (
+                              <option value={RepresentanteId.id}>
                                 {" "}
-                                {representanteId.id} - {representanteId.nome}{" "}
+                                {RepresentanteId.id} - {RepresentanteId.nome}{" "}
                               </option>
                             ))}
                           </Input>
-                          {values.representanteId.error === "has-danger" ? (
+                          {values.RepresentanteId.error === "has-danger" ? (
                             <Label className="error">
-                              {values.representanteId.message}
+                              {values.RepresentanteId.message}
                             </Label>
                           ) : null}
                         </FormGroup>
@@ -561,31 +561,31 @@ const {id} = useParams()
                       <Col md="4">
                         <Label>Item Controle</Label>
                         <FormGroup
-                          className={`has-label ${values.itmControleId.error}`}
+                          className={`has-label ${values.ItmControleId.error}`}
                         >
                           <Input
-                            name="itmControleId"
+                            name="ItmControleId"
                             type="select"
                             onChange={(event) =>
-                              handleChange(event, "itmControleId", "text")
+                              handleChange(event, "ItmControleId", "text")
                             }
-                            value={values.itmControleId.value}
+                            value={values.ItmControleId.value}
                           >
                             {" "}
                             <option disabled value="">
                               {" "}
                             Selecione o item controle{" "}
                             </option>
-                            {data5.map((itmControleId) => (
-                              <option value={itmControleId.id}>
+                            {data5.map((ItmControleId) => (
+                              <option value={ItmControleId.id}>
                                 {" "}
-                                {itmControleId.id} - {itmControleId.descItem}{" "}
+                                {ItmControleId.id} - {ItmControleId.descItem}{" "}
                               </option>
                             ))}
                           </Input>
-                          {values.itmControleId.error === "has-danger" ? (
+                          {values.ItmControleId.error === "has-danger" ? (
                             <Label className="error">
-                              {values.itmControleId.message}
+                              {values.ItmControleId.message}
                             </Label>
                           ) : null}
                         </FormGroup>

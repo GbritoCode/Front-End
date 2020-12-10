@@ -21,21 +21,20 @@ import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
-import api from "~/services/api";
-
-import { normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
-import axios from "axios"
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
+import axios from "axios";
+import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
+import { normalizeCnpj } from "~/normalize";
+import api from "~/services/api";
 
 class Tabela_Cliente extends Component {
   state = {
-    data: [],
+    data: []
   };
 
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
     this.loadCliente();
   }
@@ -53,14 +52,13 @@ class Tabela_Cliente extends Component {
           RepresentanteId: client.RepresentanteId,
           Representante: client.Representante.nome,
           TipoComisseId: client.TipoComisseId,
-          TipoComiss: client.tipoComisse.desc,
+          TipoComiss: client.TipoComisse.desc,
           EmpresaId: client.EmpresaId,
           prospect: client.prospect,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
-
               {/* use this button to add a edit kind of action */}
               <Link to={`/cliente_update/${client.id}/true`}>
                 <Button
@@ -74,10 +72,9 @@ class Tabela_Cliente extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var data = this.state.data;
+                  var { data } = this.state;
                   data.find((o, i) => {
                     if (o.idd === key) {
-                      console.log(o.id)
                       axios.delete(`http://localhost:5140/cliente/${o.id}`);
                       data.splice(i, 1);
 
@@ -85,7 +82,7 @@ class Tabela_Cliente extends Component {
                     }
                     return false;
                   });
-                  this.setState({ data: data });
+                  this.setState({ data });
                 }}
                 color="danger"
                 size="sm"
@@ -94,9 +91,9 @@ class Tabela_Cliente extends Component {
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          ),
+          )
         };
-      }),
+      })
     });
   };
 
@@ -109,11 +106,11 @@ class Tabela_Cliente extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Clientes
-                  <Link to={`/cliente_cadastro/false`}>
+                  <Link to="/cliente_cadastro/false">
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -128,9 +125,13 @@ class Tabela_Cliente extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
-                  defaultFilterMethod={(filter, row, column) => {
-                    const id = filter.pivotId || filter.id
-                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return row[id] !== undefined
+                      ? String(row[id])
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
+                      : true;
                   }}
                   previousText="Anterior"
                   nextText="Próximo"
@@ -142,31 +143,31 @@ class Tabela_Cliente extends Component {
                   columns={[
                     {
                       Header: "CNPJ",
-                      accessor: "CNPJ",
+                      accessor: "CNPJ"
                     },
                     {
                       Header: "Nome Abreviado",
-                      accessor: "nomeAbv",
+                      accessor: "nomeAbv"
                     },
                     {
                       Header: "Representante",
-                      accessor: "Representante",
+                      accessor: "Representante"
                     },
                     {
                       Header: "Tipo de comissão",
-                      accessor: "TipoComiss",
+                      accessor: "TipoComiss"
                     },
                     {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,
-                      filterable: false,
-                    },
+                      filterable: false
+                    }
                   ]}
                   defaultPageSize={10}
-                  showPagination={true}
-                  showPageJump={true}
-                  showPaginationBottom={true}
+                  showPagination
+                  showPageJump
+                  showPaginationBottom
                   className="-striped -highlight"
                 />
               </CardBody>

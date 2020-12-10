@@ -22,66 +22,58 @@ import ReactWizard from "react-bootstrap-wizard";
 import { Col } from "reactstrap";
 
 // wizard steps
+import axios from "axios";
 import Step1 from "./WizardSteps/Step1.jsx";
 import Step2 from "./WizardSteps/Step2.jsx";
 import Step3 from "./WizardSteps/Step3.jsx";
-
-import axios from "axios";
 
 var steps = [
   {
     stepName: "About",
     stepIcon: "tim-icons icon-single-02",
-    component: Step1,
+    component: Step1
   },
   {
     stepName: "Account",
     stepIcon: "tim-icons icon-settings-gear-63",
-    component: Step2,
+    component: Step2
   },
   {
     stepName: "Address",
     stepIcon: "tim-icons icon-delivery-fast",
-    component: Step3,
-  },
+    component: Step3
+  }
 ];
 
 class Wizard extends React.Component {
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
   }
+
   finishButtonClick(allStates) {
-    console.log(allStates);
     const {
       NOME_ABV,
       CNPJ,
       REPRESENTANTE,
       TIPO_COMISS,
-      CODIGO_EMP,
+      CODIGO_EMP
     } = allStates.About;
-    console.log({
-      NOME_ABV,
-      CNPJ,
-      REPRESENTANTE,
-      TIPO_COMISS,
-      CODIGO_EMP,
-    });
+
     axios
       .post("http://localhost:5140/cliente", {
         NOME_ABV,
         CNPJ,
         REPRESENTANTE,
         TIPO_COMISS,
-        CODIGO_EMP,
+        CODIGO_EMP
       })
-      .then((result) => {
-        //access the results here....
+      .then(result => {
+        // access the results here....
       })
-      .catch((error) => {
-        console.log(error.response);
-      });
+      .catch(error => {});
   }
+
   render() {
     return (
       <>

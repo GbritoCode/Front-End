@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect, Fragment, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // reactstrap components
 import {
@@ -28,27 +28,27 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { CliCompRequest } from "~/store/modules/Cliente/actions";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj } from 'normalize'
+import { normalizeCnpj } from "~/normalize";
+import { CliCompRequest } from "~/store/modules/Cliente/actions";
 
 export default function CliCompCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const {id} = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
-  let jsonpAdapter = require("axios-jsonp");
+  const jsonpAdapter = require("axios-jsonp");
   const firstRender = useRef(true);
-  let options = useRef()
+  let options = useRef();
 
   const stateSchema = {
-    clienteId: { value: "", error: "", message: "" },
+    ClienteId: { value: "", error: "", message: "" },
     CondPgmtoId: { value: "", error: "", message: "" },
     cep: { value: "", error: "", message: "" },
     rua: { value: "", error: "", message: "" },
@@ -57,38 +57,44 @@ export default function CliCompCadastro() {
     cidade: { value: "", error: "", message: "" },
     uf: { value: "", error: "", message: "" },
     inscMun: { value: "", error: "", message: "" },
-    inscEst: { value: "", error: "", message: "" },
+    inscEst: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
-    complemento: { value: "", error: "", message: "" },
-  }
+    complemento: { value: "", error: "", message: "" }
+  };
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
+  options = {};
+
+  const notifyElment = useRef(document.getElementById("not"));
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
   useEffect(() => {
-    //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
+    // ------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
       const response = await axios(`http://localhost:5140/cliente/${id}`);
       const response1 = await axios(`http://localhost:5140/condPgmto`);
       setData(response.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        clienteId: { value: response.data.id },
+        ClienteId: { value: response.data.id }
       }));
       setData1(response1.data);
       const response2 = await axios({
         url: `https://www.receitaws.com.br/v1/cnpj/${response.data.CNPJ}`,
-        adapter: jsonpAdapter,
+        adapter: jsonpAdapter
       });
       if (response2.data.status === "ERROR") {
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
           cnpj: {
             error: "has-danger",
-            message: "Insira um CNPJ válido",
-          },
+            message: "Insira um CNPJ válido"
+          }
         }));
 
         options.current = {
@@ -100,53 +106,30 @@ export default function CliCompCadastro() {
           ),
           type: "danger",
           icon: "tim-icons icon-alert-circle-exc",
-          autoDismiss: 7,
+          autoDismiss: 7
         };
-        notify()
+        notify();
       } else {
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
           cep: { value: response2.data.cep },
-        }));
-        setValues((prevState) => ({
-          ...prevState,
           rua: { value: response2.data.logradouro },
-        }));
-        setValues((prevState) => ({
-          ...prevState,
           numero: { value: response2.data.numero },
-        }));
-        setValues((prevState) => ({
-          ...prevState,
           bairro: { value: response2.data.bairro },
-        }));
-        setValues((prevState) => ({
-          ...prevState,
           cidade: { value: response2.data.municipio },
-        }));
-        setValues((prevState) => ({
-          ...prevState,
-          uf: { value: response2.data.uf },
+          uf: { value: response2.data.uf }
         }));
       }
     }
     if (firstRender.current) {
       firstRender.current = false;
       loadData();
-      return;
     }
 
-    //----------------------- Validações
-  }, [id,jsonpAdapter]);
-  options = {};
+    // ----------------------- Validações
+  }, [id, jsonpAdapter]);
 
-  const notifyElment = useRef(document.getElementById("not"));
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
-
-
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -156,41 +139,41 @@ export default function CliCompCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "optional":
-        setOptional((prevState) => ({
+        setOptional(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -208,9 +191,9 @@ export default function CliCompCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -219,7 +202,7 @@ export default function CliCompCadastro() {
     if (valid && filled) {
       dispatch(
         CliCompRequest(
-          values.clienteId.value,
+          values.ClienteId.value,
           values.CondPgmtoId.value,
           values.cep.value,
           values.rua.value,
@@ -242,14 +225,13 @@ export default function CliCompCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
   };
   return (
-    <Fragment>
-
+    <>
       <>
         <div className="rna-container">
           <NotificationAlert ref={notifyElment} id="not" />
@@ -259,50 +241,48 @@ export default function CliCompCadastro() {
             <Col md="12">
               <Card>
                 <CardHeader>
-                  <Link to={`/tabelas/cliente/comp/${values.clienteId.value}`}>
-
-                  </Link>
+                  <Link
+                    to={`/tabelas/cliente/comp/${values.ClienteId.value}`}
+                  />
                   <CardTitle tag="h4">Complemento do Cliente</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Form onSubmit={handleSubmit}>
-                  <Label>Cliente</Label>
+                    <Label>Cliente</Label>
                     <FormGroup
-                      className={`has-label ${values.clienteId.error}`}
+                      className={`has-label ${values.ClienteId.error}`}
                     >
                       <Input
                         disabled
-                        onChange={(event) =>
-                          handleChange(event, "clienteId", "text")
+                        onChange={event =>
+                          handleChange(event, "ClienteId", "text")
                         }
-                        value={values.clienteId.value}
+                        value={values.ClienteId.value}
                         name="ClienteId"
                         type="select"
                       >
                         <option disabled value="">
                           {" "}
-                            Selecione o Cliente{" "}
+                          Selecione o Cliente{" "}
                         </option>{" "}
                         <option value={data.id}>
                           {" "}
                           {data.nomeAbv} - {normalizeCnpj(data.CNPJ)}
                         </option>
                       </Input>
-                      {values.clienteId.error === "has-danger" ? (
+                      {values.ClienteId.error === "has-danger" ? (
                         <Label className="error">
-                          {values.clienteId.message}
+                          {values.ClienteId.message}
                         </Label>
                       ) : null}
                     </FormGroup>
                     <Row>
                       <Col md="4">
-                      <Label>CEP</Label>
-                        <FormGroup
-                          className={`has-label ${values.cep.error}`}
-                        >
+                        <Label>CEP</Label>
+                        <FormGroup className={`has-label ${values.cep.error}`}>
                           <Input
                             disabled
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "cep", "text")
                             }
                             value={values.cep.value}
@@ -317,13 +297,11 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <Label>Rua</Label>
-                        <FormGroup
-                          className={`has-label ${values.rua.error}`}
-                        >
+                        <Label>Rua</Label>
+                        <FormGroup className={`has-label ${values.rua.error}`}>
                           <Input
                             disabled
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "rua", "text")
                             }
                             value={values.rua.value}
@@ -339,13 +317,13 @@ export default function CliCompCadastro() {
                       </Col>
 
                       <Col md="4">
-                      <Label>Número</Label>
+                        <Label>Número</Label>
                         <FormGroup
                           className={`has-label ${values.numero.error}`}
                         >
                           <Input
                             disabled
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "numero", "number")
                             }
                             value={values.numero.value}
@@ -363,33 +341,33 @@ export default function CliCompCadastro() {
 
                     <Row>
                       <Col md="8">
-                      <Label>Complemento</Label>
-                    <FormGroup
-                      className={`has-label ${optional.complemento.error}`}
-                    >
-                      <Input
-                        onChange={(event) =>
-                          handleChange(event, "complemento", "optional")
-                        }
-                        value={optional.complemento.value}
-                        name="nomeAbv"
-                        type="text"
-                      />
-                      {optional.complemento.error === "has-danger" ? (
-                        <Label className="error">
-                          {optional.complemento.message}
-                        </Label>
-                      ) : null}
-                    </FormGroup>
+                        <Label>Complemento</Label>
+                        <FormGroup
+                          className={`has-label ${optional.complemento.error}`}
+                        >
+                          <Input
+                            onChange={event =>
+                              handleChange(event, "complemento", "optional")
+                            }
+                            value={optional.complemento.value}
+                            name="nomeAbv"
+                            type="text"
+                          />
+                          {optional.complemento.error === "has-danger" ? (
+                            <Label className="error">
+                              {optional.complemento.message}
+                            </Label>
+                          ) : null}
+                        </FormGroup>
                       </Col>
                       <Col md="4">
-                      <Label>Bairro</Label>
+                        <Label>Bairro</Label>
                         <FormGroup
                           className={`has-label ${values.bairro.error}`}
                         >
                           <Input
                             disabled
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "bairro", "text")
                             }
                             value={values.bairro.value}
@@ -403,17 +381,16 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
-
                     </Row>
                     <Row>
-                    <Col md="4">
-                      <Label>Cidade</Label>
+                      <Col md="4">
+                        <Label>Cidade</Label>
                         <FormGroup
                           className={`has-label ${values.cidade.error}`}
                         >
                           <Input
                             disabled
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "cidade", "text")
                             }
                             value={values.cidade.value}
@@ -428,11 +405,11 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <Label>UF</Label>
+                        <Label>UF</Label>
                         <FormGroup className={`has-label ${values.uf.error}`}>
                           <Input
                             disabled
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "uf", "text")
                             }
                             value={values.uf.value}
@@ -441,7 +418,7 @@ export default function CliCompCadastro() {
                           >
                             <option disabled value="">
                               {" "}
-                                Selecione o estado{" "}
+                              Selecione o estado{" "}
                             </option>
                             <option value="AC">Acre</option>
                             <option value="AL">Alagoas</option>
@@ -472,19 +449,17 @@ export default function CliCompCadastro() {
                             <option value="TO">Tocantins</option>
                           </Input>
                           {values.uf.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.uf.message}
-                            </Label>
+                            <Label className="error">{values.uf.message}</Label>
                           ) : null}
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <Label>Inscrição Municipal</Label>
+                        <Label>Inscrição Municipal</Label>
                         <FormGroup
                           className={`has-label ${values.inscMun.error}`}
                         >
                           <Input
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "inscMun", "text")
                             }
                             value={values.inscMun.value}
@@ -500,13 +475,13 @@ export default function CliCompCadastro() {
                       </Col>
                     </Row>
                     <Row>
-                    <Col md="4">
-                      <Label>Inscrição Estadual</Label>
+                      <Col md="4">
+                        <Label>Inscrição Estadual</Label>
                         <FormGroup
                           className={`has-label ${values.inscEst.error}`}
                         >
                           <Input
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "inscEst", "text")
                             }
                             value={values.inscEst.value}
@@ -521,14 +496,14 @@ export default function CliCompCadastro() {
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                      <Label>Condição de Pagamento</Label>
+                        <Label>Condição de Pagamento</Label>
                         <FormGroup
                           className={`has-label ${values.CondPgmtoId.error}`}
                         >
                           <Input
                             name="CondPgmtoId"
                             type="select"
-                            onChange={(event) =>
+                            onChange={event =>
                               handleChange(event, "CondPgmtoId", "text")
                             }
                             value={values.CondPgmtoId.value}
@@ -536,9 +511,9 @@ export default function CliCompCadastro() {
                             {" "}
                             <option disabled value="">
                               {" "}
-                                Selecione a condição de pagamento{" "}
+                              Selecione a condição de pagamento{" "}
                             </option>
-                            {data1.map((condPgmto) => (
+                            {data1.map(condPgmto => (
                               <option value={condPgmto.id}>
                                 {" "}
                                 {condPgmto.id} - {condPgmto.desc}{" "}
@@ -552,16 +527,15 @@ export default function CliCompCadastro() {
                           ) : null}
                         </FormGroup>
                       </Col>
-                      <Col md="4">
-
-                      </Col>
+                      <Col md="4" />
                     </Row>
-
-                    <Link to={`/tabelas/cliente/comp/${values.clienteId.value}`}>
+                    <Link
+                      to={`/tabelas/cliente/comp/${values.ClienteId.value}`}
+                    >
                       <Button
                         style={{
                           paddingLeft: 32,
-                          paddingRight: 33,
+                          paddingRight: 33
                         }}
                         color="secundary"
                         size="small"
@@ -571,27 +545,28 @@ export default function CliCompCadastro() {
                           className="tim-icons icon-double-left"
                           style={{
                             paddingBottom: 4,
-                            paddingRight: 1,
+                            paddingRight: 1
                           }}
                           size="large"
                         />{" "}
-                      Voltar
-                    </Button>
+                        Voltar
+                      </Button>
                     </Link>
                     <Button
                       style={{
                         paddingLeft: 29,
-                        paddingRight: 30,
+                        paddingRight: 30
                       }}
                       className="form"
                       color="info"
                       type="submit"
                     >
                       Enviar{" "}
-                      <i className="tim-icons icon-send"
+                      <i
+                        className="tim-icons icon-send"
                         style={{
                           paddingBottom: 4,
-                          paddingLeft: 3,
+                          paddingLeft: 3
                         }}
                         size="large"
                       />
@@ -603,8 +578,6 @@ export default function CliCompCadastro() {
           </Row>
         </div>
       </>
-
-
-    </Fragment >
+    </>
   );
 }

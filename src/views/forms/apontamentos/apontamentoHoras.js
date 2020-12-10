@@ -65,6 +65,7 @@ export default function HorasCadastro() {
     dataLancamento: { value: "", error: "", message: "" },
     totalApont: { value: "", error: "", message: "" },
     totalAcum: { value: "10:00", error: "", message: "" },
+    totalAcumTemp: { value: "10:00", error: "", message: "" },
     solicitante: { value: "", error: "", message: "" },
     AreaId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" }
@@ -80,18 +81,9 @@ export default function HorasCadastro() {
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        oportunidadeCod: { value: response1.data.cod }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        oportunidadeDesc: { value: response1.data.desc }
-      }));
-      setValues(prevState => ({
-        ...prevState,
+        empresaId: { value: response.data.id },
+        oportunidadeCod: { value: response1.data.cod },
+        oportunidadeDesc: { value: response1.data.desc },
         Cliente: { value: response3.data.nomeAbv }
       }));
     }
@@ -112,7 +104,7 @@ export default function HorasCadastro() {
     return false;
   };
   const horasChange = (hrInic, hrFim, hrIntvrl) => {
-    const acum = values.totalAcum.value.split(":");
+    const acum = values.totalAcumTemp.value.split(":");
 
     if (hrInic && hrFim && hrIntvrl) {
       const inicAux = hrInic.split(":");
@@ -142,9 +134,6 @@ export default function HorasCadastro() {
             (parseInt(acum[1], 10) + parseInt(apontMin, 10)) / 60
           )}`.slice(-2);
 
-        console.log(
-          Math.trunc((parseInt(acum[1], 10) + parseInt(apontMin, 10)) / 60)
-        );
         // const acumMin = `0${Math.trunc(acum % 60)}`.slice(-2);
 
         setValues(prevState => ({

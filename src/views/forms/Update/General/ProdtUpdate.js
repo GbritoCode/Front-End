@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState} from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,25 +28,25 @@ import {
   Form,
   Input,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { ProdtUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { ProdtUpdate } from "~/store/modules/general/actions";
 
 function ProdtUpdatee() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-const {id} = useParams()
+  const { id } = useParams();
   const [data1, setData1] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    descProdt: { value: "", error: "", message: "" },
+    descProdt: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -57,20 +57,17 @@ const {id} = useParams()
         `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        descProdt: { value: response.data.descProdt },
+        descProdt: { value: response.data.descProdt }
       }));
     }
-    setIsLoading(false)
+    setIsLoading(false);
     loadData();
   }, [id]);
 
-  const normalizeInput = (value) => {
+  const normalizeInput = value => {
     if (!value) return value;
     const currentValue = value.replace(/[^\d]/g, "");
     const cvLength = currentValue.length;
@@ -99,15 +96,15 @@ const {id} = useParams()
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
+        break;
+      default:
     }
   };
   var options = {};
@@ -117,7 +114,7 @@ const {id} = useParams()
     notifyElment.current.notificationAlert(options);
   }
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -126,7 +123,7 @@ const {id} = useParams()
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -134,10 +131,10 @@ const {id} = useParams()
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -155,121 +152,123 @@ const {id} = useParams()
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
   };
 
   return (
-    <Fragment>
+    <>
       {isLoading ? (
-        <div></div>
+        <div />
       ) : (
-          <>
-            <div className="rna-container">
-              <NotificationAlert ref={notifyElment} />
-            </div>
-            <div className="content">
-              <Row>
-                <Col md="12">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle tag="h4">Edição de Produto</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Form onSubmit={handleSubmit}>
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Edição de Produto</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
                       <Label>Empresa</Label>
-                        <FormGroup
-                          className={`has-label ${values.empresaId.error}`}
+                      <FormGroup
+                        className={`has-label ${values.empresaId.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="EmpresaId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "empresaId", "text")
+                          }
+                          value={values.empresaId.value}
                         >
-                          <Input
-                            disabled={true}
-                            name="EmpresaId"
-                            type="select"
-                            onChange={(event) =>
-                              handleChange(event, "empresaId", "text")
-                            }
-                            value={values.empresaId.value}
-                          >
+                          {" "}
+                          <option value={1}>
                             {" "}
-                            <option value={1}>
-                              {" "}
-                              {data1.nome} - {normalizeInput(data1.idFederal)}
-                            </option>
-                          </Input>
-                          {values.empresaId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.empresaId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
+                            {data1.nome} - {normalizeInput(data1.idFederal)}
+                          </option>
+                        </Input>
+                        {values.empresaId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.empresaId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
 
-                        <Label>Descrição do Produto</Label>
-                        <FormGroup
-                          className={`has-label ${values.descProdt.error}`}
-                        >
-                          <Input
-                            name="descProdt"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "descProdt", "text")
-                            }
-                            value={values.descProdt.value}
-                          />
-                          {values.descProdt.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.descProdt.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Link to={`/tabelas/general/prodt`}>
-                          <Button
-                            style={{
-                              paddingLeft: 32,
-                              paddingRight: 33,
-                            }}
-                            color="secundary"
-                            size="small"
-                            className="form"
-                          >
-                            <i className="tim-icons icon-double-left"
-                              style={{
-                                paddingBottom: 4,
-                                paddingRight: 1,
-                              }}
-                              size="large"
-                            />{" "}
-                      Voltar
-                    </Button>
-                        </Link>
+                      <Label>Descrição do Produto</Label>
+                      <FormGroup
+                        className={`has-label ${values.descProdt.error}`}
+                      >
+                        <Input
+                          name="descProdt"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descProdt", "text")
+                          }
+                          value={values.descProdt.value}
+                        />
+                        {values.descProdt.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descProdt.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Link to="/tabelas/general/prodt">
                         <Button
                           style={{
-                            paddingLeft: 29,
-                            paddingRight: 30,
+                            paddingLeft: 32,
+                            paddingRight: 33
                           }}
+                          color="secundary"
+                          size="small"
                           className="form"
-                          color="info"
-                          type="submit"
                         >
-                          Enviar{" "}
-                          <i className="tim-icons icon-send"
+                          <i
+                            className="tim-icons icon-double-left"
                             style={{
                               paddingBottom: 4,
-                              paddingLeft: 3,
+                              paddingRight: 1
                             }}
                             size="large"
-                          />
+                          />{" "}
+                          Voltar
                         </Button>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </>
-        )}
-    </Fragment>
+                      </Link>
+                      <Button
+                        style={{
+                          paddingLeft: 29,
+                          paddingRight: 30
+                        }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 export default ProdtUpdatee;

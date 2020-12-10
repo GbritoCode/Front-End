@@ -28,17 +28,17 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { segmentoRequest } from "~/store/modules/general/actions";
-import { store } from "~/store";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
+import { store } from "~/store";
+import { segmentoRequest } from "~/store/modules/general/actions";
 
 export default function SegmentoCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -51,13 +51,13 @@ export default function SegmentoCadastro() {
     UndNegId: { value: "", error: "", message: "" },
     ProdutoId: { value: "", error: "", message: "" },
     AreaId: { value: "", error: "", message: "" },
-    descSegmt: { value: "", error: "", message: "" },
+    descSegmt: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  async function loadData() {
+    const { empresa } = store.getState().auth;
+    async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:5140/und_neg/`);
       const response2 = await axios(`http://localhost:5140/prodt/`);
@@ -66,9 +66,9 @@ export default function SegmentoCadastro() {
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
     }
     loadData();
@@ -110,19 +110,19 @@ export default function SegmentoCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -131,7 +131,7 @@ export default function SegmentoCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -140,9 +140,9 @@ export default function SegmentoCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -168,7 +168,7 @@ export default function SegmentoCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -187,13 +187,13 @@ export default function SegmentoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -220,7 +220,7 @@ export default function SegmentoCadastro() {
                         <Input
                           name="UndNegId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "UndNegId", "text")
                           }
                           value={values.UndNegId.value}
@@ -230,7 +230,7 @@ export default function SegmentoCadastro() {
                             {" "}
                             Selecione a unidade de negócio{" "}
                           </option>
-                          {data1.map((undNeg) => (
+                          {data1.map(undNeg => (
                             <option value={undNeg.id}>
                               {" "}
                               {undNeg.descUndNeg}{" "}
@@ -253,7 +253,7 @@ export default function SegmentoCadastro() {
                         <Input
                           name="ProdutoId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "ProdutoId", "text")
                           }
                           value={values.ProdutoId.value}
@@ -263,7 +263,7 @@ export default function SegmentoCadastro() {
                             {" "}
                             Selecione o produto{" "}
                           </option>
-                          {data2.map((prodt) => (
+                          {data2.map(prodt => (
                             <option value={prodt.id}>
                               {" "}
                               {prodt.descProdt}{" "}
@@ -278,12 +278,12 @@ export default function SegmentoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Área</Label>
+                      <Label>Área</Label>
                       <FormGroup className={`has-label ${values.AreaId.error}`}>
                         <Input
                           name="AreaId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "AreaId", "text")
                           }
                           value={values.AreaId.value}
@@ -293,7 +293,7 @@ export default function SegmentoCadastro() {
                             {" "}
                             Selecione a área{" "}
                           </option>
-                          {data3.map((area) => (
+                          {data3.map(area => (
                             <option value={area.id}> {area.descArea} </option>
                           ))}
                         </Input>{" "}
@@ -307,39 +307,42 @@ export default function SegmentoCadastro() {
                   </Row>
                   <Row>
                     <Col md="8">
-                    <Label>Descrição do Segmento</Label>
-                  <FormGroup className={`has-label ${values.descSegmt.error}`}>
-                    <Input
-                      name="descSegmt"
-                      type="text"
-                      onChange={(event) =>
-                        handleChange(event, "descSegmt", "text")
-                      }
-                      value={values.descSegmt.value}
-                    />{" "}
-                    {values.descSegmt.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.descSegmt.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Descrição do Segmento</Label>
+                      <FormGroup
+                        className={`has-label ${values.descSegmt.error}`}
+                      >
+                        <Input
+                          name="descSegmt"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descSegmt", "text")
+                          }
+                          value={values.descSegmt.value}
+                        />{" "}
+                        {values.descSegmt.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descSegmt.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                   </Row>
 
-                  <Link to={`/tabelas/general/segmento`}>
+                  <Link to="/tabelas/general/segmento">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -349,17 +352,18 @@ export default function SegmentoCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

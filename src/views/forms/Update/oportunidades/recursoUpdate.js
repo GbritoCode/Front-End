@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState} from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,84 +28,74 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { recursoUpdate } from "~/store/modules/oportunidades/actions";
-import { store } from "~/store";
 import axios from "axios";
-import { normalizeCurrency } from "normalize";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
+import { normalizeCurrency } from "~/normalize";
+import { store } from "~/store";
+import { recursoUpdate } from "~/store/modules/oportunidades/actions";
 
 export default function RecursoCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-const {id} = useParams()
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data4, setData4] = useState([]);
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
-    colabId: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" },
     custoPrev: { value: "", error: "", message: "" },
     dataInclusao: { value: "", error: "", message: "" },
     hrsPrevst: { value: "", error: "", message: "" },
-    colabVlrHr: { value: "", error: "", message: "" },
+    colabVlrHr: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    const empresa = store.getState().auth.empresa;
+    const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:5140/recurso/aux/${id}`);
       const response2 = await axios(`http://localhost:5140/colab/`);
-      const response4 = await axios(`http://localhost:5140/oportunidade/${response1.data.oportunidadeId}`);
+      const response4 = await axios(
+        `http://localhost:5140/oportunidade/${response1.data.oportunidadeId}`
+      );
       setData1(response1.data);
       setData2(response2.data);
       setData4(response4.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         oportunidadeId: { value: response4.data.id },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        colabId: { value: response1.data.colabId },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        colabVlrHr: { value: normalizeCurrency(JSON.stringify(response1.data.colabVlrHr)) },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
+        ColabId: { value: response1.data.ColabId },
+        colabVlrHr: {
+          value: normalizeCurrency(JSON.stringify(response1.data.colabVlrHr))
+        },
         dataInclusao: { value: response1.data.dataInclusao },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         hrsPrevst: { value: response1.data.hrsPrevst },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        custoPrev: { value: normalizeCurrency(JSON.stringify(response1.data.custoPrev)) },
+        custoPrev: {
+          value: normalizeCurrency(JSON.stringify(response1.data.custoPrev))
+        }
       }));
     }
     loadData();
   }, [id]);
 
   function getColabHr(colab) {
-    axios(`http://localhost:5140/colab/comp/${colab}`).then((result) => {
-      setValues((prevState) => ({
+    axios(`http://localhost:5140/colab/comp/${colab}`).then(result => {
+      setValues(prevState => ({
         ...prevState,
-        colabVlrHr: { value: normalizeCurrency(JSON.stringify(result.data[0].valor)) },
+        colabVlrHr: {
+          value: normalizeCurrency(JSON.stringify(result.data[0].valor))
+        }
       }));
-    })
+    });
   }
   var options = {};
 
@@ -114,7 +104,7 @@ const {id} = useParams()
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -124,42 +114,42 @@ const {id} = useParams()
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -168,7 +158,7 @@ const {id} = useParams()
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -176,10 +166,10 @@ const {id} = useParams()
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -189,13 +179,14 @@ const {id} = useParams()
       var custoPrevdb = values.custoPrev.value.replace(/[.,]+/g, "");
       var colabVlrHrdb = values.colabVlrHr.value.replace(/[.,]+/g, "");
       dispatch(
-        recursoUpdate(id,
+        recursoUpdate(
+          id,
           values.oportunidadeId.value,
-          values.colabId.value,
+          values.ColabId.value,
           custoPrevdb,
           values.dataInclusao.value,
           values.hrsPrevst.value,
-          colabVlrHrdb,
+          colabVlrHrdb
         )
       );
     } else {
@@ -208,7 +199,7 @@ const {id} = useParams()
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -227,13 +218,14 @@ const {id} = useParams()
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-
-                <Label>Oportunidade</Label>
-                  <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
+                  <Label>Oportunidade</Label>
+                  <FormGroup
+                    className={`has-label ${values.oportunidadeId.error}`}
+                  >
                     <Input
                       disabled
                       name="oportunidadeId"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "oportunidadeId", "text")
                       }
                       value={values.oportunidadeId.value}
@@ -241,7 +233,7 @@ const {id} = useParams()
                     >
                       <option disabled value="">
                         {" "}
-      Selecione a Oportunidade{" "}
+                        Selecione a Oportunidade{" "}
                       </option>{" "}
                       <option value={data4.id}>
                         {" "}
@@ -250,35 +242,32 @@ const {id} = useParams()
                     </Input>
 
                     {values.oportunidadeId.error === "has-danger" ? (
-                      <Label className="error">{values.oportunidadeId.message}</Label>
+                      <Label className="error">
+                        {values.oportunidadeId.message}
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Label>Colaborador</Label>
-                  <FormGroup className={`has-label ${values.colabId.error}`}>
+                  <FormGroup className={`has-label ${values.ColabId.error}`}>
                     <Input
-                      name="colabId"
+                      name="ColabId"
                       type="select"
-                      onChange={(event) =>
-                        handleChange(event, "colabId", "text")
-                      }
-                      value={values.colabId.value}
-                      onChangeCapture={(e) => getColabHr(e.target.value)}
+                      onChange={event => handleChange(event, "ColabId", "text")}
+                      value={values.ColabId.value}
+                      onChangeCapture={e => getColabHr(e.target.value)}
                     >
                       {" "}
                       <option disabled value="">
                         {" "}
-          Selecione o colaborador{" "}
+                        Selecione o colaborador{" "}
                       </option>
-                      {data2.map((colab) => (
-                        <option value={colab.id}>
-                          {" "}
-                          {colab.nome}{" "}
-                        </option>
+                      {data2.map(colab => (
+                        <option value={colab.id}> {colab.nome} </option>
                       ))}
                     </Input>
 
-                    {values.colabId.error === "has-danger" ? (
-                      <Label className="error">{values.colabId.message}</Label>
+                    {values.ColabId.error === "has-danger" ? (
+                      <Label className="error">{values.ColabId.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Label>Data de Inclusão</Label>
@@ -288,7 +277,7 @@ const {id} = useParams()
                     <Input
                       name="dataInclusao"
                       type="date"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "dataInclusao", "text")
                       }
                       value={values.dataInclusao.value}
@@ -304,10 +293,9 @@ const {id} = useParams()
                     <Input
                       name="hrsPrevst"
                       type="numeric"
-                      onChange={(event) => {
+                      onChange={event => {
                         handleChange(event, "hrsPrevst", "number");
-                      }
-                      }
+                      }}
                       value={values.hrsPrevst.value}
                     />
                     {values.hrsPrevst.error === "has-danger" ? (
@@ -322,7 +310,7 @@ const {id} = useParams()
                       disabled
                       name="colabVlrHr"
                       type="numeric"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "colabVlrHr", "currency")
                       }
                       value={values.colabVlrHr.value}
@@ -339,7 +327,7 @@ const {id} = useParams()
                       disabled
                       name="custoPrev"
                       type="numeric"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "custoPrev", "currency")
                       }
                       value={values.custoPrev.value}
@@ -354,36 +342,38 @@ const {id} = useParams()
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
-    Voltar
-  </Button>
+                      Voltar
+                    </Button>
                   </Link>
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

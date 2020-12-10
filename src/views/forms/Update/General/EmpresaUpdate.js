@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,17 +28,17 @@ import {
   Label,
   Input,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { EmpresaUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { EmpresaUpdate } from "~/store/modules/general/actions";
 
-/*eslint-disable eqeqeq*/
+/* eslint-disable eqeqeq */
 function EmpresaUpdatee() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ function EmpresaUpdatee() {
     cnpj: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     license: { value: "", error: "", message: "" },
-    userId: { value: "", error: "", message: "" },
+    userId: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
@@ -58,21 +58,12 @@ function EmpresaUpdatee() {
       const response1 = await axios(`http://localhost:5140/users`);
 
       setData1(response1.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
         cnpj: { value: response.data.idFederal },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         nome: { value: response.data.nome },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         license: { value: response.data.license },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        userId: { value: response.data.UserId },
+        userId: { value: response.data.UserId }
       }));
 
       setIsLoading(false);
@@ -119,7 +110,7 @@ function EmpresaUpdatee() {
     var resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
     if (resultado != digitos.charAt(0)) return false;
 
-    tamanho = tamanho + 1;
+    tamanho += 1;
     numeros = cnpj.substring(0, tamanho);
     soma = 0;
     pos = tamanho - 7;
@@ -133,7 +124,7 @@ function EmpresaUpdatee() {
     return true;
   }
 
-  const normalizeInput = (value) => {
+  const normalizeInput = value => {
     if (!value) return value;
     const currentValue = value.replace(/[^\d]/g, "");
     const cvLength = currentValue.length;
@@ -160,21 +151,21 @@ function EmpresaUpdatee() {
     )}-${currentValue.slice(12, 14)}`;
   };
 
-  const renderCnpjState = (value) => {
+  const renderCnpjState = value => {
     if (!validarCNPJ(value)) {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cnpj: { error: "has-danger", message: "Insira um CNPJ válido" },
+        cnpj: { error: "has-danger", message: "Insira um CNPJ válido" }
       }));
     } else {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cnpj: { error: "has-success", message: "" },
+        cnpj: { error: "has-success", message: "" }
       }));
     }
   };
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -184,42 +175,42 @@ function EmpresaUpdatee() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "cnpj":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          cnpj: { value: normalizeInput(target) },
+          cnpj: { value: normalizeInput(target) }
         }));
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -228,7 +219,7 @@ function EmpresaUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -236,10 +227,10 @@ function EmpresaUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -248,7 +239,8 @@ function EmpresaUpdatee() {
     if (valid && filled) {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
       dispatch(
-        EmpresaUpdate(id,
+        EmpresaUpdate(
+          id,
           cnpjdb,
           values.nome.value,
           values.license.value,
@@ -265,158 +257,160 @@ function EmpresaUpdatee() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
   };
   return (
-    <Fragment>
+    <>
       {isLoading ? (
-        <div></div>
+        <div />
       ) : (
-          <>
-            <div className="rna-container">
-              <NotificationAlert ref={notifyElment} />
-            </div>
-            <div className="content">
-              <Row>
-                <Col md="12">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle tag="h4">Edição de Empresa</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Form onSubmit={handleSubmit}>
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Edição de Empresa</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
                       <Label>CNPJ</Label>
-                        <FormGroup className={`has-label ${values.cnpj.error}`}>
-                          <Input
-                            name="idFederal"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "cnpj", "cnpj")
-                            }
-                            value={values.cnpj.value}
-                            onBlur={(e) => {
-                              let value = e.target.value;
-                              renderCnpjState(value);
-                            }}
-                          />
-                          {values.cnpj.error === "has-danger" ? (
-                            <Label className="error">{values.cnpj.message}</Label>
-                          ) : null}
-                        </FormGroup>
+                      <FormGroup className={`has-label ${values.cnpj.error}`}>
+                        <Input
+                          name="idFederal"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "cnpj", "cnpj")
+                          }
+                          value={values.cnpj.value}
+                          onBlur={e => {
+                            const { value } = e.target;
+                            renderCnpjState(value);
+                          }}
+                        />
+                        {values.cnpj.error === "has-danger" ? (
+                          <Label className="error">{values.cnpj.message}</Label>
+                        ) : null}
+                      </FormGroup>
 
-                        <Label>Nome</Label>
-                        <FormGroup className={`has-label ${values.nome.error}`}>
-                          <Input
-                            name="nome"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "nome", "text")
-                            }
-                            value={values.nome.value}
-                          />
-                          {values.nome.error === "has-danger" ? (
-                            <Label className="error">{values.nome.message}</Label>
-                          ) : null}
-                        </FormGroup>
+                      <Label>Nome</Label>
+                      <FormGroup className={`has-label ${values.nome.error}`}>
+                        <Input
+                          name="nome"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "nome", "text")
+                          }
+                          value={values.nome.value}
+                        />
+                        {values.nome.error === "has-danger" ? (
+                          <Label className="error">{values.nome.message}</Label>
+                        ) : null}
+                      </FormGroup>
 
-                        <Label>License</Label>
-                        <FormGroup
-                          className={`has-label ${values.license.error}`}
+                      <Label>License</Label>
+                      <FormGroup
+                        className={`has-label ${values.license.error}`}
+                      >
+                        <Input
+                          name="license"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "license", "text")
+                          }
+                          value={values.license.value}
+                        />
+                        {values.license.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.license.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+
+                      <Label>Usuário</Label>
+                      <FormGroup className={`has-label ${values.userId.error}`}>
+                        <Input
+                          name="UserId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "userId", "text")
+                          }
+                          value={values.userId.value}
                         >
-                          <Input
-                            name="license"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "license", "text")
-                            }
-                            value={values.license.value}
-                          />
-                          {values.license.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.license.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-
-                        <Label>Usuário</Label>
-                        <FormGroup className={`has-label ${values.userId.error}`}>
-                          <Input
-                            name="UserId"
-                            type="select"
-                            onChange={(event) =>
-                              handleChange(event, "userId", "text")
-                            }
-                            value={values.userId.value}
-                          >
+                          {" "}
+                          <option disabled value="">
                             {" "}
-                            <option disabled value="">
-                              {" "}
                             Selecione o usuário{" "}
+                          </option>
+                          {data1.map(user => (
+                            <option key={user.id} value={user.id}>
+                              {" "}
+                              {user.name}, {user.email}{" "}
                             </option>
-                            {data1.map((user) => (
-                              <option key={user.id} value={user.id}>
-                                {" "}
-                                {user.name}, {user.email}{" "}
-                              </option>
-                            ))}
-                          </Input>{" "}
-                          {values.userId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.userId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
+                          ))}
+                        </Input>{" "}
+                        {values.userId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.userId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
 
-                        <Link to={`/tabelas/general/empresa`}>
-                          <Button
-                            style={{
-                              paddingLeft: 32,
-                              paddingRight: 33,
-                            }}
-                            color="secundary"
-                            size="small"
-                            className="form"
-                          >
-                            <i className="tim-icons icon-double-left"
-                              style={{
-                                paddingBottom: 4,
-                                paddingRight: 1,
-                              }}
-                              size="large"
-                            />{" "}
-                      Voltar
-                    </Button>
-                        </Link>
+                      <Link to="/tabelas/general/empresa">
                         <Button
                           style={{
-                            paddingLeft: 29,
-                            paddingRight: 30,
+                            paddingLeft: 32,
+                            paddingRight: 33
                           }}
+                          color="secundary"
+                          size="small"
                           className="form"
-                          color="info"
-                          type="submit"
                         >
-                          Enviar{" "}
-                          <i className="tim-icons icon-send"
+                          <i
+                            className="tim-icons icon-double-left"
                             style={{
                               paddingBottom: 4,
-                              paddingLeft: 3,
+                              paddingRight: 1
                             }}
                             size="large"
-                          />
+                          />{" "}
+                          Voltar
                         </Button>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </>
-        )}
-    </Fragment>
+                      </Link>
+                      <Button
+                        style={{
+                          paddingLeft: 29,
+                          paddingRight: 30
+                        }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 export default EmpresaUpdatee;

@@ -237,24 +237,24 @@ export function ProdtUpdate(id, EmpresaId, descProdt) {
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function recDespRequest(EmpresaId, itmControleId, desc, recDesp) {
+export function recDespRequest(EmpresaId, ItmControleId, desc, recDesp) {
   return {
     type: "@cadastro/REC_DESP_REQUEST",
     payload: {
       EmpresaId,
-      itmControleId,
+      ItmControleId,
       desc,
       recDesp
     },
   };
 }
-export function RecDespUpdate(id, EmpresaId, itmControleId, desc, recDesp) {
+export function RecDespUpdate(id, EmpresaId, ItmControleId, desc, recDesp) {
   return {
     type: "@update/REC_DESP_REQUEST",
     payload: {
       id,
       EmpresaId,
-      itmControleId,
+      ItmControleId,
       desc,
       recDesp
     },

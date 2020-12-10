@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,18 +28,18 @@ import {
   Form,
   Input,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import {  parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import {  normalizeCurrency, normalizeCalcCurrency } from "normalize";
+import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
+import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 
-/*eslint-disable eqeqeq*/
+/* eslint-disable eqeqeq */
 export default function ParcelaUpdate() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -52,74 +52,53 @@ export default function ParcelaUpdate() {
     vlrParcela: { value: "", error: "", message: "" },
     dtEmissao: { value: "", error: "", message: "" },
     dtVencimento: { value: "", error: "", message: "" },
-    notaFiscal: { value: "", error: "", message: "" },
+    notaFiscal: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     pedidoCliente: { value: "", error: "", message: "" },
     situacao: { value: "", error: "", message: "" },
     dtLiquidacao: { value: "", error: "", message: "" },
     vlrPago: { value: "", error: "", message: "" },
-    saldo: { value: "", error: "", message: "" },
-  }
+    saldo: { value: "", error: "", message: "" }
+  };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     async function loadData() {
       const response = await axios(`http://localhost:5140/parcela/aux/${id}`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${response.data.oportunidadeId}`);
+      const response1 = await axios(
+        `http://localhost:5140/oportunidade/${response.data.oportunidadeId}`
+      );
       setData1(response1.data);
-      console.log(response.data)
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
         oportunidadeId: { value: response.data.oportunidadeId },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         parcela: { value: response.data.parcela },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        vlrParcela: { value: normalizeCalcCurrency(JSON.stringify(response.data.vlrParcela)) },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
+        vlrParcela: {
+          value: normalizeCalcCurrency(JSON.stringify(response.data.vlrParcela))
+        },
         dtEmissao: { value: response.data.dtEmissao },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         dtVencimento: { value: response.data.dtVencimento },
+        notaFiscal: { value: response.data.notaFiscal }
       }));
-      setValues((prevState) => ({
-        ...prevState,
-        notaFiscal: { value: response.data.notaFiscal },
-      }));
-      setOptional((prevState) => ({
+
+      setOptional(prevState => ({
         ...prevState,
         pedidoCliente: { value: response.data.pedidoCliente },
-      }));
-      setOptional((prevState) => ({
-        ...prevState,
         situacao: { value: response.data.situacao },
-      }));
-      setOptional((prevState) => ({
-        ...prevState,
         dtLiquidacao: { value: response.data.dtLiquidacao },
+        vlrPago: {
+          value: normalizeCurrency(JSON.stringify(response.data.vlrPago))
+        },
+        saldo: { value: normalizeCurrency(JSON.stringify(response.data.saldo)) }
       }));
-      setOptional((prevState) => ({
-        ...prevState,
-        vlrPago: { value: normalizeCurrency(JSON.stringify(response.data.vlrPago)) },
-      }));
-      setOptional((prevState) => ({
-        ...prevState,
-        saldo: { value: normalizeCurrency(JSON.stringify(response.data.saldo)) },
-      }));
+
       setIsLoading(false);
     }
     loadData();
   }, [id]);
 
-
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -129,54 +108,52 @@ export default function ParcelaUpdate() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "optional":
-        setOptional((prevState) => ({
+        setOptional(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
+        break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
-  console.log(values)
-  console.log(optional)
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -185,7 +162,7 @@ export default function ParcelaUpdate() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -193,10 +170,10 @@ export default function ParcelaUpdate() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -208,7 +185,8 @@ export default function ParcelaUpdate() {
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        parcelaUpdate(id,
+        parcelaUpdate(
+          id,
           values.oportunidadeId.value,
           values.parcela.value,
           vlrParceladb,
@@ -219,7 +197,7 @@ export default function ParcelaUpdate() {
           2,
           optional.dtLiquidacao.value,
           vlrPagodb,
-          saldodb,
+          saldodb
         )
       );
     } else {
@@ -232,263 +210,263 @@ export default function ParcelaUpdate() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
   };
   return (
-    <Fragment>
+    <>
       {isLoading ? (
-        <div></div>
+        <div />
       ) : (
-          <>
-            <div className="rna-container">
-              <NotificationAlert ref={notifyElment} />
-            </div>
-            <div className="content">
-              <Row>
-                <Col md="12">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle tag="h4">Edição de Cotação</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Form onSubmit={handleSubmit}>
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Edição de Cotação</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
                       <Label>Oportunidade</Label>
-                        <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
-                          <Input
-                            disabled
-                            name="oportunidadeId"
-                            onChange={(event) =>
-                              handleChange(event, "oportunidadeId", "text")
-                            }
-                            value={values.oportunidadeId.value}
-                            type="select"
-                          >
-                            <option disabled value="">
-                              {" "}
-                        Selecione a Oportunidade{" "}
-                            </option>{" "}
-                            <option value={data1.id}>
-                              {" "}
-                              {data1.desc}
-                            </option>
-                          </Input>
+                      <FormGroup
+                        className={`has-label ${values.oportunidadeId.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="oportunidadeId"
+                          onChange={event =>
+                            handleChange(event, "oportunidadeId", "text")
+                          }
+                          value={values.oportunidadeId.value}
+                          type="select"
+                        >
+                          <option disabled value="">
+                            {" "}
+                            Selecione a Oportunidade{" "}
+                          </option>{" "}
+                          <option value={data1.id}> {data1.desc}</option>
+                        </Input>
 
-                          {values.oportunidadeId.error === "has-danger" ? (
-                            <Label className="error">{values.oportunidadeId.message}</Label>
-                          ) : null}
-                        </FormGroup>
-                        <Row>
-                          <Col md="4">
-                            {" "}
-                            <Label>Parcela</Label>
-                            <FormGroup
-                              className={`has-label ${values.parcela.error}`}
-                            >
-                              <Input
+                        {values.oportunidadeId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.oportunidadeId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>Parcela</Label>
+                          <FormGroup
+                            className={`has-label ${values.parcela.error}`}
+                          >
+                            <Input
                               disabled
-                                name="parcela"
-                                type="text"
-                                onChange={(event) =>
-                                  handleChange(event, "parcela", "number")
-                                }
-                                value={values.parcela.value}
-                              />
-                              {values.parcela.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.parcela.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            {" "}
-                            <Label>Valor da Parcela</Label>
-                            <FormGroup
-                              className={`has-label ${values.vlrParcela.error}`}
-                            >
-                              <Input
+                              name="parcela"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "parcela", "number")
+                              }
+                              value={values.parcela.value}
+                            />
+                            {values.parcela.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.parcela.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Valor da Parcela</Label>
+                          <FormGroup
+                            className={`has-label ${values.vlrParcela.error}`}
+                          >
+                            <Input
                               disabled
                               name="vlrParcela"
-                                type="text"
-                                onChange={(event) =>
-                                  handleChange(event, "vlrParcela", "currency")
-                                }
-                                value={values.vlrParcela.value}
-                              />
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "vlrParcela", "currency")
+                              }
+                              value={values.vlrParcela.value}
+                            />
 
-                              {values.vlrParcela.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.vlrParcela.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            {" "}
-                            <Label>Data da Emissão</Label>
-                            <FormGroup
-                              className={`has-label ${values.dtEmissao.error}`}
-                            >
-                              <Input
-
-                                name="dtEmissao"
-                                type="date"
-                                onChange={(event) =>
-                                  handleChange(event, "dtEmissao", "text")
-                                }
-                                value={values.dtEmissao.value}
-                              />
-                              {values.dtEmissao.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.dtEmissao.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-
-                        <Row>
-                          <Col md="4">
-                          <Label>Data de Vencimento</Label>
-                            <FormGroup
-                              className={`has-label ${values.dtVencimento.error}`}
-                            >
-                              <Input
-
-                                name="dtVencimento"
-                                type="date"
-                                onChange={(event) =>
-                                  handleChange(event, "dtVencimento", "text")
-                                }
-                                value={values.dtVencimento.value}
-                              />
-                              {values.dtVencimento.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.dtVencimento.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                          <Label>Nota Fiscal</Label>
-                            <FormGroup
-                              className={`has-label ${values.notaFiscal.error}`}
-                            >
-                              <Input
-                                name="notaFiscal"
-                                type="text"
-                                onChange={(event) =>
-                                  handleChange(event, "notaFiscal", "text")
-                                }
-                                value={values.notaFiscal.value}
-                              />
-                              {values.notaFiscal.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.notaFiscal.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                          <Label>Pedido Cliente</Label>
-                            <FormGroup
-                              className={`has-label ${optional.pedidoCliente.error}`}
-                            >
-                              <Input
-                                name="pedidoCliente"
-                                type="text"
-                                onChange={(event) => {
-                                  handleChange(event, "pedidoCliente", "optional");
-                                }
-                                }
-                                value={optional.pedidoCliente.value}
-                              />
-                              {optional.pedidoCliente.error === "has-danger" ? (
-                                <Label className="error">
-                                  {optional.pedidoCliente.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-
-                        </Row>
-                        <Row>
-                          <Col md="4">
-                            <Label>Situação</Label>
-                            <FormGroup style={{marginBottom: 25}} check >
-                              <Input
-                                name="situacao"
-                                type="select"
-                                onChange={(event) =>
-                                  handleChange(event, "situacao", "optional")
-                                }
-                                value={optional.situacao.value}
-                              >
-                                <option disabled value="">
-                                  {" "}
-                        Selecione situação{" "}
-                                </option>{" "}
-                                <option value={1}>Pendente</option>
-                                <option value={2}>Aberta</option>
-                                <option value={3}>Parcial</option>
-                                <option value={4}>Liquidada</option>
-                              </Input>
-                            </FormGroup>
-                          </Col>
-
-
-                        </Row>
-
-                        <Link to={`/tabelas/oportunidade/parcela/${data1.id}`}>
-                          <Button
-                            style={{
-                              paddingLeft: 32,
-                              paddingRight: 33,
-                            }}
-                            color="secundary"
-                            size="small"
-                            className="form"
+                            {values.vlrParcela.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.vlrParcela.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Data da Emissão</Label>
+                          <FormGroup
+                            className={`has-label ${values.dtEmissao.error}`}
                           >
-                            <i className="tim-icons icon-double-left"
-                              style={{
-                                paddingBottom: 4,
-                                paddingRight: 1,
+                            <Input
+                              name="dtEmissao"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dtEmissao", "text")
+                              }
+                              value={values.dtEmissao.value}
+                            />
+                            {values.dtEmissao.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dtEmissao.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md="4">
+                          <Label>Data de Vencimento</Label>
+                          <FormGroup
+                            className={`has-label ${values.dtVencimento.error}`}
+                          >
+                            <Input
+                              name="dtVencimento"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dtVencimento", "text")
+                              }
+                              value={values.dtVencimento.value}
+                            />
+                            {values.dtVencimento.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dtVencimento.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Nota Fiscal</Label>
+                          <FormGroup
+                            className={`has-label ${values.notaFiscal.error}`}
+                          >
+                            <Input
+                              name="notaFiscal"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "notaFiscal", "text")
+                              }
+                              value={values.notaFiscal.value}
+                            />
+                            {values.notaFiscal.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.notaFiscal.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Pedido Cliente</Label>
+                          <FormGroup
+                            className={`has-label ${optional.pedidoCliente.error}`}
+                          >
+                            <Input
+                              name="pedidoCliente"
+                              type="text"
+                              onChange={event => {
+                                handleChange(
+                                  event,
+                                  "pedidoCliente",
+                                  "optional"
+                                );
                               }}
-                              size="large"
-                            />{" "}
-                      Voltar
-                    </Button>
-                        </Link>
+                              value={optional.pedidoCliente.value}
+                            />
+                            {optional.pedidoCliente.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.pedidoCliente.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Situação</Label>
+                          <FormGroup style={{ marginBottom: 25 }} check>
+                            <Input
+                              name="situacao"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "situacao", "optional")
+                              }
+                              value={optional.situacao.value}
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione situação{" "}
+                              </option>{" "}
+                              <option value={1}>Pendente</option>
+                              <option value={2}>Aberta</option>
+                              <option value={3}>Parcial</option>
+                              <option value={4}>Liquidada</option>
+                            </Input>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
+                      <Link to={`/tabelas/oportunidade/parcela/${data1.id}`}>
                         <Button
                           style={{
-                            paddingLeft: 29,
-                            paddingRight: 30,
+                            paddingLeft: 32,
+                            paddingRight: 33
                           }}
+                          color="secundary"
+                          size="small"
                           className="form"
-                          color="info"
-                          type="submit"
                         >
-                          Enviar{" "}
-                          <i className="tim-icons icon-send"
+                          <i
+                            className="tim-icons icon-double-left"
                             style={{
                               paddingBottom: 4,
-                              paddingLeft: 3,
+                              paddingRight: 1
                             }}
                             size="large"
-                          />
+                          />{" "}
+                          Voltar
                         </Button>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </>
-        )
-      }
-    </Fragment >
+                      </Link>
+                      <Button
+                        style={{
+                          paddingLeft: 29,
+                          paddingRight: 30
+                        }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </>
   );
 }

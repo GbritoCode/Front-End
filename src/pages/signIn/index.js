@@ -40,7 +40,6 @@ export default function SignIn() {
     evt.preventDefault();
 
     var tamanho = errorCheckAux.length;
-    console.log(errorCheckAux.length);
     for (var j = 0; j < tamanho; j++) {
       if (
         !(errorCheckAux[j].valueerror === "has-danger") &&

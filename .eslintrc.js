@@ -42,7 +42,10 @@ module.exports = {
     "no-console":"off",
     "react/destructuring-assignment":"off",
     "consistent-return":"off",
-    "import/no-extraneous-dependencies":"off"
+    "import/no-extraneous-dependencies":"off",
+    "react/prop-types":"off",
+    "react/no-string-refs":"off",
+    "react/no-array-index-key":"off"
   },
   settings: {
     "import/resolver": {

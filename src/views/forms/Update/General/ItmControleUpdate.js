@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,16 +28,16 @@ import {
   Input,
   Label,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { itmControleUpdate } from "~/store/modules/general/actions";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { itmControleUpdate } from "~/store/modules/general/actions";
 
 function ItmCtrlUpdatee() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const { id } = useParams();
@@ -49,7 +49,7 @@ function ItmCtrlUpdatee() {
     descItem: { value: "", error: "", message: "" },
     tipoItem: { value: "", error: "", message: "" },
     contaContabil: { value: "", error: "", message: "" },
-    centCusto: { value: "", error: "", message: "" },
+    centCusto: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -61,32 +61,21 @@ function ItmCtrlUpdatee() {
         `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       setData1(response1.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
         descItem: { value: response.data.descItem },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         tipoItem: { value: response.data.tipoItem },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         contaContabil: { value: response.data.contaContabil },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         centCusto: { value: response.data.centCusto },
+        empresaId: { value: response.data.EmpresaId }
       }));
-      setValues((prevState) => ({
-        ...prevState,
-        empresaId: { value: response.data.EmpresaId },
-      }));
+
       setIsLoading(false);
     }
     loadData();
   }, [id]);
 
-  const normalizeInput = (value) => {
+  const normalizeInput = value => {
     if (!value) return value;
     const currentValue = value.replace(/[^\d]/g, "");
     const cvLength = currentValue.length;
@@ -113,7 +102,7 @@ function ItmCtrlUpdatee() {
     )}-${currentValue.slice(12, 14)}`;
   };
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -123,33 +112,33 @@ function ItmCtrlUpdatee() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
   var options = {};
 
@@ -158,7 +147,7 @@ function ItmCtrlUpdatee() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -167,7 +156,7 @@ function ItmCtrlUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -175,10 +164,10 @@ function ItmCtrlUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -186,7 +175,8 @@ function ItmCtrlUpdatee() {
 
     if (valid && filled) {
       dispatch(
-        itmControleUpdate(id,
+        itmControleUpdate(
+          id,
           values.empresaId.value,
           values.descItem.value,
           values.tipoItem.value,
@@ -204,174 +194,176 @@ function ItmCtrlUpdatee() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
   };
 
   return (
-    <Fragment>
+    <>
       {isLoading ? (
-        <div></div>
+        <div />
       ) : (
-          <>
-            <div className="rna-container">
-              <NotificationAlert ref={notifyElment} />
-            </div>
-            <div className="content">
-              <Row>
-                <Col md="12">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle tag="h4">Edição de Item Controle</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Form onSubmit={handleSubmit}>
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Edição de Item Controle</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
                       <Label>Empresa</Label>
-                        <FormGroup
-                          className={`has-label ${values.empresaId.error}`}
+                      <FormGroup
+                        className={`has-label ${values.empresaId.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="EmpresaId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "empresaId", "text")
+                          }
+                          value={values.empresaId.value}
                         >
-                          <Input
-                            disabled={true}
-                            name="EmpresaId"
-                            type="select"
-                            onChange={(event) =>
-                              handleChange(event, "empresaId", "text")
-                            }
-                            value={values.empresaId.value}
-                          >
+                          {" "}
+                          <option value={1}>
                             {" "}
-                            <option value={1}>
-                              {" "}
-                              {data1.nome} - {normalizeInput(data1.idFederal)}
-                            </option>
-                          </Input>
-                          {values.empresaId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.empresaId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Descrição do Item</Label>
-                        <FormGroup
-                          className={`has-label ${values.descItem.error}`}
-                        >
-                          <Input
-                            name="descItem"
-                            type="text"
-                            onChange={(event) =>
-                              handleChange(event, "descItem", "text")
-                            }
-                            value={values.descItem.value}
-                          />
-                          {values.descItem.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.descItem.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Tipo de Item</Label>
-                        <FormGroup
-                          className={`has-label ${values.tipoItem.error}`}
-                        >
-                          <Input
-                            name="tipoItem"
-                            type="numeric"
-                            onChange={(event) =>
-                              handleChange(event, "tipoItem", "text")
-                            }
-                            value={values.tipoItem.value}
-                          />
-                          {values.tipoItem.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.tipoItem.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Conta Contábil</Label>
-                        <FormGroup
-                          className={`has-label ${values.contaContabil.error}`}
-                        >
-                          <Input
-                            name="contaContabil"
-                            type="numeric"
-                            onChange={(event) =>
-                              handleChange(event, "contaContabil", "text")
-                            }
-                            value={values.contaContabil.value}
-                          />
-                          {values.contaContabil.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.contaContabil.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Label>Centro de Custo</Label>
-                        <FormGroup
-                          className={`has-label ${values.centCusto.error}`}
-                        >
-                          <Input
-                            name="centCusto"
-                            type="numeric"
-                            onChange={(event) =>
-                              handleChange(event, "centCusto", "text")
-                            }
-                            value={values.centCusto.value}
-                          />
-                          {values.centCusto.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.centCusto.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Link to={`/tabelas/general/itm_controle`}>
-                          <Button
-                            style={{
-                              paddingLeft: 32,
-                              paddingRight: 33,
-                            }}
-                            color="secundary"
-                            size="small"
-                            className="form"
-                          >
-                            <i className="tim-icons icon-double-left"
-                              style={{
-                                paddingBottom: 4,
-                                paddingRight: 1,
-                              }}
-                              size="large"
-                            />{" "}
-                      Voltar
-                    </Button>
-                        </Link>
+                            {data1.nome} - {normalizeInput(data1.idFederal)}
+                          </option>
+                        </Input>
+                        {values.empresaId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.empresaId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Descrição do Item</Label>
+                      <FormGroup
+                        className={`has-label ${values.descItem.error}`}
+                      >
+                        <Input
+                          name="descItem"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descItem", "text")
+                          }
+                          value={values.descItem.value}
+                        />
+                        {values.descItem.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descItem.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Tipo de Item</Label>
+                      <FormGroup
+                        className={`has-label ${values.tipoItem.error}`}
+                      >
+                        <Input
+                          name="tipoItem"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "tipoItem", "text")
+                          }
+                          value={values.tipoItem.value}
+                        />
+                        {values.tipoItem.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.tipoItem.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Conta Contábil</Label>
+                      <FormGroup
+                        className={`has-label ${values.contaContabil.error}`}
+                      >
+                        <Input
+                          name="contaContabil"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "contaContabil", "text")
+                          }
+                          value={values.contaContabil.value}
+                        />
+                        {values.contaContabil.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.contaContabil.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Label>Centro de Custo</Label>
+                      <FormGroup
+                        className={`has-label ${values.centCusto.error}`}
+                      >
+                        <Input
+                          name="centCusto"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "centCusto", "text")
+                          }
+                          value={values.centCusto.value}
+                        />
+                        {values.centCusto.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.centCusto.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Link to="/tabelas/general/itm_controle">
                         <Button
                           style={{
-                            paddingLeft: 29,
-                            paddingRight: 30,
+                            paddingLeft: 32,
+                            paddingRight: 33
                           }}
+                          color="secundary"
+                          size="small"
                           className="form"
-                          color="info"
-                          type="submit"
                         >
-                          Enviar{" "}
-                          <i className="tim-icons icon-send"
+                          <i
+                            className="tim-icons icon-double-left"
                             style={{
                               paddingBottom: 4,
-                              paddingLeft: 3,
+                              paddingRight: 1
                             }}
                             size="large"
-                          />
+                          />{" "}
+                          Voltar
                         </Button>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </>
-        )}
-    </Fragment>
+                      </Link>
+                      <Button
+                        style={{
+                          paddingLeft: 29,
+                          paddingRight: 30
+                        }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 export default ItmCtrlUpdatee;

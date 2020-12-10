@@ -1,23 +1,23 @@
 export function signFailure() {
   return {
-    type: "@cadastro/CADASTRO_FALHA",
+    type: "@cadastro/CADASTRO_FALHA"
   };
 }
 export function UpdateSuccess(profile) {
   return {
     type: "@update/REQUEST_SUCCES",
-    payload: { profile },
+    payload: { profile }
   };
 }
 
 export function oportRequest(
   EmpresaId,
-  colabId,
-  clienteId,
+  ColabId,
+  ClienteId,
   UndNegId,
-  itmControleId,
-  segmentoId,
-  representanteId,
+  ItmControleId,
+  SegmentoId,
+  RepresentanteId,
   contato,
   data,
   fase,
@@ -29,31 +29,31 @@ export function oportRequest(
     type: "@cadastro/OPORT_REQUEST",
     payload: {
       EmpresaId,
-      colabId,
-      clienteId,
+      ColabId,
+      ClienteId,
       UndNegId,
-      itmControleId,
-      segmentoId,
-      representanteId,
+      ItmControleId,
+      SegmentoId,
+      RepresentanteId,
       contato,
       data,
       fase,
       cod,
       desc,
       narrativa
-    },
+    }
   };
 }
 
 export function oportUpdate(
   id,
   EmpresaId,
-  colabId,
-  clienteId,
+  ColabId,
+  ClienteId,
   UndNegId,
-  itmControleId,
-  segmentoId,
-  representanteId,
+  ItmControleId,
+  SegmentoId,
+  RepresentanteId,
   contato,
   data,
   fase,
@@ -66,19 +66,19 @@ export function oportUpdate(
     payload: {
       id,
       EmpresaId,
-      colabId,
-      clienteId,
+      ColabId,
+      ClienteId,
       UndNegId,
-      itmControleId,
-      segmentoId,
-      representanteId,
+      ItmControleId,
+      SegmentoId,
+      RepresentanteId,
       contato,
       data,
       fase,
       cod,
       desc,
       narrativa
-    },
+    }
   };
 }
 //---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ export function cotacaoRequest(
       numParcelas,
       motivo,
       desc
-    },
+    }
   };
 }
 
@@ -152,7 +152,7 @@ export function cotacaoUpdate(
       numParcelas,
       motivo,
       desc
-    },
+    }
   };
 }
 
@@ -161,48 +161,47 @@ export function cotacaoUpdate(
 
 export function recursoReqest(
   oportunidadeId,
-  colabId,
+  ColabId,
   custoPrev,
   dataInclusao,
   hrsPrevst,
-  colabVlrHr,
+  colabVlrHr
 ) {
   return {
     type: "@cadastro/RECURSO_REQUEST",
     payload: {
       oportunidadeId,
-      colabId,
+      ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,
-      colabVlrHr,
+      colabVlrHr
     }
-  }
+  };
 }
 
 export function recursoUpdate(
   id,
   oportunidadeId,
-  colabId,
+  ColabId,
   custoPrev,
   dataInclusao,
   hrsPrevst,
-  colabVlrHr,
+  colabVlrHr
 ) {
   return {
     type: "@update/RECURSO_REQUEST",
     payload: {
       id,
       oportunidadeId,
-      colabId,
+      ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,
-      colabVlrHr,
-    },
+      colabVlrHr
+    }
   };
 }
-
 
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
@@ -218,7 +217,7 @@ export function parcelaReqest(
   situacao,
   dtLiquidacao,
   vlrPago,
-  saldo,
+  saldo
 ) {
   return {
     type: "@cadastro/PARCELA_REQUEST",
@@ -233,24 +232,24 @@ export function parcelaReqest(
       situacao,
       dtLiquidacao,
       vlrPago,
-      saldo,
+      saldo
     }
-  }
+  };
 }
 
 export function parcelaUpdate(
   id,
   oportunidadeId,
-parcela,
-vlrParcela,
-dtEmissao,
-dtVencimento,
-notaFiscal,
-pedidoCliente,
-situacao,
-dtLiquidacao,
-vlrPago,
-saldo,
+  parcela,
+  vlrParcela,
+  dtEmissao,
+  dtVencimento,
+  notaFiscal,
+  pedidoCliente,
+  situacao,
+  dtLiquidacao,
+  vlrPago,
+  saldo
 ) {
   return {
     type: "@update/PARCELA_REQUEST",
@@ -266,7 +265,7 @@ saldo,
       situacao,
       dtLiquidacao,
       vlrPago,
-      saldo,
-    },
+      saldo
+    }
   };
 }

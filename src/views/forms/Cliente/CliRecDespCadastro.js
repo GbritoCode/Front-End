@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState} from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,44 +28,52 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { CliRecDespRequest } from "~/store/modules/Cliente/actions";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeCnpj, normalizeCurrency } from 'normalize'
+import { CliRecDespRequest } from "~/store/modules/Cliente/actions";
+import { normalizeCnpj, normalizeCurrency } from "~/normalize";
 
 export default function CliRecDespCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  let [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/")
-  var endDate = new Date()
-  endDate.setDate(endDate.getDate() + 1)
+  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
+  var endDate = new Date();
+  endDate.setDate(endDate.getDate() + 1);
   const stateSchema = {
-    clienteId: { value: "", error: "", message: "" },
-    recDespId: { value: "", error: "", message: "" },
+    ClienteId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
     tipoCobranca: { value: "", error: "", message: "" },
     valorRec: { value: "", error: "", message: "" },
-    dataInic: { value: year + "-" + month + "-" + date, error: "", message: "" },
-    dataFim: { value: year + "-" + month + "-" + endDate.getDate(), error: "", message: "" },
+    dataInic: {
+      value: `${year}-${month}-${date}`,
+      error: "",
+      message: ""
+    },
+    dataFim: {
+      value: `${year}-${month}-${endDate.getDate()}`,
+      error: "",
+      message: ""
+    }
   };
   const [values, setValues] = useState(stateSchema);
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-const {id} = useParams()
-useEffect(() => {
+  const { id } = useParams();
+  useEffect(() => {
     async function loadData() {
       const response = await axios(`http://localhost:5140/cliente/${id}`);
       const response1 = await axios(`http://localhost:5140/rec_desp/?rec=true`);
       setData(response.data);
       setData1(response1.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        clienteId: { value: response.data.id },
+        ClienteId: { value: response.data.id }
       }));
     }
 
@@ -79,7 +87,7 @@ useEffect(() => {
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -89,42 +97,42 @@ useEffect(() => {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
+        break;
+      default:
     }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -142,9 +150,9 @@ useEffect(() => {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -154,12 +162,12 @@ useEffect(() => {
       var valorRecdb = values.valorRec.value.replace(/[^\d]+/g, "");
       dispatch(
         CliRecDespRequest(
-          values.clienteId.value,
-          values.recDespId.value,
+          values.ClienteId.value,
+          values.RecDespId.value,
           values.tipoCobranca.value,
           valorRecdb,
           values.dataInic.value,
-          values.dataFim.value,
+          values.dataFim.value
         )
       );
     } else {
@@ -172,7 +180,7 @@ useEffect(() => {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -187,19 +195,18 @@ useEffect(() => {
           <Col md="12">
             <Card>
               <CardHeader>
-
                 <CardTitle tag="h4">Receita do Cliente</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Cliente</Label>
-                  <FormGroup className={`has-label ${values.clienteId.error}`}>
+                  <Label>Cliente</Label>
+                  <FormGroup className={`has-label ${values.ClienteId.error}`}>
                     <Input
                       disabled
-                      onChange={(event) =>
-                        handleChange(event, "clienteId", "text")
+                      onChange={event =>
+                        handleChange(event, "ClienteId", "text")
                       }
-                      value={values.clienteId.value}
+                      value={values.ClienteId.value}
                       name="ClienteId"
                       type="select"
                     >
@@ -212,141 +219,148 @@ useEffect(() => {
                         {data.nomeAbv} - {normalizeCnpj(data.CNPJ)}
                       </option>
                     </Input>
-                    {values.clienteId.error === "has-danger" ? (
+                    {values.ClienteId.error === "has-danger" ? (
                       <Label className="error">
-                        {values.clienteId.message}
+                        {values.ClienteId.message}
                       </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                    <Label>Receita</Label>
-                  <FormGroup
-                    className={`has-label ${values.recDespId.error}`}
-                  >
-                    <Input
-                      name="recDespId"
-                      type="select"
-                      onChange={(event) =>
-                        handleChange(event, "recDespId", "text")
-                      }
-                      value={values.recDespId.value}
-                    >
-                      {" "}
-                      <option disabled value="">
-                        {" "}
-                            Selecione a receita ou despesa{" "}
-                      </option>
-                      {data1.map((recDespId) => (
-                        <option value={recDespId.id}>
+                      <Label>Receita</Label>
+                      <FormGroup
+                        className={`has-label ${values.RecDespId.error}`}
+                      >
+                        <Input
+                          name="RecDespId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "RecDespId", "text")
+                          }
+                          value={values.RecDespId.value}
+                        >
                           {" "}
-                          {recDespId.id} - {recDespId.desc}{" "}
-                        </option>
-                      ))}
-                    </Input>
-                    {values.recDespId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.recDespId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                          <option disabled value="">
+                            {" "}
+                            Selecione a receita ou despesa{" "}
+                          </option>
+                          {data1.map(RecDespId => (
+                            <option value={RecDespId.id}>
+                              {" "}
+                              {RecDespId.id} - {RecDespId.desc}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.RecDespId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.RecDespId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Tipo de Cobrança</Label>
-                  <FormGroup
-                    className={`has-label ${values.tipoCobranca.error}`}
-                  >
-                    <Input
-                      name="tipoCobranca"
-                      type="select"
-                      onChange={(event) =>
-                        handleChange(event, "tipoCobranca", "text")
-                      }
-                      value={values.tipoCobranca.value}
-                    >
-                      <option disabled value="">
-                        {" "}
+                      <Label>Tipo de Cobrança</Label>
+                      <FormGroup
+                        className={`has-label ${values.tipoCobranca.error}`}
+                      >
+                        <Input
+                          name="tipoCobranca"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "tipoCobranca", "text")
+                          }
+                          value={values.tipoCobranca.value}
+                        >
+                          <option disabled value="">
+                            {" "}
                             Selecione o tipo de cobrança{" "}
-                      </option>
-                      <option value={1}>Por Hora</option>
-                      <option value={2}>Por Projeto</option>
-                      <option value={3}>Por Dia</option>
-                      <option value={4}>Por Quilometro</option>
-                      <option value={5}>Por Refeição</option>
-                      <option value={6}>Por Pacote</option>
-                    </Input>
-                    {values.tipoCobranca.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.tipoCobranca.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                          </option>
+                          <option value={1}>Por Hora</option>
+                          <option value={2}>Por Projeto</option>
+                          <option value={3}>Por Dia</option>
+                          <option value={4}>Por Quilometro</option>
+                          <option value={5}>Por Refeição</option>
+                          <option value={6}>Por Pacote</option>
+                        </Input>
+                        {values.tipoCobranca.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.tipoCobranca.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Valor da Receita</Label>
-                  <FormGroup
-                    className={`has-label ${values.valorRec.error}`}
-                  >
-                    <Input
-                      name="valorRec"
-                      type="numeric"
-                      onChange={(event) =>
-                        handleChange(event, "valorRec", "currency")
-                      }
-                      value={values.valorRec.value}
-                    />{" "}
-                    {values.valorRec.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.valorRec.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
-
+                      <Label>Valor da Receita</Label>
+                      <FormGroup
+                        className={`has-label ${values.valorRec.error}`}
+                      >
+                        <Input
+                          name="valorRec"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "valorRec", "currency")
+                          }
+                          value={values.valorRec.value}
+                        />{" "}
+                        {values.valorRec.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.valorRec.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="4">
-                    <Label>Data Inicial</Label>
-                  <FormGroup className={`has-label ${values.dataInic.error}`}>
-                    <Input
-                      name="dataInic"
-                      type="date"
-                      onChange={(event) =>
-                        handleChange(event, "dataInic", "text")
-                      }
-                      value={values.dataInic.value}
-                    />
-                    {values.dataInic.error === "has-danger" ? (
-                      <Label className="error">{values.dataInic.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Data Inicial</Label>
+                      <FormGroup
+                        className={`has-label ${values.dataInic.error}`}
+                      >
+                        <Input
+                          name="dataInic"
+                          type="date"
+                          onChange={event =>
+                            handleChange(event, "dataInic", "text")
+                          }
+                          value={values.dataInic.value}
+                        />
+                        {values.dataInic.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.dataInic.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Data Final</Label>
-                  <FormGroup className={`has-label ${values.dataFim.error}`}>
-                    <Input
-                      name="dataFim"
-                      type="date"
-                      onChange={(event) =>
-                        handleChange(event, "dataFim", "text")
-                      }
-                      value={values.dataFim.value}
-                    />
-                    {values.dataFim.error === "has-danger" ? (
-                      <Label className="error">{values.dataFim.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Data Final</Label>
+                      <FormGroup
+                        className={`has-label ${values.dataFim.error}`}
+                      >
+                        <Input
+                          name="dataFim"
+                          type="date"
+                          onChange={event =>
+                            handleChange(event, "dataFim", "text")
+                          }
+                          value={values.dataFim.value}
+                        />
+                        {values.dataFim.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.dataFim.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
-                    <Col md="4">
-
-                    </Col>
+                    <Col md="4" />
                   </Row>
 
-                  <Link to={`/tabelas/cliente/rec_desp/${values.clienteId.value}`}>
+                  <Link
+                    to={`/tabelas/cliente/rec_desp/${values.ClienteId.value}`}
+                  >
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
@@ -356,7 +370,7 @@ useEffect(() => {
                         className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -366,17 +380,18 @@ useEffect(() => {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

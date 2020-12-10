@@ -15,24 +15,26 @@ import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
-import api from "~/services/api";
 import { Link } from "react-router-dom";
 import { ArrowBackIos, AttachMoney, Receipt } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from "@material-ui/icons/Add";
+import api from "~/services/api";
 import history from "~/services/history";
 
 class ParametrosTable extends Component {
   state = {
-    data: [],
+    data: []
   };
+
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
     this.loadClients();
   }
+
   loadClients = async () => {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     const response = await api.get(`/parcela/${id}`);
     this.setState({
       data: response.data.map((parcela, key) => {
@@ -53,46 +55,45 @@ class ParametrosTable extends Component {
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-                <Tooltip title="Nota Fiscal">
+              <Tooltip title="Nota Fiscal">
                 <Button
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
-                  onClick={()=>{
-                    history.push(`/update/oportunidade/parcNota/${parcela.id}`)
+                  onClick={() => {
+                    history.push(`/update/oportunidade/parcNota/${parcela.id}`);
                   }}
                 >
-                  <Receipt/>
+                  <Receipt />
                 </Button>
-                </Tooltip>
-                <Tooltip title="Liquidar">
+              </Tooltip>
+              <Tooltip title="Liquidar">
                 <Button
-                  disabled={parcela.situacao < 2 ? true : false}
+                  disabled={parcela.situacao < 2}
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
-                  onClick={()=>{
-                    history.push(`/update/oportunidade/parc/${parcela.id}`)
+                  onClick={() => {
+                    history.push(`/update/oportunidade/parc/${parcela.id}`);
                   }}
                 >
-                  <AttachMoney/>
+                  <AttachMoney />
                 </Button>
-                </Tooltip>              
+              </Tooltip>
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var data = this.state.data;
+                  var { data } = this.state;
                   data.find((o, i) => {
                     if (o.id === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
-                      console.log(data);
                       return true;
                     }
                     return false;
                   });
-                  this.setState({ data: data });
+                  this.setState({ data });
                 }}
                 color="danger"
                 size="sm"
@@ -101,15 +102,14 @@ class ParametrosTable extends Component {
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          ),
+          )
         };
-      }),
+      })
     });
-    
   };
 
   render() {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -119,10 +119,10 @@ class ParametrosTable extends Component {
                 <CardTitle tag="h4">
                   Parcelas
                   <Link to={`/cadastro/oportunidade/parcela/${id}`}>
-                  <Tooltip title="Novo" placement="top" interactive>
+                    <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -130,16 +130,16 @@ class ParametrosTable extends Component {
                       </Button>
                     </Tooltip>
                   </Link>
-                  <Link to={`/tabelas/oportunidade/oport`}>
-                  <Tooltip title="Voltar">
-                    <Button
+                  <Link to="/tabelas/oportunidade/oport">
+                    <Tooltip title="Voltar">
+                      <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos  />
-                    </Button>
+                        <ArrowBackIos />
+                      </Button>
                     </Tooltip>
                   </Link>
                 </CardTitle>
@@ -149,9 +149,13 @@ class ParametrosTable extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
-                  defaultFilterMethod={(filter, row, column) => {
-                    const id = filter.pivotId || filter.id
-                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return row[id] !== undefined
+                      ? String(row[id])
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
+                      : true;
                   }}
                   previousText="Anterior"
                   nextText="Próximo"
@@ -163,39 +167,39 @@ class ParametrosTable extends Component {
                   columns={[
                     {
                       Header: "parcela",
-                      accessor: "parcela",
+                      accessor: "parcela"
                     },
                     {
                       Header: "Valor Parcela",
-                      accessor: "vlrParcela",
+                      accessor: "vlrParcela"
                     },
                     {
                       Header: "Nota Fiscal",
-                      accessor: "notaFiscal",
+                      accessor: "notaFiscal"
                     },
                     {
                       Header: "Vencimento",
-                      accessor: "dtVencimento",
+                      accessor: "dtVencimento"
                     },
                     {
                       Header: "Saldo",
-                      accessor: "saldo",
+                      accessor: "saldo"
                     },
                     {
                       Header: "Situação",
-                      accessor: "situacao",
+                      accessor: "situacao"
                     },
                     {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,
-                      filterable: false,
-                    },
+                      filterable: false
+                    }
                   ]}
                   defaultPageSize={10}
-                  showPagination={true}
-                  showPageJump={true}
-                  showPaginationBottom={true}
+                  showPagination
+                  showPageJump
+                  showPaginationBottom
                   className="-striped -highlight"
                 />
               </CardBody>

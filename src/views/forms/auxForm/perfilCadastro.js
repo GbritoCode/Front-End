@@ -28,35 +28,35 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { perfilRequest } from "~/store/modules/general/actions";
-import { store } from "~/store";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
+import { store } from "~/store";
+import { perfilRequest } from "~/store/modules/general/actions";
 
 export default function PerfilCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" },
+    desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  async function loadData() {
+    const { empresa } = store.getState().auth;
+    async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       setData(response.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
     }
     loadData();
@@ -91,16 +91,16 @@ export default function PerfilCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
   var options = {};
 
@@ -109,7 +109,7 @@ export default function PerfilCadastro() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -118,7 +118,7 @@ export default function PerfilCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -126,17 +126,17 @@ export default function PerfilCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
     }
 
     if (valid && filled) {
-      const first = false
+      const first = false;
       dispatch(perfilRequest(values.empresaId.value, values.desc.value, first));
     } else {
       options = {
@@ -148,7 +148,7 @@ export default function PerfilCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -167,13 +167,13 @@ export default function PerfilCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -195,18 +195,18 @@ export default function PerfilCadastro() {
                     <Input
                       name="license"
                       type="text"
-                      onChange={(event) => handleChange(event, "desc", "text")}
+                      onChange={event => handleChange(event, "desc", "text")}
                       value={values.desc.value}
                     />
                     {values.desc.error === "has-danger" ? (
                       <Label className="error">{values.desc.message}</Label>
                     ) : null}
                   </FormGroup>
-                  <Link to={`/tabelas/aux/perfil`}>
+                  <Link to="/tabelas/aux/perfil">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
@@ -216,7 +216,7 @@ export default function PerfilCadastro() {
                         className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -226,17 +226,18 @@ export default function PerfilCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

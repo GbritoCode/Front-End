@@ -63,7 +63,7 @@ class HorasTable extends Component {
           idd: key,
           id: recurso.id,
           oportunidadeId: recurso.Oportunidade.desc,
-          colabId: recurso.Colab.nome,
+          ColabId: recurso.Colab.nome,
           custoPrev: recurso.custoPrev,
           dataInclusao: recurso.dataInclusao,
           hrsPrevst: recurso.hrsPrevst,
@@ -85,7 +85,6 @@ class HorasTable extends Component {
                   var { data } = this.state;
                   data.find((o, i) => {
                     if (o.idd === key) {
-                      console.log(o.id);
                       data.splice(i, 1);
 
                       return true;
@@ -143,7 +142,7 @@ class HorasTable extends Component {
                     },
                     {
                       Header: "Colaborador",
-                      accessor: "colabId"
+                      accessor: "ColabId"
                     },
                     {
                       Header: "Horas Previstas",

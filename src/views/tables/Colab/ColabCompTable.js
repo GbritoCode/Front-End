@@ -19,58 +19,68 @@ import React, { Component } from "react";
 import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-import { normalizeCurrency } from "normalize";
-import api from "~/services/api";
 import classNames from "classnames";
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
+import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
 
 import { Link } from "react-router-dom";
 import { ArrowBackIos } from "@material-ui/icons";
+import { normalizeCurrency } from "~/normalize";
+import api from "~/services/api";
 
-/*eslint-disable eqeqeq*/
+/* eslint-disable eqeqeq */
 class ColabCompTable extends Component {
   state = {
-    data: [],
+    data: []
   };
+
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
     this.loadClients();
   }
-  checkNivel = (value) => {
-    if (value == 1) {
-      return "Trainee"
-    } else if (value == 2) {
-      return "Júnior"
-    } else if (value == 3) {
-      return "Pleno"
-    } else if (value == 4) {
-      return "Sênior"
-    }
-  }
 
-  checkAtend = (value) => {
+  checkNivel = value => {
     if (value == 1) {
-      return "Consultoria"
-    } else if (value == 2) {
-      return "Tecnologia"
-    } else if (value == 3) {
-      return "Desenvolvimento"
-    } else if (value == 4) {
-      return "Complementar"
+      return "Trainee";
     }
-  }
-  checkValor = (value) => {
+    if (value == 2) {
+      return "Júnior";
+    }
+    if (value == 3) {
+      return "Pleno";
+    }
+    if (value == 4) {
+      return "Sênior";
+    }
+  };
+
+  checkAtend = value => {
     if (value == 1) {
-      return "Por Hora"
-    } else if (value == 2) {
-      return "Fixo"
+      return "Consultoria";
     }
-  }
+    if (value == 2) {
+      return "Tecnologia";
+    }
+    if (value == 3) {
+      return "Desenvolvimento";
+    }
+    if (value == 4) {
+      return "Complementar";
+    }
+  };
+
+  checkValor = value => {
+    if (value == 1) {
+      return "Por Hora";
+    }
+    if (value == 2) {
+      return "Fixo";
+    }
+  };
+
   loadClients = async () => {
-    const id = this.props.match.params.id;
-    console.log(id);
+    const { id } = this.props.match.params;
     const response = await api.get(`/colab/comp/${id}`);
     this.setState({
       data: response.data.map((client, key) => {
@@ -101,18 +111,17 @@ class ColabCompTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var data = this.state.data;
+                  var { data } = this.state;
                   data.find((o, i) => {
                     if (o.id === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
-                      console.log(data);
                       return true;
                     }
                     return false;
                   });
-                  this.setState({ data: data });
+                  this.setState({ data });
                 }}
                 color="danger"
                 size="sm"
@@ -121,14 +130,14 @@ class ColabCompTable extends Component {
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          ),
+          )
         };
-      }),
+      })
     });
   };
 
   render() {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
 
     return (
       <>
@@ -138,11 +147,11 @@ class ColabCompTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Complemento de Colaborador
-                    <Link to={`/cadastro/colab/comp/${id}`}>
+                  <Link to={`/cadastro/colab/comp/${id}`}>
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -151,15 +160,15 @@ class ColabCompTable extends Component {
                     </Tooltip>
                   </Link>
                   <Link to={`/colab/update/${id}`}>
-                  <Tooltip title="Voltar">
-                    <Button
+                    <Tooltip title="Voltar">
+                      <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos  />
-                    </Button>
+                        <ArrowBackIos />
+                      </Button>
                     </Tooltip>
                   </Link>
                 </CardTitle>
@@ -169,9 +178,13 @@ class ColabCompTable extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
-                  defaultFilterMethod={(filter, row, column) => {
-                    const id = filter.pivotId || filter.id
-                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return row[id] !== undefined
+                      ? String(row[id])
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
+                      : true;
                   }}
                   previousText="Anterior"
                   nextText="Próximo"
@@ -183,31 +196,31 @@ class ColabCompTable extends Component {
                   columns={[
                     {
                       Header: "Colaborador",
-                      accessor: "Colab",
+                      accessor: "Colab"
                     },
                     {
                       Header: "Nivel",
-                      accessor: "nivel",
+                      accessor: "nivel"
                     },
                     {
                       Header: "Valor",
-                      accessor: "valor",
+                      accessor: "valor"
                     },
                     {
                       Header: "Tipo de Atendimento",
-                      accessor: "tipoAtend",
+                      accessor: "tipoAtend"
                     },
                     {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,
-                      filterable: false,
-                    },
+                      filterable: false
+                    }
                   ]}
                   defaultPageSize={10}
-                  showPagination={true}
-                  showPageJump={true}
-                  showPaginationBottom={true}
+                  showPagination
+                  showPageJump
+                  showPaginationBottom
                   className="-striped -highlight"
                 />
               </CardBody>

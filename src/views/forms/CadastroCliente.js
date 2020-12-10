@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeCnpj } from "normalize.js";
 import { Link, useParams } from "react-router-dom";
+import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
 

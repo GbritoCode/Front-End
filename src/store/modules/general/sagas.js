@@ -338,10 +338,10 @@ export function* updateProdt({ payload }) {
 
 export function* recDespCadastro({ payload }) {
   try {
-    const { EmpresaId, itmControleId, desc, recDesp } = payload;
+    const { EmpresaId, ItmControleId, desc, recDesp } = payload;
     yield call(api.post, "rec_desp", {
       EmpresaId,
-      itmControleId,
+      ItmControleId,
       desc,
       recDesp
     });
@@ -353,11 +353,11 @@ export function* recDespCadastro({ payload }) {
 }
 export function* updateRecDesp({ payload }) {
   try {
-    const { id, EmpresaId, itmControleId, desc, recDesp } = payload;
+    const { id, EmpresaId, ItmControleId, desc, recDesp } = payload;
 
     const Colab = Object.assign({
       EmpresaId,
-      itmControleId,
+      ItmControleId,
       desc,
       recDesp
     });

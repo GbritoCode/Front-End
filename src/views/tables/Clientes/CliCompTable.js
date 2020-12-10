@@ -21,24 +21,25 @@ import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
-import api from "~/services/api";
-
 import { Link } from "react-router-dom";
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
+import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
 import { ArrowBackIos } from "@material-ui/icons";
+import api from "~/services/api";
 
 class Tabela_CliComp extends Component {
   state = {
-    data: [],
+    data: []
   };
+
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
     this.loadCliComp();
   }
+
   loadCliComp = async () => {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     const response = await api.get(`/cliente/complem/${id}`);
     this.setState({
       data: response.data.map((client, key) => {
@@ -73,18 +74,17 @@ class Tabela_CliComp extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var data = this.state.data;
+                  var { data } = this.state;
                   data.find((o, i) => {
                     if (o.id === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
-                      console.log(data);
                       return true;
                     }
                     return false;
                   });
-                  this.setState({ data: data });
+                  this.setState({ data });
                 }}
                 color="danger"
                 size="sm"
@@ -93,14 +93,14 @@ class Tabela_CliComp extends Component {
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          ),
+          )
         };
-      }),
+      })
     });
   };
 
   render() {
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -113,7 +113,7 @@ class Tabela_CliComp extends Component {
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -123,14 +123,14 @@ class Tabela_CliComp extends Component {
                   </Link>
                   <Link to={`/cliente_update/${id}/true`}>
                     <Tooltip title="Voltar">
-                    <Button
+                      <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos  />
-                    </Button>
+                        <ArrowBackIos />
+                      </Button>
                     </Tooltip>
                   </Link>
                 </CardTitle>
@@ -140,9 +140,13 @@ class Tabela_CliComp extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
-                  defaultFilterMethod={(filter, row, column) => {
-                    const id = filter.pivotId || filter.id
-                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return row[id] !== undefined
+                      ? String(row[id])
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
+                      : true;
                   }}
                   previousText="Anterior"
                   nextText="Próximo"
@@ -154,31 +158,31 @@ class Tabela_CliComp extends Component {
                   columns={[
                     {
                       Header: "Nome",
-                      accessor: "nomeAbv",
+                      accessor: "nomeAbv"
                     },
                     {
                       Header: "Rua",
-                      accessor: "rua",
+                      accessor: "rua"
                     },
                     {
                       Header: "Bairro",
-                      accessor: "bairro",
+                      accessor: "bairro"
                     },
                     {
                       Header: "Estado",
-                      accessor: "uf",
+                      accessor: "uf"
                     },
                     {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,
-                      filterable: false,
-                    },
+                      filterable: false
+                    }
                   ]}
                   defaultPageSize={10}
-                  showPagination={true}
-                  showPageJump={true}
-                  showPaginationBottom={true}
+                  showPagination
+                  showPageJump
+                  showPaginationBottom
                   className="-striped -highlight"
                 />
               </CardBody>

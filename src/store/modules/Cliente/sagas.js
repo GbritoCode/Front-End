@@ -218,10 +218,10 @@ export function* updateCliComp({ payload }) {
 //--------------------------------------------------------------------------
 export function* cliRecDespCadastro({ payload }) {
   try {
-    const { ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
+    const { ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
     yield call(api.post, "cliente/rec_desp", {
       ClienteId,
-      recDespId,
+      RecDespId,
       tipoCobranca,
       valorRec,
       dataInic,
@@ -236,11 +236,11 @@ export function* cliRecDespCadastro({ payload }) {
 
 export function* updateCliRecDesp({ payload }) {
   try {
-    const { id, ClienteId, recDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
+    const { id, ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
 
     const Cliente = Object.assign({
       ClienteId,
-      recDespId,
+      RecDespId,
       tipoCobranca,
       valorRec,
       dataInic,

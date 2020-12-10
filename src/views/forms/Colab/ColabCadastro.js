@@ -28,20 +28,20 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { colabRequest } from "~/store/modules/Colab/actions";
-import { signUpRequest } from "~/store/modules/auth/actions";
-import { store } from "~/store";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeFone, normalizeCpf, normalizeCnpj } from "normalize";
 import { Link } from "react-router-dom";
+import { normalizeFone, normalizeCpf, normalizeCnpj } from "~/normalize";
+import { store } from "~/store";
+import { signUpRequest } from "~/store/modules/auth/actions";
+import { colabRequest } from "~/store/modules/Colab/actions";
 
-/*eslint-disable eqeqeq*/
+/* eslint-disable eqeqeq */
 export default function ColabCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -59,12 +59,12 @@ export default function ColabCadastro() {
     PerfilId: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    espec: { value: "", error: "", message: "" },
+    espec: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    const empresa = store.getState().auth.empresa;
+    const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:5140/fornec`);
@@ -72,11 +72,10 @@ export default function ColabCadastro() {
       setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
-
     }
     loadData();
   }, []);
@@ -98,37 +97,37 @@ export default function ColabCadastro() {
     if (cpf == "00000000000") return false;
 
     for (var i = 1; i <= 9; i++)
-      Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+      Soma += parseInt(cpf.substring(i - 1, i), 10) * (11 - i);
     Resto = (Soma * 10) % 11;
 
     if (Resto == 10 || Resto == 11) Resto = 0;
-    if (Resto != parseInt(cpf.substring(9, 10))) return false;
+    if (Resto != parseInt(cpf.substring(9, 10), 10)) return false;
 
     Soma = 0;
-    for ( i = 1; i <= 10; i++)
-      Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    for (i = 1; i <= 10; i++)
+      Soma += parseInt(cpf.substring(i - 1, i), 10) * (12 - i);
     Resto = (Soma * 10) % 11;
 
     if (Resto == 10 || Resto == 11) Resto = 0;
-    if (Resto != parseInt(cpf.substring(10, 11))) return false;
+    if (Resto != parseInt(cpf.substring(10, 11), 10)) return false;
     return true;
   }
 
-  const renderCpfState = (value) => {
+  const renderCpfState = value => {
     if (!validarCPF(value)) {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cpf: { error: "has-danger", message: "Insira um cpf válido" },
+        cpf: { error: "has-danger", message: "Insira um cpf válido" }
       }));
     } else {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cpf: { value: value, error: "has-success", message: "" },
+        cpf: { value, error: "has-success", message: "" }
       }));
     }
   };
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -136,7 +135,7 @@ export default function ColabCadastro() {
     return false;
   };
 
-  const verifyEmail = (value) => {
+  const verifyEmail = value => {
     var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (emailRex.test(value)) {
       return true;
@@ -144,64 +143,63 @@ export default function ColabCadastro() {
     return false;
   };
 
-
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "email":
         if (verifyEmail(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um E-mail válido",
-            },
+              message: "Insira um E-mail válido"
+            }
           }));
         }
         break;
       case "cpf":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          cpf: { value: normalizeCpf(target) },
+          cpf: { value: normalizeCpf(target) }
         }));
         break;
 
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
+        break;
+      default:
     }
   };
 
-  const colab = true
-  const handleSubmit = (evt) => {
+  const colab = true;
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -210,7 +208,7 @@ export default function ColabCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -218,15 +216,14 @@ export default function ColabCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
     }
-
 
     if (valid && filled) {
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
@@ -243,11 +240,16 @@ export default function ColabCadastro() {
           values.PerfilId.value,
           values.skype.value,
           values.email.value,
-          values.espec.value,
+          values.espec.value
         )
       );
       dispatch(
-        signUpRequest(values.nome.value, values.email.value, "Aidera2020", colab)
+        signUpRequest(
+          values.nome.value,
+          values.email.value,
+          "Aidera2020",
+          colab
+        )
       );
     } else {
       options = {
@@ -259,7 +261,7 @@ export default function ColabCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -278,13 +280,13 @@ export default function ColabCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -301,33 +303,33 @@ export default function ColabCadastro() {
                       </Label>
                     ) : null}
                   </FormGroup>
-<Row>
-  <Col md="4">
-  <Label>CPF</Label>
-                  <FormGroup className={`has-label ${values.cpf.error}`}>
-                    <Input
-                      maxLength={18}
-                      name="cpf"
-                      type="text"
-                      onChange={(event) => handleChange(event, "cpf", "cpf")}
-                      value={values.cpf.value}
-                      onBlur={(e) => {
-                        let value = e.target.value;
-                        renderCpfState(value);
-                      }}
-                    />
-                    {values.cpf.error === "has-danger" ? (
-                      <Label className="error">{values.cpf.message}</Label>
-                    ) : null}
-                  </FormGroup>
-  </Col>
-  <Col md="4">
-  <Label>Nome</Label>
+                  <Row>
+                    <Col md="4">
+                      <Label>CPF</Label>
+                      <FormGroup className={`has-label ${values.cpf.error}`}>
+                        <Input
+                          maxLength={18}
+                          name="cpf"
+                          type="text"
+                          onChange={event => handleChange(event, "cpf", "cpf")}
+                          value={values.cpf.value}
+                          onBlur={e => {
+                            const { value } = e.target;
+                            renderCpfState(value);
+                          }}
+                        />
+                        {values.cpf.error === "has-danger" ? (
+                          <Label className="error">{values.cpf.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Nome</Label>
                       <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input
                           name="nome"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "nome", "text")
                           }
                           value={values.nome.value}
@@ -336,16 +338,16 @@ export default function ColabCadastro() {
                           <Label className="error">{values.nome.message}</Label>
                         ) : null}
                       </FormGroup>
-  </Col>
-  <Col md="4">
-  <Label>Data de Adimissão</Label>
+                    </Col>
+                    <Col md="4">
+                      <Label>Data de Adimissão</Label>
                       <FormGroup
                         className={`has-label ${values.dtAdmiss.error}`}
                       >
                         <Input
                           name="dtAdmiss"
                           type="date"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "dtAdmiss", "text")
                           }
                           value={values.dtAdmiss.value}
@@ -356,8 +358,8 @@ export default function ColabCadastro() {
                           </Label>
                         ) : null}
                       </FormGroup>
-  </Col>
-</Row>
+                    </Col>
+                  </Row>
 
                   <Row>
                     <Col md="4">
@@ -369,14 +371,12 @@ export default function ColabCadastro() {
                           minLength={10}
                           name="cel"
                           type="numeric"
-                          onChange={(event) =>
-                            handleChange(event, "cel", "text")
-                          }
-                          onBlur={(e) => {
-                            let value = e.target.value;
-                            setValues((prevState) => ({
+                          onChange={event => handleChange(event, "cel", "text")}
+                          onBlur={e => {
+                            const { value } = e.target;
+                            setValues(prevState => ({
                               ...prevState,
-                              cel: { value: normalizeFone(value) },
+                              cel: { value: normalizeFone(value) }
                             }));
                           }}
                           value={values.cel.value}
@@ -387,14 +387,14 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Fornecedor</Label>
+                      <Label>Fornecedor</Label>
                       <FormGroup
                         className={`has-label ${values.fornecId.error}`}
                       >
                         <Input
                           name="FornecId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "fornecId", "text")
                           }
                           value={values.fornecId.value}
@@ -404,8 +404,10 @@ export default function ColabCadastro() {
                             {" "}
                             Selecione o fornecedor{" "}
                           </option>
-                          {data1.map((fornec) => (
-                            <option value={fornec.id}>{fornec.nomeConta} - {fornec.nome} </option>
+                          {data1.map(fornec => (
+                            <option value={fornec.id}>
+                              {fornec.nomeConta} - {fornec.nome}{" "}
+                            </option>
                           ))}
                         </Input>
                         {values.fornecId.error === "has-danger" ? (
@@ -424,7 +426,7 @@ export default function ColabCadastro() {
                         <Input
                           name="FornecId"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "PerfilId", "text")
                           }
                           value={values.PerfilId.value}
@@ -434,7 +436,7 @@ export default function ColabCadastro() {
                             {" "}
                             Selecione o perfil{" "}
                           </option>
-                          {data2.map((perfil) => (
+                          {data2.map(perfil => (
                             <option value={perfil.id}>
                               {" "}
                               {perfil.id} - {perfil.desc}{" "}
@@ -457,7 +459,7 @@ export default function ColabCadastro() {
                         <Input
                           name="skype"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "skype", "text")
                           }
                           value={values.skype.value}
@@ -470,12 +472,12 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Email</Label>
+                      <Label>Email</Label>
                       <FormGroup className={`has-label ${values.email.error}`}>
                         <Input
                           name="email"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "email", "email")
                           }
                           value={values.email.value}
@@ -487,36 +489,38 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="4">
-
-                    </Col>
+                    <Col md="4" />
                   </Row>
 
                   <Row>
                     <Col md="6">
                       {" "}
                       <Label>Especialidade</Label>
-                  <FormGroup claclassName={`has-label ${values.espec.error}`}>
-                    <Input
-                      name="espec"
-                      type="text"
-                      onChange={(event) => handleChange(event, "espec", "text")}
-                      value={values.espec.value}
-                    />
-                    {values.espec.error === "has-danger" ? (
-                      <Label className="error">{values.espec.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <FormGroup
+                        claclassName={`has-label ${values.espec.error}`}
+                      >
+                        <Input
+                          name="espec"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "espec", "text")
+                          }
+                          value={values.espec.value}
+                        />
+                        {values.espec.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.espec.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
-
                   </Row>
 
-
-                  <Link to={`/tabelas/colab`}>
+                  <Link to="/tabelas/colab">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
@@ -526,7 +530,7 @@ export default function ColabCadastro() {
                         className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -536,17 +540,18 @@ export default function ColabCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

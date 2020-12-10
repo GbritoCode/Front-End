@@ -10,12 +10,12 @@ export function* oportCadastro({ payload }) {
   try {
     const {
       EmpresaId,
-      colabId,
-      clienteId,
+      ColabId,
+      ClienteId,
       UndNegId,
-      itmControleId,
-      segmentoId,
-      representanteId,
+      ItmControleId,
+      SegmentoId,
+      RepresentanteId,
       contato,
       data,
       fase,
@@ -25,12 +25,12 @@ export function* oportCadastro({ payload }) {
     } = payload;
     yield call(api.post, "oportunidade", {
       EmpresaId,
-      colabId,
-      clienteId,
+      ColabId,
+      ClienteId,
       UndNegId,
-      itmControleId,
-      segmentoId,
-      representanteId,
+      ItmControleId,
+      SegmentoId,
+      RepresentanteId,
       contato,
       data,
       fase,
@@ -50,12 +50,12 @@ export function* updateOport({ payload }) {
     const {
       id,
       EmpresaId,
-      colabId,
-      clienteId,
+      ColabId,
+      ClienteId,
       UndNegId,
-      itmControleId,
-      segmentoId,
-      representanteId,
+      ItmControleId,
+      SegmentoId,
+      RepresentanteId,
       contato,
       data,
       fase,
@@ -66,12 +66,12 @@ export function* updateOport({ payload }) {
 
     const Oport = Object.assign({
       EmpresaId,
-      colabId,
-      clienteId,
+      ColabId,
+      ClienteId,
       UndNegId,
-      itmControleId,
-      segmentoId,
-      representanteId,
+      ItmControleId,
+      SegmentoId,
+      RepresentanteId,
       contato,
       data,
       fase,
@@ -181,7 +181,7 @@ export function* recursoCadastro({ payload }) {
   try {
     const {
       oportunidadeId,
-      colabId,
+      ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,
@@ -189,7 +189,7 @@ export function* recursoCadastro({ payload }) {
     } = payload;
     yield call(api.post, "recurso", {
       oportunidadeId,
-      colabId,
+      ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,
@@ -206,7 +206,7 @@ export function* updateRecurso({ payload }) {
     const {
       id,
       oportunidadeId,
-      colabId,
+      ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,
@@ -215,7 +215,7 @@ export function* updateRecurso({ payload }) {
 
     const recurso = Object.assign({
       oportunidadeId,
-      colabId,
+      ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,

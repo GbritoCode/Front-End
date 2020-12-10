@@ -28,17 +28,17 @@ import {
   FormGroup,
   Label,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { itmControleRequest } from "~/store/modules/general/actions";
-import { store } from "~/store";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
+import { store } from "~/store";
+import { itmControleRequest } from "~/store/modules/general/actions";
 
 export default function ItmControleCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -48,19 +48,18 @@ export default function ItmControleCadastro() {
     descItem: { value: "", error: "", message: "" },
     tipoItem: { value: "", error: "", message: "" },
     contaContabil: { value: "", error: "", message: "" },
-    centCusto: { value: "", error: "", message: "" },
+    centCusto: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  async function loadData() {
-
+    const { empresa } = store.getState().auth;
+    async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       setData(response.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
+        empresaId: { value: response.data.id }
       }));
     }
     loadData();
@@ -100,7 +99,7 @@ export default function ItmControleCadastro() {
     )}-${currentValue.slice(12, 14)}`;
   };
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -110,36 +109,36 @@ export default function ItmControleCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -148,7 +147,7 @@ export default function ItmControleCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -157,9 +156,9 @@ export default function ItmControleCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -185,7 +184,7 @@ export default function ItmControleCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -204,13 +203,13 @@ export default function ItmControleCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Empresa</Label>
+                  <Label>Empresa</Label>
                   <FormGroup className={`has-label ${values.empresaId.error}`}>
                     <Input
-                      disabled={true}
+                      disabled
                       name="EmpresaId"
                       type="select"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "empresaId", "text")
                       }
                       value={values.empresaId.value}
@@ -229,102 +228,106 @@ export default function ItmControleCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                    <Label>Descrição do Item</Label>
-                  <FormGroup className={`has-label ${values.descItem.error}`}>
-                    <Input
-                      name="descItem"
-                      type="text"
-                      onChange={(event) =>
-                        handleChange(event, "descItem", "text")
-                      }
-                      value={values.descItem.value}
-                    />
-                    {values.descItem.error === "has-danger" ? (
-                      <Label className="error">{values.descItem.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Descrição do Item</Label>
+                      <FormGroup
+                        className={`has-label ${values.descItem.error}`}
+                      >
+                        <Input
+                          name="descItem"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descItem", "text")
+                          }
+                          value={values.descItem.value}
+                        />
+                        {values.descItem.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descItem.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Tipo de Item</Label>
-                  <FormGroup className={`has-label ${values.tipoItem.error}`}>
-                    <Input
-                      name="tipoItem"
-                      type="numeric"
-                      onChange={(event) =>
-                        handleChange(event, "tipoItem", "text")
-                      }
-                      value={values.tipoItem.value}
-                    />
-                    {values.tipoItem.error === "has-danger" ? (
-                      <Label className="error">{values.tipoItem.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Tipo de Item</Label>
+                      <FormGroup
+                        className={`has-label ${values.tipoItem.error}`}
+                      >
+                        <Input
+                          name="tipoItem"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "tipoItem", "text")
+                          }
+                          value={values.tipoItem.value}
+                        />
+                        {values.tipoItem.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.tipoItem.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-
-                  <Label>Conta Contábil</Label>
-                  <FormGroup
-                    className={`has-label ${values.contaContabil.error}`}
-                  >
-                    <Input
-                      name="contaContabil"
-                      type="numeric"
-                      onChange={(event) =>
-                        handleChange(event, "contaContabil", "text")
-                      }
-                      value={values.contaContabil.value}
-                    />
-                    {values.contaContabil.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.contaContabil.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Conta Contábil</Label>
+                      <FormGroup
+                        className={`has-label ${values.contaContabil.error}`}
+                      >
+                        <Input
+                          name="contaContabil"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "contaContabil", "text")
+                          }
+                          value={values.contaContabil.value}
+                        />
+                        {values.contaContabil.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.contaContabil.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="4">
-                    <Label>Centro de Custo</Label>
-                  <FormGroup className={`has-label ${values.centCusto.error}`}>
-                    <Input
-                      name="centCusto"
-                      type="numeric"
-                      onChange={(event) =>
-                        handleChange(event, "centCusto", "text")
-                      }
-                      value={values.centCusto.value}
-                    />
-                    {values.centCusto.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.centCusto.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Centro de Custo</Label>
+                      <FormGroup
+                        className={`has-label ${values.centCusto.error}`}
+                      >
+                        <Input
+                          name="centCusto"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "centCusto", "text")
+                          }
+                          value={values.centCusto.value}
+                        />
+                        {values.centCusto.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.centCusto.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
-                    <Col md="4">
-
-                    </Col>
-                    <Col md="4">
-
-                    </Col>
+                    <Col md="4" />
+                    <Col md="4" />
                   </Row>
 
-
-
-                  <Link to={`/tabelas/general/itm_controle`}>
+                  <Link to="/tabelas/general/itm_controle">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -334,17 +337,18 @@ export default function ItmControleCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

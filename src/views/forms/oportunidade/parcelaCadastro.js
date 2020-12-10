@@ -28,26 +28,26 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { parcelaReqest } from "~/store/modules/oportunidades/actions";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCurrency} from "normalize";
 import { useParams, Link } from "react-router-dom";
+import { normalizeCurrency } from "~/normalize";
+import { parcelaReqest } from "~/store/modules/oportunidades/actions";
 
 export default function ParcelaCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams()
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [data1, setData1] = useState({});
   const stateSchema = {
     oportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
-    vlrParcela: { value: "", error: "", message: "" },
+    vlrParcela: { value: "", error: "", message: "" }
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -56,14 +56,13 @@ export default function ParcelaCadastro() {
       const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
       setData1(response1.data);
 
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        oportunidadeId: { value: response1.data.id },
+        oportunidadeId: { value: response1.data.id }
       }));
     }
     loadData();
   }, [id]);
-
 
   var options = {};
   const notifyElment = useRef(null);
@@ -71,7 +70,7 @@ export default function ParcelaCadastro() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -80,45 +79,44 @@ export default function ParcelaCadastro() {
   };
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
         break;
       case "optional":
-
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -127,7 +125,7 @@ export default function ParcelaCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -135,10 +133,10 @@ export default function ParcelaCadastro() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -151,9 +149,9 @@ export default function ParcelaCadastro() {
         parcelaReqest(
           values.oportunidadeId.value,
           values.parcela.value,
-          vlrParceladb,
-        ));
-
+          vlrParceladb
+        )
+      );
     } else {
       options = {
         place: "tr",
@@ -164,7 +162,7 @@ export default function ParcelaCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -183,12 +181,14 @@ export default function ParcelaCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Oportunidade</Label>
-                  <FormGroup className={`has-label ${values.oportunidadeId.error}`}>
+                  <Label>Oportunidade</Label>
+                  <FormGroup
+                    className={`has-label ${values.oportunidadeId.error}`}
+                  >
                     <Input
                       disabled
                       name="oportunidadeId"
-                      onChange={(event) =>
+                      onChange={event =>
                         handleChange(event, "oportunidadeId", "text")
                       }
                       value={values.oportunidadeId.value}
@@ -198,14 +198,13 @@ export default function ParcelaCadastro() {
                         {" "}
                         Selecione a Oportunidade{" "}
                       </option>{" "}
-                      <option value={data1.id}>
-                        {" "}
-                        {data1.desc}
-                      </option>
+                      <option value={data1.id}> {data1.desc}</option>
                     </Input>
 
                     {values.oportunidadeId.error === "has-danger" ? (
-                      <Label className="error">{values.oportunidadeId.message}</Label>
+                      <Label className="error">
+                        {values.oportunidadeId.message}
+                      </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
@@ -218,7 +217,7 @@ export default function ParcelaCadastro() {
                         <Input
                           name="parcela"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "parcela", "number")
                           }
                           value={values.parcela.value}
@@ -239,7 +238,7 @@ export default function ParcelaCadastro() {
                         <Input
                           name="vlrParcela"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "vlrParcela", "currency")
                           }
                           value={values.vlrParcela.value}
@@ -254,20 +253,21 @@ export default function ParcelaCadastro() {
                     </Col>
                   </Row>
 
-                  <Link to={`/tabelas/oportunidade/oport`}>
+                  <Link to="/tabelas/oportunidade/oport">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
                       className="form"
                     >
-                      <i className="tim-icons icon-double-left"
+                      <i
+                        className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -277,17 +277,18 @@ export default function ParcelaCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

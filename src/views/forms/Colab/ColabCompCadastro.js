@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 // reactstrap components
 import {
@@ -28,42 +28,42 @@ import {
   Label,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { colabCompRequest } from "~/store/modules/Colab/actions";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCurrency } from "normalize";
+import { normalizeCurrency } from "~/normalize";
+import { colabCompRequest } from "~/store/modules/Colab/actions";
 
 export default function ColabCompCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const {id} = useParams();
-  const dispatch = useDispatch()
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const stateSchema = {
-    colabId: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" },
     nivel: { value: "", error: "", message: "" },
     tipoValor: { value: "", error: "", message: "" },
     valor: { value: "", error: "", message: "" },
     dataInic: { value: "", error: "", message: "" },
     dataFim: { value: "", error: "", message: "" },
-    tipoAtend: { value: "", error: "", message: "" },
+    tipoAtend: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   const [data, setData] = useState({});
 
   useEffect(() => {
-    //------------------- busca de dados das apis, e setar as variáveis que dependem das apis
+    // ------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
       const response = await axios(`http://localhost:5140/colab/${id}`);
       setData(response.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        colabId: { value: response.data.id },
+        ColabId: { value: response.data.id }
       }));
     }
     loadData();
@@ -76,7 +76,7 @@ export default function ColabCompCadastro() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -86,42 +86,42 @@ export default function ColabCompCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
+        break;
+      default:
     }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -139,9 +139,9 @@ export default function ColabCompCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -151,7 +151,7 @@ export default function ColabCompCadastro() {
       var valordb = values.valor.value.replace(/[^\d]+/g, "");
       dispatch(
         colabCompRequest(
-          values.colabId.value,
+          values.ColabId.value,
           values.nivel.value,
           values.tipoValor.value,
           valordb,
@@ -170,7 +170,7 @@ export default function ColabCompCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -189,15 +189,13 @@ export default function ColabCompCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                <Label>Colaborador</Label>
-                  <FormGroup className={`has-label ${values.colabId.error}`}>
+                  <Label>Colaborador</Label>
+                  <FormGroup className={`has-label ${values.ColabId.error}`}>
                     <Input
                       disabled
                       name="ColabId"
-                      onChange={(event) =>
-                        handleChange(event, "colabId", "text")
-                      }
-                      value={values.colabId.value}
+                      onChange={event => handleChange(event, "ColabId", "text")}
+                      value={values.ColabId.value}
                       type="select"
                     >
                       <option disabled value="">
@@ -210,8 +208,8 @@ export default function ColabCompCadastro() {
                       </option>
                     </Input>
 
-                    {values.colabId.error === "has-danger" ? (
-                      <Label className="error">{values.colabId.message}</Label>
+                    {values.ColabId.error === "has-danger" ? (
+                      <Label className="error">{values.ColabId.message}</Label>
                     ) : null}
                   </FormGroup>
                   <Row>
@@ -222,7 +220,7 @@ export default function ColabCompCadastro() {
                         <Input
                           name="nivel"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "nivel", "text")
                           }
                           value={values.nivel.value}
@@ -252,14 +250,14 @@ export default function ColabCompCadastro() {
                         <Input
                           name="tipoValor"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "tipoValor", "text")
                           }
                           value={values.tipoValor.value}
                         >
                           <option disabled value="">
                             {" "}
-                                Selecione o tipo de valor{" "}
+                            Selecione o tipo de valor{" "}
                           </option>
                           <option value={1}>Por Hora</option>
                           <option value={2}>Fixo</option>
@@ -278,7 +276,7 @@ export default function ColabCompCadastro() {
                         <Input
                           name="valor"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "valor", "currency")
                           }
                           value={values.valor.value}
@@ -301,7 +299,7 @@ export default function ColabCompCadastro() {
                         <Input
                           name="dataInic"
                           type="date"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "dataInic", "text")
                           }
                           value={values.dataInic.value}
@@ -322,7 +320,7 @@ export default function ColabCompCadastro() {
                         <Input
                           name="dataFim"
                           type="date"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "dataFim", "text")
                           }
                           value={values.dataFim.value}
@@ -335,14 +333,14 @@ export default function ColabCompCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Tipo de Atendimento</Label>
+                      <Label>Tipo de Atendimento</Label>
                       <FormGroup
                         className={`has-label ${values.tipoAtend.error}`}
                       >
                         <Input
                           name="tipoAtend"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "tipoAtend", "text")
                           }
                           value={values.tipoAtend.value}
@@ -364,11 +362,11 @@ export default function ColabCompCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tables/colab/comp/1`}>
+                  <Link to="/tables/colab/comp/1">
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
@@ -378,7 +376,7 @@ export default function ColabCompCadastro() {
                         className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -388,17 +386,18 @@ export default function ColabCompCadastro() {
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />

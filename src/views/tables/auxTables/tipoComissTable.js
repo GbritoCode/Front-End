@@ -20,22 +20,24 @@ import classNames from "classnames";
 import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-import { normalizeCurrency } from 'normalize'
-import api from "~/services/api";
 
 import { Link } from "react-router-dom";
-import Tooltip from '@material-ui/core/Tooltip';
-import AddIcon from '@material-ui/icons/Add';
+import Tooltip from "@material-ui/core/Tooltip";
+import AddIcon from "@material-ui/icons/Add";
+import { normalizeCurrency } from "~/normalize";
+import api from "~/services/api";
 
 class tipoComissTable extends Component {
   state = {
-    data: [],
+    data: []
   };
+
   componentDidMount() {
-    //--------- colocando no modo claro do template
+    // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
     this.loadClients();
   }
+
   loadClients = async () => {
     const response = await api.get("/tipoComiss");
     this.setState({
@@ -45,7 +47,7 @@ class tipoComissTable extends Component {
           idd: client.id,
           Empresa: client.Empresa.nome,
           desc: client.desc,
-          prcnt: normalizeCurrency(JSON.stringify(client.prcnt)) + " %",
+          prcnt: `${normalizeCurrency(JSON.stringify(client.prcnt))} %`,
           bsComiss: client.bsComiss,
           actions: (
             // we've added some custom button actions
@@ -63,18 +65,17 @@ class tipoComissTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var data = this.state.data;
+                  var { data } = this.state;
                   data.find((o, i) => {
                     if (o.id === key) {
                       // here you should add some custom code so you can delete the data
                       // from this component and from your server as well
                       data.splice(i, 1);
-                      console.log(o);
                       return true;
                     }
                     return false;
                   });
-                  this.setState({ data: data });
+                  this.setState({ data });
                 }}
                 color="danger"
                 size="sm"
@@ -83,9 +84,9 @@ class tipoComissTable extends Component {
                 <i className="tim-icons icon-simple-remove" />
               </Button>{" "}
             </div>
-          ),
+          )
         };
-      }),
+      })
     });
   };
 
@@ -102,7 +103,7 @@ class tipoComissTable extends Component {
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
-                          float: "right",
+                          float: "right"
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
@@ -117,9 +118,13 @@ class tipoComissTable extends Component {
                   data={this.state.data}
                   filterable
                   resizable={false}
-                  defaultFilterMethod={(filter, row, column) => {
-                    const id = filter.pivotId || filter.id
-                    return row[id] !== undefined ? String(row[id]).toLowerCase().startsWith(filter.value.toLowerCase()) : true
+                  defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return row[id] !== undefined
+                      ? String(row[id])
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
+                      : true;
                   }}
                   previousText="Anterior"
                   nextText="Próximo"
@@ -129,35 +134,34 @@ class tipoComissTable extends Component {
                   ofText="de"
                   rowsText="Linhas"
                   columns={[
-
                     {
                       Header: "Código",
-                      accessor: "idd",
+                      accessor: "idd"
                     },
                     {
                       Header: "Descrição",
-                      accessor: "desc",
+                      accessor: "desc"
                     },
                     {
                       Header: "Porcentagem",
-                      accessor: "prcnt",
+                      accessor: "prcnt"
                     },
                     {
                       Header: "Base de Comissão",
-                      accessor: "bsComiss",
+                      accessor: "bsComiss"
                     },
 
                     {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,
-                      filterable: false,
-                    },
+                      filterable: false
+                    }
                   ]}
                   defaultPageSize={10}
-                  showPagination={true}
-                  showPageJump={true}
-                  showPaginationBottom={true}
+                  showPagination
+                  showPageJump
+                  showPaginationBottom
                   className="-striped -highlight"
                 />
               </CardBody>

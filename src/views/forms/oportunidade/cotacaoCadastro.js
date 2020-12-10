@@ -78,17 +78,12 @@ export default function CotacaoCadastro() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(
-        `http://localhost:5140/oportunidade/${id}`
-      );
+      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
       setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id }
-      }));
-      setValues(prevState => ({
-        ...prevState,
+        empresaId: { value: response.data.id },
         oportunidadeId: { value: response1.data.id }
       }));
     }
@@ -101,7 +96,7 @@ export default function CotacaoCadastro() {
   }
   function getCliData(cobranca) {
     axios(
-      `http://localhost:5140/cliente/rec_desp/${data1.clienteId}/?itmControleId=${data1.itmControleId}&cobranca=${cobranca}`
+      `http://localhost:5140/cliente/rec_desp/${data1.ClienteId}/?ItmControleId=${data1.itmControleId}&cobranca=${cobranca}`
     ).then(result => {
       if (result.data === null) {
         options = {
@@ -125,7 +120,6 @@ export default function CotacaoCadastro() {
     });
   }
 
-  console.log(data2);
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -254,9 +248,9 @@ export default function CotacaoCadastro() {
           data1.id,
           data1.EmpresaId,
           data1.ColabId,
-          data1.clienteId,
+          data1.ClienteId,
           data1.UndNegId,
-          data1.itmControleId,
+          data1.ItmControleId,
           data1.SegmentoId,
           data1.RepresentanteId,
           data1.contato,

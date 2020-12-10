@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, Fragment, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
@@ -28,17 +28,17 @@ import {
   Label,
   Input,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { ColabCompUpdate } from "~/store/modules/Colab/actions";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { normalizeCurrency } from "normalize";
+import { normalizeCurrency } from "~/normalize";
+import { ColabCompUpdate } from "~/store/modules/Colab/actions";
 
 function ColabCompUpdatee() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
@@ -46,13 +46,13 @@ function ColabCompUpdatee() {
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
-    colabId: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" },
     nivel: { value: "", error: "", message: "" },
     tipoValor: { value: "", error: "", message: "" },
     valor: { value: "", error: "", message: "" },
     dataInic: { value: "", error: "", message: "" },
     dataFim: { value: "", error: "", message: "" },
-    tipoAtend: { value: "", error: "", message: "" },
+    tipoAtend: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -64,33 +64,17 @@ function ColabCompUpdatee() {
       );
       setData1(response1.data);
 
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        colabId: { value: response.data.ColabId },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
+        ColabId: { value: response.data.ColabId },
         nivel: { value: response.data.nivel },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         tipoValor: { value: response.data.tipoValor },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        valor: { value: normalizeCurrency(JSON.stringify(response.data.valor)) },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
+        valor: {
+          value: normalizeCurrency(JSON.stringify(response.data.valor))
+        },
         dataInic: { value: response.data.dataInic },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
         dataFim: { value: response.data.dataFim },
-      }));
-      setValues((prevState) => ({
-        ...prevState,
-        tipoAtend: { value: response.data.tipoAtend },
+        tipoAtend: { value: response.data.tipoAtend }
       }));
 
       setIsLoading(false);
@@ -98,7 +82,7 @@ function ColabCompUpdatee() {
     loadData();
   }, [id]);
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -107,39 +91,39 @@ function ColabCompUpdatee() {
   };
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "currency":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) },
+          [name]: { value: normalizeCurrency(target) }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
   var options = {};
 
@@ -148,7 +132,7 @@ function ColabCompUpdatee() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -157,7 +141,7 @@ function ColabCompUpdatee() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -165,10 +149,10 @@ function ColabCompUpdatee() {
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-        filled = false
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -177,8 +161,9 @@ function ColabCompUpdatee() {
     if (valid && filled) {
       var valordb = values.valor.value.replace(/[^\d]+/g, "");
       dispatch(
-        ColabCompUpdate(id,
-          values.colabId.value,
+        ColabCompUpdate(
+          id,
+          values.ColabId.value,
           values.nivel.value,
           values.tipoValor.value,
           valordb,
@@ -197,262 +182,263 @@ function ColabCompUpdatee() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
   };
   return (
-    <Fragment>
+    <>
       {isLoading ? (
-        <div></div>
+        <div />
       ) : (
-          <>
-            <div className="rna-container">
-              <NotificationAlert ref={notifyElment} />
-            </div>
-            <div className="content">
-              <Row>
-                <Col md="12">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle tag="h4">
-                        Edição de Complemento do Colaborador
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">
+                      Edição de Complemento do Colaborador
                     </CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Form onSubmit={handleSubmit}>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
                       <Label>Colaborador</Label>
-                        <FormGroup
-                          className={`has-label ${values.colabId.error}`}
+                      <FormGroup
+                        className={`has-label ${values.ColabId.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="ColabId"
+                          onChange={event =>
+                            handleChange(event, "ColabId", "text")
+                          }
+                          value={values.ColabId.value}
+                          type="select"
                         >
-                          <Input
-                            disabled
-                            name="ColabId"
-                            onChange={(event) =>
-                              handleChange(event, "colabId", "text")
-                            }
-                            value={values.colabId.value}
-                            type="select"
-                          >
-                            <option disabled value="">
-                              {" "}
+                          <option disabled value="">
+                            {" "}
                             Selecione o Colaborador{" "}
-                            </option>{" "}
-                            <option value={data1.id}>
-                              {" "}
-                              {data1.nome} - {data1.CPF}
-                            </option>
-                          </Input>
+                          </option>{" "}
+                          <option value={data1.id}>
+                            {" "}
+                            {data1.nome} - {data1.CPF}
+                          </option>
+                        </Input>
 
-                          {values.colabId.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.colabId.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
-                        <Row>
-                          <Col md="4">
-                            {" "}
-                            <Label>Nível</Label>
-                            <FormGroup
-                              className={`has-label ${values.nivel.error}`}
-                            >
-                              <Input
-                                name="nivel"
-                                type="select"
-                                onChange={(event) =>
-                                  handleChange(event, "nivel", "text")
-                                }
-                                value={values.nivel.value}
-                              >
-                                <option disabled value="">
-                                  {" "}
-                                Selecione o nível{" "}
-                                </option>
-                                <option value={1}>Trainee</option>
-                                <option value={2}>Júnior</option>
-                                <option value={3}>Pleno</option>
-                                <option value={4}>Sênior</option>
-                              </Input>
-                              {values.nivel.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.nivel.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            {" "}
-                            <Label>Tipo de valor</Label>
-                            <FormGroup
-                              className={`has-label ${values.tipoValor.error}`}
-                            >
-                              <Input
-                                name="tipoValor"
-                                type="select"
-                                onChange={(event) =>
-                                  handleChange(event, "tipoValor", "text")
-                                }
-                                value={values.tipoValor.value}
-                              >
-                                <option disabled value="">
-                                  {" "}
-                                Selecione o tipo de valor{" "}
-                                </option>
-                                <option value={1}>Por Hora</option>
-                                <option value={2}>Fixo</option>
-                              </Input>
-                              {values.tipoValor.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.tipoValor.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            {" "}
-                            <Label>Valor</Label>
-                            <FormGroup
-                              className={`has-label ${values.valor.error}`}
-                            >
-                              <Input
-                                name="valor"
-                                type="numeric"
-                                onChange={(event) =>
-                                  handleChange(event, "valor", "currency")
-                                }
-                                value={values.valor.value}
-                              />
-                              {values.valor.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.valor.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col md="4">
-                            {" "}
-                            <Label>Data Inicial</Label>
-                            <FormGroup
-                              className={`has-label ${values.dataInic.error}`}
-                            >
-                              <Input
-                                name="dataInic"
-                                type="date"
-                                onChange={(event) =>
-                                  handleChange(event, "dataInic", "text")
-                                }
-                                value={values.dataInic.value}
-                              />
-                              {values.dataInic.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.dataInic.message}
-                                </Label>
-                              ) : null}{" "}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            {" "}
-                            <Label>Data Final</Label>
-                            <FormGroup
-                              className={`has-label ${values.dataFim.error}`}
-                            >
-                              <Input
-                                name="dataFim"
-                                type="date"
-                                onChange={(event) =>
-                                  handleChange(event, "dataFim", "text")
-                                }
-                                value={values.dataFim.value}
-                              />
-                              {values.dataFim.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.dataFim.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                          <Label>Tipo de Atendimento</Label>
-                            <FormGroup
-                              className={`has-label ${values.tipoAtend.error}`}
-                            >
-                              <Input
-                                name="tipoAtend"
-                                type="select"
-                                onChange={(event) =>
-                                  handleChange(event, "tipoAtend", "text")
-                                }
-                                value={values.tipoAtend.value}
-                              >
-                                <option disabled value="">
-                                  {" "}
-                            Selecione o tipo de atendimento{" "}
-                                </option>
-                                <option value={1}>Consultoria</option>
-                                <option value={2}>Tecnologia</option>
-                                <option value={3}>Desenvolvimento</option>
-                                <option value={4}>Complementar</option>
-                              </Input>
-                              {values.tipoAtend.error === "has-danger" ? (
-                                <Label className="error">
-                                  {values.tipoAtend.message}
-                                </Label>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Link to={`/tables/colab/comp/1`}>
-                          <Button
-                            style={{
-                              paddingLeft: 32,
-                              paddingRight: 33,
-                            }}
-                            color="secundary"
-                            size="small"
-                            className="text-left"
+                        {values.ColabId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.ColabId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>Nível</Label>
+                          <FormGroup
+                            className={`has-label ${values.nivel.error}`}
                           >
-                            <i
-                              className="tim-icons icon-double-left"
-                              style={{
-                                paddingBottom: 4,
-                                paddingRight: 1,
-                              }}
-                              size="large"
-                            />{" "}
-                      Voltar
-                    </Button>
-                        </Link>
+                            <Input
+                              name="nivel"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "nivel", "text")
+                              }
+                              value={values.nivel.value}
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione o nível{" "}
+                              </option>
+                              <option value={1}>Trainee</option>
+                              <option value={2}>Júnior</option>
+                              <option value={3}>Pleno</option>
+                              <option value={4}>Sênior</option>
+                            </Input>
+                            {values.nivel.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.nivel.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Tipo de valor</Label>
+                          <FormGroup
+                            className={`has-label ${values.tipoValor.error}`}
+                          >
+                            <Input
+                              name="tipoValor"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "tipoValor", "text")
+                              }
+                              value={values.tipoValor.value}
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione o tipo de valor{" "}
+                              </option>
+                              <option value={1}>Por Hora</option>
+                              <option value={2}>Fixo</option>
+                            </Input>
+                            {values.tipoValor.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.tipoValor.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Valor</Label>
+                          <FormGroup
+                            className={`has-label ${values.valor.error}`}
+                          >
+                            <Input
+                              name="valor"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "valor", "currency")
+                              }
+                              value={values.valor.value}
+                            />
+                            {values.valor.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.valor.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>Data Inicial</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataInic.error}`}
+                          >
+                            <Input
+                              name="dataInic"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataInic", "text")
+                              }
+                              value={values.dataInic.value}
+                            />
+                            {values.dataInic.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataInic.message}
+                              </Label>
+                            ) : null}{" "}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Data Final</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataFim.error}`}
+                          >
+                            <Input
+                              name="dataFim"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataFim", "text")
+                              }
+                              value={values.dataFim.value}
+                            />
+                            {values.dataFim.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataFim.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo de Atendimento</Label>
+                          <FormGroup
+                            className={`has-label ${values.tipoAtend.error}`}
+                          >
+                            <Input
+                              name="tipoAtend"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "tipoAtend", "text")
+                              }
+                              value={values.tipoAtend.value}
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione o tipo de atendimento{" "}
+                              </option>
+                              <option value={1}>Consultoria</option>
+                              <option value={2}>Tecnologia</option>
+                              <option value={3}>Desenvolvimento</option>
+                              <option value={4}>Complementar</option>
+                            </Input>
+                            {values.tipoAtend.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.tipoAtend.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Link to="/tables/colab/comp/1">
                         <Button
                           style={{
-                            paddingLeft: 29,
-                            paddingRight: 30,
+                            paddingLeft: 32,
+                            paddingRight: 33
                           }}
-                          className="form"
-                          color="info"
-                          type="submit"
+                          color="secundary"
+                          size="small"
+                          className="text-left"
                         >
-                          Enviar{" "}
-                          <i className="tim-icons icon-send"
+                          <i
+                            className="tim-icons icon-double-left"
                             style={{
                               paddingBottom: 4,
-                              paddingLeft: 3,
+                              paddingRight: 1
                             }}
                             size="large"
-                          />
+                          />{" "}
+                          Voltar
                         </Button>
-                      </Form>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </>
-        )}
-    </Fragment>
+                      </Link>
+                      <Button
+                        style={{
+                          paddingLeft: 29,
+                          paddingRight: 30
+                        }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 export default ColabCompUpdatee;

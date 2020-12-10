@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 // reactstrap components
 import {
@@ -28,34 +28,34 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { CliContRequest } from "~/store/modules/Cliente/actions";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
-import { normalizeFone } from "normalize";
+import { normalizeFone } from "~/normalize";
+import { CliContRequest } from "~/store/modules/Cliente/actions";
 
 export default function CliContCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const [data, setData] = useState({});
-  const {id} = useParams();
-const dispatch = useDispatch();
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const stateSchema = {
-    clienteId: { value: "", error: "", message: "" },
+    ClienteId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" },
+    tipoConta: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
-    aniver: { value: null, error: "", message: "" },
-  }
+    aniver: { value: null, error: "", message: "" }
+  };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
@@ -63,9 +63,9 @@ const dispatch = useDispatch();
     async function loadData() {
       const response = await axios(`http://localhost:5140/cliente/${id}`);
       setData(response.data);
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        clienteId: { value: response.data.id },
+        ClienteId: { value: response.data.id }
       }));
     }
     loadData();
@@ -78,7 +78,7 @@ const dispatch = useDispatch();
     notifyElment.current.notificationAlert(options);
   }
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -86,7 +86,7 @@ const dispatch = useDispatch();
     return false;
   };
 
-  const verifyEmail = (value) => {
+  const verifyEmail = value => {
     var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (emailRex.test(value)) {
       return true;
@@ -96,59 +96,59 @@ const dispatch = useDispatch();
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "email":
         if (verifyEmail(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um E-mail válido",
-            },
+              message: "Insira um E-mail válido"
+            }
           }));
         }
         break;
       case "optional":
-        setOptional((prevState) => ({
+        setOptional(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
+        break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -165,10 +165,10 @@ const dispatch = useDispatch();
       if (aux[j][1].value !== "") {
         var filled = true;
       } else {
-  filled = false;
-        setValues((prevState) => ({
+        filled = false;
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -179,7 +179,7 @@ const dispatch = useDispatch();
       var fonedb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
         CliContRequest(
-          values.clienteId.value,
+          values.ClienteId.value,
           values.nome.value,
           celdb,
           fonedb,
@@ -199,7 +199,7 @@ const dispatch = useDispatch();
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -218,14 +218,14 @@ const dispatch = useDispatch();
               </CardHeader>
               <CardBody>
                 <Form id="RegisterValidation" onSubmit={handleSubmit}>
-                <Label>Cliente</Label>
-                  <FormGroup className={`has-label ${values.clienteId.error}`}>
+                  <Label>Cliente</Label>
+                  <FormGroup className={`has-label ${values.ClienteId.error}`}>
                     <Input
                       disabled
-                      onChange={(event) =>
-                        handleChange(event, "clienteId", "text")
+                      onChange={event =>
+                        handleChange(event, "ClienteId", "text")
                       }
-                      value={values.clienteId.value}
+                      value={values.ClienteId.value}
                       name="ClienteId"
                       type="select"
                     >
@@ -238,43 +238,43 @@ const dispatch = useDispatch();
                         {data.nomeAbv} - {data.CNPJ}
                       </option>
                     </Input>
-                    {values.clienteId.error === "has-danger" ? (
+                    {values.ClienteId.error === "has-danger" ? (
                       <Label className="error">
-                        {values.clienteId.message}
+                        {values.ClienteId.message}
                       </Label>
                     ) : null}
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                    <Label>Nome</Label>
-                  <FormGroup className={`has-label ${values.nome.error}`}>
-                    <Input
-                      name="nome"
-                      type="text"
-                      onChange={(event) => handleChange(event, "nome", "text")}
-                      value={values.nome.value}
-                    />
-                    {values.nome.error === "has-danger" ? (
-                      <Label className="error">{values.nome.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                      <Label>Nome</Label>
+                      <FormGroup className={`has-label ${values.nome.error}`}>
+                        <Input
+                          name="nome"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "nome", "text")
+                          }
+                          value={values.nome.value}
+                        />
+                        {values.nome.error === "has-danger" ? (
+                          <Label className="error">{values.nome.message}</Label>
+                        ) : null}
+                      </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Celular</Label>
+                      <Label>Celular</Label>
                       <FormGroup className={`has-label ${values.cel.error}`}>
                         <Input
                           minLength={10}
                           maxLength={11}
                           name="cel"
                           type="numeric"
-                          onChange={(event) =>
-                            handleChange(event, "cel", "text")
-                          }
-                          onBlur={(e) => {
-                            let value = e.target.value;
-                            setValues((prevState) => ({
+                          onChange={event => handleChange(event, "cel", "text")}
+                          onBlur={e => {
+                            const { value } = e.target;
+                            setValues(prevState => ({
                               ...prevState,
-                              cel: { value: normalizeFone(value) },
+                              cel: { value: normalizeFone(value) }
                             }));
                           }}
                           value={values.cel.value}
@@ -285,21 +285,21 @@ const dispatch = useDispatch();
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Telefone</Label>
+                      <Label>Telefone</Label>
                       <FormGroup className={`has-label ${values.fone.error}`}>
                         <Input
                           minLength={10}
                           maxLength={11}
                           name="fone"
                           type="numeric"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "fone", "text")
                           }
-                          onBlur={(e) => {
-                            let value = e.target.value;
-                            setValues((prevState) => ({
+                          onBlur={e => {
+                            const { value } = e.target;
+                            setValues(prevState => ({
                               ...prevState,
-                              fone: { value: normalizeFone(value) },
+                              fone: { value: normalizeFone(value) }
                             }));
                           }}
                           value={values.fone.value}
@@ -313,12 +313,14 @@ const dispatch = useDispatch();
 
                   <Row>
                     <Col md="4">
-                      <FormGroup className={`has-label ${optional.aniver.error}`}>
+                      <FormGroup
+                        className={`has-label ${optional.aniver.error}`}
+                      >
                         <Label>Aniversário </Label>
                         <Input
                           name="aniver"
                           type="date"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "aniver", "optional")
                           }
                           value={optional.aniver.value}
@@ -331,14 +333,14 @@ const dispatch = useDispatch();
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>tipo de Contato</Label>
+                      <Label>tipo de Contato</Label>
                       <FormGroup
                         className={`has-label ${values.tipoConta.error}`}
                       >
                         <Input
                           name="tipoConta"
                           type="select"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "tipoConta", "text")
                           }
                           value={values.tipoConta.value}
@@ -358,12 +360,12 @@ const dispatch = useDispatch();
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                    <Label>Skype</Label>
+                      <Label>Skype</Label>
                       <FormGroup className={`has-label ${values.skype.error}`}>
                         <Input
                           name="skype"
                           type="text"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "skype", "text")
                           }
                           value={values.skype.value}
@@ -374,7 +376,7 @@ const dispatch = useDispatch();
                           </Label>
                         ) : null}
                       </FormGroup>
-                      </Col>
+                    </Col>
                   </Row>
                   <Row>
                     <Col md="4">
@@ -383,7 +385,7 @@ const dispatch = useDispatch();
                         <Input
                           name="email"
                           type="email"
-                          onChange={(event) =>
+                          onChange={event =>
                             handleChange(event, "email", "email")
                           }
                           value={values.email.value}
@@ -396,11 +398,11 @@ const dispatch = useDispatch();
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tabelas/cliente/cont/${values.clienteId.value}`}>
+                  <Link to={`/tabelas/cliente/cont/${values.ClienteId.value}`}>
                     <Button
                       style={{
                         paddingLeft: 32,
-                        paddingRight: 33,
+                        paddingRight: 33
                       }}
                       color="secundary"
                       size="small"
@@ -410,7 +412,7 @@ const dispatch = useDispatch();
                         className="tim-icons icon-double-left"
                         style={{
                           paddingBottom: 4,
-                          paddingRight: 1,
+                          paddingRight: 1
                         }}
                         size="large"
                       />{" "}
@@ -420,17 +422,18 @@ const dispatch = useDispatch();
                   <Button
                     style={{
                       paddingLeft: 29,
-                      paddingRight: 30,
+                      paddingRight: 30
                     }}
                     className="form"
                     color="info"
                     type="submit"
                   >
                     Enviar{" "}
-                    <i className="tim-icons icon-send"
+                    <i
+                      className="tim-icons icon-send"
                       style={{
                         paddingBottom: 4,
-                        paddingLeft: 3,
+                        paddingLeft: 3
                       }}
                       size="large"
                     />
