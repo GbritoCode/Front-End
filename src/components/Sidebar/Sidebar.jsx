@@ -163,27 +163,18 @@ class Sidebar extends React.Component {
     let logoText = null;
     if (logo !== undefined) {
       if (logo.outterLink !== undefined) {
-        logoImg = (
-          <a
-            href={logo.outterLink}
-            className="simple-text logo-mini"
-            target="_blank"
-            onClick={this.props.closeSidebar}
-          >
-            <div className="logo-img">
-              <img src={logo.imgSrc} alt="react-logo" />
-            </div>
-          </a>
-        );
+
         logoText = (
+          <div>
           <a
             href={logo.outterLink}
             className="simple-text logo-normal"
             target="_blank"
             onClick={this.props.closeSidebar}
           >
-            {logo.text}
+             <img width={180} height={70} style={{ display: "block", marginLeft:12, paddingLeft: 5, paddingRight:5 }}  src={logo.imgSrc} alt="react-logo" />
           </a>
+          </div>
         );
       } else {
         logoImg = (

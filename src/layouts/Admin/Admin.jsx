@@ -27,7 +27,7 @@ import Sidebar from "~/components/Sidebar/Sidebar.jsx";
 
 import routes from "~/routes/routes.js";
 
-import logo from "~/assets/img/logo tovo.png";
+import logo from "~/assets/img/logo tovo-teste.png";
 
 var ps;
 
@@ -38,21 +38,23 @@ class Admin extends React.Component {
       activeColor: "blue",
       sidebarMini: true,
       opacity: 0,
-      sidebarOpened: false,
+      sidebarOpened: false
     };
   }
+
   componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");
       ps = new PerfectScrollbar(this.refs.mainPanel);
-      let tables = document.querySelectorAll(".table-responsive");
+      const tables = document.querySelectorAll(".table-responsive");
       for (let i = 0; i < tables.length; i++) {
         ps = new PerfectScrollbar(tables[i]);
       }
     }
     window.addEventListener("scroll", this.showNavbarButton);
   }
+
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
@@ -61,13 +63,14 @@ class Admin extends React.Component {
     }
     window.removeEventListener("scroll", this.showNavbarButton);
   }
+
   componentDidUpdate(e) {
     if (
       e.children.props.location.pathname !==
       e.children.props.history.location.pathname
     ) {
       if (navigator.platform.indexOf("Win") > -1) {
-        let tables = document.querySelectorAll(".table-responsive");
+        const tables = document.querySelectorAll(".table-responsive");
         for (let i = 0; i < tables.length; i++) {
           ps = new PerfectScrollbar(tables[i]);
         }
@@ -77,6 +80,7 @@ class Admin extends React.Component {
       this.refs.mainPanel.scrollTop = 0;
     }
   }
+
   showNavbarButton = () => {
     if (
       document.documentElement.scrollTop > 50 ||
@@ -92,37 +96,38 @@ class Admin extends React.Component {
       this.setState({ opacity: 0 });
     }
   };
-  getRoutes = (routes) => {
+
+  getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
       if (prop.layout === "/admin") {
         return <Route path={prop.path} component={prop.component} key={key} />;
-      } else {
-        return null;
       }
+      return null;
     });
   };
-  getActiveRoute = (routes) => {
-    let activeRoute = "";
+
+  getActiveRoute = routes => {
+    const activeRoute = "";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
-        let collapseActiveRoute = this.getActiveRoute(routes[i].views);
+        const collapseActiveRoute = this.getActiveRoute(routes[i].views);
         if (collapseActiveRoute === activeRoute) {
           return collapseActiveRoute;
         }
-      } else {
-        if (window.location.pathname.indexOf(routes[i].path) !== -1) {
-          return routes[i].name;
-        }
+      } else if (window.location.pathname.indexOf(routes[i].path) !== -1) {
+        return routes[i].name;
       }
     }
     return activeRoute;
   };
-  handleActiveClick = (color) => {
+
+  handleActiveClick = color => {
     this.setState({ activeColor: color });
   };
+
   handleMiniClick = () => {
     let notifyMessage = "Sidebar mini ";
     if (document.body.classList.contains("sidebar-mini")) {
@@ -138,23 +143,26 @@ class Admin extends React.Component {
       message: notifyMessage,
       type: "primary",
       icon: "tim-icons icon-bell-55",
-      autoDismiss: 7,
+      autoDismiss: 7
     };
     this.refs.notificationAlert.notificationAlert(options);
     document.body.classList.toggle("sidebar-mini");
   };
+
   toggleSidebar = () => {
     this.setState({
-      sidebarOpened: !this.state.sidebarOpened,
+      sidebarOpened: !this.state.sidebarOpened
     });
     document.documentElement.classList.toggle("nav-open");
   };
+
   closeSidebar = () => {
     this.setState({
-      sidebarOpened: false,
+      sidebarOpened: false
     });
     document.documentElement.classList.remove("nav-open");
   };
+
   render() {
     return (
       <div className="wrapper">
@@ -180,7 +188,7 @@ class Admin extends React.Component {
           logo={{
             outterLink: "https://www.creative-tim.com/",
             text: "Tovo",
-            imgSrc: logo,
+            imgSrc: logo
           }}
           closeSidebar={this.closeSidebar}
         />

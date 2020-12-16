@@ -64,7 +64,7 @@ export default function SignIn() {
             <Form className="form" onSubmit={handleSubmit}>
               <Card className="card-login card-white">
                 <CardHeader>
-                  <img alt="..." src={require("assets/img/card-primary.png")} />
+                  <img alt="..." src={require("assets/img/card-info.png")} />
                   <CardTitle tag="h1">Log in</CardTitle>
                 </CardHeader>
                 <CardBody>
@@ -120,7 +120,7 @@ export default function SignIn() {
                     type="submit"
                     block
                     className="mb-3"
-                    color="primary"
+                    color="info"
                     size="lg"
                   >
                     {loading ? "Carregando..." : "Acessar"}
