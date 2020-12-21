@@ -25,6 +25,7 @@ class Footer extends React.Component {
     return (
       <footer
         className={"footer" + (this.props.default ? " footer-default" : "")}
+        style={{ paddingTop: 0, paddingBottom: 0 }}
       >
         <Container fluid={this.props.fluid ? true : false}>
           <ul className="nav">

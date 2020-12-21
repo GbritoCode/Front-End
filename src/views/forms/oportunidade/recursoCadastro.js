@@ -54,7 +54,7 @@ export default function RecursoCadastro() {
   }
 
   const stateSchema = {
-    oportunidadeId: { value: "", error: "", message: "" },
+    OportunidadeId: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" },
     custoPrev: { value: "", error: "", message: "" },
     dataInclusao: {
@@ -78,7 +78,7 @@ export default function RecursoCadastro() {
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        oportunidadeId: { value: response1.data.id }
+        OportunidadeId: { value: response1.data.id }
       }));
     }
     loadData();
@@ -200,7 +200,7 @@ export default function RecursoCadastro() {
       var colabVlrHrdb = values.colabVlrHr.value.replace(/[.,]+/g, "");
       dispatch(
         recursoReqest(
-          values.oportunidadeId.value,
+          values.OportunidadeId.value,
           values.ColabId.value,
           custoPrevdb,
           values.dataInclusao.value,
@@ -239,15 +239,15 @@ export default function RecursoCadastro() {
                 <Form onSubmit={handleSubmit}>
                   <Label>Oportunidade</Label>
                   <FormGroup
-                    className={`has-label ${values.oportunidadeId.error}`}
+                    className={`has-label ${values.OportunidadeId.error}`}
                   >
                     <Input
                       disabled
-                      name="oportunidadeId"
+                      name="OportunidadeId"
                       onChange={event =>
-                        handleChange(event, "oportunidadeId", "text")
+                        handleChange(event, "OportunidadeId", "text")
                       }
-                      value={values.oportunidadeId.value}
+                      value={values.OportunidadeId.value}
                       type="select"
                     >
                       <option disabled value="">
@@ -260,9 +260,9 @@ export default function RecursoCadastro() {
                       </option>
                     </Input>
 
-                    {values.oportunidadeId.error === "has-danger" ? (
+                    {values.OportunidadeId.error === "has-danger" ? (
                       <Label className="error">
-                        {values.oportunidadeId.message}
+                        {values.OportunidadeId.message}
                       </Label>
                     ) : null}
                   </FormGroup>

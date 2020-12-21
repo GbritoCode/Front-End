@@ -23,12 +23,13 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Schedule, AttachMoney } from "@material-ui/icons";
+import { EditOutlined } from "@material-ui/icons";
 import api from "~/services/api";
 import { store } from "~/store";
+import { normalizeCurrency } from "~/normalize";
 
 /* eslint-disable eqeqeq */
-export default class ApontTable extends Component {
+export default class DespesasTable extends Component {
   state = {
     data: []
   };
@@ -38,54 +39,75 @@ export default class ApontTable extends Component {
     document.body.classList.add("white-content");
     this.loadCliente();
   }
-
-  checkFase = value => {
+  checkTipo = value => {
     if (value == 1) {
-      return "Aberta";
+      return "Alimentação";
     }
     if (value == 2) {
-      return "Em Cotação";
+      return "Deslocamento";
     }
     if (value == 3) {
-      return "Cotada";
+      return "Hospedagem";
     }
     if (value == 4) {
-      return "Aprovada";
+      return "Passagem";
+    }
+    if (value == 5) {
+      return "Pedágio";
+    }
+    if (value == 6) {
+      return "Estacionamento";
     }
   };
-
   loadCliente = async () => {
     const { id } = store.getState().auth.user;
-    const response = await api.get(`/oportunidade/?apont=${true}&colab=${id}`);
+    const response = await api.get(`/despesas/${id}`);
     this.setState({
-      data: response.data.map((horas, key) => {
+      data: response.data.map((desps, key) => {
         return {
           idd: key,
-          id: horas.id,
-          cod: horas.cod,
-          desc: horas.desc,
-          cliente: horas.Cliente.nomeAbv,
-          area: horas.Segmento.Area.descArea,
+          id: desps.id,
+          cod: desps.Oportunidade.cod,
+          oportDesc: desps.Oportunidade.desc,
+          tipoDespesa: this.checkTipo(desps.tipoDespesa),
+          valorDespesa: normalizeCurrency(JSON.stringify(desps.valorDespesa)),
+          desc: desps.desc,
 
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/cadastro/apontamentos/horas/${id}`}>
-                <Tooltip title="Horas" placement="top" interactive>
-                  <Button className={classNames("btn-icon btn-link like")}>
-                    <Schedule />
+              <Link to={`/update/apontamentos/despesas/${desps.id}`}>
+                <Tooltip title="Editar" placement="top" interactive>
+                  <Button
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <EditOutlined />
                   </Button>
                 </Tooltip>
               </Link>
               {/* use this button to remove the data row */}
-              <Link to={`/cadastro/apontamentos/despesas/${id}`}>
-                <Tooltip title="Horas" placement="top" interactive>
-                  <Button className={classNames("btn-icon btn-link like")}>
-                    <AttachMoney />
-                  </Button>
-                </Tooltip>
-              </Link>
+              <Button
+                onClick={() => {
+                  var { data } = this.state;
+                  data.find((o, i) => {
+                    if (o.idd === key) {
+                      data.splice(i, 1);
+
+                      return true;
+                    }
+                    return false;
+                  });
+                  this.setState({ data });
+                }}
+                color="danger"
+                size="sm"
+                className={classNames("btn-icon btn-link like")}
+              >
+                <i className="tim-icons icon-simple-remove" />
+              </Button>{" "}
             </div>
           )
         };
@@ -100,7 +122,7 @@ export default class ApontTable extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Projetos</CardTitle>
+                <CardTitle tag="h4">Despesas</CardTitle>
               </CardHeader>
               <CardBody>
                 <ReactTable
@@ -129,17 +151,20 @@ export default class ApontTable extends Component {
                     },
                     {
                       Header: "Oportunidade",
+                      accessor: "oportDesc"
+                    },
+                    {
+                      Header: "Tipo da Despesa",
+                      accessor: "tipoDespesa"
+                    },
+                    {
+                      Header: "Valor da Despesa",
+                      accessor: "valorDespesa"
+                    },
+                    {
+                      Header: "Comentário",
                       accessor: "desc"
                     },
-                    {
-                      Header: "Cliente",
-                      accessor: "cliente"
-                    },
-                    {
-                      Header: "Área",
-                      accessor: "area"
-                    },
-
                     {
                       Header: "Ações",
                       accessor: "actions",

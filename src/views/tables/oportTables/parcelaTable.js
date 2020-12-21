@@ -41,7 +41,7 @@ class ParametrosTable extends Component {
         return {
           id: key,
           idd: parcela.id,
-          oportunidadeId: parcela.oportunidadeId,
+          OportunidadeId: parcela.OportunidadeId,
           parcela: parcela.parcela,
           vlrParcela: parcela.vlrParcela,
           dtEmissao: parcela.dtEmissao,
@@ -153,8 +153,8 @@ class ParametrosTable extends Component {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined
                       ? String(row[id])
-                          .toLowerCase()
-                          .startsWith(filter.value.toLowerCase())
+                        .toLowerCase()
+                        .startsWith(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"

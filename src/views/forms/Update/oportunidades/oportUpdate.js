@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useRef, useEffect, useState, Fragment} from "react";
+import React, { useRef, useEffect, useState, Fragment } from "react";
 
 // reactstrap components
 import {
@@ -46,7 +46,7 @@ export default function UpdateOport() {
   //--------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const firstRender = useRef(true)
-const {id} = useParams()
+  const { id } = useParams()
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
@@ -157,6 +157,20 @@ const {id} = useParams()
     loadData();
   }, [id]);
 
+  const checkFase = value => {
+    if (value == 1) {
+      return "Aberta";
+    }
+    if (value == 2) {
+      return "Em Cotação";
+    }
+    if (value == 3) {
+      return "Cotada";
+    }
+    if (value == 4) {
+      return "Aprovada";
+    }
+  };
   function getContato(cliente) {
     axios(`http://localhost:5140/cliente/cont/${cliente}`).then((result) => { setData3(result.data); })
     axios(`http://localhost:5140/cliente/${cliente}`).then((result) => {
@@ -213,7 +227,7 @@ const {id} = useParams()
           [name]: { value: target },
         }));
         break
-        default:
+      default:
     }
   };
 
@@ -222,32 +236,32 @@ const {id} = useParams()
     if (fase == 4 && firstRender.current) {
 
       return <>
-      <Link to={"/tabelas/oportunidade/recurso/" + id}>
-        <Tooltip title="Recurso" placement="top" interactive>
-          <Button
-            style={{ float: "right" }}
-            color="default"
-            size="sm"
-            className={classNames("btn-icon btn-link like")}
-          >
-            <AssignmentInd />
-          </Button>
-        </Tooltip>
-      </Link>
+        <Link to={"/tabelas/oportunidade/recurso/" + id}>
+          <Tooltip title="Recurso" placement="top" interactive>
+            <Button
+              style={{ float: "right" }}
+              color="default"
+              size="sm"
+              className={classNames("btn-icon btn-link like")}
+            >
+              <AssignmentInd />
+            </Button>
+          </Tooltip>
+        </Link>
 
-      <Link to={"/tabelas/oportunidade/parcela/" + id}>
-      <Tooltip title="Parcelas" placement="top" interactive>
-        <Button
-          style={{ float: "right" }}
-          color="default"
-          size="sm"
-          className={classNames("btn-icon btn-link like")}
-        >
-          <CreditCard />
-        </Button>
-      </Tooltip>
-    </Link>
-    </>
+        <Link to={"/tabelas/oportunidade/parcela/" + id}>
+          <Tooltip title="Parcelas" placement="top" interactive>
+            <Button
+              style={{ float: "right" }}
+              color="default"
+              size="sm"
+              className={classNames("btn-icon btn-link like")}
+            >
+              <CreditCard />
+            </Button>
+          </Tooltip>
+        </Link>
+      </>
     }
   }
 
@@ -363,7 +377,7 @@ const {id} = useParams()
                       ) : null}
                     </FormGroup>
                     <Row><Col md="4">
-                    <Label>Colaborador</Label>
+                      <Label>Colaborador</Label>
                       <FormGroup className={`has-label ${values.ColabId.error}`}>
                         <Input
                           disabled
@@ -396,34 +410,18 @@ const {id} = useParams()
                         </FormGroup>
                       </Col>
                       <Col md="4">
-                        <Label>Fase</Label>
-                        <FormGroup
-                          className={`has-label ${values.fase.error}`}
+                        <p
+                          style={{
+                            paddingTop: 27,
+                            paddingLeft: 47,
+                            marginRight: 5,
+                            fontSize: 30,
+                            float: "right",
+                            fontStyle: "sans-serif"
+                          }}
                         >
-                          <Input
-                            name="fase"
-                            type="select"
-                            onChange={(event) =>
-                              handleChange(event, "fase", "text")
-                            }
-                            value={values.fase.value}
-                          >
-                            <option disabled value="">
-                              {" "}
-                                Selecione a fase{" "}
-                            </option>
-                            <option value={1}>Aberta</option>
-                            <option value={2}>Em cotação</option>
-                            <option value={3}>Cotada</option>
-                            <option value={4}>Aprovada</option>
-                            <option value={5}>Reprovada</option>
-                          </Input>
-                          {values.fase.error === "has-danger" ? (
-                            <Label className="error">
-                              {values.fase.message}
-                            </Label>
-                          ) : null}
-                        </FormGroup>
+                          {checkFase(values.fase.value)}
+                        </p>
                       </Col>
                     </Row>
                     <Row>
@@ -625,7 +623,7 @@ const {id} = useParams()
                     </Row>
                     <Row>
                       <Col md="4">
-                      <Label>Código</Label>
+                        <Label>Código</Label>
                         <FormGroup className={`has-label ${values.cod.error}`}>
                           <Input
                             disabled
@@ -642,7 +640,7 @@ const {id} = useParams()
                         </FormGroup>
                       </Col>
                       <Col md="8">
-                      <Label>Descrição</Label>
+                        <Label>Descrição</Label>
                         <FormGroup className={`has-label ${values.desc.error}`}>
                           <Input
                             name="desc"
@@ -660,7 +658,7 @@ const {id} = useParams()
                     </Row>
                     <Row>
                       <Col>
-                      <Label>Narrativa</Label>
+                        <Label>Narrativa</Label>
                         <FormGroup className={`has-label ${optional.narrativa.error}`}>
                           <Input
                             name="narrativa"

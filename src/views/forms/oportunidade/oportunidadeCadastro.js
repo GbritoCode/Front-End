@@ -127,6 +127,21 @@ export default function CadastroOport() {
     });
   }
 
+  const checkFase = value => {
+    if (value == 1) {
+      return "Aberta";
+    }
+    if (value == 2) {
+      return "Em Cotação";
+    }
+    if (value == 3) {
+      return "Cotada";
+    }
+    if (value == 4) {
+      return "Aprovada";
+    }
+  };
+
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -315,11 +330,13 @@ export default function CadastroOport() {
                         style={{
                           paddingTop: 27,
                           paddingLeft: 47,
-                          fontSize: 20,
+                          marginRight: 5,
+                          fontSize: 30,
+                          float: "right",
                           fontStyle: "sans-serif"
                         }}
                       >
-                        Aberta
+                        {checkFase(values.fase.value)}
                       </p>
                     </Col>
                   </Row>

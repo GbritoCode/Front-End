@@ -121,7 +121,7 @@ export default function ProspectTable() {
           <Card>
             <CardHeader>
               <CardTitle tag="h4">
-                Clientes
+                Prospects
                 <Link to="/cliente_cadastro/true">
                   <Tooltip title="Novo" placement="top" interactive>
                     <Button
@@ -145,8 +145,8 @@ export default function ProspectTable() {
                   const id = filter.pivotId || filter.id;
                   return row[id] !== undefined
                     ? String(row[id])
-                        .toLowerCase()
-                        .startsWith(filter.value.toLowerCase())
+                      .toLowerCase()
+                      .startsWith(filter.value.toLowerCase())
                     : true;
                 }}
                 previousText="Anterior"

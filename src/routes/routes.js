@@ -140,8 +140,13 @@ import ParcelaCadastro from "~/views/forms/oportunidade/parcelaCadastro";
 import ParcelaTable from "~/views/tables/oportTables/parcelaTable";
 import parcUpdate from "~/views/forms/Update/oportunidades/parcUpdate";
 import parcNotaFiscal from "~/views/forms/Update/oportunidades/parcNotaFiscal";
-import ApontCadastro from "~/views/forms/apontamentos/apontamentoHoras";
+import HorasCadastro from "~/views/forms/apontamentos/apontamentoHoras";
 import ApontTable from "~/views/tables/apontamentos/tabelaApont";
+import DespesaTable from "~/views/tables/apontamentos/tabelaDespesa";
+import DespesaCadastro from "~/views/forms/apontamentos/apontamentoDespesas";
+import HorasTable from "~/views/tables/apontamentos/tabelaHora";
+import HorasUpdate from "~/views/forms/Update/apontamentos/horasUpdate";
+import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 
 const routes = [
   {
@@ -512,7 +517,28 @@ const routes = [
         path: "/cadastro/apontamentos/horas/:id",
         name: "Horas",
         mini: "OPT",
-        component: ApontCadastro,
+        component: HorasCadastro,
+        layout: "/admin"
+      },
+      {
+        path: "/update/apontamentos/horas/:id",
+        name: "Horas",
+        mini: "OPT",
+        component: HorasUpdate,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/apontamentos/despesas/:id",
+        name: "Despesas",
+        mini: "DSP",
+        component: DespesaCadastro,
+        layout: "/admin"
+      },
+      {
+        path: "/update/apontamentos/despesas/:id",
+        name: "Despesas",
+        mini: "DSP",
+        component: DespesaUpdate,
         layout: "/admin"
       }
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
@@ -551,10 +577,26 @@ const routes = [
     views: [
       {
         path: "/tabelas/apontamentos/oportunidades/",
-        name: "Oportunidades",
-        mini: "OPT",
+        name: "Projetos",
+        mini: "PJT",
         component: ApontTable,
         layout: "/admin"
+      },
+      {
+        path: "/tabelas/apontamentos/despesas/:id",
+        name: "Despesas",
+        mini: "DSP",
+        component: DespesaTable,
+        layout: "/admin",
+        invisible: true
+      },
+      {
+        path: "/tabelas/apontamentos/horas/:id",
+        name: "Horas",
+        mini: "HRS",
+        component: HorasTable,
+        layout: "/admin",
+        invisible: true
       }
     ]
   },

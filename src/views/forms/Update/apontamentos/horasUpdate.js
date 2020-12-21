@@ -35,12 +35,12 @@ import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { differenceInMinutes, subHours, subMinutes } from "date-fns";
-import { normalizeCurrency } from "~/normalize";
+import { normalizeCurrency, normalizeHrToMin } from "~/normalize";
 import { store } from "~/store";
-import { horaRequest } from "~/store/modules/oportunidades/actions";
+import { horaUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
-export default function HorasCadastro() {
+export default function HorasUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
@@ -59,7 +59,7 @@ export default function HorasCadastro() {
     ColabId: { value: "", error: "", message: "" },
     dataAtivd: { value: "", error: "", message: "" },
     horaInic: { value: "", error: "", message: "" },
-    horaIntrv: { value: "01:00", error: "", message: "" },
+    horaIntrv: { value: "", error: "", message: "" },
     horaFim: { value: "", error: "", message: "" },
     dataLancamento: {
       value: `${year}-${month}-${date}`,
@@ -68,6 +68,7 @@ export default function HorasCadastro() {
     },
     totalApont: { value: "", error: "", message: "" },
     totalApontDb: { value: "", error: "", message: "" },
+    totalApontTemp: { value: "", error: "", message: "" },
     totalAcum: { value: "", error: "", message: "" },
     totalAcumTemp: { value: "", error: "", message: "" },
     solicitante: { value: "", error: "", message: "" },
@@ -75,33 +76,42 @@ export default function HorasCadastro() {
     desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-
   console.log(values)
   useEffect(() => {
     const { email } = store.getState().auth.user;
-    const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
+      const response = await axios(`http://localhost:5140/horas/${id}/?update=true`);
+      const response1 = await axios(`http://localhost:5140/oportunidade/${response.data.OportunidadeId}`);
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
       const response4 = await axios(`http://localhost:5140/area/`);
       const response5 = await axios(`http://localhost:5140/colab/?email=${email}`);
-      const response6 = await axios(`http://localhost:5140/horas/${id}/?total=${true}&tipo=project&oport=${response1.data.id}`);
+      const response6 = await axios(`http://localhost:5140/horas/${response5.data.id}/?total=${true}&tipo=project&oport=${response1.data.id}`);
       setData4(response4.data);
       setData1(response1.data);
+      console.log(response.data)
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id },
         OportunidadeId: { value: response1.data.id },
         oportunidadeCod: { value: response1.data.cod },
         oportunidadeDesc: { value: response1.data.desc },
         Cliente: { value: response3.data.nomeAbv },
         ColabId: { value: response5.data.id },
         totalAcum: { value: response6.data },
-        totalAcumTemp: { value: response6.data }
+        totalAcumTemp: { value: response6.data },
+        dataAtivd: { value: response.data.dataAtivd },
+        horaInic: { value: response.data.horaInic },
+        horaIntrv: { value: response.data.horaIntrv },
+        horaFim: { value: response.data.horaFim },
+        dataLancamento: { value: response.data.dataLancamento },
+        totalApont: { value: normalizeHrToMin(response.data.totalApont) },
+        totalApontTemp: { value: response.data.totalApont },
+        solicitante: { value: response.data.solicitante },
+        AreaId: { value: response.data.AreaId },
+        desc: { value: response.data.desc },
       }));
     }
     loadData();
+
   }, [id]);
 
   var options = {};
@@ -141,14 +151,12 @@ export default function HorasCadastro() {
         const apontBruto = differenceInMinutes(fimParsed, inicParsed);
         const apontHr = `0${Math.trunc(apontBruto / 60)}`.slice(-2);
         const apontMin = `0${Math.trunc(apontBruto % 60)}`.slice(-2);
-        const acumMin = `0${Math.trunc((acum[1] + apontMin) % 60)}`.slice(-2);
+        const acumMin = `0${Math.trunc((parseInt(acum[1], 10) + parseInt(apontMin, 10)) % 60)}`.slice(-2);
         const acumHr = `0${parseInt(acum[0], 10) +
           parseInt(apontHr, 10) +
           Math.trunc(
             (parseInt(acum[1], 10) + parseInt(apontMin, 10)) / 60
           )}`.slice(-2);
-
-        // const acumMin = `0${Math.trunc(acum % 60)}`.slice(-2);
 
         setValues(prevState => ({
           ...prevState,
@@ -244,8 +252,12 @@ export default function HorasCadastro() {
     }
 
     if (valid && filled) {
+      const apont = values.totalApont.value.split(":");
+      const apontMins = Math.trunc((apont[0] * 60) + parseInt(apont[1], 10))
+      const apontDiff = apontMins - values.totalApontTemp.value
       dispatch(
-        horaRequest(
+        horaUpdate(
+          id,
           values.OportunidadeId.value,
           values.ColabId.value,
           values.dataAtivd.value,
@@ -256,7 +268,8 @@ export default function HorasCadastro() {
           values.totalApontDb.value,
           values.solicitante.value,
           values.AreaId.value,
-          values.desc.value
+          values.desc.value,
+          apontDiff
         )
       );
     } else {
@@ -284,7 +297,7 @@ export default function HorasCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Horas</CardTitle>
+                <CardTitle tag="h4">Edição de Horas</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
@@ -365,7 +378,6 @@ export default function HorasCadastro() {
                         <Input
                           type="time"
                           name="horaInic"
-                          placeholder="time placeholder"
                           onChange={event => {
                             handleChange(event, "horaInic", "text");
                             horasChange(
@@ -374,6 +386,7 @@ export default function HorasCadastro() {
                               document.getElementsByName("horaIntrv")[0].value
                             );
                           }}
+                          value={values.horaInic.value}
                         />
                         {values.horaInic.error === "has-danger" ? (
                           <Label className="error">
@@ -399,6 +412,7 @@ export default function HorasCadastro() {
                               document.getElementsByName("horaIntrv")[0].value
                             );
                           }}
+                          value={values.horaFim.value}
                         />
                         {values.horaFim.error === "has-danger" ? (
                           <Label className="error">

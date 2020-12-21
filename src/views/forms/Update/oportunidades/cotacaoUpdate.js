@@ -54,7 +54,7 @@ function CotacaoUpdate() {
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    oportunidadeId: { value: "", error: "", message: "" },
+    OportunidadeId: { value: "", error: "", message: "" },
     probVend: { value: "", error: "", message: "" },
     tipoCobranca: { value: "", error: "", message: "" },
     hrsPrevst: { value: "", error: "", message: "" },
@@ -78,14 +78,14 @@ function CotacaoUpdate() {
         `http://localhost:5140/empresa/${response.data.EmpresaId}`
       );
       const response2 = await axios(
-        `http://localhost:5140/oportunidade/${response.data.oportunidadeId}`
+        `http://localhost:5140/oportunidade/${response.data.OportunidadeId}`
       );
       setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
-        oportunidadeId: { value: response.data.oportunidadeId },
+        OportunidadeId: { value: response.data.OportunidadeId },
         probVend: { value: response.data.probVend },
         tipoCobranca: { value: response.data.tipoCobranca },
         hrsPrevst: { value: response.data.hrsPrevst },
@@ -257,7 +257,7 @@ function CotacaoUpdate() {
         cotacaoUpdate(
           id,
           values.empresaId.value,
-          values.oportunidadeId.value,
+          values.OportunidadeId.value,
           values.probVend.value,
           values.tipoCobranca.value,
           values.hrsPrevst.value,
@@ -291,429 +291,429 @@ function CotacaoUpdate() {
       {isLoading ? (
         <div />
       ) : (
-        <>
-          <div className="rna-container">
-            <NotificationAlert ref={notifyElment} />
-          </div>
-          <div className="content">
-            <Row>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">Edição de Cotação</CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
+          <>
+            <div className="rna-container">
+              <NotificationAlert ref={notifyElment} />
+            </div>
+            <div className="content">
+              <Row>
+                <Col md="12">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">Edição de Cotação</CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <Form onSubmit={handleSubmit}>
+                        <Label>Empresa</Label>
+                        <FormGroup
+                          className={`has-label ${values.empresaId.error}`}
                         >
-                          {" "}
-                          <option value={1}>
+                          <Input
+                            disabled
+                            name="EmpresaId"
+                            type="select"
+                            onChange={event =>
+                              handleChange(event, "empresaId", "text")
+                            }
+                            value={values.empresaId.value}
+                          >
                             {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                      <Row>
-                        <Col md="4">
-                          <Label>Oportunidade</Label>
-                          <FormGroup
-                            className={`has-label ${values.oportunidadeId.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="oportunidadeId"
-                              onChange={event =>
-                                handleChange(event, "oportunidadeId", "text")
-                              }
-                              value={values.oportunidadeId.value}
-                              type="select"
+                            <option value={1}>
+                              {" "}
+                              {data1.nome} - {normalizeCnpj(data1.idFederal)}
+                            </option>
+                          </Input>
+                          {values.empresaId.error === "has-danger" ? (
+                            <Label className="error">
+                              {values.empresaId.message}
+                            </Label>
+                          ) : null}
+                        </FormGroup>
+                        <Row>
+                          <Col md="4">
+                            <Label>Oportunidade</Label>
+                            <FormGroup
+                              className={`has-label ${values.OportunidadeId.error}`}
                             >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Oportunidade{" "}
-                              </option>{" "}
-                              <option value={data2.id}> {data2.desc}</option>
-                            </Input>
-
-                            {values.oportunidadeId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.oportunidadeId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          {" "}
-                          <Label>Probabilidade de Venda</Label>
-                          <FormGroup
-                            className={`has-label ${values.probVend.error}`}
-                          >
-                            <Input
-                              name="probVend"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "probVend", "text")
-                              }
-                              value={values.probVend.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Probabilidade de venda{" "}
-                              </option>
-                              <option value={1}>Alta</option>
-                              <option value={2}>Média</option>
-                              <option value={3}>Baixa</option>
-                            </Input>
-                            {values.probVend.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.probVend.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          {" "}
-                          <Label>Tipo de Cobrança</Label>
-                          <FormGroup
-                            className={`has-label ${values.tipoCobranca.error}`}
-                          >
-                            <Input
-                              name="tipoCobranca"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "tipoCobranca", "text")
-                              }
-                              onChangeCapture={e => {
-                                getCliData(e.target.value);
-                              }}
-                              value={values.tipoCobranca.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione o tipo de cobrança{" "}
-                              </option>
-                              <option value={1}>Por Hora</option>
-                              <option value={2}>Por Projeto</option>
-                            </Input>
-                            {values.tipoCobranca.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.tipoCobranca.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          <Label>Horas Previstas</Label>
-                          <FormGroup
-                            className={`has-label ${values.hrsPrevst.error}`}
-                          >
-                            <Input
-                              name="hrsPrevst"
-                              type="numeric"
-                              onChange={event => {
-                                handleChange(event, "hrsPrevst", "number");
-                                setValues(prevState => ({
-                                  ...prevState,
-                                  vlrProp: {
-                                    value: normalizeCurrency(
-                                      JSON.stringify(
-                                        event.target.value * data3.valorRec
-                                      )
-                                    )
-                                  }
-                                }));
-                                descontoChange(
-                                  document.getElementsByName("vlrDesc")[0].value
-                                );
-                              }}
-                              value={values.hrsPrevst.value}
-                            />
-                            {values.hrsPrevst.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.hrsPrevst.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          {" "}
-                          <Label>Valor da Proposta</Label>
-                          <FormGroup
-                            className={`has-label ${values.vlrProp.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="vlrProp"
-                              type="numeric"
-                              onChange={event =>
-                                handleChange(event, "vlrProp", "currency")
-                              }
-                              value={values.vlrProp.value}
-                            />
-                            {values.vlrProp.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.vlrProp.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Valor Desconto</Label>
-                          <FormGroup
-                            className={`has-label ${values.vlrDesc.error}`}
-                          >
-                            <Input
-                              name="vlrDesc"
-                              type="text"
-                              onChange={event => {
-                                handleChange(event, "vlrDesc", "currency");
-                                descontoChange(event.target.value);
-                              }}
-                              value={values.vlrDesc.value}
-                            />
-                            {values.vlrDesc.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.vlrDesc.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          {" "}
-                          <Label>Valor Líquido</Label>
-                          <FormGroup
-                            className={`has-label ${values.vlrLiq.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="vlrLiq"
-                              type="numeric"
-                              onChange={event =>
-                                handleChange(event, "vlrLiq", "currency")
-                              }
-                              value={values.vlrLiq.value}
-                            />
-                            {values.vlrLiq.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.vlrLiq.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Receita Líquida</Label>
-                          <FormGroup
-                            className={`has-label ${values.recLiq.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="recLiq"
-                              type="numeric"
-                              onChange={event =>
-                                handleChange(event, "recLiq", "currency")
-                              }
-                              value={values.recLiq.value}
-                            />
-                            {values.recLiq.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.recLiq.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Previsão de Lucro</Label>
-                          <FormGroup
-                            className={`has-label ${values.prevLucro.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="prevLucro"
-                              type="numeric"
-                              onChange={event =>
-                                handleChange(event, "prevLucro", "currency")
-                              }
-                              value={values.prevLucro.value}
-                            />
-                            {values.prevLucro.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.prevLucro.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          <Label>Número de Parcelas</Label>
-                          <FormGroup
-                            className={`has-label ${values.numParcelas.error}`}
-                          >
-                            <Input
-                              name="numParcelas"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "numParcelas", "text")
-                              }
-                              value={values.numParcelas.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a quantidade de parcelas{" "}
-                              </option>{" "}
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                              <option value={3}>3</option>
-                              <option value={4}>4</option>
-                              <option value={5}>5</option>
-                              <option value={6}>6</option>
-                              <option value={7}>7</option>
-                              <option value={8}>8</option>
-                              <option value={9}>9</option>
-                              <option value={10}>10</option>
-                              <option value={11}>11</option>
-                              <option value={12}>12</option>
-                            </Input>
-                            {values.numParcelas.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.numParcelas.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-
-                        <Col md="4">
-                          <Label>Motivo Orçamento/Revisão</Label>
-                          <FormGroup check>
-                            <Label check>
                               <Input
-                                checked={checkOrcamento(values)}
-                                name="motivo"
-                                type="radio"
+                                disabled
+                                name="OportunidadeId"
                                 onChange={event =>
-                                  handleChange(event, "motivo", "text")
+                                  handleChange(event, "OportunidadeId", "text")
                                 }
-                                value={1}
-                              />{" "}
+                                value={values.OportunidadeId.value}
+                                type="select"
+                              >
+                                <option disabled value="">
+                                  {" "}
+                                Selecione a Oportunidade{" "}
+                                </option>{" "}
+                                <option value={data2.id}> {data2.desc}</option>
+                              </Input>
+
+                              {values.OportunidadeId.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.OportunidadeId.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                            <Label>Probabilidade de Venda</Label>
+                            <FormGroup
+                              className={`has-label ${values.probVend.error}`}
+                            >
+                              <Input
+                                name="probVend"
+                                type="select"
+                                onChange={event =>
+                                  handleChange(event, "probVend", "text")
+                                }
+                                value={values.probVend.value}
+                              >
+                                <option disabled value="">
+                                  {" "}
+                                Selecione a Probabilidade de venda{" "}
+                                </option>
+                                <option value={1}>Alta</option>
+                                <option value={2}>Média</option>
+                                <option value={3}>Baixa</option>
+                              </Input>
+                              {values.probVend.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.probVend.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                            <Label>Tipo de Cobrança</Label>
+                            <FormGroup
+                              className={`has-label ${values.tipoCobranca.error}`}
+                            >
+                              <Input
+                                name="tipoCobranca"
+                                type="select"
+                                onChange={event =>
+                                  handleChange(event, "tipoCobranca", "text")
+                                }
+                                onChangeCapture={e => {
+                                  getCliData(e.target.value);
+                                }}
+                                value={values.tipoCobranca.value}
+                              >
+                                <option disabled value="">
+                                  {" "}
+                                Selecione o tipo de cobrança{" "}
+                                </option>
+                                <option value={1}>Por Hora</option>
+                                <option value={2}>Por Projeto</option>
+                              </Input>
+                              {values.tipoCobranca.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.tipoCobranca.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                            <Label>Horas Previstas</Label>
+                            <FormGroup
+                              className={`has-label ${values.hrsPrevst.error}`}
+                            >
+                              <Input
+                                name="hrsPrevst"
+                                type="numeric"
+                                onChange={event => {
+                                  handleChange(event, "hrsPrevst", "number");
+                                  setValues(prevState => ({
+                                    ...prevState,
+                                    vlrProp: {
+                                      value: normalizeCurrency(
+                                        JSON.stringify(
+                                          event.target.value * data3.valorRec
+                                        )
+                                      )
+                                    }
+                                  }));
+                                  descontoChange(
+                                    document.getElementsByName("vlrDesc")[0].value
+                                  );
+                                }}
+                                value={values.hrsPrevst.value}
+                              />
+                              {values.hrsPrevst.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.hrsPrevst.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            {" "}
+                            <Label>Valor da Proposta</Label>
+                            <FormGroup
+                              className={`has-label ${values.vlrProp.error}`}
+                            >
+                              <Input
+                                disabled
+                                name="vlrProp"
+                                type="numeric"
+                                onChange={event =>
+                                  handleChange(event, "vlrProp", "currency")
+                                }
+                                value={values.vlrProp.value}
+                              />
+                              {values.vlrProp.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.vlrProp.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <Label>Valor Desconto</Label>
+                            <FormGroup
+                              className={`has-label ${values.vlrDesc.error}`}
+                            >
+                              <Input
+                                name="vlrDesc"
+                                type="text"
+                                onChange={event => {
+                                  handleChange(event, "vlrDesc", "currency");
+                                  descontoChange(event.target.value);
+                                }}
+                                value={values.vlrDesc.value}
+                              />
+                              {values.vlrDesc.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.vlrDesc.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                            {" "}
+                            <Label>Valor Líquido</Label>
+                            <FormGroup
+                              className={`has-label ${values.vlrLiq.error}`}
+                            >
+                              <Input
+                                disabled
+                                name="vlrLiq"
+                                type="numeric"
+                                onChange={event =>
+                                  handleChange(event, "vlrLiq", "currency")
+                                }
+                                value={values.vlrLiq.value}
+                              />
+                              {values.vlrLiq.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.vlrLiq.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <Label>Receita Líquida</Label>
+                            <FormGroup
+                              className={`has-label ${values.recLiq.error}`}
+                            >
+                              <Input
+                                disabled
+                                name="recLiq"
+                                type="numeric"
+                                onChange={event =>
+                                  handleChange(event, "recLiq", "currency")
+                                }
+                                value={values.recLiq.value}
+                              />
+                              {values.recLiq.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.recLiq.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <Label>Previsão de Lucro</Label>
+                            <FormGroup
+                              className={`has-label ${values.prevLucro.error}`}
+                            >
+                              <Input
+                                disabled
+                                name="prevLucro"
+                                type="numeric"
+                                onChange={event =>
+                                  handleChange(event, "prevLucro", "currency")
+                                }
+                                value={values.prevLucro.value}
+                              />
+                              {values.prevLucro.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.prevLucro.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="4">
+                            <Label>Número de Parcelas</Label>
+                            <FormGroup
+                              className={`has-label ${values.numParcelas.error}`}
+                            >
+                              <Input
+                                name="numParcelas"
+                                type="select"
+                                onChange={event =>
+                                  handleChange(event, "numParcelas", "text")
+                                }
+                                value={values.numParcelas.value}
+                              >
+                                <option disabled value="">
+                                  {" "}
+                                Selecione a quantidade de parcelas{" "}
+                                </option>{" "}
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                                <option value={6}>6</option>
+                                <option value={7}>7</option>
+                                <option value={8}>8</option>
+                                <option value={9}>9</option>
+                                <option value={10}>10</option>
+                                <option value={11}>11</option>
+                                <option value={12}>12</option>
+                              </Input>
+                              {values.numParcelas.error === "has-danger" ? (
+                                <Label className="error">
+                                  {values.numParcelas.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+
+                          <Col md="4">
+                            <Label>Motivo Orçamento/Revisão</Label>
+                            <FormGroup check>
+                              <Label check>
+                                <Input
+                                  checked={checkOrcamento(values)}
+                                  name="motivo"
+                                  type="radio"
+                                  onChange={event =>
+                                    handleChange(event, "motivo", "text")
+                                  }
+                                  value={1}
+                                />{" "}
                               Orçamento
                             </Label>
-                            <Label check>
-                              <Input
-                                checked={checkDesc(values)}
-                                name="motivo"
-                                type="radio"
-                                onChange={event =>
-                                  handleChange(event, "motivo", "text")
-                                }
-                                value={2}
-                              />
+                              <Label check>
+                                <Input
+                                  checked={checkDesc(values)}
+                                  name="motivo"
+                                  type="radio"
+                                  onChange={event =>
+                                    handleChange(event, "motivo", "text")
+                                  }
+                                  value={2}
+                                />
                               Desconto
                             </Label>
-                            <Label check>
-                              <Input
-                                checked={checkEscopo(values)}
-                                name="motivo"
-                                type="radio"
-                                onChange={event =>
-                                  handleChange(event, "motivo", "text")
-                                }
-                                value={3}
-                              />
+                              <Label check>
+                                <Input
+                                  checked={checkEscopo(values)}
+                                  name="motivo"
+                                  type="radio"
+                                  onChange={event =>
+                                    handleChange(event, "motivo", "text")
+                                  }
+                                  value={3}
+                                />
                               Escopo
                             </Label>
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <Label>Descrição</Label>
-                          <FormGroup
-                            className={`has-label ${optional.desc.error}`}
-                          >
-                            <Input
-                              name="desc"
-                              type="textarea"
-                              onChange={event =>
-                                handleChange(event, "desc", "optional")
-                              }
-                              value={optional.desc.value}
-                            />
-                            {optional.desc.error === "has-danger" ? (
-                              <Label className="error">
-                                {optional.desc.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Link to={`/tabelas/oportunidade/cotacao/${data2.id}`}>
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <Label>Descrição</Label>
+                            <FormGroup
+                              className={`has-label ${optional.desc.error}`}
+                            >
+                              <Input
+                                name="desc"
+                                type="textarea"
+                                onChange={event =>
+                                  handleChange(event, "desc", "optional")
+                                }
+                                value={optional.desc.value}
+                              />
+                              {optional.desc.error === "has-danger" ? (
+                                <Label className="error">
+                                  {optional.desc.message}
+                                </Label>
+                              ) : null}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Link to={`/tabelas/oportunidade/cotacao/${data2.id}`}>
+                          <Button
                             style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
+                              paddingLeft: 32,
+                              paddingRight: 33
                             }}
-                            size="large"
-                          />{" "}
+                            color="secundary"
+                            size="small"
+                            className="form"
+                          >
+                            <i
+                              className="tim-icons icon-double-left"
+                              style={{
+                                paddingBottom: 4,
+                                paddingRight: 1
+                              }}
+                              size="large"
+                            />{" "}
                           Voltar
                         </Button>
-                      </Link>
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                        </Link>
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </>
-      )}
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          </>
+        )}
     </>
   );
 }

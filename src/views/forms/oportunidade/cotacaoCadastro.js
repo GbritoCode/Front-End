@@ -56,7 +56,7 @@ export default function CotacaoCadastro() {
   const [data2, setData2] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    oportunidadeId: { value: "", error: "", message: "" },
+    OportunidadeId: { value: "", error: "", message: "" },
     probVend: { value: "", error: "", message: "" },
     tipoCobranca: { value: "", error: "", message: "" },
     hrsPrevst: { value: "", error: "", message: "" },
@@ -84,7 +84,7 @@ export default function CotacaoCadastro() {
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        oportunidadeId: { value: response1.data.id }
+        OportunidadeId: { value: response1.data.id }
       }));
     }
     loadData();
@@ -229,7 +229,7 @@ export default function CotacaoCadastro() {
       dispatch(
         cotacaoRequest(
           values.empresaId.value,
-          values.oportunidadeId.value,
+          values.OportunidadeId.value,
           values.probVend.value,
           values.tipoCobranca.value,
           values.hrsPrevst.value,
@@ -317,15 +317,15 @@ export default function CotacaoCadastro() {
                     <Col md="4">
                       <Label>Oportunidade</Label>
                       <FormGroup
-                        className={`has-label ${values.oportunidadeId.error}`}
+                        className={`has-label ${values.OportunidadeId.error}`}
                       >
                         <Input
                           disabled
-                          name="oportunidadeId"
+                          name="OportunidadeId"
                           onChange={event =>
-                            handleChange(event, "oportunidadeId", "text")
+                            handleChange(event, "OportunidadeId", "text")
                           }
-                          value={values.oportunidadeId.value}
+                          value={values.OportunidadeId.value}
                           type="select"
                         >
                           <option disabled value="">
@@ -335,9 +335,9 @@ export default function CotacaoCadastro() {
                           <option value={data1.id}> {data1.desc}</option>
                         </Input>
 
-                        {values.oportunidadeId.error === "has-danger" ? (
+                        {values.OportunidadeId.error === "has-danger" ? (
                           <Label className="error">
-                            {values.oportunidadeId.message}
+                            {values.OportunidadeId.message}
                           </Label>
                         ) : null}
                       </FormGroup>

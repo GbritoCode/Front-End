@@ -23,12 +23,12 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Schedule, AttachMoney } from "@material-ui/icons";
+import { EditOutlined } from "@material-ui/icons";
 import api from "~/services/api";
 import { store } from "~/store";
 
 /* eslint-disable eqeqeq */
-export default class ApontTable extends Component {
+export default class HorasTable extends Component {
   state = {
     data: []
   };
@@ -39,53 +39,57 @@ export default class ApontTable extends Component {
     this.loadCliente();
   }
 
-  checkFase = value => {
-    if (value == 1) {
-      return "Aberta";
-    }
-    if (value == 2) {
-      return "Em Cotação";
-    }
-    if (value == 3) {
-      return "Cotada";
-    }
-    if (value == 4) {
-      return "Aprovada";
-    }
-  };
-
   loadCliente = async () => {
     const { id } = store.getState().auth.user;
-    const response = await api.get(`/oportunidade/?apont=${true}&colab=${id}`);
+    const response = await api.get(`/horas/${id}`);
     this.setState({
       data: response.data.map((horas, key) => {
         return {
           idd: key,
           id: horas.id,
-          cod: horas.cod,
-          desc: horas.desc,
-          cliente: horas.Cliente.nomeAbv,
-          area: horas.Segmento.Area.descArea,
+          cod: horas.Oportunidade.cod,
+          desc: horas.Oportunidade.desc,
+          horaInic: horas.horaInic,
+          horaIntrv: horas.horaIntrv,
+          horaFim: horas.horaFim,
+          dataAtivd: horas.dataAtivd,
+          TotalApont: horas.TotalApont,
 
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/cadastro/apontamentos/horas/${id}`}>
-                <Tooltip title="Horas" placement="top" interactive>
-                  <Button className={classNames("btn-icon btn-link like")}>
-                    <Schedule />
+              <Link to={`/update/apontamentos/horas/${horas.id}`}>
+                <Tooltip title="Editar" placement="top" interactive>
+                  <Button
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <EditOutlined />
                   </Button>
                 </Tooltip>
               </Link>
               {/* use this button to remove the data row */}
-              <Link to={`/cadastro/apontamentos/despesas/${id}`}>
-                <Tooltip title="Horas" placement="top" interactive>
-                  <Button className={classNames("btn-icon btn-link like")}>
-                    <AttachMoney />
-                  </Button>
-                </Tooltip>
-              </Link>
+              <Button
+                onClick={() => {
+                  var { data } = this.state;
+                  data.find((o, i) => {
+                    if (o.idd === key) {
+                      data.splice(i, 1);
+
+                      return true;
+                    }
+                    return false;
+                  });
+                  this.setState({ data });
+                }}
+                color="danger"
+                size="sm"
+                className={classNames("btn-icon btn-link like")}
+              >
+                <i className="tim-icons icon-simple-remove" />
+              </Button>{" "}
             </div>
           )
         };
@@ -100,7 +104,7 @@ export default class ApontTable extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Projetos</CardTitle>
+                <CardTitle tag="h4">Horas</CardTitle>
               </CardHeader>
               <CardBody>
                 <ReactTable
@@ -132,12 +136,20 @@ export default class ApontTable extends Component {
                       accessor: "desc"
                     },
                     {
-                      Header: "Cliente",
-                      accessor: "cliente"
+                      Header: "Hora Ínicial",
+                      accessor: "horaInic"
                     },
                     {
-                      Header: "Área",
-                      accessor: "area"
+                      Header: "Intervalo",
+                      accessor: "horaIntrv"
+                    },
+                    {
+                      Header: "Hora Final",
+                      accessor: "horaFim"
+                    },
+                    {
+                      Header: "Data",
+                      accessor: "dataAtivd"
                     },
 
                     {

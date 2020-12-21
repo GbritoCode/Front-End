@@ -17,7 +17,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-import AuthNavbar from "~/components/Navbars/AuthNavbar.jsx";
 import Footer from "~/components/Footer/Footer.jsx";
 
 import routes from "~/routes/routes";
@@ -73,11 +72,10 @@ class Pages extends React.Component {
   render() {
     return (
       <>
-        <AuthNavbar brandText={`${this.getActiveRoute(routes)} Page`} />
         <div className="wrapper wrapper-full-page" ref="fullPages">
-          <div className={`full-page ${this.getFullPageName(routes)}`}>
+          <div className="container" style={{ paddingTop: 50 }}>
             <Switch>{this.getRoutes(routes)}</Switch>
-            <Footer fluid />
+            <Footer style={{ paddingTop: 0 }} fluid />
           </div>
         </div>
       </>

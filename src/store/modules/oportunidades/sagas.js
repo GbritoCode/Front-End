@@ -95,7 +95,7 @@ export function* cotacaoCadastro({ payload }) {
   try {
     const {
       EmpresaId,
-      oportunidadeId,
+      OportunidadeId,
       probVend,
       tipoCobranca,
       hrsPrevst,
@@ -110,7 +110,7 @@ export function* cotacaoCadastro({ payload }) {
     } = payload;
     yield call(api.post, "cotacao", {
       EmpresaId,
-      oportunidadeId,
+      OportunidadeId,
       probVend,
       tipoCobranca,
       hrsPrevst,
@@ -135,7 +135,7 @@ export function* updateCotacao({ payload }) {
     const {
       id,
       EmpresaId,
-      oportunidadeId,
+      OportunidadeId,
       probVend,
       tipoCobranca,
       hrsPrevst,
@@ -151,7 +151,7 @@ export function* updateCotacao({ payload }) {
 
     const Oport = Object.assign({
       EmpresaId,
-      oportunidadeId,
+      OportunidadeId,
       probVend,
       tipoCobranca,
       hrsPrevst,
@@ -180,7 +180,7 @@ export function* updateCotacao({ payload }) {
 export function* recursoCadastro({ payload }) {
   try {
     const {
-      oportunidadeId,
+      OportunidadeId,
       ColabId,
       custoPrev,
       dataInclusao,
@@ -188,14 +188,14 @@ export function* recursoCadastro({ payload }) {
       colabVlrHr,
     } = payload;
     yield call(api.post, "recurso", {
-      oportunidadeId,
+      OportunidadeId,
       ColabId,
       custoPrev,
       dataInclusao,
       hrsPrevst,
       colabVlrHr,
     });
-    history.push(`/update/oportunidade/oport/${oportunidadeId}`);
+    history.push(`/tabelas/oportunidade/recurso/${OportunidadeId}`);
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -205,7 +205,7 @@ export function* updateRecurso({ payload }) {
   try {
     const {
       id,
-      oportunidadeId,
+      OportunidadeId,
       ColabId,
       custoPrev,
       dataInclusao,
@@ -214,7 +214,7 @@ export function* updateRecurso({ payload }) {
     } = payload;
 
     const recurso = Object.assign({
-      oportunidadeId,
+      OportunidadeId,
       ColabId,
       custoPrev,
       dataInclusao,
@@ -223,7 +223,7 @@ export function* updateRecurso({ payload }) {
     });
 
     const response = yield call(api.put, `recurso/${id}`, recurso);
-    history.push(`/update/oportunidade/oport/${oportunidadeId}`);
+    history.push(`/update/oportunidade/oport/${OportunidadeId}`);
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
@@ -239,20 +239,20 @@ export function* updateRecurso({ payload }) {
 export function* parcelaCadastro({ payload }) {
   try {
     const {
-      oportunidadeId,
-parcela,
-vlrParcela,
-dtEmissao,
-dtVencimento,
-notaFiscal,
-pedidoCliente,
-situacao,
-dtLiquidacao,
-vlrPago,
-saldo,
+      OportunidadeId,
+      parcela,
+      vlrParcela,
+      dtEmissao,
+      dtVencimento,
+      notaFiscal,
+      pedidoCliente,
+      situacao,
+      dtLiquidacao,
+      vlrPago,
+      saldo,
     } = payload;
     yield call(api.post, "parcela", {
-      oportunidadeId,
+      OportunidadeId,
       parcela,
       vlrParcela,
       dtEmissao,
@@ -264,7 +264,7 @@ saldo,
       vlrPago,
       saldo,
     });
-    history.push(`/tabelas/oportunidade/parcela/${oportunidadeId}`);
+    history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -274,35 +274,35 @@ export function* updateParcela({ payload }) {
   try {
     const {
       id,
-      oportunidadeId,
-parcela,
-vlrParcela,
-dtEmissao,
-dtVencimento,
-notaFiscal,
-pedidoCliente,
-situacao,
-dtLiquidacao,
-vlrPago,
-saldo,
+      OportunidadeId,
+      parcela,
+      vlrParcela,
+      dtEmissao,
+      dtVencimento,
+      notaFiscal,
+      pedidoCliente,
+      situacao,
+      dtLiquidacao,
+      vlrPago,
+      saldo,
     } = payload;
 
     const recurso = Object.assign({
-      oportunidadeId,
-parcela,
-vlrParcela,
-dtEmissao,
-dtVencimento,
-notaFiscal,
-pedidoCliente,
-situacao,
-dtLiquidacao,
-vlrPago,
-saldo,
+      OportunidadeId,
+      parcela,
+      vlrParcela,
+      dtEmissao,
+      dtVencimento,
+      notaFiscal,
+      pedidoCliente,
+      situacao,
+      dtLiquidacao,
+      vlrPago,
+      saldo,
     });
 
     const response = yield call(api.put, `parcela/${id}`, recurso);
-    history.push(`/tabelas/oportunidade/parcela/${oportunidadeId}`);
+    history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
@@ -311,6 +311,148 @@ saldo,
   }
 }
 
+
+//---------
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
+
+export function* horaCadastro({ payload }) {
+  try {
+    const {
+      OportunidadeId,
+      ColabId,
+      dataAtivd,
+      horaInic,
+      horaIntrv,
+      horaFim,
+      dataLancamento,
+      totalApont,
+      solicitante,
+      AreaId,
+      desc,
+    } = payload;
+    yield call(api.post, "horas", {
+      OportunidadeId,
+      ColabId,
+      dataAtivd,
+      horaInic,
+      horaIntrv,
+      horaFim,
+      dataLancamento,
+      totalApont,
+      solicitante,
+      AreaId,
+      desc,
+    });
+    history.go(0);
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
+export function* updateHora({ payload }) {
+  try {
+    const {
+      id,
+      OportunidadeId,
+      ColabId,
+      dataAtivd,
+      horaInic,
+      horaIntrv,
+      horaFim,
+      dataLancamento,
+      totalApont,
+      solicitante,
+      AreaId,
+      desc,
+      apontDiff
+    } = payload;
+
+    const recurso = Object.assign({
+      OportunidadeId,
+      ColabId,
+      dataAtivd,
+      horaInic,
+      horaIntrv,
+      horaFim,
+      dataLancamento,
+      totalApont,
+      solicitante,
+      AreaId,
+      desc,
+      apontDiff
+    });
+
+    const response = yield call(api.put, `horas/${id}`, recurso);
+    toast.success("cliente atualizado");
+    history.go(0)
+    yield put(UpdateSuccess(response.data));
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
+
+
+//---------
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
+
+export function* despesaCadastro({ payload }) {
+  try {
+    const {
+      OportunidadeId,
+      ColabId,
+      dataDespesa,
+      tipoDespesa,
+      valorDespesa,
+      desc,
+    } = payload;
+    yield call(api.post, "despesas", {
+      OportunidadeId,
+      ColabId,
+      dataDespesa,
+      tipoDespesa,
+      valorDespesa,
+      desc,
+    });
+    history.go(0);
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
+export function* updateDespesa({ payload }) {
+  try {
+    const {
+      id,
+      OportunidadeId,
+      ColabId,
+      dataDespesa,
+      tipoDespesa,
+      valorDespesa,
+      desc,
+    } = payload;
+
+    const recurso = Object.assign({
+      OportunidadeId,
+      ColabId,
+      dataDespesa,
+      tipoDespesa,
+      valorDespesa,
+      desc,
+    });
+
+    const response = yield call(api.put, `despesas/${id}`, recurso);
+    toast.success("cliente atualizado");
+    yield put(UpdateSuccess(response.data));
+  } catch (err) {
+    toast.error("Falha no cadastro, este email já existe");
+    yield put(signFailure());
+  }
+}
 
 export default all([
   takeLatest("@cadastro/OPORT_REQUEST", oportCadastro),
@@ -321,4 +463,8 @@ export default all([
   takeLatest("@update/RECURSO_REQUEST", updateRecurso),
   takeLatest("@cadastro/PARCELA_REQUEST", parcelaCadastro),
   takeLatest("@update/PARCELA_REQUEST", updateParcela),
+  takeLatest("@cadastro/HORA_REQUEST", horaCadastro),
+  takeLatest("@update/HORA_REQUEST", updateHora),
+  takeLatest("@cadastro/DESPESA_REQUEST", despesaCadastro),
+  takeLatest("@update/DESPESA_REQUEST", updateDespesa),
 ]);

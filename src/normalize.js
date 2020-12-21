@@ -128,3 +128,9 @@ export function normalizeCalcCurrency(value) {
   v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
   return v;
 }
+
+export function normalizeHrToMin(minsTotal) {
+  const apontHr = `0${Math.trunc(minsTotal / 60)}`.slice(-2);
+  const apontMin = `0${Math.trunc(minsTotal % 60)}`.slice(-2);
+  return `${apontHr}:${apontMin}`
+}

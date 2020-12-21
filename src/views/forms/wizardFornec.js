@@ -72,20 +72,22 @@ export default function FornecCadastro() {
   const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
-  const empresa = store.getState().auth.empresa;
-  axios("http://localhost:5140/empresa").then((result) => {
-      setValues((prevState) => ({
-        ...prevState,
-        cnpj: { value: normalizeCnpj(result.data[0].idFederal) },
-      }));
-      cnpjRequest(result.data[0].idFederal)
-      const idEmpresa = result.data[0].id,
-        cod = "000",
-        desc = "Condição de Pagaento padrão",
-        diasPrazo = 0,
-        first = true;
-      dispatch(condPgmtoRequest(idEmpresa, cod, desc, diasPrazo, first))
-    })
+    const empresa = store.getState().auth.empresa;
+    async function Aux() {
+      await axios("http://localhost:5140/empresa").then((result) => {
+        setValues((prevState) => ({
+          ...prevState,
+          cnpj: { value: normalizeCnpj(result.data[0].idFederal) },
+        }));
+        cnpjRequest(result.data[0].idFederal)
+        const idEmpresa = result.data[0].id,
+          cod = "000",
+          desc = "Condição de Pagaento padrão",
+          diasPrazo = 0,
+          first = true;
+        dispatch(condPgmtoRequest(idEmpresa, cod, desc, diasPrazo, first))
+      })
+    }
     async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:5140/condPgmto`);
@@ -96,6 +98,7 @@ export default function FornecCadastro() {
         empresaId: { value: response.data.id },
       }));
     }
+    Aux()
     loadData();
     // eslint-disable-next-line
   }, [dispatch]);
@@ -229,8 +232,8 @@ export default function FornecCadastro() {
           [name]: { value: target },
         }));
         break
-        default:
-      }
+      default:
+    }
   };
 
   const handleSubmit = (evt) => {
@@ -316,7 +319,7 @@ export default function FornecCadastro() {
             </CardHeader>
             <CardBody>
               <Form onSubmit={handleSubmit}>
-              <Label>Empresa</Label>
+                <Label>Empresa</Label>
                 <FormGroup
                   className={`has-label ${values.empresaId.error}`}
                 >
@@ -344,7 +347,7 @@ export default function FornecCadastro() {
                 </FormGroup>
                 <Row>
                   <Col md="4">
-                  <Label>CNPJ</Label>
+                    <Label>CNPJ</Label>
                     <FormGroup className={`has-label ${values.cnpj.error}`}>
                       <Input
                         disabled
@@ -389,7 +392,7 @@ export default function FornecCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="4  ">
-                  <Label>Nome Abreviado</Label>
+                    <Label>Nome Abreviado</Label>
                     <FormGroup
                       className={`has-label ${values.nomeConta.error}`}
                     >
@@ -412,7 +415,7 @@ export default function FornecCadastro() {
 
                 <Row>
                   <Col md="4">
-                  <Label>Condição de Pagamento</Label>
+                    <Label>Condição de Pagamento</Label>
                     <FormGroup
                       className={`has-label ${values.CondPgmtoId.error}`}
                     >
@@ -499,7 +502,7 @@ export default function FornecCadastro() {
 
                 <Row>
                   <Col md="4">
-                  <Label>Rua</Label>
+                    <Label>Rua</Label>
                     <FormGroup
                       className={`has-label ${values.rua.error}`}
                     >
@@ -520,7 +523,7 @@ export default function FornecCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="2">
-                  <Label>Número</Label>
+                    <Label>Número</Label>
                     <FormGroup
                       className={`has-label ${values.numero.error}`}
                     >
@@ -542,7 +545,7 @@ export default function FornecCadastro() {
                   </Col>
 
                   <Col md="6">
-                  <Label>Complemento</Label>
+                    <Label>Complemento</Label>
                     <FormGroup
                       className={`has-label ${optional.complemento.error}`}
                     >
@@ -565,7 +568,7 @@ export default function FornecCadastro() {
 
                 <Row>
                   <Col md="4">
-                  <Label>Bairro</Label>
+                    <Label>Bairro</Label>
                     <FormGroup
                       className={`has-label ${values.bairro.error}`}
                     >
@@ -586,7 +589,7 @@ export default function FornecCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="4">
-                  <Label>Cidade</Label>
+                    <Label>Cidade</Label>
                     <FormGroup
                       className={`has-label ${values.cidade.error}`}
                     >
@@ -607,7 +610,7 @@ export default function FornecCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="4">
-                  <Label>UF</Label>
+                    <Label>UF</Label>
                     <FormGroup className={`has-label ${values.uf.error}`}>
                       <Input
                         disabled
@@ -660,7 +663,7 @@ export default function FornecCadastro() {
                 </Row>
                 <Row>
                   <Col md="4">
-                  <Label>Banco</Label>
+                    <Label>Banco</Label>
                     <FormGroup
                       className={`has-label ${values.banco.error}`}
                     >
@@ -708,7 +711,7 @@ export default function FornecCadastro() {
                     </FormGroup>{" "}
                   </Col>
                   <Col md="4">
-                  <Label>Agência</Label>
+                    <Label>Agência</Label>
                     <FormGroup
                       className={`has-label ${values.agencia.error}`}
                     >
@@ -728,7 +731,7 @@ export default function FornecCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="4">
-                  <Label>Conta</Label>
+                    <Label>Conta</Label>
                     <FormGroup
                       className={`has-label ${values.conta.error}`}
                     >

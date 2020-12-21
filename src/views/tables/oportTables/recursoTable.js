@@ -62,7 +62,7 @@ class RecursoTable extends Component {
         return {
           idd: key,
           id: recurso.id,
-          oportunidadeId: recurso.Oportunidade.desc,
+          OportunidadeId: recurso.Oportunidade.desc,
           ColabId: recurso.Colab.nome,
           custoPrev: recurso.custoPrev,
           dataInclusao: recurso.dataInclusao,
@@ -153,8 +153,8 @@ class RecursoTable extends Component {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined
                       ? String(row[id])
-                          .toLowerCase()
-                          .startsWith(filter.value.toLowerCase())
+                        .toLowerCase()
+                        .startsWith(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"
@@ -167,7 +167,7 @@ class RecursoTable extends Component {
                   columns={[
                     {
                       Header: "Oportunidade",
-                      accessor: "oportunidadeId"
+                      accessor: "OportunidadeId"
                     },
                     {
                       Header: "Colaborador",

@@ -48,7 +48,7 @@ export default function RecursoCadastro() {
   const [data2, setData2] = useState([]);
   const [data4, setData4] = useState([]);
   const stateSchema = {
-    oportunidadeId: { value: "", error: "", message: "" },
+    OportunidadeId: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" },
     custoPrev: { value: "", error: "", message: "" },
     dataInclusao: { value: "", error: "", message: "" },
@@ -64,7 +64,7 @@ export default function RecursoCadastro() {
       const response1 = await axios(`http://localhost:5140/recurso/aux/${id}`);
       const response2 = await axios(`http://localhost:5140/colab/`);
       const response4 = await axios(
-        `http://localhost:5140/oportunidade/${response1.data.oportunidadeId}`
+        `http://localhost:5140/oportunidade/${response1.data.OportunidadeId}`
       );
       setData1(response1.data);
       setData2(response2.data);
@@ -72,7 +72,7 @@ export default function RecursoCadastro() {
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        oportunidadeId: { value: response4.data.id },
+        OportunidadeId: { value: response4.data.id },
         ColabId: { value: response1.data.ColabId },
         colabVlrHr: {
           value: normalizeCurrency(JSON.stringify(response1.data.colabVlrHr))
@@ -181,7 +181,7 @@ export default function RecursoCadastro() {
       dispatch(
         recursoUpdate(
           id,
-          values.oportunidadeId.value,
+          values.OportunidadeId.value,
           values.ColabId.value,
           custoPrevdb,
           values.dataInclusao.value,
@@ -220,15 +220,15 @@ export default function RecursoCadastro() {
                 <Form onSubmit={handleSubmit}>
                   <Label>Oportunidade</Label>
                   <FormGroup
-                    className={`has-label ${values.oportunidadeId.error}`}
+                    className={`has-label ${values.OportunidadeId.error}`}
                   >
                     <Input
                       disabled
-                      name="oportunidadeId"
+                      name="OportunidadeId"
                       onChange={event =>
-                        handleChange(event, "oportunidadeId", "text")
+                        handleChange(event, "OportunidadeId", "text")
                       }
-                      value={values.oportunidadeId.value}
+                      value={values.OportunidadeId.value}
                       type="select"
                     >
                       <option disabled value="">
@@ -241,9 +241,9 @@ export default function RecursoCadastro() {
                       </option>
                     </Input>
 
-                    {values.oportunidadeId.error === "has-danger" ? (
+                    {values.OportunidadeId.error === "has-danger" ? (
                       <Label className="error">
-                        {values.oportunidadeId.message}
+                        {values.OportunidadeId.message}
                       </Label>
                     ) : null}
                   </FormGroup>

@@ -45,6 +45,8 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 
+import { store } from "~/store";
+
 // core components
 import {
   chartExample1,
@@ -52,6 +54,10 @@ import {
   chartExample3,
   chartExample4
 } from "~/variables/charts";
+import api from "~/services/api";
+import { Link } from "react-router-dom";
+import { normalizeCurrency } from "~/normalize";
+
 
 var mapData = {
   AU: 760,
@@ -71,13 +77,27 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bigChartData: "data1"
+      bigChartData: "data1",
+      horas: null,
+      mes: null,
+      desps: null
     };
   }
 
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
+    this.loadData()
+  }
+
+  loadData = async () => {
+    const { id } = store.getState().auth.user;
+    const hrs = await api.get(`horas/${id}/?total=${true}&tipo=month`)
+    const desps = await api.get(`despesas/${id}/?total=${true}&tipo=month`)
+    console.log(desps)
+    const date = new Date()
+    const month = date.toLocaleString('default', { month: 'long' });
+    this.setState({ mes: month, horas: hrs.data, vlrDesps: normalizeCurrency(desps.data) })
   }
 
   setBgChartData = name => {
@@ -87,6 +107,7 @@ class Dashboard extends React.Component {
   };
 
   render() {
+    const { id } = store.getState().auth.user;
     return (
       <>
         <div className="content">
@@ -183,8 +204,8 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col xs="7">
                       <div className="numbers">
-                        <p className="card-category">Number</p>
-                        <CardTitle tag="h3">150GB</CardTitle>
+                        <p className="card-category">Total de horas {this.state.mes}</p>
+                        <CardTitle tag="h3">{this.state.horas}</CardTitle>
                       </div>
                     </Col>
                   </Row>
@@ -192,7 +213,9 @@ class Dashboard extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="tim-icons icon-refresh-01" /> Update Now
+                    <Link to={`tabelas/apontamentos/horas/${id}`}>
+                      <i className="tim-icons icon-refresh-01" /> Ver horas
+                    </Link>
                   </div>
                 </CardFooter>
               </Card>
@@ -208,8 +231,8 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col xs="7">
                       <div className="numbers">
-                        <p className="card-category">Followers</p>
-                        <CardTitle tag="h3">+45k</CardTitle>
+                        <p className="card-category">Valor despesa {this.state.mes}</p>
+                        <CardTitle tag="h3">{this.state.vlrDesps}</CardTitle>
                       </div>
                     </Col>
                   </Row>
@@ -217,7 +240,9 @@ class Dashboard extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="tim-icons icon-sound-wave" /> Last Research
+                    <Link to={`tabelas/apontamentos/despesas/${id}`}>
+                      <i className="tim-icons icon-sound-wave" /> Ver despesas
+                  </Link>
                   </div>
                 </CardFooter>
               </Card>

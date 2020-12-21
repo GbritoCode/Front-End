@@ -86,7 +86,7 @@ export function oportUpdate(
 
 export function cotacaoRequest(
   EmpresaId,
-  oportunidadeId,
+  OportunidadeId,
   probVend,
   tipoCobranca,
   hrsPrevst,
@@ -103,7 +103,7 @@ export function cotacaoRequest(
     type: "@cadastro/COTACAO_REQUEST",
     payload: {
       EmpresaId,
-      oportunidadeId,
+      OportunidadeId,
       probVend,
       tipoCobranca,
       hrsPrevst,
@@ -122,7 +122,7 @@ export function cotacaoRequest(
 export function cotacaoUpdate(
   id,
   EmpresaId,
-  oportunidadeId,
+  OportunidadeId,
   probVend,
   tipoCobranca,
   hrsPrevst,
@@ -140,7 +140,7 @@ export function cotacaoUpdate(
     payload: {
       id,
       EmpresaId,
-      oportunidadeId,
+      OportunidadeId,
       probVend,
       tipoCobranca,
       hrsPrevst,
@@ -160,7 +160,7 @@ export function cotacaoUpdate(
 //---------------------------------------------------------------------------
 
 export function recursoReqest(
-  oportunidadeId,
+  OportunidadeId,
   ColabId,
   custoPrev,
   dataInclusao,
@@ -170,7 +170,7 @@ export function recursoReqest(
   return {
     type: "@cadastro/RECURSO_REQUEST",
     payload: {
-      oportunidadeId,
+      OportunidadeId,
       ColabId,
       custoPrev,
       dataInclusao,
@@ -182,7 +182,7 @@ export function recursoReqest(
 
 export function recursoUpdate(
   id,
-  oportunidadeId,
+  OportunidadeId,
   ColabId,
   custoPrev,
   dataInclusao,
@@ -193,7 +193,7 @@ export function recursoUpdate(
     type: "@update/RECURSO_REQUEST",
     payload: {
       id,
-      oportunidadeId,
+      OportunidadeId,
       ColabId,
       custoPrev,
       dataInclusao,
@@ -207,7 +207,7 @@ export function recursoUpdate(
 //---------------------------------------------------------------------------
 
 export function parcelaReqest(
-  oportunidadeId,
+  OportunidadeId,
   parcela,
   vlrParcela,
   dtEmissao,
@@ -222,7 +222,7 @@ export function parcelaReqest(
   return {
     type: "@cadastro/PARCELA_REQUEST",
     payload: {
-      oportunidadeId,
+      OportunidadeId,
       parcela,
       vlrParcela,
       dtEmissao,
@@ -239,7 +239,7 @@ export function parcelaReqest(
 
 export function parcelaUpdate(
   id,
-  oportunidadeId,
+  OportunidadeId,
   parcela,
   vlrParcela,
   dtEmissao,
@@ -255,7 +255,7 @@ export function parcelaUpdate(
     type: "@update/PARCELA_REQUEST",
     payload: {
       id,
-      oportunidadeId,
+      OportunidadeId,
       parcela,
       vlrParcela,
       dtEmissao,
@@ -266,6 +266,123 @@ export function parcelaUpdate(
       dtLiquidacao,
       vlrPago,
       saldo
+    }
+  };
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+export function horaRequest(
+  OportunidadeId,
+  ColabId,
+  dataAtivd,
+  horaInic,
+  horaIntrv,
+  horaFim,
+  dataLancamento,
+  totalApont,
+  solicitante,
+  AreaId,
+  desc,
+) {
+  return {
+    type: "@cadastro/HORA_REQUEST",
+    payload: {
+      OportunidadeId,
+      ColabId,
+      dataAtivd,
+      horaInic,
+      horaIntrv,
+      horaFim,
+      dataLancamento,
+      totalApont,
+      solicitante,
+      AreaId,
+      desc,
+    }
+  };
+}
+
+export function horaUpdate(
+  id,
+  OportunidadeId,
+  ColabId,
+  dataAtivd,
+  horaInic,
+  horaIntrv,
+  horaFim,
+  dataLancamento,
+  totalApont,
+  solicitante,
+  AreaId,
+  desc,
+  apontDiff
+) {
+  return {
+    type: "@update/HORA_REQUEST",
+    payload: {
+      id,
+      OportunidadeId,
+      ColabId,
+      dataAtivd,
+      horaInic,
+      horaIntrv,
+      horaFim,
+      dataLancamento,
+      totalApont,
+      solicitante,
+      AreaId,
+      desc,
+      apontDiff
+    }
+  };
+}
+
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+export function despesaRequest(
+  OportunidadeId,
+  ColabId,
+  dataDespesa,
+  tipoDespesa,
+  valorDespesa,
+  desc,
+) {
+  return {
+    type: "@cadastro/DESPESA_REQUEST",
+    payload: {
+      OportunidadeId,
+      ColabId,
+      dataDespesa,
+      tipoDespesa,
+      valorDespesa,
+      desc,
+    }
+  };
+}
+
+export function despesaUpdate(
+  id,
+  OportunidadeId,
+  ColabId,
+  dataDespesa,
+  tipoDespesa,
+  valorDespesa,
+  desc,
+) {
+  return {
+    type: "@update/DESPESA_REQUEST",
+    payload: {
+      id,
+      OportunidadeId,
+      ColabId,
+      dataDespesa,
+      tipoDespesa,
+      valorDespesa,
+      desc,
     }
   };
 }

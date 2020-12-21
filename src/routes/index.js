@@ -113,6 +113,11 @@ import parcUpdate from "~/views/forms/Update/oportunidades/parcUpdate";
 import parcNotaFiscal from "~/views/forms/Update/oportunidades/parcNotaFiscal";
 import ApontTable from "~/views/tables/apontamentos/tabelaApont";
 import HorasCadastro from "~/views/forms/apontamentos/apontamentoHoras";
+import HorasUpdate from "~/views/forms/Update/apontamentos/horasUpdate";
+import HorasTable from "~/views/tables/apontamentos/tabelaHora";
+import DespesaCadastro from "~/views/forms/apontamentos/apontamentoDespesas";
+import DespesaTable from "~/views/tables/apontamentos/tabelaDespesa";
+import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 
 export default function Routes() {
   return (
@@ -221,6 +226,16 @@ export default function Routes() {
       <Route
         path="/tabelas/apontamentos/oportunidades/"
         component={ApontTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/apontamentos/despesas/:id"
+        component={DespesaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/apontamentos/horas/:id"
+        component={HorasTable}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -459,14 +474,30 @@ export default function Routes() {
         component={parcNotaFiscal}
         isPrivate
       />
+
+      <Route
+        path="/update/oportunidade/recurso/:id"
+        component={RecursoUpdate}
+        isPrivate
+      />
       <Route
         path="/cadastro/apontamentos/horas/:id"
         component={HorasCadastro}
         isPrivate
       />
       <Route
-        path="/update/oportunidade/recurso/:id"
-        component={RecursoUpdate}
+        path="/update/apontamentos/horas/:id"
+        component={HorasUpdate}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/apontamentos/despesas/:id"
+        component={DespesaCadastro}
+        isPrivate
+      />
+      <Route
+        path="/update/apontamentos/despesas/:id"
+        component={DespesaUpdate}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

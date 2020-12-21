@@ -27,7 +27,7 @@ import Sidebar from "~/components/Sidebar/Sidebar.jsx";
 
 import routes from "~/routes/routes.js";
 
-import logo from "~/assets/img/logo tovo-teste.png";
+import logo from "~/assets/img/tovoLogo.png";
 
 var ps;
 

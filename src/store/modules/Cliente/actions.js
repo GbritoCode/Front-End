@@ -11,12 +11,15 @@ export function ClienteRequest(
   fantasia,
   RepresentanteId,
   TipoComisseId,
-  EmpresaId
+  EmpresaId,
+  prospect
 ) {
   return {
     type: "@cadastro/CADASTRO_REQUEST",
-    payload: { CNPJ, nomeAbv,  rzSoc,
-      fantasia, RepresentanteId, TipoComisseId, EmpresaId },
+    payload: {
+      CNPJ, nomeAbv, rzSoc,
+      fantasia, RepresentanteId, TipoComisseId, EmpresaId, prospect
+    },
   };
 }
 
@@ -31,8 +34,10 @@ export function ClienteUpdate(
 ) {
   return {
     type: "@update/CLIENTE_REQUEST",
-    payload: { id, nomeAbv,  rzSoc,
-      fantasia, RepresentanteId, TipoComisseId, prospect },
+    payload: {
+      id, nomeAbv, rzSoc,
+      fantasia, RepresentanteId, TipoComisseId, prospect
+    },
   };
 }
 export function ClienteUpdateSuccess(profile) {
@@ -88,9 +93,7 @@ export function CliContUpdate(
 export function CliCompRequest(
   ClienteId,
   CondPgmtoId,
-  rzSocial,
   nomeAbv,
-  fantasia,
   cep,
   rua,
   numero,
@@ -105,9 +108,7 @@ export function CliCompRequest(
     payload: {
       ClienteId,
       CondPgmtoId,
-      rzSocial,
       nomeAbv,
-      fantasia,
       cep,
       rua,
       numero,
@@ -124,9 +125,7 @@ export function CliCompUpdate(
   id,
   ClienteId,
   CondPgmtoId,
-  rzSocial,
   nomeAbv,
-  fantasia,
   cep,
   rua,
   numero,
@@ -142,9 +141,7 @@ export function CliCompUpdate(
       id,
       ClienteId,
       CondPgmtoId,
-      rzSocial,
       nomeAbv,
-      fantasia,
       cep,
       rua,
       numero,

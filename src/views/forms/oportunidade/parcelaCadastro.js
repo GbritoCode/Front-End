@@ -45,7 +45,7 @@ export default function ParcelaCadastro() {
   const dispatch = useDispatch();
   const [data1, setData1] = useState({});
   const stateSchema = {
-    oportunidadeId: { value: "", error: "", message: "" },
+    OportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" }
   };
@@ -58,7 +58,7 @@ export default function ParcelaCadastro() {
 
       setValues(prevState => ({
         ...prevState,
-        oportunidadeId: { value: response1.data.id }
+        OportunidadeId: { value: response1.data.id }
       }));
     }
     loadData();
@@ -147,7 +147,7 @@ export default function ParcelaCadastro() {
 
       dispatch(
         parcelaReqest(
-          values.oportunidadeId.value,
+          values.OportunidadeId.value,
           values.parcela.value,
           vlrParceladb
         )
@@ -183,15 +183,15 @@ export default function ParcelaCadastro() {
                 <Form onSubmit={handleSubmit}>
                   <Label>Oportunidade</Label>
                   <FormGroup
-                    className={`has-label ${values.oportunidadeId.error}`}
+                    className={`has-label ${values.OportunidadeId.error}`}
                   >
                     <Input
                       disabled
-                      name="oportunidadeId"
+                      name="OportunidadeId"
                       onChange={event =>
-                        handleChange(event, "oportunidadeId", "text")
+                        handleChange(event, "OportunidadeId", "text")
                       }
-                      value={values.oportunidadeId.value}
+                      value={values.OportunidadeId.value}
                       type="select"
                     >
                       <option disabled value="">
@@ -201,9 +201,9 @@ export default function ParcelaCadastro() {
                       <option value={data1.id}> {data1.desc}</option>
                     </Input>
 
-                    {values.oportunidadeId.error === "has-danger" ? (
+                    {values.OportunidadeId.error === "has-danger" ? (
                       <Label className="error">
-                        {values.oportunidadeId.message}
+                        {values.OportunidadeId.message}
                       </Label>
                     ) : null}
                   </FormGroup>
