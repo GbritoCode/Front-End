@@ -80,7 +80,7 @@ export default class ApontTable extends Component {
               </Link>
               {/* use this button to remove the data row */}
               <Link to={`/cadastro/apontamentos/despesas/${id}`}>
-                <Tooltip title="Horas" placement="top" interactive>
+                <Tooltip title="Despesas" placement="top" interactive>
                   <Button className={classNames("btn-icon btn-link like")}>
                     <AttachMoney />
                   </Button>
@@ -111,8 +111,8 @@ export default class ApontTable extends Component {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined
                       ? String(row[id])
-                        .toLowerCase()
-                        .startsWith(filter.value.toLowerCase())
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"
@@ -161,4 +161,3 @@ export default class ApontTable extends Component {
     );
   }
 }
-

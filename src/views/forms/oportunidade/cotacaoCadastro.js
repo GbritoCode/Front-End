@@ -44,6 +44,7 @@ import {
   cotacaoRequest,
   oportUpdate
 } from "~/store/modules/oportunidades/actions";
+import api from "~/services/api";
 
 export default function CotacaoCadastro() {
   // --------- colocando no modo claro do template
@@ -77,15 +78,48 @@ export default function CotacaoCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
-      setData(response.data);
-      setData1(response1.data);
-      setValues(prevState => ({
-        ...prevState,
-        empresaId: { value: response.data.id },
-        OportunidadeId: { value: response1.data.id }
-      }));
+      const response2 = await api.get(`/cotacao/${id}/?one=true`);
+      if (response2.data === null) {
+      } else {
+        const response = await axios(
+          `http://localhost:5140/empresa/${empresa}`
+        );
+        const response1 = await axios(
+          `http://localhost:5140/oportunidade/${id}`
+        );
+        setData(response.data);
+        setData1(response1.data);
+        console.log(response2.data);
+        setValues(prevState => ({
+          ...prevState,
+          empresaId: { value: response2.data[0].EmpresaId },
+          OportunidadeId: { value: response2.data[0].OportunidadeId },
+          probVend: { value: response2.data[0].probVend },
+          tipoCobranca: { value: response2.data[0].tipoCobranca },
+          hrsPrevst: { value: response2.data[0].hrsPrevst },
+          vlrProp: {
+            value: normalizeCalcCurrency(response2.data[0].vlrProp)
+          },
+          vlrDesc: {
+            value: normalizeCurrency(response2.data[0].vlrDesc)
+          },
+          vlrLiq: {
+            value: normalizeCalcCurrency(response2.data[0].vlrLiq)
+          },
+          recLiq: {
+            value: normalizeCalcCurrency(response2.data[0].recLiq)
+          },
+          prevLucro: {
+            value: normalizeCalcCurrency(response2.data[0].prevLucro)
+          },
+          numParcelas: { value: response2.data[0].numParcelas },
+          motivo: { value: response2.data[0].motivo }
+        }));
+        setOptional(prevState => ({
+          ...prevState,
+          desc: { value: response2.data[0].desc }
+        }));
+      }
     }
     loadData();
   }, [id]);
@@ -96,7 +130,7 @@ export default function CotacaoCadastro() {
   }
   function getCliData(cobranca) {
     axios(
-      `http://localhost:5140/cliente/rec_desp/${data1.ClienteId}/?ItmControleId=${data1.itmControleId}&cobranca=${cobranca}`
+      `http://localhost:5140/cliente/rec_desp/${data1.ClienteId}/?ItmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
     ).then(result => {
       if (result.data === null) {
         options = {
@@ -180,15 +214,15 @@ export default function CotacaoCadastro() {
       const lucro = rLiq - hr * 6000;
       setValues(prevState => ({
         ...prevState,
-        vlrLiq: { value: normalizeCalcCurrency(JSON.stringify(vLiq)) }
+        vlrLiq: { value: normalizeCalcCurrency(vLiq) }
       }));
       setValues(prevState => ({
         ...prevState,
-        recLiq: { value: normalizeCalcCurrency(JSON.stringify(rLiq)) }
+        recLiq: { value: normalizeCalcCurrency(rLiq) }
       }));
       setValues(prevState => ({
         ...prevState,
-        prevLucro: { value: normalizeCalcCurrency(JSON.stringify(lucro)) }
+        prevLucro: { value: normalizeCalcCurrency(lucro) }
       }));
     }
   };

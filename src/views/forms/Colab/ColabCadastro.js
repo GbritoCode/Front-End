@@ -56,7 +56,7 @@ export default function ColabCadastro() {
     nome: { value: "", error: "", message: "" },
     dtAdmiss: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
-    PerfilId: { value: "", error: "", message: "" },
+    PerfilIdaux: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
     espec: { value: "", error: "", message: "" }

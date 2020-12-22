@@ -185,7 +185,7 @@ class Admin extends React.Component {
           routes={routes}
           activeColor={this.state.activeColor}
           logo={{
-            outterLink: "https://www.creative-tim.com/",
+            outterLink: "https://www.aidera.com.br/",
             text: "Tovo",
             imgSrc: logo
           }}

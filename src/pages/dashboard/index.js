@@ -46,6 +46,7 @@ import {
 } from "reactstrap";
 
 import { Link } from "react-router-dom";
+import { AttachMoney, Schedule } from "@material-ui/icons";
 import { store } from "~/store";
 
 // core components
@@ -204,7 +205,7 @@ class Dashboard extends React.Component {
                   <Row>
                     <Col xs="5">
                       <div className="info-icon text-center icon-warning">
-                        <i className="tim-icons icon-chat-33" />
+                        <Schedule style={{ marginTop: 7 }} fontSize="large" />
                       </div>
                     </Col>
                     <Col xs="7">
@@ -236,7 +237,10 @@ class Dashboard extends React.Component {
                   <Row>
                     <Col xs="5">
                       <div className="info-icon text-center icon-primary">
-                        <i className="tim-icons icon-shape-star" />
+                        <AttachMoney
+                          style={{ marginTop: 7 }}
+                          fontSize="large"
+                        />
                       </div>
                     </Col>
                     <Col xs="7">

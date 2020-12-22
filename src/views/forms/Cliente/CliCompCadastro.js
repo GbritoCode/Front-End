@@ -96,19 +96,6 @@ export default function CliCompCadastro() {
             message: "Insira um CNPJ válido"
           }
         }));
-
-        options.current = {
-          place: "tr",
-          message: (
-            <div>
-              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
-            </div>
-          ),
-          type: "danger",
-          icon: "tim-icons icon-alert-circle-exc",
-          autoDismiss: 7
-        };
-        notify();
       } else {
         setValues(prevState => ({
           ...prevState,
@@ -241,9 +228,6 @@ export default function CliCompCadastro() {
             <Col md="12">
               <Card>
                 <CardHeader>
-                  <Link
-                    to={`/tabelas/cliente/comp/${values.ClienteId.value}`}
-                  />
                   <CardTitle tag="h4">Complemento do Cliente</CardTitle>
                 </CardHeader>
                 <CardBody>

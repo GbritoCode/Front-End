@@ -35,6 +35,7 @@ import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { CliCompUpdate } from "~/store/modules/Cliente/actions";
+import { normalizeCnpj } from "~/normalize";
 
 export default function CliCompUpdatee() {
   // --------- colocando no modo claro do template
@@ -45,10 +46,7 @@ export default function CliCompUpdatee() {
 
   const stateSchema = {
     ClienteId: { value: "", error: "", message: "" },
-    rzSoc: { value: "", error: "", message: "" },
     CondPgmtoId: { value: "", error: "", message: "" },
-    nomeAbv: { value: "", error: "", message: "" },
-    fantasia: { value: "", error: "", message: "" },
     cep: { value: "", error: "", message: "" },
     rua: { value: "", error: "", message: "" },
     numero: { value: "", error: "", message: "" },
@@ -58,7 +56,11 @@ export default function CliCompUpdatee() {
     inscMun: { value: "", error: "", message: "" },
     inscEst: { value: "", error: "", message: "" }
   };
+  const optionalSchema = {
+    complemento: { value: "", error: "", message: "" }
+  };
   const [values, setValues] = useState(stateSchema);
+  const [optional, setOptional] = useState(optionalSchema);
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -79,9 +81,6 @@ export default function CliCompUpdatee() {
         ...prevState,
         ClienteId: { value: response.data.ClienteId },
         CondPgmtoId: { value: response.data.CondPgmtoId },
-        rzSoc: { value: response.data.rzSocial },
-        fantasia: { value: response.data.fantasia },
-        nomeAbv: { value: response.data.nomeAbv },
         cep: { value: response.data.cep },
         rua: { value: response.data.rua },
         numero: { value: response.data.numero },
@@ -90,6 +89,10 @@ export default function CliCompUpdatee() {
         uf: { value: response.data.uf },
         inscMun: { value: response.data.inscMun },
         inscEst: { value: response.data.inscEst }
+      }));
+      setOptional(prevState => ({
+        ...prevState,
+        complemento: { value: response.data.complemento }
       }));
       setIsLoading(false);
     }
@@ -124,6 +127,12 @@ export default function CliCompUpdatee() {
             }
           }));
         }
+        break;
+      case "optional":
+        setOptional(prevState => ({
+          ...prevState,
+          [name]: { value: target }
+        }));
         break;
       case "text":
         setValues(prevState => ({
@@ -240,7 +249,7 @@ export default function CliCompUpdatee() {
                           </option>{" "}
                           <option value={data2.id}>
                             {" "}
-                            {data2.nomeAbv} - {data2.CNPJ}
+                            {data2.nomeAbv} - {normalizeCnpj(data2.CNPJ)}
                           </option>
                         </Input>
                         {values.ClienteId.error === "has-danger" ? (
@@ -249,62 +258,6 @@ export default function CliCompUpdatee() {
                           </Label>
                         ) : null}
                       </FormGroup>
-
-                      <Label>Razão Social</Label>
-                      <FormGroup className={`has-label ${values.rzSoc.error}`}>
-                        <Input
-                          id="rzSoc"
-                          name="rzSoc"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "rzSoc", "text")
-                          }
-                          value={values.rzSoc.value}
-                        />
-                        {values.rzSoc.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.rzSoc.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Nome Abreviado</Label>
-                      <FormGroup
-                        className={`has-label ${values.nomeAbv.error}`}
-                      >
-                        <Input
-                          disabled
-                          onChange={event =>
-                            handleChange(event, "nomeAbv", "text")
-                          }
-                          value={values.nomeAbv.value}
-                          name="nomeAbv"
-                          type="text"
-                        />
-                        {values.nomeAbv.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.nomeAbv.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                      <Label>Nome Fantasia</Label>
-                      <FormGroup
-                        className={`has-label ${values.fantasia.error}`}
-                      >
-                        <Input
-                          onChange={event =>
-                            handleChange(event, "fantasia", "text")
-                          }
-                          value={values.fantasia.value}
-                          name="nomeAbv"
-                          type="text"
-                        />
-                        {values.fantasia.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.fantasia.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
                       <Row>
                         <Col md="4">
                           <Label>CEP</Label>
@@ -371,7 +324,28 @@ export default function CliCompUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
+
                       <Row>
+                        <Col md="8">
+                          <Label>Complemento</Label>
+                          <FormGroup
+                            className={`has-label ${optional.complemento.error}`}
+                          >
+                            <Input
+                              onChange={event =>
+                                handleChange(event, "complemento", "optional")
+                              }
+                              value={optional.complemento.value}
+                              name="nomeAbv"
+                              type="text"
+                            />
+                            {optional.complemento.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.complemento.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
                         <Col md="4">
                           <Label>Bairro</Label>
                           <FormGroup
@@ -393,6 +367,8 @@ export default function CliCompUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Cidade</Label>
                           <FormGroup
@@ -465,8 +441,6 @@ export default function CliCompUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Inscrição Municipal</Label>
                           <FormGroup
@@ -487,6 +461,8 @@ export default function CliCompUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Inscrição Estadual</Label>
                           <FormGroup
@@ -528,7 +504,7 @@ export default function CliCompUpdatee() {
                               {data1.map(condPgmto => (
                                 <option value={condPgmto.id}>
                                   {" "}
-                                  {condPgmto.id} -{condPgmto.desc}{" "}
+                                  {condPgmto.id} - {condPgmto.desc}{" "}
                                 </option>
                               ))}
                             </Input>
@@ -539,6 +515,7 @@ export default function CliCompUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                        <Col md="4" />
                       </Row>
                       <Link
                         to={`/tabelas/cliente/comp/${values.ClienteId.value}`}

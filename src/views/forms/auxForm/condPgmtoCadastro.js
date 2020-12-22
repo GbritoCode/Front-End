@@ -113,12 +113,14 @@ export default function CondPgmtoCadastro() {
     }
 
     if (valid && filled) {
+      const first = false;
       dispatch(
         condPgmtoRequest(
           values.empresaId.value,
           values.cod.value,
           values.desc.value,
-          values.diasPrazo.value
+          values.diasPrazo.value,
+          first
         )
       );
     } else {

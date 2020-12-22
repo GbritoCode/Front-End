@@ -43,7 +43,7 @@ import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 
 /* eslint-disable eqeqeq */
-function ClienteUpdatee(props) {
+function ClienteUpdatee() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
@@ -85,10 +85,12 @@ function ClienteUpdatee(props) {
         nomeAbv: { value: response.data.nomeAbv },
         representante: { value: response.data.RepresentanteId },
         tipoComiss: { value: response.data.TipoComisseId },
-        rzSoc: { value: response.data.rzSoc },
+        rzSoc: { value: response.data.rzSoc }
+      }));
+      setOptional(prevState => ({
+        ...prevState,
         fantasia: { value: response.data.fantasia }
       }));
-
       setIsLoading(false);
     }
     loadData();

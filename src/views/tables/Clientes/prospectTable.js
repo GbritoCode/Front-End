@@ -44,6 +44,8 @@ export default function ProspectTable() {
             idd: key,
             id: client.id,
             CNPJ: normalizeCnpj(client.CNPJ),
+            fantasia: client.fantasia,
+            rzSoc: client.rzSoc,
             nomeAbv: client.nomeAbv,
             RepresentanteId: client.RepresentanteId,
             Representante: client.Representante.nome,
@@ -61,10 +63,17 @@ export default function ProspectTable() {
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                     onClick={() => {
+                      console.log(
+                        client.id,
+                        client.nomeAbv,
+                        client.TipoComisseId
+                      );
                       dispatch(
                         ClienteUpdate(
                           client.id,
                           client.nomeAbv,
+                          client.rzSoc,
+                          client.fantasia,
                           client.RepresentanteId,
                           client.TipoComisseId,
                           0
@@ -145,8 +154,8 @@ export default function ProspectTable() {
                   const id = filter.pivotId || filter.id;
                   return row[id] !== undefined
                     ? String(row[id])
-                      .toLowerCase()
-                      .startsWith(filter.value.toLowerCase())
+                        .toLowerCase()
+                        .startsWith(filter.value.toLowerCase())
                     : true;
                 }}
                 previousText="Anterior"

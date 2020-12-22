@@ -121,7 +121,9 @@ export function normalizeCurrency(value) {
   return v;
 }
 export function normalizeCalcCurrency(value) {
-  value = JSON.stringify(value);
+  if (typeof value !== "string") {
+    value = JSON.stringify(value);
+  }
   var v = value.replace(/[.,]+/g, "");
   v = `${(v / 100).toFixed(2)}`;
   v = v.replace(".", ",");

@@ -1,6 +1,6 @@
 export function signFailure() {
   return {
-    type: "@cadastro/CADASTRO_FALHA",
+    type: "@cadastro/CADASTRO_FALHA"
   };
 }
 
@@ -17,9 +17,15 @@ export function ClienteRequest(
   return {
     type: "@cadastro/CADASTRO_REQUEST",
     payload: {
-      CNPJ, nomeAbv, rzSoc,
-      fantasia, RepresentanteId, TipoComisseId, EmpresaId, prospect
-    },
+      CNPJ,
+      nomeAbv,
+      rzSoc,
+      fantasia,
+      RepresentanteId,
+      TipoComisseId,
+      EmpresaId,
+      prospect
+    }
   };
 }
 
@@ -35,15 +41,20 @@ export function ClienteUpdate(
   return {
     type: "@update/CLIENTE_REQUEST",
     payload: {
-      id, nomeAbv, rzSoc,
-      fantasia, RepresentanteId, TipoComisseId, prospect
-    },
+      id,
+      nomeAbv,
+      rzSoc,
+      fantasia,
+      RepresentanteId,
+      TipoComisseId,
+      prospect
+    }
   };
 }
 export function ClienteUpdateSuccess(profile) {
   return {
     type: "@update/CLIENTE_REQUEST_SUCCES",
-    payload: { profile },
+    payload: { profile }
   };
 }
 
@@ -59,7 +70,7 @@ export function CliContRequest(
 ) {
   return {
     type: "@cadastro/CADASTRO_CONT_REQUEST",
-    payload: { ClienteId, nome, cel, fone, skype, email, aniver, tipoConta },
+    payload: { ClienteId, nome, cel, fone, skype, email, aniver, tipoConta }
   };
 }
 
@@ -85,15 +96,14 @@ export function CliContUpdate(
       skype,
       email,
       aniver,
-      tipoConta,
-    },
+      tipoConta
+    }
   };
 }
 
 export function CliCompRequest(
   ClienteId,
   CondPgmtoId,
-  nomeAbv,
   cep,
   rua,
   numero,
@@ -108,7 +118,6 @@ export function CliCompRequest(
     payload: {
       ClienteId,
       CondPgmtoId,
-      nomeAbv,
       cep,
       rua,
       numero,
@@ -116,8 +125,8 @@ export function CliCompRequest(
       cidade,
       uf,
       inscMun,
-      inscEst,
-    },
+      inscEst
+    }
   };
 }
 
@@ -125,7 +134,6 @@ export function CliCompUpdate(
   id,
   ClienteId,
   CondPgmtoId,
-  nomeAbv,
   cep,
   rua,
   numero,
@@ -141,7 +149,6 @@ export function CliCompUpdate(
       id,
       ClienteId,
       CondPgmtoId,
-      nomeAbv,
       cep,
       rua,
       numero,
@@ -149,22 +156,37 @@ export function CliCompUpdate(
       cidade,
       uf,
       inscMun,
-      inscEst,
-    },
+      inscEst
+    }
   };
 }
 
 //------------------------------------------
 //------------------------------------------
 
-export function CliRecDespRequest(ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim) {
+export function CliRecDespRequest(
+  ClienteId,
+  RecDespId,
+  tipoCobranca,
+  valorRec,
+  dataInic,
+  dataFim
+) {
   return {
     type: "@cadastro/CADASTRO_REC_DESP_REQUEST",
-    payload: { ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim },
+    payload: { ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim }
   };
 }
 
-export function cliRecDespUpdate(id, ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim) {
+export function cliRecDespUpdate(
+  id,
+  ClienteId,
+  RecDespId,
+  tipoCobranca,
+  valorRec,
+  dataInic,
+  dataFim
+) {
   return {
     type: "@update/CLI_REC_DESP_REQUEST",
     payload: {
@@ -175,6 +197,6 @@ export function cliRecDespUpdate(id, ClienteId, RecDespId, tipoCobranca, valorRe
       valorRec,
       dataInic,
       dataFim
-    },
+    }
   };
 }

@@ -1,10 +1,10 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import history from "~/services/history.js";
-import api from "~/services/api.js";
+import history from "~/services/history";
+import api from "~/services/api";
 
-import { signFailure, ClienteUpdateSuccess } from "./actions.js";
+import { signFailure, ClienteUpdateSuccess } from "./actions";
 
 export function* clienteCadastro({ payload }) {
   try {
@@ -37,17 +37,24 @@ export function* clienteCadastro({ payload }) {
 
 export function* updateCliente({ payload }) {
   try {
-    const { id, nomeAbv, rzSoc,
-      fantasia, RepresentanteId, TipoComisseId, prospect } = payload;
-
-    const Cliente = Object.assign({
+    const {
+      id,
       nomeAbv,
       rzSoc,
       fantasia,
       RepresentanteId,
       TipoComisseId,
-      prospect,
-    });
+      prospect
+    } = payload;
+
+    const Cliente = {
+      nomeAbv,
+      rzSoc,
+      fantasia,
+      RepresentanteId,
+      TipoComisseId,
+      prospect
+    };
 
     const response = yield call(api.put, `cliente/${id}`, Cliente);
 
@@ -72,7 +79,7 @@ export function* cliContCadastro({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta,
+      tipoConta
     } = payload;
     yield call(api.post, "cliente/cont", {
       ClienteId,
@@ -82,7 +89,7 @@ export function* cliContCadastro({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta,
+      tipoConta
     });
     history.push(`/cliente_update/${ClienteId}/true`);
   } catch (err) {
@@ -102,10 +109,10 @@ export function* updateCliCont({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta,
+      tipoConta
     } = payload;
 
-    const Cliente = Object.assign({
+    const Cliente = {
       ClienteId,
       nome,
       cel,
@@ -113,8 +120,8 @@ export function* updateCliCont({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta,
-    });
+      tipoConta
+    };
 
     const response = yield call(api.put, `cliente/cont/${id}`, Cliente);
 
@@ -134,7 +141,6 @@ export function* cliCompCadastro({ payload }) {
     const {
       ClienteId,
       CondPgmtoId,
-      nomeAbv,
       cep,
       rua,
       numero,
@@ -142,12 +148,11 @@ export function* cliCompCadastro({ payload }) {
       cidade,
       uf,
       inscMun,
-      inscEst,
+      inscEst
     } = payload;
     yield call(api.post, "cliente/complem", {
       ClienteId,
       CondPgmtoId,
-      nomeAbv,
       cep,
       rua,
       numero,
@@ -155,7 +160,7 @@ export function* cliCompCadastro({ payload }) {
       cidade,
       uf,
       inscMun,
-      inscEst,
+      inscEst
     });
     history.push(`/cliente_update/${ClienteId}/true`);
   } catch (err) {
@@ -170,7 +175,6 @@ export function* updateCliComp({ payload }) {
       id,
       ClienteId,
       CondPgmtoId,
-      nomeAbv,
       cep,
       rua,
       numero,
@@ -178,13 +182,12 @@ export function* updateCliComp({ payload }) {
       cidade,
       uf,
       inscMun,
-      inscEst,
+      inscEst
     } = payload;
 
-    const Cliente = Object.assign({
+    const Cliente = {
       ClienteId,
       CondPgmtoId,
-      nomeAbv,
       cep,
       rua,
       numero,
@@ -192,8 +195,8 @@ export function* updateCliComp({ payload }) {
       cidade,
       uf,
       inscMun,
-      inscEst,
-    });
+      inscEst
+    };
 
     const response = yield call(api.put, `cliente/complem/${id}`, Cliente);
 
@@ -210,7 +213,14 @@ export function* updateCliComp({ payload }) {
 //--------------------------------------------------------------------------
 export function* cliRecDespCadastro({ payload }) {
   try {
-    const { ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
+    const {
+      ClienteId,
+      RecDespId,
+      tipoCobranca,
+      valorRec,
+      dataInic,
+      dataFim
+    } = payload;
     yield call(api.post, "cliente/rec_desp", {
       ClienteId,
       RecDespId,
@@ -228,16 +238,24 @@ export function* cliRecDespCadastro({ payload }) {
 
 export function* updateCliRecDesp({ payload }) {
   try {
-    const { id, ClienteId, RecDespId, tipoCobranca, valorRec, dataInic, dataFim } = payload;
-
-    const Cliente = Object.assign({
+    const {
+      id,
       ClienteId,
       RecDespId,
       tipoCobranca,
       valorRec,
       dataInic,
       dataFim
-    });
+    } = payload;
+
+    const Cliente = {
+      ClienteId,
+      RecDespId,
+      tipoCobranca,
+      valorRec,
+      dataInic,
+      dataFim
+    };
 
     const response = yield call(api.put, `cliente/rec_desp/${id}`, Cliente);
 
@@ -258,5 +276,5 @@ export default all([
   takeLatest("@update/CLIENTE_REQUEST", updateCliente),
   takeLatest("@update/CONT_REQUEST", updateCliCont),
   takeLatest("@update/COMP_REQUEST", updateCliComp),
-  takeLatest("@update/CLI_REC_DESP_REQUEST", updateCliRecDesp),
+  takeLatest("@update/CLI_REC_DESP_REQUEST", updateCliRecDesp)
 ]);
