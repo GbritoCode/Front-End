@@ -30,7 +30,6 @@ import {
   ModalBody
 } from "reactstrap";
 
-import { normalizeCnpj } from "normalize";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -44,6 +43,7 @@ import {
   CheckCircleOutline,
   RadioButtonCheckedOutlined
 } from "@material-ui/icons";
+import { normalizeCnpj } from "~/normalize";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
@@ -193,37 +193,37 @@ function OportTable() {
                       </Button>
                     </Tooltip>
                   ) : (
-                      <Tooltip title="Finalizar">
-                        <Button
-                          color="default"
-                          size="sm"
-                          className={classNames("btn-icon btn-link like")}
-                          onClick={() => {
-                            history.go(0);
-                            dispatch(
-                              oportUpdate(
-                                oport.id,
-                                oport.EmpresaId,
-                                oport.ColabId,
-                                oport.ClienteId,
-                                oport.UndNegId,
-                                oport.ItmControleId,
-                                oport.SegmentoId,
-                                oport.RepresentanteId,
-                                oport.contato,
-                                oport.data,
-                                5,
-                                oport.cod,
-                                oport.desc,
-                                oport.narrativa
-                              )
-                            );
-                          }}
-                        >
-                          <RadioButtonCheckedOutlined />
-                        </Button>
-                      </Tooltip>
-                    )}
+                    <Tooltip title="Finalizar">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.go(0);
+                          dispatch(
+                            oportUpdate(
+                              oport.id,
+                              oport.EmpresaId,
+                              oport.ColabId,
+                              oport.ClienteId,
+                              oport.UndNegId,
+                              oport.ItmControleId,
+                              oport.SegmentoId,
+                              oport.RepresentanteId,
+                              oport.contato,
+                              oport.data,
+                              5,
+                              oport.cod,
+                              oport.desc,
+                              oport.narrativa
+                            )
+                          );
+                        }}
+                      >
+                        <RadioButtonCheckedOutlined />
+                      </Button>
+                    </Tooltip>
+                  )}
                   {/* use this button to add a edit kind of action */}
                   <Link to={`/update/oportunidade/oport/${oport.id}`}>
                     <Button
@@ -235,23 +235,6 @@ function OportTable() {
                     </Button>
                   </Link>
                   {/* use this button to remove the data row */}
-                  <Button
-                    onClick={() => {
-                      data.find((o, i) => {
-                        if (o.idd === key) {
-                          data.splice(i, 1);
-
-                          return true;
-                        }
-                        return false;
-                      });
-                    }}
-                    color="danger"
-                    size="sm"
-                    className={classNames("btn-icon btn-link like")}
-                  >
-                    <i className="tim-icons icon-simple-remove" />
-                  </Button>{" "}
                 </div>
               </>
             )
@@ -260,7 +243,7 @@ function OportTable() {
       );
     }
     loadData();
-  }, [data, dispatch, history]);
+  }, [dispatch, history]);
   const checkFase = value => {
     if (value == 1) {
       return "Aberta";
@@ -358,12 +341,12 @@ function OportTable() {
                 data={data}
                 filterable
                 resizable
-                defaultFilterMethod={(filter, row, column) => {
+                defaultFilterMethod={(filter, row) => {
                   const id = filter.pivotId || filter.id;
                   return row[id] !== undefined
                     ? String(row[id])
-                      .toLowerCase()
-                      .startsWith(filter.value.toLowerCase())
+                        .toLowerCase()
+                        .startsWith(filter.value.toLowerCase())
                     : true;
                 }}
                 previousText="Anterior"

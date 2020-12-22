@@ -118,6 +118,7 @@ import HorasTable from "~/views/tables/apontamentos/tabelaHora";
 import DespesaCadastro from "~/views/forms/apontamentos/apontamentoDespesas";
 import DespesaTable from "~/views/tables/apontamentos/tabelaDespesa";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
+import DataOport from "~/views/forms/oportunidade/oportunidadeData";
 
 export default function Routes() {
   return (
@@ -221,6 +222,11 @@ export default function Routes() {
       <Route
         path="/tabelas/oportunidade/cotacao/:id"
         component={cotacaoTable}
+        isPrivate
+      />
+      <Route
+        path="/view/oportunidade/dados/:id"
+        component={DataOport}
         isPrivate
       />
       <Route
@@ -474,7 +480,6 @@ export default function Routes() {
         component={parcNotaFiscal}
         isPrivate
       />
-
       <Route
         path="/update/oportunidade/recurso/:id"
         component={RecursoUpdate}

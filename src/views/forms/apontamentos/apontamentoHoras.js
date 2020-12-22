@@ -49,8 +49,9 @@ export default function HorasCadastro() {
   const [data1, setData1] = useState({});
   const [data4, setData4] = useState([]);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
-
-
+  const optionalSchema = {
+    totalApontDb: { value: 0, error: "", message: "" }
+  };
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     oportunidadeCod: { value: "", error: "", message: "" },
@@ -67,7 +68,6 @@ export default function HorasCadastro() {
       message: ""
     },
     totalApont: { value: "", error: "", message: "" },
-    totalApontDb: { value: "", error: "", message: "" },
     totalAcum: { value: "", error: "", message: "" },
     totalAcumTemp: { value: "", error: "", message: "" },
     solicitante: { value: "", error: "", message: "" },
@@ -75,8 +75,9 @@ export default function HorasCadastro() {
     desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
+  const [optional, setOptional] = useState(optionalSchema);
 
-  console.log(values)
+  console.log(values);
   useEffect(() => {
     const { email } = store.getState().auth.user;
     const { empresa } = store.getState().auth;
@@ -85,8 +86,14 @@ export default function HorasCadastro() {
       const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
       const response4 = await axios(`http://localhost:5140/area/`);
-      const response5 = await axios(`http://localhost:5140/colab/?email=${email}`);
-      const response6 = await axios(`http://localhost:5140/horas/${id}/?total=${true}&tipo=project&oport=${response1.data.id}`);
+      const response5 = await axios(
+        `http://localhost:5140/colab/?email=${email}`
+      );
+      const response6 = await axios(
+        `http://localhost:5140/horas/${id}/?total=${true}&tipo=project&oport=${
+          response1.data.id
+        }`
+      );
       setData4(response4.data);
       setData1(response1.data);
       setValues(prevState => ({
@@ -152,9 +159,12 @@ export default function HorasCadastro() {
 
         setValues(prevState => ({
           ...prevState,
-          totalApontDb: { value: apontBruto },
           totalApont: { value: `${apontHr}:${apontMin}` },
           totalAcum: { value: `${acumHr}:${acumMin}` }
+        }));
+        setOptional(prevState => ({
+          ...prevState,
+          totalApontDb: { value: apontBruto }
         }));
       } else if (differenceInMinutes(fimParsed, inicParsed) < 0) {
         setValues(prevState => ({
@@ -253,7 +263,7 @@ export default function HorasCadastro() {
           values.horaIntrv.value,
           values.horaFim.value,
           values.dataLancamento.value,
-          values.totalApontDb.value,
+          optional.totalApontDb.value,
           values.solicitante.value,
           values.AreaId.value,
           values.desc.value
@@ -289,46 +299,33 @@ export default function HorasCadastro() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md="4">
-                      <Label>Código Oportunidade</Label>
+                    <Col md="8">
+                      <Label>Oportunidade</Label>
                       <FormGroup
-                        className={`has-label ${values.oportunidadeCod.error}`}
+                        className={`has-label ${values.OportunidadeId.error}`}
                       >
                         <Input
                           disabled
-                          name="oportunidadeCod"
+                          name="OportunidadeId"
                           onChange={event =>
-                            handleChange(event, "oportunidadeCod", "text")
+                            handleChange(event, "OportunidadeId", "text")
                           }
-                          value={values.oportunidadeCod.value}
-                          type="text"
-                        />
+                          value={values.OportunidadeId.value}
+                          type="select"
+                        >
+                          <option disabled value="">
+                            {" "}
+                            Selecione a Oportunidade{" "}
+                          </option>{" "}
+                          <option value={data1.id}>
+                            {" "}
+                            {data1.cod} - {data1.desc}
+                          </option>
+                        </Input>
 
-                        {values.oportunidadeCod.error === "has-danger" ? (
+                        {values.OportunidadeId.error === "has-danger" ? (
                           <Label className="error">
-                            {values.oportunidadeCod.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Descrição Oportunidade</Label>
-                      <FormGroup
-                        className={`has-label ${values.oportunidadeDesc.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="oportunidadeDesc"
-                          onChange={event =>
-                            handleChange(event, "oportunidadeDesc", "text")
-                          }
-                          value={values.oportunidadeDesc.value}
-                          type="text"
-                        />
-
-                        {values.oportunidadeDesc.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.oportunidadeDesc.message}
+                            {values.OportunidadeId.message}
                           </Label>
                         ) : null}
                       </FormGroup>
@@ -553,9 +550,7 @@ export default function HorasCadastro() {
                   <Row>
                     <Col md="12">
                       <Label>Descrição</Label>
-                      <FormGroup
-                        className={`has-label ${values.desc.error}`}
-                      >
+                      <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           type="textarea"
                           name="desc"
@@ -565,9 +560,7 @@ export default function HorasCadastro() {
                           value={values.desc.value}
                         />
                         {values.desc.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.desc.message}
-                          </Label>
+                          <Label className="error">{values.desc.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>

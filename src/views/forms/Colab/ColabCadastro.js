@@ -47,7 +47,7 @@ export default function ColabCadastro() {
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState([]);
+  // const [data2, setData2] = useState([]);
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -68,10 +68,10 @@ export default function ColabCadastro() {
     async function loadData() {
       const response = await axios(`http://localhost:5140/empresa/${empresa}`);
       const response1 = await axios(`http://localhost:5140/fornec`);
-      const response2 = await axios(`http://localhost:5140/perfil`);
+      // const response2 = await axios(`http://localhost:5140/perfil`);
       setData(response.data);
       setData1(response1.data);
-      setData2(response2.data);
+      // setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -237,7 +237,7 @@ export default function ColabCadastro() {
           values.nome.value,
           values.dtAdmiss.value,
           celdb,
-          values.PerfilId.value,
+          1,
           values.skype.value,
           values.email.value,
           values.espec.value
@@ -248,6 +248,7 @@ export default function ColabCadastro() {
           values.nome.value,
           values.email.value,
           "Aidera2020",
+          values.PerfilIdaux.value,
           colab
         )
       );
@@ -421,31 +422,29 @@ export default function ColabCadastro() {
                       {" "}
                       <Label>Perfil</Label>
                       <FormGroup
-                        className={`has-label ${values.PerfilId.error}`}
+                        className={`has-label ${values.PerfilIdaux.error}`}
                       >
                         <Input
                           name="FornecId"
                           type="select"
                           onChange={event =>
-                            handleChange(event, "PerfilId", "text")
+                            handleChange(event, "PerfilIdaux", "text")
                           }
-                          value={values.PerfilId.value}
+                          value={values.PerfilIdaux.value}
                         >
                           {" "}
                           <option disabled value="">
                             {" "}
                             Selecione o perfil{" "}
                           </option>
-                          {data2.map(perfil => (
-                            <option value={perfil.id}>
-                              {" "}
-                              {perfil.id} - {perfil.desc}{" "}
-                            </option>
-                          ))}
+                          <option value={1}>Analista</option>
+                          <option value={2}>Comercial</option>
+                          <option value={3}>Gestor</option>
+                          <option value={10}>Admin</option>
                         </Input>
-                        {values.PerfilId.error === "has-danger" ? (
+                        {values.PerfilIdaux.error === "has-danger" ? (
                           <Label className="error">
-                            {values.PerfilId.message}
+                            {values.PerfilIdaux.message}
                           </Label>
                         ) : null}
                       </FormGroup>

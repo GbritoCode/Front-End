@@ -24,12 +24,12 @@ export function* signIn({ payload }) {
 
 export function* signUp({ payload }) {
   try {
-    const { name, email, password, colab } = payload;
+    const { name, email, password, profile, colab } = payload;
     yield call(api.post, "users", {
       name,
       email,
       password,
-      provider: true
+      profile
     });
     if (colab === false) {
       history.push("/login");

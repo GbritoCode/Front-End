@@ -147,6 +147,7 @@ import DespesaCadastro from "~/views/forms/apontamentos/apontamentoDespesas";
 import HorasTable from "~/views/tables/apontamentos/tabelaHora";
 import HorasUpdate from "~/views/forms/Update/apontamentos/horasUpdate";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
+import DataOport from "~/views/forms/oportunidade/oportunidadeData";
 
 const routes = [
   {
@@ -162,7 +163,7 @@ const routes = [
     mini: "L",
     component: signIn,
     layout: "/auth",
-    invisible: true
+    redirect: true
   },
   {
     path: "/register",
@@ -170,7 +171,7 @@ const routes = [
     mini: "R",
     component: SignUp,
     layout: "/auth",
-    invisible: true
+    redirect: true
   },
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
@@ -182,7 +183,7 @@ const routes = [
     name: "Páginas de cadastro invisíveis",
     icon: "tim-icons icon-notes",
     state: "formsCollapse",
-    invisible: true,
+    redirect: true,
     views: [
       {
         path: "/cliente_cadastro/:prospect",
@@ -559,6 +560,7 @@ const routes = [
     name: "Administrador",
     icon: "tim-icons icon-molecule-40",
     state: "AdministradorCollapse",
+    profile: 10,
     views: [
       {
         path: "/tabelas/aux/perfil",
@@ -574,6 +576,7 @@ const routes = [
     name: "Apontamentos",
     icon: "tim-icons icon-molecule-40",
     state: "ApontamentosCollapse",
+    profile: 1,
     views: [
       {
         path: "/tabelas/apontamentos/oportunidades/",
@@ -588,7 +591,7 @@ const routes = [
         mini: "DSP",
         component: DespesaTable,
         layout: "/admin",
-        invisible: true
+        redirect: true
       },
       {
         path: "/tabelas/apontamentos/horas/:id",
@@ -596,7 +599,7 @@ const routes = [
         mini: "HRS",
         component: HorasTable,
         layout: "/admin",
-        invisible: true
+        redirect: true
       }
     ]
   },
@@ -605,6 +608,7 @@ const routes = [
     name: "Oportunidades",
     icon: "tim-icons icon-molecule-40",
     state: "OportunidadeCollapse",
+    profile: 2,
     views: [
       {
         path: "/tabelas/oportunidade/oport",
@@ -619,7 +623,7 @@ const routes = [
         mini: "OPT",
         component: cotacaoTable,
         layout: "/admin",
-        invisible: true
+        redirect: true
       },
       {
         path: "/tabelas/oportunidade/recurso/:id",
@@ -627,7 +631,7 @@ const routes = [
         mini: "rec",
         component: RecursoTable,
         layout: "/admin",
-        invisible: true
+        redirect: true
       },
       {
         path: "/tabelas/oportunidade/parcela/:id",
@@ -635,7 +639,15 @@ const routes = [
         mini: "rec",
         component: ParcelaTable,
         layout: "/admin",
-        invisible: true
+        redirect: true
+      },
+      {
+        path: "/view/oportunidade/dados/:id",
+        name: "Dados OPT",
+        mini: "DOP",
+        component: DataOport,
+        layout: "/admin",
+        redirect: true
       }
     ]
   },
@@ -644,20 +656,23 @@ const routes = [
     name: "Cadastros",
     icon: "tim-icons icon-puzzle-10",
     state: "tablesCollapse",
+    profile: 2,
     views: [
       {
         path: "/tabelas/aux/condPgmto",
         name: "Condição de Pagamento",
         mini: "CPG",
         component: condPgmtoTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/aux/tipoComiss",
         name: "Tipos de Comissão",
         mini: "CMS",
         component: tipoComissTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
 
       {
@@ -665,48 +680,54 @@ const routes = [
         name: "Receita e Despesa",
         mini: "RDP",
         component: RecDespTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/cliente/cliente",
         name: "Clientes",
         mini: "RT",
         component: Tabela_Cliente,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 3
       },
       {
         path: "/cadastro/wizard/empresa",
         name: "wizard",
         mini: "RT",
         component: WizardCadastro,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 100
       },
       {
         path: "/cadastro/wizard/fornec",
         name: "wizardFornec",
         mini: "RT",
         component: WizardFornec,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 100
       },
       {
         path: "/cadastro/wizard/colab",
         name: "wizardColab",
         mini: "RT",
         component: WizardColab,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 100
       },
       {
         path: "/tabelas/cliente/prospect",
         name: "Prospects",
         mini: "RT",
         component: prospectTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 2
       },
       {
         path: "/tabelas/cliente/comp/:id",
         name: "Complemento de Clientes",
         mini: "RT",
-        invisible: true,
+        redirect: true,
         component: CliCompTable,
         layout: "/admin"
       },
@@ -714,7 +735,7 @@ const routes = [
         path: "/tabelas/cliente/cont/:id",
         name: "Continuação Cliente",
         mini: "RT",
-        invisible: true,
+        redirect: true,
         component: CliContTable,
         layout: "/admin"
       },
@@ -722,7 +743,7 @@ const routes = [
         path: "/tabelas/cliente/rec_desp/:id",
         name: "Receita e Despesa de Cliente",
         mini: "RT",
-        invisible: true,
+        redirect: true,
         component: CliRecDespTable,
         layout: "/admin"
       },
@@ -731,13 +752,14 @@ const routes = [
         name: "Colaborador",
         mini: "RT",
         component: ColabTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tables/colab/comp/:id",
         name: "Complemento de Colaborador",
         mini: "RT",
-        invisible: true,
+        redirect: true,
         component: ColabCompTable,
         layout: "/admin"
       },
@@ -746,63 +768,72 @@ const routes = [
         name: "Area",
         mini: "RT",
         component: AreaTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/empresa",
         name: "Empresa",
         mini: "RT",
         component: EmpresaTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/fornec",
         name: "Fornecedor",
         mini: "RT",
         component: FornecTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/itm_controle",
         name: "Item Controle",
         mini: "RT",
         component: ItmControleTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/parametros",
         name: "Parametros",
         mini: "RT",
         component: ParametrosTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/prodt",
         name: "Produto",
         mini: "RT",
         component: ProdtTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/representante",
         name: "Representante",
         mini: "RT",
         component: RepresentanteTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/segmento",
         name: "Segmento",
         mini: "RT",
         component: SegmentoTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       },
       {
         path: "/tabelas/general/und_neg",
         name: "Unidade de Negócio",
         mini: "RT",
         component: UndNegTable,
-        layout: "/admin"
+        layout: "/admin",
+        profile: 10
       }
     ]
   }

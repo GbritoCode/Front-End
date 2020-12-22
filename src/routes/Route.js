@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-import AuthLayout from "layouts/Auth/Auth.jsx";
-import AdminLayout from "layouts/Admin/Admin.jsx";
+import AuthLayout from "~/layouts/Auth/Auth.jsx";
+import AdminLayout from "~/layouts/Admin/Admin.jsx";
 
 import { store } from "~/store";
 
@@ -11,7 +11,7 @@ export default function RouteWrapper({
   isPrivate = false,
   ...rest
 }) {
-  const signed = store.getState().auth.signed;
+  const { signed } = store.getState().auth;
   /*
     Axios("http://localhost:5140/empresa").then((result) => {
       if (signed && result.data.length === 0) {
@@ -32,7 +32,7 @@ export default function RouteWrapper({
 
   return (
     <Route
-      render={(props) => (
+      render={props => (
         <Layout>
           <Component {...props} />
         </Layout>
@@ -42,5 +42,5 @@ export default function RouteWrapper({
 }
 
 RouteWrapper.defaultProps = {
-  isPrivate: false,
+  isPrivate: false
 };

@@ -45,6 +45,7 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 
+import { Link } from "react-router-dom";
 import { store } from "~/store";
 
 // core components
@@ -55,9 +56,7 @@ import {
   chartExample4
 } from "~/variables/charts";
 import api from "~/services/api";
-import { Link } from "react-router-dom";
 import { normalizeCurrency } from "~/normalize";
-
 
 var mapData = {
   AU: 760,
@@ -80,25 +79,31 @@ class Dashboard extends React.Component {
       bigChartData: "data1",
       horas: null,
       mes: null,
-      desps: null
+      vlrDesps: null,
+      vlrHrs: null
     };
   }
 
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
-    this.loadData()
+    this.loadData();
   }
 
   loadData = async () => {
     const { id } = store.getState().auth.user;
-    const hrs = await api.get(`horas/${id}/?total=${true}&tipo=month`)
-    const desps = await api.get(`despesas/${id}/?total=${true}&tipo=month`)
-    console.log(desps)
-    const date = new Date()
-    const month = date.toLocaleString('default', { month: 'long' });
-    this.setState({ mes: month, horas: hrs.data, vlrDesps: normalizeCurrency(desps.data) })
-  }
+    const hrs = await api.get(`horas/${id}/?total=${true}&tipo=month`);
+    const desps = await api.get(`despesas/${id}/?total=${true}&tipo=month`);
+    const vlrHrs = await api.get(`colab/${id}/?vlrHrMes=true`);
+    const date = new Date();
+    const month = date.toLocaleString("default", { month: "long" });
+    this.setState({
+      mes: month,
+      horas: hrs.data,
+      vlrDesps: normalizeCurrency(desps.data),
+      vlrHrs: normalizeCurrency(vlrHrs.data)
+    });
+  };
 
   setBgChartData = name => {
     this.setState({
@@ -204,7 +209,12 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col xs="7">
                       <div className="numbers">
-                        <p className="card-category">Total de horas {this.state.mes}</p>
+                        <p
+                          style={{ textTransform: "capitalize" }}
+                          className="card-category"
+                        >
+                          horas {this.state.mes}
+                        </p>
                         <CardTitle tag="h3">{this.state.horas}</CardTitle>
                       </div>
                     </Col>
@@ -231,7 +241,12 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col xs="7">
                       <div className="numbers">
-                        <p className="card-category">Valor despesa {this.state.mes}</p>
+                        <p
+                          style={{ textTransform: "capitalize" }}
+                          className="card-category"
+                        >
+                          despesa {this.state.mes}
+                        </p>
                         <CardTitle tag="h3">{this.state.vlrDesps}</CardTitle>
                       </div>
                     </Col>
@@ -242,7 +257,7 @@ class Dashboard extends React.Component {
                   <div className="stats">
                     <Link to={`tabelas/apontamentos/despesas/${id}`}>
                       <i className="tim-icons icon-sound-wave" /> Ver despesas
-                  </Link>
+                    </Link>
                   </div>
                 </CardFooter>
               </Card>
@@ -258,8 +273,14 @@ class Dashboard extends React.Component {
                     </Col>
                     <Col xs="7">
                       <div className="numbers">
-                        <p className="card-category">Users</p>
-                        <CardTitle tag="h3">150,000</CardTitle>
+                        <p
+                          style={{ textTransform: "capitalize" }}
+                          className="card-category"
+                        >
+                          {" "}
+                          a Receber {this.state.mes}
+                        </p>
+                        <CardTitle tag="h3">{this.state.vlrHrs}</CardTitle>
                       </div>
                     </Col>
                   </Row>

@@ -16,10 +16,11 @@
 */
 /*eslint-disable*/
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
+import { store } from "~/store";
 
 // reactstrap components
 import { Nav, Collapse } from "reactstrap";
@@ -63,14 +64,17 @@ class Sidebar extends React.Component {
   }
   // this function creates the links and collapses that appear in the sidebar (left menu)
   createLinks = (routes) => {
+  const { profile } = store.getState().auth.user;
+
     return routes.map((prop, key) => {
       if (prop.redirect) {
         return null;
       }
-      if (prop.invisible) return null;
-      if (prop.collapse) {
+      if(prop.profile > profile) return null
+      if (prop.collapse === true) {
         var st = {};
         st[prop["state"]] = !this.state[prop.state];
+        console.log(st)
         return (
           <li
             className={this.getCollapseInitialState(prop.views) ? "active" : ""}
@@ -94,6 +98,7 @@ class Sidebar extends React.Component {
                   </p>
                 </>
               ) : (
+                prop.profile === "g@g.com" ? (null):(
                 <>
                   <span className="sidebar-mini-icon">
                     {prop.mini}
@@ -103,7 +108,7 @@ class Sidebar extends React.Component {
                     <b className="caret" />
                   </span>
                 </>
-              )}
+              ))}
             </a>
             <Collapse isOpen={this.state[prop.state]}>
               <ul className="nav">{this.createLinks(prop.views)}</ul>
@@ -145,6 +150,7 @@ class Sidebar extends React.Component {
       : "";
   };
   componentDidMount() {
+    console.log(this.props)
     // if you are using a Windows Machine, the scrollbars will have a Mac look
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar);

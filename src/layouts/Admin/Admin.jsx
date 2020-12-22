@@ -25,7 +25,7 @@ import NotificationAlert from "react-notification-alert";
 import AdminNavbar from "~/components/Navbars/AdminNavbar.jsx";
 import Sidebar from "~/components/Sidebar/Sidebar.jsx";
 
-import routes from "~/routes/routes.js";
+import routes from "~/routes/routes";
 
 import logo from "~/assets/img/tovoLogo.png";
 
@@ -36,7 +36,6 @@ class Admin extends React.Component {
     super(props);
     this.state = {
       activeColor: "blue",
-      sidebarMini: true,
       opacity: 0,
       sidebarOpened: false
     };
@@ -55,15 +54,6 @@ class Admin extends React.Component {
     window.addEventListener("scroll", this.showNavbarButton);
   }
 
-  componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
-      document.documentElement.className += " perfect-scrollbar-off";
-      document.documentElement.classList.remove("perfect-scrollbar-on");
-    }
-    window.removeEventListener("scroll", this.showNavbarButton);
-  }
-
   componentDidUpdate(e) {
     if (
       e.children.props.location.pathname !==
@@ -79,6 +69,15 @@ class Admin extends React.Component {
       document.scrollingElement.scrollTop = 0;
       this.refs.mainPanel.scrollTop = 0;
     }
+  }
+
+  componentWillUnmount() {
+    if (navigator.platform.indexOf("Win") > -1) {
+      ps.destroy();
+      document.documentElement.className += " perfect-scrollbar-off";
+      document.documentElement.classList.remove("perfect-scrollbar-on");
+    }
+    window.removeEventListener("scroll", this.showNavbarButton);
   }
 
   showNavbarButton = () => {

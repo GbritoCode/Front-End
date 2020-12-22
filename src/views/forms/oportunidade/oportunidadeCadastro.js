@@ -128,16 +128,16 @@ export default function CadastroOport() {
   }
 
   const checkFase = value => {
-    if (value == 1) {
+    if (value === "1") {
       return "Aberta";
     }
-    if (value == 2) {
+    if (value === "2") {
       return "Em Cotação";
     }
-    if (value == 3) {
+    if (value === "3") {
       return "Cotada";
     }
-    if (value == 4) {
+    if (value === "4") {
       return "Aprovada";
     }
   };

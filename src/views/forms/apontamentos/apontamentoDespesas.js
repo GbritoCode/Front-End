@@ -54,7 +54,7 @@ export default function DespesaCadastro() {
 
   const optionalSchema = {
     desc: { value: "", error: "", message: "" }
-  }
+  };
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" },
@@ -64,7 +64,7 @@ export default function DespesaCadastro() {
       message: ""
     },
     tipoDespesa: { value: "", error: "", message: "" },
-    valorDespesa: { value: "", error: "", message: "" },
+    valorDespesa: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
@@ -73,7 +73,9 @@ export default function DespesaCadastro() {
     const { email } = store.getState().auth.user;
     async function loadData() {
       const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
-      const response2 = await axios(`http://localhost:5140/colab/?email=${email}`);
+      const response2 = await axios(
+        `http://localhost:5140/colab/?email=${email}`
+      );
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -170,7 +172,7 @@ export default function DespesaCadastro() {
           values.dataDespesa.value,
           values.tipoDespesa.value,
           valorDespesadb,
-          optional.desc.value,
+          optional.desc.value
         )
       );
     } else {
@@ -203,7 +205,7 @@ export default function DespesaCadastro() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col md="4">
+                    <Col md="8">
                       <Label>Oportunidade</Label>
                       <FormGroup
                         className={`has-label ${values.OportunidadeId.error}`}
@@ -219,7 +221,7 @@ export default function DespesaCadastro() {
                         >
                           <option disabled value="">
                             {" "}
-                        Selecione a Oportunidade{" "}
+                            Selecione a Oportunidade{" "}
                           </option>{" "}
                           <option value={data1.id}>
                             {" "}
@@ -254,9 +256,13 @@ export default function DespesaCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
+                  </Row>
+                  <Row>
                     <Col md="4">
                       <Label>Tipo da Despesa</Label>
-                      <FormGroup className={`has-label ${values.tipoDespesa.error}`}>
+                      <FormGroup
+                        className={`has-label ${values.tipoDespesa.error}`}
+                      >
                         <Input
                           name="tipoDespesa"
                           type="select"
@@ -267,7 +273,7 @@ export default function DespesaCadastro() {
                         >
                           <option disabled value="">
                             {" "}
-                                Selecione o tipo da despesa{" "}
+                            Selecione o tipo da despesa{" "}
                           </option>
                           <option value={1}>Alimentação</option>
                           <option value={2}>Deslocamento</option>
@@ -283,11 +289,11 @@ export default function DespesaCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
                     <Col md="4">
                       <Label>Valor da Despesa </Label>
-                      <FormGroup className={`has-label ${values.valorDespesa.error}`}>
+                      <FormGroup
+                        className={`has-label ${values.valorDespesa.error}`}
+                      >
                         <Input
                           name="valorDespesa"
                           type="text"
@@ -303,12 +309,14 @@ export default function DespesaCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="4">
-                      <Label>Comentário</Label>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Label>Descrição</Label>
                       <FormGroup className={`has-label ${optional.desc.error}`}>
                         <Input
                           name="desc"
-                          type="text"
+                          type="textarea"
                           onChange={event =>
                             handleChange(event, "desc", "optional")
                           }
@@ -322,6 +330,7 @@ export default function DespesaCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
+
                   <Button
                     style={{
                       paddingLeft: 29,
