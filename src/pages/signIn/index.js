@@ -38,7 +38,7 @@ export default function SignIn() {
 
   const errorCheckAux = [bindEmail, bindPassword];
   async function teste() {
-    const response = await api.get("/empresa");
+    const response = await api.get("/12010739000163");
     console.log(response);
   }
   teste();
