@@ -35,6 +35,7 @@ import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { empresaRequest } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 export default function EmpresaCadastro() {
@@ -56,7 +57,7 @@ export default function EmpresaCadastro() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/users`);
+      const response = await api.get(`/users`);
       setData(response.data);
     }
     loadData();

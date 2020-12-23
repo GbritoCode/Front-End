@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { ProdtUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 function ProdtUpdatee() {
   // --------- colocando no modo claro do template
@@ -52,10 +52,8 @@ function ProdtUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/prodt/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/empresa/${response.data.EmpresaId}`
-      );
+      const response = await api.get(`/prodt/${id}`);
+      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,

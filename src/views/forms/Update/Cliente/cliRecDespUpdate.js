@@ -33,9 +33,9 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { normalizeCnpj, normalizeCurrency } from "~/normalize";
 import { cliRecDespUpdate } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 export default function CliRecDespUpdatee() {
   // --------- colocando no modo claro do template
@@ -59,13 +59,9 @@ export default function CliRecDespUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(
-        `http://localhost:5140/cliente/rec_desp/1/${id}`
-      );
-      const response1 = await axios(
-        `http://localhost:5140/cliente/${response.data.ClienteId}`
-      );
-      const response2 = await axios(`http://localhost:5140/rec_desp/?rec=true`);
+      const response = await api.get(`/cliente/rec_desp/1/${id}`);
+      const response1 = await api.get(`/cliente/${response.data.ClienteId}`);
+      const response2 = await api.get(`/rec_desp/?rec=true`);
 
       setData1(response1.data);
       setData2(response2.data);

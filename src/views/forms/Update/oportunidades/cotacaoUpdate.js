@@ -33,13 +33,13 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import {
   normalizeCnpj,
   normalizeCurrency,
   normalizeCalcCurrency
 } from "~/normalize";
 import { cotacaoUpdate } from "~/store/modules/oportunidades/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 function CotacaoUpdate() {
@@ -74,16 +74,14 @@ function CotacaoUpdate() {
   const imposto = 14 / 100;
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/cotacao/aux/${id}`);
+      const response = await api.get(`/cotacao/aux/${id}`);
 
       if (response.data === null) {
         setIsLoading(false);
       } else {
-        const response1 = await axios(
-          `http://localhost:5140/empresa/${response.data.EmpresaId}`
-        );
-        const response2 = await axios(
-          `http://localhost:5140/oportunidade/${response.data.OportunidadeId}`
+        const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
+        const response2 = await api.get(
+          `/oportunidade/${response.data.OportunidadeId}`
         );
         setData1(response1.data);
         setData2(response2.data);
@@ -125,11 +123,13 @@ function CotacaoUpdate() {
   }, [id]);
 
   function getCliData(cobranca) {
-    axios(
-      `http://localhost:5140/cliente/rec_desp/${data1.ClienteId}/?itmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
-    ).then(result => {
-      setData3(result.data);
-    });
+    api
+      .get(
+        `/cliente/rec_desp/${data1.ClienteId}/?itmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
+      )
+      .then(result => {
+        setData3(result.data);
+      });
   }
 
   const verifyNumber = value => {

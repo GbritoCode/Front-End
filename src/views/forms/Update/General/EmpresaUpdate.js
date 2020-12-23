@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { EmpresaUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 function EmpresaUpdatee() {
@@ -54,8 +54,8 @@ function EmpresaUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${id}`);
-      const response1 = await axios(`http://localhost:5140/users`);
+      const response = await api.get(`/empresa/${id}`);
+      const response1 = await api.get(`/users`);
 
       setData1(response1.data);
       setValues(prevState => ({

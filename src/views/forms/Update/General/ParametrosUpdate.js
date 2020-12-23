@@ -33,9 +33,9 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { normalizeCnpj, normalizeCurrency } from "~/normalize";
 import { ParametrosUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 function ParametrosUpdatee() {
   // --------- colocando no modo claro do template
@@ -58,7 +58,7 @@ function ParametrosUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/parametros/${id}`);
+      const response = await api.get(`/parametros/${id}`);
 
       setData(response.data);
       setValues(prevState => ({

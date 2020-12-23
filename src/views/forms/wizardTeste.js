@@ -28,27 +28,27 @@ import {
   Input,
   FormGroup,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import {  empresaRequest } from "~/store/modules/general/actions";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { empresaRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
 
-/*eslint-disable eqeqeq*/
+/* eslint-disable eqeqeq */
 export default function WizardCadastro() {
-  //--------- colocando no modo claro do template
+  // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  let jsonpAdapter = require("axios-jsonp");
+  const jsonpAdapter = require("axios-jsonp");
 
   const stateSchema = {
     cnpj: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     license: { value: "", error: "", message: "" },
-    userId: { value: "", error: "", message: "" },
+    userId: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -56,7 +56,7 @@ export default function WizardCadastro() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/users`);
+      const response = await api.get(`/users`);
       setData(response.data);
     }
     loadData();
@@ -102,7 +102,7 @@ export default function WizardCadastro() {
     var resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
     if (resultado != digitos.charAt(0)) return false;
 
-    tamanho = tamanho + 1;
+    tamanho += 1;
     numeros = cnpj.substring(0, tamanho);
     soma = 0;
     pos = tamanho - 7;
@@ -116,7 +116,7 @@ export default function WizardCadastro() {
     return true;
   }
 
-  const normalizeInput = (value) => {
+  const normalizeInput = value => {
     if (!value) return value;
     const currentValue = value.replace(/[^\d]/g, "");
     const cvLength = currentValue.length;
@@ -143,21 +143,21 @@ export default function WizardCadastro() {
     )}-${currentValue.slice(12, 14)}`;
   };
 
-  const renderCnpjState = (value) => {
+  const renderCnpjState = value => {
     if (!validarCNPJ(value)) {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cnpj: { error: "has-danger", message: "Insira um CNPJ válido" },
+        cnpj: { error: "has-danger", message: "Insira um CNPJ válido" }
       }));
     } else {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        cnpj: { value: value, error: "has-success", message: "" },
+        cnpj: { value, error: "has-success", message: "" }
       }));
     }
   };
 
-  const verifyNumber = (value) => {
+  const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
@@ -167,53 +167,53 @@ export default function WizardCadastro() {
 
   const handleChange = (event, name, type) => {
     event.persist();
-    let target = event.target.value;
+    const target = event.target.value;
     switch (type) {
       case "number":
         if (verifyNumber(target)) {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
-            [name]: { value: target, error: "has-success" },
+            [name]: { value: target, error: "has-success" }
           }));
         } else {
-          setValues((prevState) => ({
+          setValues(prevState => ({
             ...prevState,
             [name]: {
               value: target,
               error: "has-danger",
-              message: "Insira um número válido",
-            },
+              message: "Insira um número válido"
+            }
           }));
         }
         break;
       case "cnpj":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          cnpj: { value: normalizeInput(target) },
+          cnpj: { value: normalizeInput(target) }
         }));
         break;
       case "text":
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target },
+          [name]: { value: target }
         }));
-        break
-        default:
-      }
+        break;
+      default:
+    }
   };
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
     const response = await axios({
       url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-      adapter: jsonpAdapter,
+      adapter: jsonpAdapter
     });
     if (response.data.status === "ERROR") {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
         cnpj: {
           error: "has-danger",
-          message: "Insira um CNPJ válido",
-        },
+          message: "Insira um CNPJ válido"
+        }
       }));
       options = {
         place: "tr",
@@ -224,17 +224,17 @@ export default function WizardCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     } else {
-      setValues((prevState) => ({
+      setValues(prevState => ({
         ...prevState,
-        nome: { value: response.data.nome },
+        nome: { value: response.data.nome }
       }));
     }
   }
-  const handleSubmit = async (evt) => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -243,7 +243,7 @@ export default function WizardCadastro() {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
       } else {
-        valid = false
+        valid = false;
         break;
       }
     }
@@ -252,9 +252,9 @@ export default function WizardCadastro() {
         var filled = true;
       } else {
         filled = false;
-        setValues((prevState) => ({
+        setValues(prevState => ({
           ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" },
+          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
         break;
       }
@@ -262,19 +262,20 @@ export default function WizardCadastro() {
 
     if (valid && filled) {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
-      const first = true
+      const first = true;
       dispatch(
         empresaRequest(
           cnpjdb,
           values.nome.value,
           values.license.value,
           values.userId.value,
-          first,
+          first
         )
-      )
-      api.get("/empresa").then((results) => {
-      }).catch((error) => {
-      })
+      );
+      api
+        .get("/empresa")
+        .then(results => {})
+        .catch(error => {});
     } else {
       options = {
         place: "tr",
@@ -285,7 +286,7 @@ export default function WizardCadastro() {
         ),
         type: "danger",
         icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7,
+        autoDismiss: 7
       };
       notify();
     }
@@ -297,28 +298,36 @@ export default function WizardCadastro() {
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
-        <div class="mr-auto ml-auto col-md-10">
-          <div class="text-center card-header" style={{ backgroundColor: "#f5f6fa", borderBottomWidth: 0 }}>
-            <h3 class="card-title">Bem Vindo!</h3>
-            <h4 class="description">Esse é o primeiro login dessa aplicação, cadastre alguns dados necessários.</h4>
+        <div className="mr-auto ml-auto col-md-10">
+          <div
+            className="text-center card-header"
+            style={{ backgroundColor: "#f5f6fa", borderBottomWidth: 0 }}
+          >
+            <h3 className="card-title">Bem Vindo!</h3>
+            <h4 className="description">
+              Esse é o primeiro login dessa aplicação, cadastre alguns dados
+              necessários.
+            </h4>
           </div>
           <Card>
             <CardHeader>
-              <CardTitle style={{ textAlign: "center" }} tag="h4">Cadastre a sua Empresa</CardTitle>
+              <CardTitle style={{ textAlign: "center" }} tag="h4">
+                Cadastre a sua Empresa
+              </CardTitle>
             </CardHeader>
             <CardBody>
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col md="6">
-                  <Label>CNPJ</Label>
+                    <Label>CNPJ</Label>
                     <FormGroup className={`has-label ${values.cnpj.error}`}>
                       <Input
                         name="idFederal"
                         type="text"
-                        onChange={(event) => handleChange(event, "cnpj", "cnpj")}
+                        onChange={event => handleChange(event, "cnpj", "cnpj")}
                         value={values.cnpj.value}
-                        onBlur={(e) => {
-                          let value = e.target.value;
+                        onBlur={e => {
+                          const { value } = e.target;
                           renderCnpjState(value);
                           cnpjRequest(value);
                         }}
@@ -329,12 +338,12 @@ export default function WizardCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="6">
-                  <Label>Nome</Label>
+                    <Label>Nome</Label>
                     <FormGroup className={`has-label ${values.nome.error}`}>
                       <Input
                         name="nome"
                         type="text"
-                        onChange={(event) => handleChange(event, "nome", "text")}
+                        onChange={event => handleChange(event, "nome", "text")}
                         value={values.nome.value}
                       />
                       {values.nome.error === "has-danger" ? (
@@ -345,28 +354,30 @@ export default function WizardCadastro() {
                 </Row>
                 <Row>
                   <Col md="6">
-                  <Label>License</Label>
+                    <Label>License</Label>
                     <FormGroup className={`has-label ${values.license.error}`}>
                       <Input
                         name="license"
                         type="text"
-                        onChange={(event) =>
+                        onChange={event =>
                           handleChange(event, "license", "text")
                         }
                         value={values.license.value}
                       />
                       {values.license.error === "has-danger" ? (
-                        <Label className="error">{values.license.message}</Label>
+                        <Label className="error">
+                          {values.license.message}
+                        </Label>
                       ) : null}
                     </FormGroup>
                   </Col>
                   <Col md="6">
-                  <Label>Usuário</Label>
+                    <Label>Usuário</Label>
                     <FormGroup className={`has-label ${values.userId.error}`}>
                       <Input
                         name="UserId"
                         type="select"
-                        onChange={(event) =>
+                        onChange={event =>
                           handleChange(event, "userId", "text")
                         }
                         value={values.userId.value}
@@ -374,9 +385,9 @@ export default function WizardCadastro() {
                         {" "}
                         <option disabled value="">
                           {" "}
-                        Selecione o usuário{" "}
+                          Selecione o usuário{" "}
                         </option>
-                        {data.map((user) => (
+                        {data.map(user => (
                           <option key={user.id} value={user.id}>
                             {" "}
                             {user.name} - {user.email}{" "}
@@ -387,7 +398,6 @@ export default function WizardCadastro() {
                         <Label className="error">{values.userId.message}</Label>
                       ) : null}
                     </FormGroup>
-
                   </Col>
                 </Row>
                 <Button
@@ -401,10 +411,11 @@ export default function WizardCadastro() {
                   type="submit"
                 >
                   Enviar{" "}
-                  <i className="tim-icons icon-send"
+                  <i
+                    className="tim-icons icon-send"
                     style={{
                       paddingBottom: 4,
-                      paddingLeft: 3,
+                      paddingLeft: 3
                     }}
                     size="large"
                   />

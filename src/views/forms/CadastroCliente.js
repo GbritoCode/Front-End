@@ -37,6 +37,7 @@ import { Link, useParams } from "react-router-dom";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 export default function CadastroCliente() {
@@ -65,9 +66,9 @@ export default function CadastroCliente() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/tipoComiss/`);
-      const response2 = await axios(`http://localhost:5140/representante/`);
+      const response = await api.get(`empresa/${empresa}`);
+      const response1 = await api.get(`tipoComiss/`);
+      const response2 = await api.get(`representante/`);
       setData1(response1.data);
       setData2(response2.data);
       setData(response.data);

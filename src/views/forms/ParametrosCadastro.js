@@ -31,12 +31,12 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { normalizeCurrency, normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { parametrosRequest } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 export default function ParametrosCadastro() {
   // --------- colocando no modo claro do template
@@ -58,7 +58,7 @@ export default function ParametrosCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response = await api.get(`/empresa/${empresa}`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

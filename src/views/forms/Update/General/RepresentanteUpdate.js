@@ -33,9 +33,9 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { normalizeCnpj, normalizeCurrency } from "~/normalize";
 import { RepresentanteUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 function RepresentanteUpdatee() {
   // --------- colocando no modo claro do template
@@ -55,11 +55,9 @@ function RepresentanteUpdatee() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/representante/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/empresa/${response.data.EmpresaId}`
-      );
-      const response2 = await axios(`http://localhost:5140/tipoComiss/`);
+      const response = await api.get(`/representante/${id}`);
+      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
+      const response2 = await api.get(`/tipoComiss/`);
       setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({

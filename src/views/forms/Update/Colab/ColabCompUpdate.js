@@ -33,9 +33,9 @@ import {
 import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { normalizeCurrency } from "~/normalize";
 import { ColabCompUpdate } from "~/store/modules/Colab/actions";
+import api from "~/services/api";
 
 function ColabCompUpdatee() {
   // --------- colocando no modo claro do template
@@ -58,10 +58,8 @@ function ColabCompUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/colab/comp/1/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/colab/${response.data.ColabId}`
-      );
+      const response = await api.get(`/colab/comp/1/${id}`);
+      const response1 = await api.get(`/colab/${response.data.ColabId}`);
       setData1(response1.data);
 
       setValues(prevState => ({

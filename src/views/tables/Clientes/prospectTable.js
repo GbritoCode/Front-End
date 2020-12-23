@@ -22,7 +22,6 @@ import ReactTable from "react-table-v6";
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { useDispatch } from "react-redux";
@@ -100,7 +99,7 @@ export default function ProspectTable() {
                     var data1 = [];
                     data1.find((o, i) => {
                       if (o.idd === key) {
-                        axios.delete(`http://localhost:5140/cliente/${o.id}`);
+                        api.delete(`/cliente/${o.id}`);
                         data1.splice(i, 1);
 
                         return true;

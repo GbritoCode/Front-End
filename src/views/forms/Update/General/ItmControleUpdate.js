@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { itmControleUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 function ItmCtrlUpdatee() {
   // --------- colocando no modo claro do template
@@ -56,10 +56,8 @@ function ItmCtrlUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:5140/itm_controle/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/empresa/${response.data.EmpresaId}`
-      );
+      const response = await api.get(`/itm_controle/${id}`);
+      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,

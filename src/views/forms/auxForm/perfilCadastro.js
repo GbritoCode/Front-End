@@ -31,11 +31,11 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { store } from "~/store";
 import { perfilRequest } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 export default function PerfilCadastro() {
   // --------- colocando no modo claro do template
@@ -52,7 +52,9 @@ export default function PerfilCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response = await api.get(
+        `http://localhost:5140/empresa/${empresa}`
+      );
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

@@ -31,7 +31,6 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { differenceInMinutes, subHours, subMinutes } from "date-fns";
@@ -49,7 +48,6 @@ export default function HorasUpdate() {
   const [data1, setData1] = useState({});
   const [data4, setData4] = useState([]);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
-
 
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
@@ -76,19 +74,25 @@ export default function HorasUpdate() {
     desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-  console.log(values)
+  console.log(values);
   useEffect(() => {
     const { email } = store.getState().auth.user;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/horas/${id}/?update=true`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${response.data.OportunidadeId}`);
+      const response = await api.get(`/horas/${id}/?update=true`);
+      const response1 = await api.get(
+        `/oportunidade/${response.data.OportunidadeId}`
+      );
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
-      const response4 = await axios(`http://localhost:5140/area/`);
-      const response5 = await axios(`http://localhost:5140/colab/?email=${email}`);
-      const response6 = await axios(`http://localhost:5140/horas/${response5.data.id}/?total=${true}&tipo=project&oport=${response1.data.id}`);
+      const response4 = await api.get(`/area/`);
+      const response5 = await api.get(`/colab/?email=${email}`);
+      const response6 = await api.get(
+        `/horas/${response5.data.id}/?total=${true}&tipo=project&oport=${
+          response1.data.id
+        }`
+      );
       setData4(response4.data);
       setData1(response1.data);
-      console.log(response.data)
+      console.log(response.data);
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response1.data.id },
@@ -107,11 +111,10 @@ export default function HorasUpdate() {
         totalApontTemp: { value: response.data.totalApont },
         solicitante: { value: response.data.solicitante },
         AreaId: { value: response.data.AreaId },
-        desc: { value: response.data.desc },
+        desc: { value: response.data.desc }
       }));
     }
     loadData();
-
   }, [id]);
 
   var options = {};
@@ -151,7 +154,9 @@ export default function HorasUpdate() {
         const apontBruto = differenceInMinutes(fimParsed, inicParsed);
         const apontHr = `0${Math.trunc(apontBruto / 60)}`.slice(-2);
         const apontMin = `0${Math.trunc(apontBruto % 60)}`.slice(-2);
-        const acumMin = `0${Math.trunc((parseInt(acum[1], 10) + parseInt(apontMin, 10)) % 60)}`.slice(-2);
+        const acumMin = `0${Math.trunc(
+          (parseInt(acum[1], 10) + parseInt(apontMin, 10)) % 60
+        )}`.slice(-2);
         const acumHr = `0${parseInt(acum[0], 10) +
           parseInt(apontHr, 10) +
           Math.trunc(
@@ -253,8 +258,8 @@ export default function HorasUpdate() {
 
     if (valid && filled) {
       const apont = values.totalApont.value.split(":");
-      const apontMins = Math.trunc((apont[0] * 60) + parseInt(apont[1], 10))
-      const apontDiff = apontMins - values.totalApontTemp.value
+      const apontMins = Math.trunc(apont[0] * 60 + parseInt(apont[1], 10));
+      const apontDiff = apontMins - values.totalApontTemp.value;
       dispatch(
         horaUpdate(
           id,
@@ -567,9 +572,7 @@ export default function HorasUpdate() {
                   <Row>
                     <Col md="12">
                       <Label>Descrição</Label>
-                      <FormGroup
-                        className={`has-label ${values.desc.error}`}
-                      >
+                      <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           type="textarea"
                           name="desc"
@@ -579,9 +582,7 @@ export default function HorasUpdate() {
                           value={values.desc.value}
                         />
                         {values.desc.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.desc.message}
-                          </Label>
+                          <Label className="error">{values.desc.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>

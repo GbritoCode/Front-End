@@ -36,6 +36,7 @@ import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { normalizeCnpj } from "~/normalize";
 import { CliCompRequest } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 export default function CliCompCadastro() {
   // --------- colocando no modo claro do template
@@ -76,8 +77,8 @@ export default function CliCompCadastro() {
   useEffect(() => {
     // ------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await axios(`http://localhost:5140/cliente/${id}`);
-      const response1 = await axios(`http://localhost:5140/condPgmto`);
+      const response = await api.get(`/cliente/${id}`);
+      const response1 = await api.get(`/condPgmto`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

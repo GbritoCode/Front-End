@@ -33,9 +33,9 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { FornecUpdate } from "~/store/modules/general/actions";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 function FornecUpdatee() {
@@ -73,11 +73,9 @@ function FornecUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/fornec/${id}`);
-      const response1 = await axios(`http://localhost:5140/condPgmto`);
-      const response2 = await axios(
-        `http://localhost:5140/empresa/${response.data.EmpresaId}`
-      );
+      const response = await api.get(`/fornec/${id}`);
+      const response1 = await api.get(`/condPgmto`);
+      const response2 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({

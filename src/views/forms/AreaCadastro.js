@@ -31,11 +31,11 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { store } from "~/store";
 import { areaRequest } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 export default function CadastroCliente() {
   // --------- colocando no modo claro do template
@@ -53,7 +53,7 @@ export default function CadastroCliente() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response = await api.get(`/empresa/${empresa}`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

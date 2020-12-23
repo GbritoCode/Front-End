@@ -32,7 +32,6 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -40,6 +39,7 @@ import { AssignmentInd, CreditCard, LocalOffer } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 export default function UpdateOport() {
@@ -80,18 +80,16 @@ export default function UpdateOport() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response2 = await axios(`http://localhost:5140/cliente/`);
-      const response4 = await axios(`http://localhost:5140/und_neg/`);
-      const response5 = await axios(`http://localhost:5140/itm_controle/`);
-      const response6 = await axios(`http://localhost:5140/segmento/`);
-      const response7 = await axios(`http://localhost:5140/representante/`);
-      const response8 = await axios(`http://localhost:5140/oportunidade/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/colab/${response8.data.ColabId}`
-      );
-      const response3 = await axios(
-        `http://localhost:5140/cliente/cont/${response8.data.ClienteId}`
+      const response = await api.get(`/empresa/${empresa}`);
+      const response2 = await api.get(`/cliente/`);
+      const response4 = await api.get(`/und_neg/`);
+      const response5 = await api.get(`/itm_controle/`);
+      const response6 = await api.get(`/segmento/`);
+      const response7 = await api.get(`/representante/`);
+      const response8 = await api.get(`/oportunidade/${id}`);
+      const response1 = await api.get(`/colab/${response8.data.ColabId}`);
+      const response3 = await api.get(
+        `/cliente/cont/${response8.data.ClienteId}`
       );
       setData1(response1.data);
       setData2(response2.data);
@@ -176,10 +174,10 @@ export default function UpdateOport() {
     }
   };
   function getContato(cliente) {
-    axios(`http://localhost:5140/cliente/cont/${cliente}`).then(result => {
+    api.get(`/cliente/cont/${cliente}`).then(result => {
       setData3(result.data);
     });
-    axios(`http://localhost:5140/cliente/${cliente}`).then(result => {
+    api.get(`/cliente/${cliente}`).then(result => {
       setValues(prevState => ({
         ...prevState,
         RepresentanteId: { value: result.data.RepresentanteId }

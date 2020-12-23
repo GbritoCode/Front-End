@@ -31,7 +31,6 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -81,12 +80,8 @@ export default function CotacaoCadastro() {
       const response2 = await api.get(`/cotacao/${id}/?one=true`);
       if (response2.data === null) {
       } else {
-        const response = await axios(
-          `http://localhost:5140/empresa/${empresa}`
-        );
-        const response1 = await axios(
-          `http://localhost:5140/oportunidade/${id}`
-        );
+        const response = await api.get(`/empresa/${empresa}`);
+        const response1 = await api.get(`/oportunidade/${id}`);
         setData(response.data);
         setData1(response1.data);
         console.log(response2.data);
@@ -129,29 +124,31 @@ export default function CotacaoCadastro() {
     notifyElment.current.notificationAlert(options);
   }
   function getCliData(cobranca) {
-    axios(
-      `http://localhost:5140/cliente/rec_desp/${data1.ClienteId}/?ItmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
-    ).then(result => {
-      if (result.data === null) {
-        options = {
-          place: "tr",
-          message: (
-            <div>
+    api
+      .get(
+        `/cliente/rec_desp/${data1.ClienteId}/?ItmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
+      )
+      .then(result => {
+        if (result.data === null) {
+          options = {
+            place: "tr",
+            message: (
               <div>
-                Ops! Parece que não há uma receita cadastrada para o caso dessa
-                oportunidade, casdastre uma!
+                <div>
+                  Ops! Parece que não há uma receita cadastrada para o caso
+                  dessa oportunidade, casdastre uma!
+                </div>
               </div>
-            </div>
-          ),
-          type: "danger",
-          icon: "tim-icons icon-alert-circle-exc",
-          autoDismiss: 7
-        };
-        notify();
-      } else {
-        setData2(result.data);
-      }
-    });
+            ),
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            autoDismiss: 7
+          };
+          notify();
+        } else {
+          setData2(result.data);
+        }
+      });
   }
 
   const verifyNumber = value => {

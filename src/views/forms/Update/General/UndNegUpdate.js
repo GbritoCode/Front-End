@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { UndNegUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 function UndNegUpdatee() {
   // --------- colocando no modo claro do template
@@ -53,10 +53,8 @@ function UndNegUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:5140/und_neg/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/empresa/${response.data.EmpresaId}`
-      );
+      const response = await api.get(`/und_neg/${id}`);
+      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData(response.data);
       setData(response1.data);
       setValues(prevState => ({

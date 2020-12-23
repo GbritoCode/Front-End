@@ -31,11 +31,11 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { useParams, Link } from "react-router-dom";
 import { normalizeCurrency } from "~/normalize";
 import { parcelaReqest } from "~/store/modules/oportunidades/actions";
+import api from "~/services/api";
 
 export default function ParcelaCadastro() {
   // --------- colocando no modo claro do template
@@ -53,7 +53,7 @@ export default function ParcelaCadastro() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
+      const response1 = await api.get(`/oportunidade/${id}`);
       setData1(response1.data);
 
       setValues(prevState => ({

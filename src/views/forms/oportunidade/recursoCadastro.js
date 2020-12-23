@@ -31,12 +31,12 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { recursoReqest } from "~/store/modules/oportunidades/actions";
 import { store } from "~/store";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
+import api from "~/services/api";
 
 export default function RecursoCadastro() {
   // --------- colocando no modo claro do template
@@ -70,9 +70,9 @@ export default function RecursoCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
-      const response2 = await axios(`http://localhost:5140/colab/`);
+      const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/oportunidade/${id}`);
+      const response2 = await api.get(`/colab/`);
       setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({
@@ -85,7 +85,7 @@ export default function RecursoCadastro() {
   }, [id]);
 
   function getColabHr(colab) {
-    axios(`http://localhost:5140/colab/comp/${colab}`).then(result => {
+    api.get(`/colab/comp/${colab}`).then(result => {
       if (result.data.length === 0) {
         options = {
           place: "tr",

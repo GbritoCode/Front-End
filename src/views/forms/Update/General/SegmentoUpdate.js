@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { SegmentoUpdate } from "~/store/modules/general/actions";
+import api from "~/services/api";
 
 function SegmentoUpdatee() {
   // --------- colocando no modo claro do template
@@ -59,13 +59,11 @@ function SegmentoUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:5140/segmento/${id}`);
-      const response1 = await axios(`http://localhost:5140/und_neg/`);
-      const response2 = await axios(`http://localhost:5140/prodt/`);
-      const response3 = await axios(`http://localhost:5140/area/`);
-      const response4 = await axios(
-        `http://localhost:5140/empresa/${response.data.EmpresaId}`
-      );
+      const response = await api.get(`/segmento/${id}`);
+      const response1 = await api.get(`/und_neg/`);
+      const response2 = await api.get(`/prodt/`);
+      const response3 = await api.get(`/area/`);
+      const response4 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);

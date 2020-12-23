@@ -31,7 +31,6 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { differenceInMinutes, subHours, subMinutes } from "date-fns";
@@ -82,17 +81,13 @@ export default function HorasCadastro() {
     const { email } = store.getState().auth.user;
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
+      const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/oportunidade/${id}`);
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
-      const response4 = await axios(`http://localhost:5140/area/`);
-      const response5 = await axios(
-        `http://localhost:5140/colab/?email=${email}`
-      );
-      const response6 = await axios(
-        `http://localhost:5140/horas/${id}/?total=${true}&tipo=project&oport=${
-          response1.data.id
-        }`
+      const response4 = await api.get(`/area/`);
+      const response5 = await api.get(`/colab/?email=${email}`);
+      const response6 = await api.get(
+        `/horas/${id}/?total=${true}&tipo=project&oport=${response1.data.id}`
       );
       setData4(response4.data);
       setData1(response1.data);

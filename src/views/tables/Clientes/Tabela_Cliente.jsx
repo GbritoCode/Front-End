@@ -22,7 +22,6 @@ import ReactTable from "react-table-v6";
 import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
@@ -75,7 +74,7 @@ class Tabela_Cliente extends Component {
                   var { data } = this.state;
                   data.find((o, i) => {
                     if (o.idd === key) {
-                      axios.delete(`http://localhost:5140/cliente/${o.id}`);
+                      api.delete(`http://localhost:5140/cliente/${o.id}`);
                       data.splice(i, 1);
 
                       return true;

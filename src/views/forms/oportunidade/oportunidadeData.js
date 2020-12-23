@@ -30,13 +30,13 @@ import {
   Row,
   Col
 } from "reactstrap";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import {
   normalizeHrToMin,
   normalizeCurrency,
   normalizeCalcCurrency
 } from "~/normalize";
+import api from "~/services/api";
 
 export default function DataOport() {
   // --------- colocando no modo claro do template
@@ -57,16 +57,10 @@ export default function DataOport() {
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/oportunidade/${id}`);
-      const response1 = await axios(
-        `http://localhost:5140/cotacao/${id}/?one=true`
-      );
-      const response2 = await axios(
-        `http://localhost:5140/recurso/${id}/?total=true`
-      );
-      const response3 = await axios(
-        `http://localhost:5140/colab/?data=true&oport=${id}`
-      );
+      const response = await api.get(`/oportunidade/${id}`);
+      const response1 = await api.get(`/cotacao/${id}/?one=true`);
+      const response2 = await api.get(`/recurso/${id}/?total=true`);
+      const response3 = await api.get(`/colab/?data=true&oport=${id}`);
 
       setValues(prevState => ({
         ...prevState,

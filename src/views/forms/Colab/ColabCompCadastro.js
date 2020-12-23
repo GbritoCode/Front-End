@@ -31,11 +31,11 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { normalizeCurrency } from "~/normalize";
 import { colabCompRequest } from "~/store/modules/Colab/actions";
+import api from "~/services/api";
 
 export default function ColabCompCadastro() {
   // --------- colocando no modo claro do template
@@ -59,7 +59,7 @@ export default function ColabCompCadastro() {
   useEffect(() => {
     // ------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await axios(`http://localhost:5140/colab/${id}`);
+      const response = await api.get(`http://localhost:5140/colab/${id}`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

@@ -32,11 +32,11 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { perfilUpdate } from "~/store/modules/general/actions";
 import { store } from "~/store";
 import { normalizeCnpj } from "~/normalize";
+import api from "~/services/api";
 
 function AreaUpdatee() {
   // --------- colocando no modo claro do template
@@ -56,8 +56,8 @@ function AreaUpdatee() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/perfil/${id}`);
+      const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/perfil/${id}`);
       setData(response.data);
 
       setValues(prevState => ({

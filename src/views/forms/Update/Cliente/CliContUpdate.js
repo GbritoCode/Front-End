@@ -33,9 +33,9 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 export default function CliContUpdatee() {
   // --------- colocando no modo claro do template
@@ -60,12 +60,8 @@ export default function CliContUpdatee() {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(
-        `http://localhost:5140/cliente/cont/1/${id}`
-      );
-      const response1 = await axios(
-        `http://localhost:5140/cliente/${response.data.ClienteId}`
-      );
+      const response = await api.get(`/cliente/cont/1/${id}`);
+      const response1 = await api.get(`/cliente/${response.data.ClienteId}`);
       setData1(response1.data);
 
       setValues(prevState => ({

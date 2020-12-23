@@ -31,12 +31,12 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { despesaRequest } from "~/store/modules/oportunidades/actions";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
+import api from "~/services/api";
 
 export default function DespesaCadastro() {
   // --------- colocando no modo claro do template
@@ -72,8 +72,10 @@ export default function DespesaCadastro() {
   useEffect(() => {
     const { email } = store.getState().auth.user;
     async function loadData() {
-      const response1 = await axios(`http://localhost:5140/oportunidade/${id}`);
-      const response2 = await axios(
+      const response1 = await api.get(
+        `http://localhost:5140/oportunidade/${id}`
+      );
+      const response2 = await api.get(
         `http://localhost:5140/colab/?email=${email}`
       );
       setData1(response1.data);

@@ -31,12 +31,12 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { despesaUpdate } from "~/store/modules/oportunidades/actions";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
+import api from "~/services/api";
 
 export default function DespesaUpdate() {
   // --------- colocando no modo claro do template
@@ -54,7 +54,7 @@ export default function DespesaUpdate() {
 
   const optionalSchema = {
     desc: { value: "", error: "", message: "" }
-  }
+  };
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" },
@@ -64,7 +64,7 @@ export default function DespesaUpdate() {
       message: ""
     },
     tipoDespesa: { value: "", error: "", message: "" },
-    valorDespesa: { value: "", error: "", message: "" },
+    valorDespesa: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
@@ -72,9 +72,11 @@ export default function DespesaUpdate() {
   useEffect(() => {
     const { email } = store.getState().auth.user;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/despesas/${id}/?update=true`);
-      const response1 = await axios(`http://localhost:5140/oportunidade/${response.data.OportunidadeId}`);
-      const response2 = await axios(`http://localhost:5140/colab/?email=${email}`);
+      const response = await api.get(`/despesas/${id}/?update=true`);
+      const response1 = await api.get(
+        `/oportunidade/${response.data.OportunidadeId}`
+      );
+      const response2 = await api.get(`/colab/?email=${email}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -82,11 +84,13 @@ export default function DespesaUpdate() {
         ColabId: { value: response2.data.id },
         dataDespesa: { value: response.data.dataDespesa },
         tipoDespesa: { value: response.data.tipoDespesa },
-        valorDespesa: { value: normalizeCurrency(JSON.stringify(response.data.valorDespesa)) }
+        valorDespesa: {
+          value: normalizeCurrency(JSON.stringify(response.data.valorDespesa))
+        }
       }));
       setOptional(prevState => ({
         ...prevState,
-        desc: { value: response.data.desc },
+        desc: { value: response.data.desc }
       }));
     }
     loadData();
@@ -179,7 +183,7 @@ export default function DespesaUpdate() {
           values.dataDespesa.value,
           values.tipoDespesa.value,
           valorDespesadb,
-          optional.desc.value,
+          optional.desc.value
         )
       );
     } else {
@@ -228,7 +232,7 @@ export default function DespesaUpdate() {
                         >
                           <option disabled value="">
                             {" "}
-                        Selecione a Oportunidade{" "}
+                            Selecione a Oportunidade{" "}
                           </option>{" "}
                           <option value={data1.id}>
                             {" "}
@@ -265,7 +269,9 @@ export default function DespesaUpdate() {
                     </Col>
                     <Col md="4">
                       <Label>Tipo da Despesa</Label>
-                      <FormGroup className={`has-label ${values.tipoDespesa.error}`}>
+                      <FormGroup
+                        className={`has-label ${values.tipoDespesa.error}`}
+                      >
                         <Input
                           name="tipoDespesa"
                           type="select"
@@ -276,7 +282,7 @@ export default function DespesaUpdate() {
                         >
                           <option disabled value="">
                             {" "}
-                                Selecione o tipo da despesa{" "}
+                            Selecione o tipo da despesa{" "}
                           </option>
                           <option value={1}>Alimentação</option>
                           <option value={2}>Deslocamento</option>
@@ -296,7 +302,9 @@ export default function DespesaUpdate() {
                   <Row>
                     <Col md="4">
                       <Label>Valor da Despesa </Label>
-                      <FormGroup className={`has-label ${values.valorDespesa.error}`}>
+                      <FormGroup
+                        className={`has-label ${values.valorDespesa.error}`}
+                      >
                         <Input
                           name="valorDespesa"
                           type="text"

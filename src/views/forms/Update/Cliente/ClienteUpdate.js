@@ -32,7 +32,6 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -41,6 +40,7 @@ import { AttachMoney, Contacts } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 function ClienteUpdatee() {
@@ -71,10 +71,10 @@ function ClienteUpdatee() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       setIsLoading(true);
-      const response = await axios(`http://localhost:5140/cliente/${id}`);
-      const response1 = await axios(`http://localhost:5140/tipoComiss`);
-      const response2 = await axios(`http://localhost:5140/representante`);
-      const response3 = await axios(`http://localhost:5140/empresa/${empresa}`);
+      const response = await api.get(`/cliente/${id}`);
+      const response1 = await api.get(`/tipoComiss`);
+      const response2 = await api.get(`/representante`);
+      const response3 = await api.get(`/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);

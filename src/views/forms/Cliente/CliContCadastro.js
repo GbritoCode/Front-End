@@ -31,11 +31,11 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { normalizeFone } from "~/normalize";
 import { CliContRequest } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
 export default function CliContCadastro() {
   // --------- colocando no modo claro do template
@@ -61,7 +61,7 @@ export default function CliContCadastro() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await axios(`http://localhost:5140/cliente/${id}`);
+      const response = await api.get(`/cliente/${id}`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

@@ -32,12 +32,12 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { normalizeFone, normalizeCpf, normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { signUpRequest } from "~/store/modules/auth/actions";
 import { colabRequest } from "~/store/modules/Colab/actions";
+import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
 export default function ColabCadastro() {
@@ -66,9 +66,9 @@ export default function ColabCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(`http://localhost:5140/fornec`);
-      // const response2 = await axios(`http://localhost:5140/perfil`);
+      const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/fornec`);
+      // const response2 = await api.get(`/perfil`);
       setData(response.data);
       setData1(response1.data);
       // setData2(response2.data);

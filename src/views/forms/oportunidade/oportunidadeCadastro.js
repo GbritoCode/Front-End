@@ -32,11 +32,11 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { oportRequest } from "~/store/modules/oportunidades/actions";
+import api from "~/services/api";
 
 export default function CadastroOport() {
   // --------- colocando no modo claro do template
@@ -78,18 +78,14 @@ export default function CadastroOport() {
     const { email } = store.getState().auth.user;
 
     async function loadData() {
-      const response = await axios(`http://localhost:5140/empresa/${empresa}`);
-      const response1 = await axios(
-        `http://localhost:5140/colab/?email=${email}`
-      );
-      const response2 = await axios(`http://localhost:5140/cliente/`);
-      const response4 = await axios(`http://localhost:5140/und_neg/`);
-      const response5 = await axios(`http://localhost:5140/itm_controle/`);
-      const response6 = await axios(`http://localhost:5140/segmento/`);
-      const response7 = await axios(`http://localhost:5140/representante/`);
-      const response8 = await axios(
-        `http://localhost:5140/oportunidade/?one=true`
-      );
+      const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/colab/?email=${email}`);
+      const response2 = await api.get(`/cliente/`);
+      const response4 = await api.get(`/und_neg/`);
+      const response5 = await api.get(`/itm_controle/`);
+      const response6 = await api.get(`/segmento/`);
+      const response7 = await api.get(`/representante/`);
+      const response8 = await api.get(`/oportunidade/?one=true`);
       setData1(response1.data);
       setData2(response2.data);
       setData4(response4.data);
@@ -116,10 +112,10 @@ export default function CadastroOport() {
     loadData();
   }, []);
   function getCliData(cliente) {
-    axios(`http://localhost:5140/cliente/cont/${cliente}`).then(result => {
+    api.get(`/cliente/cont/${cliente}`).then(result => {
       setData3(result.data);
     });
-    axios(`http://localhost:5140/cliente/${cliente}`).then(result => {
+    api.get(`/cliente/${cliente}`).then(result => {
       setValues(prevState => ({
         ...prevState,
         RepresentanteId: { value: result.data.RepresentanteId }
