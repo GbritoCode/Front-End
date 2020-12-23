@@ -17,10 +17,10 @@ import {
   Container,
   Col
 } from "reactstrap";
-import axios from "axios";
 
 import { signInRequest } from "~/store/modules/auth/actions";
 import { useInput } from "~/hooks";
+import api from "~/services/api";
 
 // reactstrap components
 
@@ -38,9 +38,7 @@ export default function SignIn() {
 
   const errorCheckAux = [bindEmail, bindPassword];
   async function teste() {
-    const response = await axios({
-      url: `api.tovoit.com.br/empresa`
-    });
+    const response = await api.get("/empresa");
     console.log(response);
   }
   teste();
