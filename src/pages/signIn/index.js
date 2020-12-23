@@ -27,7 +27,6 @@ import { useInput } from "~/hooks";
 export default function SignIn() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
-  const jsonpAdapter = require("axios-jsonp");
 
   const dispatch = useDispatch();
   const [emailFocus, setEmailFocus] = useState("");
