@@ -40,8 +40,7 @@ export default function SignIn() {
   const errorCheckAux = [bindEmail, bindPassword];
   async function teste() {
     const response = await axios({
-      url: `https://www.receitaws.com.br/v1/cnpj/12010739000163`,
-      adapter: jsonpAdapter
+      url: `api.tovoit.com.br/empresa`
     });
     console.log(response);
   }
