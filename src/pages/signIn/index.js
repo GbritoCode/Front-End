@@ -20,7 +20,6 @@ import {
 
 import { signInRequest } from "~/store/modules/auth/actions";
 import { useInput } from "~/hooks";
-import api from "~/services/api";
 
 // reactstrap components
 
@@ -37,11 +36,7 @@ export default function SignIn() {
   const loading = useSelector(state => state.auth.loading);
 
   const errorCheckAux = [bindEmail, bindPassword];
-  async function teste() {
-    const response = await api.get("/12010739000163");
-    console.log(response);
-  }
-  teste();
+
   const handleSubmit = evt => {
     evt.preventDefault();
 
