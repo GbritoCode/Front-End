@@ -17,6 +17,7 @@ import {
   Container,
   Col
 } from "reactstrap";
+import axios from "axios";
 
 import { signInRequest } from "~/store/modules/auth/actions";
 import { useInput } from "~/hooks";
@@ -26,6 +27,7 @@ import { useInput } from "~/hooks";
 export default function SignIn() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+  const jsonpAdapter = require("axios-jsonp");
 
   const dispatch = useDispatch();
   const [emailFocus, setEmailFocus] = useState("");
@@ -36,6 +38,14 @@ export default function SignIn() {
   const loading = useSelector(state => state.auth.loading);
 
   const errorCheckAux = [bindEmail, bindPassword];
+  async function teste() {
+    const response = await axios({
+      url: `https://www.receitaws.com.br/v1/cnpj/12010739000163`,
+      adapter: jsonpAdapter
+    });
+    console.log(response);
+  }
+  teste();
   const handleSubmit = evt => {
     evt.preventDefault();
 
