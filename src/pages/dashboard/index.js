@@ -57,7 +57,6 @@ import {
   chartExample3,
   chartExample4
 } from "~/variables/charts";
-import api from "~/services/api";
 import { normalizeCurrency } from "~/normalize";
 
 var mapData = {
