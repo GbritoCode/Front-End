@@ -125,385 +125,178 @@ export default function Routes() {
     <Switch>
       <Route path="/login" exact component={signIn} />
       <Route path="/register" component={singUp} />
-      <Route path="/dashboard" component={Dashboard} isPrivate />
+      <Route path="/dashboard" component={Dashboard} />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------*/}
       {/** CLIENTE */}
-      <Route
-        path="/tabelas/cliente/cliente"
-        component={Tabela_Cliente}
-        isPrivate
-      />
-      <Route
-        path="/tabelas/cliente/prospect"
-        component={prospectTable}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/wizard/empresa"
-        component={WizardCadastro}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/wizard/fornec"
-        component={WizardFornec}
-        isPrivate
-      />
-      <Route path="/cadastro/wizard/colab" component={WizardColab} isPrivate />
-      <Route
-        path="/tabelas/cliente/comp/:id"
-        component={CliCompTable}
-        isPrivate
-      />
-      <Route
-        path="/tabelas/cliente/cont/:id"
-        component={CliContTable}
-        isPrivate
-      />
-      <Route
-        path="/tabelas/cliente/rec_desp/:id"
-        component={CliRecDespTable}
-        isPrivate
-      />
-      <Route path="/tabelas/colab" component={ColabTable} exact isPrivate />
-      <Route exact path="/tables/colab/comp/:id" component={colab} isPrivate />
-      <Route path="/tabelas/general/area" component={AreaTable} isPrivate />
-      <Route
-        path="/tabelas/general/empresa"
-        component={EmpresaTable}
-        isPrivate
-      />
-      <Route path="/tabelas/general/fornec" component={FornecTable} isPrivate />
+      <Route path="/tabelas/cliente/cliente" component={Tabela_Cliente} />
+      <Route path="/tabelas/cliente/prospect" component={prospectTable} />
+      <Route path="/cadastro/wizard/empresa" component={WizardCadastro} />
+      <Route path="/cadastro/wizard/fornec" component={WizardFornec} />
+      <Route path="/cadastro/wizard/colab" component={WizardColab} />
+      <Route path="/tabelas/cliente/comp/:id" component={CliCompTable} />
+      <Route path="/tabelas/cliente/cont/:id" component={CliContTable} />
+      <Route path="/tabelas/cliente/rec_desp/:id" component={CliRecDespTable} />
+      <Route path="/tabelas/colab" component={ColabTable} exact />
+      <Route exact path="/tables/colab/comp/:id" component={colab} />
+      <Route path="/tabelas/general/area" component={AreaTable} />
+      <Route path="/tabelas/general/empresa" component={EmpresaTable} />
+      <Route path="/tabelas/general/fornec" component={FornecTable} />
       <Route
         path="/tabelas/general/itm_controle"
         component={ItmControleTable}
-        isPrivate
       />
-      <Route
-        path="/tabelas/general/parametros"
-        component={ParametrosTable}
-        isPrivate
-      />
-      <Route path="/tabelas/general/prodt" component={ProdtTable} isPrivate />
+      <Route path="/tabelas/general/parametros" component={ParametrosTable} />
+      <Route path="/tabelas/general/prodt" component={ProdtTable} />
       <Route
         path="/tabelas/general/representante"
         component={RepresentanteTable}
-        isPrivate
       />
-      <Route
-        path="/tabelas/general/segmento"
-        component={SegmentoTable}
-        isPrivate
-      />
-      <Route
-        path="/tabelas/general/und_neg"
-        component={UndNegTable}
-        isPrivate
-      />
-      <Route path="/tabelas/aux/rec_desp" component={RecDespTable} isPrivate />
-      <Route
-        path="/tabelas/aux/condPgmto"
-        component={condPgmtoTable}
-        isPrivate
-      />
-      <Route
-        path="/tabelas/aux/tipoComiss"
-        component={tipoComissTable}
-        isPrivate
-      />
-      <Route path="/tabelas/aux/perfil" component={perfilTable} isPrivate />
-      <Route
-        path="/tabelas/oportunidade/oport"
-        component={OportTable}
-        isPrivate
-      />
+      <Route path="/tabelas/general/segmento" component={SegmentoTable} />
+      <Route path="/tabelas/general/und_neg" component={UndNegTable} />
+      <Route path="/tabelas/aux/rec_desp" component={RecDespTable} />
+      <Route path="/tabelas/aux/condPgmto" component={condPgmtoTable} />
+      <Route path="/tabelas/aux/tipoComiss" component={tipoComissTable} />
+      <Route path="/tabelas/aux/perfil" component={perfilTable} />
+      <Route path="/tabelas/oportunidade/oport" component={OportTable} />
       <Route
         path="/tabelas/oportunidade/cotacao/:id"
         component={cotacaoTable}
-        isPrivate
       />
-      <Route
-        path="/view/oportunidade/dados/:id"
-        component={DataOport}
-        isPrivate
-      />
+      <Route path="/view/oportunidade/dados/:id" component={DataOport} />
       <Route
         path="/tabelas/apontamentos/oportunidades/"
         component={ApontTable}
-        isPrivate
       />
       <Route
         path="/tabelas/apontamentos/despesas/:id"
         component={DespesaTable}
-        isPrivate
       />
-      <Route
-        path="/tabelas/apontamentos/horas/:id"
-        component={HorasTable}
-        isPrivate
-      />
+      <Route path="/tabelas/apontamentos/horas/:id" component={HorasTable} />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------*/}
       {/** CLIENTE */}
-      <Route path="/validation-forms" component={ValidationForms} isPrivate />
-      <Route path="/extended-forms" component={ExtendedForms} isPrivate />
+      <Route path="/validation-forms" component={ValidationForms} />
+      <Route path="/extended-forms" component={ExtendedForms} />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------*/}
       {/** CLIENTE */}
-      <Route
-        path="/cliente_cadastro/:prospect"
-        component={CadastroCliente}
-        isPrivate
-      />
-      <Route
-        path="/cliente_update/:id/:prct?"
-        component={ClienteUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/cliente/comp/:id"
-        component={CliCompCadastro}
-        isPrivate
-      />
-      <Route
-        path="/cliente/comp_update/:id"
-        component={CliCompUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/cliente/cont/:id"
-        component={CliContCadastro}
-        isPrivate
-      />
-      <Route
-        path="/cliente/cont_update/:id"
-        component={CliContUpdate}
-        isPrivate
-      />
+      <Route path="/cliente_cadastro/:prospect" component={CadastroCliente} />
+      <Route path="/cliente_update/:id/:prct?" component={ClienteUpdate} />
+      <Route path="/cadastro/cliente/comp/:id" component={CliCompCadastro} />
+      <Route path="/cliente/comp_update/:id" component={CliCompUpdate} />
+      <Route path="/cadastro/cliente/cont/:id" component={CliContCadastro} />
+      <Route path="/cliente/cont_update/:id" component={CliContUpdate} />
       <Route
         path="/cadastro/cliente/rec_desp/:id"
         component={CliRecDespCadastro}
-        isPrivate
       />
-      <Route
-        path="/update/cliente/rec_desp/:id"
-        component={cliRecDespUpdate}
-        isPrivate
-      />
+      <Route path="/update/cliente/rec_desp/:id" component={cliRecDespUpdate} />
       {/** CLIENTE FIM */}
       {/* COLAB */}
-      <Route
-        path="/cadastro/colab/colab"
-        component={ColabCadastro}
-        isPrivate
-      />{" "}
-      <Route path="/colab/update/:id" component={ColabUpdate} isPrivate />
-      <Route
-        path="/cadastro/colab/comp/:id"
-        component={ColabCompCadastro}
-        isPrivate
-      />
-      <Route
-        path="/colab/comp/update/:id"
-        component={ColabCompUpdate}
-        isPrivate
-      />
+      <Route path="/cadastro/colab/colab" component={ColabCadastro} />{" "}
+      <Route path="/colab/update/:id" component={ColabUpdate} />
+      <Route path="/cadastro/colab/comp/:id" component={ColabCompCadastro} />
+      <Route path="/colab/comp/update/:id" component={ColabCompUpdate} />
       {/** COLAB FIM */}
-      <Route path="/cadastro/geral/area" component={AreaCadastro} isPrivate />
-      <Route path="/update/general/area/:id" component={AreaUpdate} isPrivate />
-      <Route
-        path="/cadastro/geral/empresa"
-        component={EmpresaCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/general/empresa/:id"
-        component={EmpresaUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/geral/fornec"
-        component={FornecCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/general/fornec/:id"
-        component={FornecUpdate}
-        isPrivate
-      />
+      <Route path="/cadastro/geral/area" component={AreaCadastro} />
+      <Route path="/update/general/area/:id" component={AreaUpdate} />
+      <Route path="/cadastro/geral/empresa" component={EmpresaCadastro} />
+      <Route path="/update/general/empresa/:id" component={EmpresaUpdate} />
+      <Route path="/cadastro/geral/fornec" component={FornecCadastro} />
+      <Route path="/update/general/fornec/:id" component={FornecUpdate} />
       <Route
         path="/cadastro/geral/itm_controle"
         component={ItmControleCadastro}
-        isPrivate
       />
       <Route
         path="/update/general/itm_controle/:id"
         component={ItmControleUpdate}
-        isPrivate
       />
-      <Route
-        path="/cadastro/geral/parametros"
-        component={ParametrosCadastro}
-        isPrivate
-      />
+      <Route path="/cadastro/geral/parametros" component={ParametrosCadastro} />
       <Route
         path="/update/general/parametros/:id"
         component={ParametrosUpdate}
-        isPrivate
       />
-      <Route path="/cadastro/geral/prodt" component={ProdtCadastro} isPrivate />
-      <Route
-        path="/update/general/prodt/:id"
-        component={ProdtUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/geral/rec_desp"
-        component={RecDespCadastro}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/aux/condPgmto"
-        component={condPgmtoCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/aux/condPgmto/:id"
-        component={condPgmtoUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/aux/tipoComiss"
-        component={tipoComissCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/aux/tipoComiss/:id"
-        component={tipoComissUpdate}
-        isPrivate
-      />
-      <Route path="/cadastro/aux/perfil" component={perfilCadastro} isPrivate />
-      <Route path="/update/aux/perfil/:id" component={perfilUpdate} isPrivate />
-      <Route
-        path="/update/general/rec_desp/:id"
-        component={RecDespUpdate}
-        isPrivate
-      />
+      <Route path="/cadastro/geral/prodt" component={ProdtCadastro} />
+      <Route path="/update/general/prodt/:id" component={ProdtUpdate} />
+      <Route path="/cadastro/geral/rec_desp" component={RecDespCadastro} />
+      <Route path="/cadastro/aux/condPgmto" component={condPgmtoCadastro} />
+      <Route path="/update/aux/condPgmto/:id" component={condPgmtoUpdate} />
+      <Route path="/cadastro/aux/tipoComiss" component={tipoComissCadastro} />
+      <Route path="/update/aux/tipoComiss/:id" component={tipoComissUpdate} />
+      <Route path="/cadastro/aux/perfil" component={perfilCadastro} />
+      <Route path="/update/aux/perfil/:id" component={perfilUpdate} />
+      <Route path="/update/general/rec_desp/:id" component={RecDespUpdate} />
       <Route
         path="/cadastro/geral/represent"
         component={RepresentanteCadastro}
-        isPrivate
       />
       <Route
         path="/update/general/represent/:id"
         component={RepresentanteUpdate}
-        isPrivate
       />
-      <Route
-        path="/cadastro/geral/sgmet"
-        component={SegmentoCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/general/segmento/:id"
-        component={SegmentoUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/geral/und_neg"
-        component={UndNegCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/general/und_neg/:id"
-        component={UndNegUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/oportunidade/oport"
-        component={CadastroOport}
-        isPrivate
-      />
-      <Route
-        path="/update/oportunidade/oport/:id"
-        component={updateOport}
-        isPrivate
-      />
+      <Route path="/cadastro/geral/sgmet" component={SegmentoCadastro} />
+      <Route path="/update/general/segmento/:id" component={SegmentoUpdate} />
+      <Route path="/cadastro/geral/und_neg" component={UndNegCadastro} />
+      <Route path="/update/general/und_neg/:id" component={UndNegUpdate} />
+      <Route path="/cadastro/oportunidade/oport" component={CadastroOport} />
+      <Route path="/update/oportunidade/oport/:id" component={updateOport} />
       <Route
         path="/cadastro/oportunidade/cotacao/:id"
         component={CotacaoCadastro}
-        isPrivate
       />
       <Route
         path="/update/oportunidade/cotacao/:id"
         component={cotacaoUpdate}
-        isPrivate
       />
       <Route
         path="/tabelas/oportunidade/recurso/:id"
         component={RecursoTable}
-        isPrivate
       />
       <Route
         path="/cadastro/oportunidade/recurso/:id"
         component={RecursoCadastro}
-        isPrivate
       />
       <Route
         path="/update/oportunidade/recurso/:id"
         component={RecursoUpdate}
-        isPrivate
       />
       <Route
         path="/tabelas/oportunidade/parcela/:id"
         component={ParcelaTable}
-        isPrivate
       />
       <Route
         path="/cadastro/oportunidade/parcela/:id"
         component={ParcelaCadastro}
-        isPrivate
       />
-      <Route
-        path="/update/oportunidade/parc/:id"
-        component={parcUpdate}
-        isPrivate
-      />
+      <Route path="/update/oportunidade/parc/:id" component={parcUpdate} />
       <Route
         path="/update/oportunidade/parcNota/:id"
         component={parcNotaFiscal}
-        isPrivate
       />
       <Route
         path="/update/oportunidade/recurso/:id"
         component={RecursoUpdate}
-        isPrivate
       />
       <Route
         path="/cadastro/apontamentos/horas/:id"
         component={HorasCadastro}
-        isPrivate
       />
-      <Route
-        path="/update/apontamentos/horas/:id"
-        component={HorasUpdate}
-        isPrivate
-      />
+      <Route path="/update/apontamentos/horas/:id" component={HorasUpdate} />
       <Route
         path="/cadastro/apontamentos/despesas/:id"
         component={DespesaCadastro}
-        isPrivate
       />
       <Route
         path="/update/apontamentos/despesas/:id"
         component={DespesaUpdate}
-        isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
