@@ -93,15 +93,19 @@ class Dashboard extends React.Component {
 
   loadData = async () => {
     const { id } = store.getState().auth.user;
-    const hrs = await Axios(
-      `${process.env.REACT_APP_API_URL}horas/${id}/?total=${true}&tipo=month`
-    );
-    const desps = await Axios(
-      `${process.env.REACT_APP_API_URL}despesas/${id}/?total=${true}&tipo=month`
-    );
-    const vlrHrs = await Axios(
-      `${process.env.REACT_APP_API_URL}colab/${id}/?vlrHrMes=true`
-    );
+    const hrs = await Axios({
+      url: `${
+        process.env.REACT_APP_API_URL
+      }/horas/${id}/?total=${true}&tipo=month`
+    });
+    const desps = await Axios({
+      url: `${
+        process.env.REACT_APP_API_URL
+      }/despesas/${id}/?total=${true}&tipo=month`
+    });
+    const vlrHrs = await Axios({
+      url: `${process.env.REACT_APP_API_URL}/colab/${id}/?vlrHrMes=true`
+    });
     const date = new Date();
     const month = date.toLocaleString("default", { month: "long" });
     this.setState({
