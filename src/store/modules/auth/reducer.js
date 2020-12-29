@@ -2,14 +2,14 @@ import produce from "immer";
 
 const INITIAL_STATE = {
   token: null,
-  signed: false,
+  signed: true,
   loading: false,
   empresa: null,
-  user: null,
+  user: null
 };
 
 export default function auth(state = INITIAL_STATE, action) {
-  return produce(state, (draft) => {
+  return produce(state, draft => {
     switch (action.type) {
       case "@auth/SIGN_IN_REQUEST": {
         draft.loading = true;
