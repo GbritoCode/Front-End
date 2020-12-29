@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   signed: true,
   loading: false,
   empresa: null,
-  user: null
+  user: { profile: 100 }
 };
 
 export default function auth(state = INITIAL_STATE, action) {
