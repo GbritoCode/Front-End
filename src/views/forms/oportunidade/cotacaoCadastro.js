@@ -83,17 +83,16 @@ export default function CotacaoCadastro() {
         const response1 = await api.get(`/oportunidade/${id}`);
         setData(response.data);
         setData1(response1.data);
+        setValues(prevState => ({
+          ...prevState,
+          empresaId: { value: response.data.id },
+          OportunidadeId: { value: response1.data.id }
+        }));
       } else {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         setData(response.data);
         setData1(response1.data);
-        setValues(prevState => ({
-          ...prevState,
-          empresaId: { value: response.data.EmpresaId },
-          OportunidadeId: { value: response1.data.id }
-        }));
-        console.log(response2.data);
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response2.data[0].EmpresaId },
