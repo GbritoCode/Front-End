@@ -90,8 +90,8 @@ export default function CotacaoCadastro() {
         setData1(response1.data);
         setValues(prevState => ({
           ...prevState,
-          empresaId: { value: response2.data[0].EmpresaId },
-          OportunidadeId: { value: response2.data[0].OportunidadeId }
+          empresaId: { value: response.data.EmpresaId },
+          OportunidadeId: { value: response1.data.id }
         }));
         console.log(response2.data);
         setValues(prevState => ({
