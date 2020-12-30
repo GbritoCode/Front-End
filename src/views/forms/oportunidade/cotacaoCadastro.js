@@ -78,7 +78,7 @@ export default function CotacaoCadastro() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response2 = await api.get(`/cotacao/${id}/?one=true`);
-      if (response2.data === null) {
+      if (response2.data === null || response2.data.length === 0) {
       } else {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);

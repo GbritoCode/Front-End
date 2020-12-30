@@ -53,7 +53,7 @@ function OportTable() {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [data, setData] = useState();
-  const [modalMini, setModalMini] = useState(true);
+  const [modalMini, setModalMini] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
