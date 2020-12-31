@@ -33,8 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj, normalizeFone, validarCNPJ } from "normalize.js";
 import { Link } from "react-router-dom";
+import { normalizeCnpj, normalizeFone, validarCNPJ } from "~/normalize";
 import { store } from "~/store";
 import {
   condPgmtoRequest,
@@ -74,62 +74,6 @@ export default function FornecCadastro() {
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-
-  useEffect(() => {
-    const { empresa } = store.getState().auth;
-    async function Aux() {
-      api.get("/empresa").then(result => {
-        setValues(prevState => ({
-          ...prevState,
-          cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
-        }));
-        cnpjRequest(result.data[0].idFederal);
-        const idEmpresa = result.data[0].id;
-        const cod = "000";
-        const desc = "Condição de Pagaento padrão";
-        const diasPrazo = 0;
-        const first = true;
-        dispatch(condPgmtoRequest(idEmpresa, cod, desc, diasPrazo, first));
-      });
-    }
-    async function loadData() {
-      const response = await api.get(`/empresa/${empresa}`);
-      const response1 = await api.get(`/condPgmto`);
-      setData(response.data);
-      setData1(response1.data);
-      setValues(prevState => ({
-        ...prevState,
-        empresaId: { value: response.data.id }
-      }));
-    }
-    Aux();
-    loadData();
-    // eslint-disable-next-line
-  }, [dispatch]);
-
-  var options = {};
-
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
-
-  const renderCnpjState = value => {
-    if (!validarCNPJ(value)) {
-      setValues(prevState => ({
-        ...prevState,
-        cnpj: {
-          error: "has-danger",
-          message: "Insira um CNPJ válido"
-        }
-      }));
-    } else {
-      setValues(prevState => ({
-        ...prevState,
-        cnpj: { value, error: "has-success", message: "" }
-      }));
-    }
-  };
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
@@ -188,6 +132,62 @@ export default function FornecCadastro() {
       }));
     }
   }
+
+  useEffect(() => {
+    const { empresa } = store.getState().auth;
+    async function Aux() {
+      api.get("/empresa").then(result => {
+        setValues(prevState => ({
+          ...prevState,
+          cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
+        }));
+        cnpjRequest(result.data[0].idFederal);
+        const idEmpresa = result.data[0].id;
+        const cod = "000";
+        const desc = "Condição de Pagaento padrão";
+        const diasPrazo = 0;
+        const first = true;
+        dispatch(condPgmtoRequest(idEmpresa, cod, desc, diasPrazo, first));
+      });
+    }
+    async function loadData() {
+      const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/condPgmto`);
+      setData(response.data);
+      setData1(response1.data);
+      setValues(prevState => ({
+        ...prevState,
+        empresaId: { value: response.data.id }
+      }));
+    }
+    Aux();
+    loadData();
+    // eslint-disable-next-line
+  }, [dispatch]);
+
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
+  const renderCnpjState = value => {
+    if (!validarCNPJ(value)) {
+      setValues(prevState => ({
+        ...prevState,
+        cnpj: {
+          error: "has-danger",
+          message: "Insira um CNPJ válido"
+        }
+      }));
+    } else {
+      setValues(prevState => ({
+        ...prevState,
+        cnpj: { value, error: "has-success", message: "" }
+      }));
+    }
+  };
 
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");

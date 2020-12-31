@@ -51,9 +51,13 @@ export default function CotacaoCadastro() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [isloading, setIsLoading] = useState(true);
+  const [auxState, setAuxState] = useState(false);
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
+  const [data3, setData3] = useState({});
+  const [data4, setData4] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     OportunidadeId: { value: "", error: "", message: "" },
@@ -73,7 +77,6 @@ export default function CotacaoCadastro() {
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-  const imposto = 14 / 100;
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
@@ -91,6 +94,9 @@ export default function CotacaoCadastro() {
       } else {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
+        const response3 = await api.get(`/parametros/?one=true`);
+        setData3(response3.data);
+        setData4(response2.data);
         setData(response.data);
         setData1(response1.data);
         setValues(prevState => ({
@@ -123,6 +129,7 @@ export default function CotacaoCadastro() {
           desc: { value: response2.data[0].desc }
         }));
       }
+      setIsLoading(false);
     }
     loadData();
   }, [id]);
@@ -157,6 +164,11 @@ export default function CotacaoCadastro() {
           setData2(result.data);
         }
       });
+  }
+
+  if (!isloading && !auxState) {
+    getCliData(data4[0].tipoCobranca);
+    setAuxState(true);
   }
 
   const verifyNumber = value => {
@@ -209,14 +221,32 @@ export default function CotacaoCadastro() {
     }
   };
   const descontoChange = descont => {
+    const imposto =
+      (data3.IRPJ +
+        data3.CSLL +
+        data3.COFINS +
+        data3.PIS +
+        data3.INSS +
+        data3.ISS) /
+      10000;
+
     const value = descont.replace(/[.,]+/g, "");
     if (value >= 100) {
       const vHr = data2.valorRec;
-      var prop = document.getElementsByName("hrsPrevst")[0].value * vHr;
       const hr = document.getElementsByName("hrsPrevst")[0].value;
+      var prop = hr * vHr;
       const vLiq = prop - value;
-      const rLiq = vLiq - vLiq * imposto;
-      const lucro = rLiq - hr * 6000;
+      const rLiq = (
+        (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
+        100
+      ).toFixed(2);
+      const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
+
+      console.log(parseFloat(rLiq));
+      console.log(hr);
+      console.log(data3.vlrBsHr / 100);
+      console.log((hr * data3.vlrBsHr) / 100);
+      console.log(parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100);
       setValues(prevState => ({
         ...prevState,
         vlrLiq: { value: normalizeCalcCurrency(vLiq) }

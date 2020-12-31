@@ -43,6 +43,7 @@ import {
   CheckCircleOutline,
   RadioButtonCheckedOutlined
 } from "@material-ui/icons";
+import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -271,26 +272,16 @@ function OportTable() {
               <CardTitle tag="h4">
                 Oportunidades
                 <Link to="/cadastro/oportunidade/oport">
-                  <Button
-                    style={{
-                      float: "right",
-                      paddingLeft: 15,
-                      paddingRight: 15
-                    }}
-                    color="info"
-                    size="small"
-                    className="text-left"
-                  >
-                    <i
-                      className="tim-icons icon-simple-add"
+                  <Tooltip title="Novo" placement="top" interactive>
+                    <Button
                       style={{
-                        paddingBottom: 4,
-                        paddingRight: 5
+                        float: "right"
                       }}
-                      size="large"
-                    />{" "}
-                    Novo
-                  </Button>
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <AddIcon fontSize="large" />
+                    </Button>
+                  </Tooltip>
                 </Link>
               </CardTitle>
             </CardHeader>

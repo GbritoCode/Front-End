@@ -4,20 +4,20 @@ export function requestFailure() {
 export function ClienteUpdateSuccess(profile) {
   return {
     type: "@update/CLIENTE_REQUEST_SUCCES",
-    payload: { profile },
+    payload: { profile }
   };
 }
 
 export function areaRequest(EmpresaId, descArea) {
   return {
     type: "@cadastro/AREA_REQUEST",
-    payload: { EmpresaId, descArea },
+    payload: { EmpresaId, descArea }
   };
 }
 export function AreaUpdate(id, EmpresaId, descArea) {
   return {
     type: "@update/AREA_REQUEST",
-    payload: { id, EmpresaId, descArea },
+    payload: { id, EmpresaId, descArea }
   };
 }
 //----------------------------------------------------
@@ -26,13 +26,13 @@ export function AreaUpdate(id, EmpresaId, descArea) {
 export function empresaRequest(idFederal, nome, license, UserId, first) {
   return {
     type: "@cadastro/EMPRESA_REQUEST",
-    payload: { idFederal, nome, license, UserId, first },
+    payload: { idFederal, nome, license, UserId, first }
   };
 }
 export function EmpresaUpdate(id, idFederal, nome, license, UserId) {
   return {
     type: "@update/EMPRESA_REQUEST",
-    payload: { id, idFederal, nome, license, UserId },
+    payload: { id, idFederal, nome, license, UserId }
   };
 }
 //----------------------------------------------------
@@ -77,7 +77,7 @@ export function fornecRequest(
       agencia,
       conta,
       first
-    },
+    }
   };
 }
 export function FornecUpdate(
@@ -118,8 +118,8 @@ export function FornecUpdate(
       uf,
       banco,
       agencia,
-      conta,
-    },
+      conta
+    }
   };
 }
 //----------------------------------------------------
@@ -139,8 +139,8 @@ export function itmControleRequest(
       descItem,
       tipoItem,
       contaContabil,
-      centCusto,
-    },
+      centCusto
+    }
   };
 }
 export function itmControleUpdate(
@@ -159,8 +159,8 @@ export function itmControleUpdate(
       descItem,
       tipoItem,
       contaContabil,
-      centCusto,
-    },
+      centCusto
+    }
   };
 }
 //----------------------------------------------------
@@ -168,7 +168,14 @@ export function itmControleUpdate(
 
 export function parametrosRequest(
   EmpresaId,
-  impostos,
+  IRPJ,
+  CSLL,
+  COFINS,
+  PIS,
+  INSS,
+  ISS,
+  PSProLabor,
+  IRRFProLabor,
   vlrMinHr,
   vlrBsHr,
   vlrBsDesp,
@@ -179,19 +186,33 @@ export function parametrosRequest(
     type: "@cadastro/PARAMETROS_REQUEST",
     payload: {
       EmpresaId,
-      impostos,
+      IRPJ,
+      CSLL,
+      COFINS,
+      PIS,
+      INSS,
+      ISS,
+      PSProLabor,
+      IRRFProLabor,
       vlrMinHr,
       vlrBsHr,
       vlrBsDesp,
       adiantaPgmto,
-      percAdiantaPgmto,
-    },
+      percAdiantaPgmto
+    }
   };
 }
 export function ParametrosUpdate(
   id,
   EmpresaId,
-  impostos,
+  IRPJ,
+  CSLL,
+  COFINS,
+  PIS,
+  INSS,
+  ISS,
+  PSProLabor,
+  IRRFProLabor,
   vlrMinHr,
   vlrBsHr,
   vlrBsDesp,
@@ -203,13 +224,20 @@ export function ParametrosUpdate(
     payload: {
       id,
       EmpresaId,
-      impostos,
+      IRPJ,
+      CSLL,
+      COFINS,
+      PIS,
+      INSS,
+      ISS,
+      PSProLabor,
+      IRRFProLabor,
       vlrMinHr,
       vlrBsHr,
       vlrBsDesp,
       adiantaPgmto,
-      percAdiantaPgmto,
-    },
+      percAdiantaPgmto
+    }
   };
 }
 //----------------------------------------------------
@@ -220,8 +248,8 @@ export function prodtRequest(EmpresaId, descProdt) {
     type: "@cadastro/PRODT_REQUEST",
     payload: {
       EmpresaId,
-      descProdt,
-    },
+      descProdt
+    }
   };
 }
 export function ProdtUpdate(id, EmpresaId, descProdt) {
@@ -230,8 +258,8 @@ export function ProdtUpdate(id, EmpresaId, descProdt) {
     payload: {
       id,
       EmpresaId,
-      descProdt,
-    },
+      descProdt
+    }
   };
 }
 //----------------------------------------------------
@@ -245,7 +273,7 @@ export function recDespRequest(EmpresaId, ItmControleId, desc, recDesp) {
       ItmControleId,
       desc,
       recDesp
-    },
+    }
   };
 }
 export function RecDespUpdate(id, EmpresaId, ItmControleId, desc, recDesp) {
@@ -257,7 +285,7 @@ export function RecDespUpdate(id, EmpresaId, ItmControleId, desc, recDesp) {
       ItmControleId,
       desc,
       recDesp
-    },
+    }
   };
 }
 //----------------------------------------------------
@@ -272,7 +300,7 @@ export function condPgmtoRequest(EmpresaId, cod, desc, diasPrazo, first) {
       desc,
       diasPrazo,
       first
-    },
+    }
   };
 }
 export function condPgmtoUpdate(id, EmpresaId, cod, desc, diasPrazo) {
@@ -283,8 +311,8 @@ export function condPgmtoUpdate(id, EmpresaId, cod, desc, diasPrazo) {
       EmpresaId,
       cod,
       desc,
-      diasPrazo,
-    },
+      diasPrazo
+    }
   };
 }
 //----------------------------------------------------
@@ -298,7 +326,7 @@ export function tipoComissRequest(EmpresaId, desc, prcnt, bsComiss) {
       desc,
       prcnt,
       bsComiss
-    },
+    }
   };
 }
 export function tipoComissUpdate(id, EmpresaId, desc, prcnt, bsComiss) {
@@ -310,7 +338,7 @@ export function tipoComissUpdate(id, EmpresaId, desc, prcnt, bsComiss) {
       desc,
       prcnt,
       bsComiss
-    },
+    }
   };
 }
 //----------------------------------------------------
@@ -323,7 +351,7 @@ export function perfilRequest(EmpresaId, desc, first) {
       EmpresaId,
       desc,
       first
-    },
+    }
   };
 }
 export function perfilUpdate(id, EmpresaId, desc) {
@@ -333,8 +361,8 @@ export function perfilUpdate(id, EmpresaId, desc) {
       id,
       EmpresaId,
 
-      desc,
-    },
+      desc
+    }
   };
 }
 //----------------------------------------------------
@@ -352,8 +380,8 @@ export function representanteRequest(
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens,
-    },
+      vlrFixMens
+    }
   };
 }
 export function RepresentanteUpdate(
@@ -370,8 +398,8 @@ export function RepresentanteUpdate(
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens,
-    },
+      vlrFixMens
+    }
   };
 }
 //----------------------------------------------------
@@ -382,8 +410,8 @@ export function undNegRequest(EmpresaId, descUndNeg) {
     type: "@cadastro/UndNeg_REQUEST",
     payload: {
       EmpresaId,
-      descUndNeg,
-    },
+      descUndNeg
+    }
   };
 }
 export function UndNegUpdate(id, EmpresaId, descUndNeg) {
@@ -392,8 +420,8 @@ export function UndNegUpdate(id, EmpresaId, descUndNeg) {
     payload: {
       id,
       EmpresaId,
-      descUndNeg,
-    },
+      descUndNeg
+    }
   };
 }
 //----------------------------------------------------
@@ -413,8 +441,8 @@ export function segmentoRequest(
       UndNegId,
       ProdutoId,
       AreaId,
-      descSegmt,
-    },
+      descSegmt
+    }
   };
 }
 export function SegmentoUpdate(
@@ -433,8 +461,8 @@ export function SegmentoUpdate(
       UndNegId,
       ProdutoId,
       AreaId,
-      descSegmt,
-    },
+      descSegmt
+    }
   };
 }
 

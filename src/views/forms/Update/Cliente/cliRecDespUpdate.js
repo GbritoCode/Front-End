@@ -170,6 +170,7 @@ export default function CliRecDespUpdatee() {
           values.RecDespId.value,
           values.tipoCobranca.value,
           valorRecdb,
+          values.dataInic.value,
           values.dataFim.value
         )
       );

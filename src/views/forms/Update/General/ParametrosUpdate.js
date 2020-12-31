@@ -43,11 +43,18 @@ function ParametrosUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState();
+  const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    impostos: { value: "", error: "", message: "" },
+    IRPJ: { value: "", error: "", message: "" },
+    CSLL: { value: "", error: "", message: "" },
+    COFINS: { value: "", error: "", message: "" },
+    PIS: { value: "", error: "", message: "" },
+    INSS: { value: "", error: "", message: "" },
+    ISS: { value: "", error: "", message: "" },
+    PSProLabor: { value: "", error: "", message: "" },
+    IRRFProLabor: { value: "", error: "", message: "" },
     vlrMinHr: { value: "", error: "", message: "" },
     vlrBsHr: { value: "", error: "", message: "" },
     vlrBsDesp: { value: "", error: "", message: "" },
@@ -59,13 +66,35 @@ function ParametrosUpdatee() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parametros/${id}`);
+      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
 
-      setData(response.data);
+      setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
-        impostos: {
-          value: normalizeCurrency(JSON.stringify(response.data.impostos))
+        IRPJ: {
+          value: normalizeCurrency(JSON.stringify(response.data.IRPJ))
+        },
+        CSLL: {
+          value: normalizeCurrency(JSON.stringify(response.data.CSLL))
+        },
+        COFINS: {
+          value: normalizeCurrency(JSON.stringify(response.data.COFINS))
+        },
+        PIS: {
+          value: normalizeCurrency(JSON.stringify(response.data.PIS))
+        },
+        INSS: {
+          value: normalizeCurrency(JSON.stringify(response.data.INSS))
+        },
+        ISS: {
+          value: normalizeCurrency(JSON.stringify(response.data.ISS))
+        },
+        PSProLabor: {
+          value: normalizeCurrency(JSON.stringify(response.data.PSProLabor))
+        },
+        IRRFProLabor: {
+          value: normalizeCurrency(JSON.stringify(response.data.IRRFProLabor))
         },
         vlrMinHr: {
           value: normalizeCurrency(JSON.stringify(response.data.vlrMinHr))
@@ -163,16 +192,30 @@ function ParametrosUpdatee() {
     }
 
     if (valid && filled) {
-      var impostosdb = values.impostos.value.replace(/[^\d]+/g, "");
       var vlrMinHrdb = values.vlrMinHr.value.replace(/[^\d]+/g, "");
       var vlrBsHrdb = values.vlrBsHr.value.replace(/[^\d]+/g, "");
       var vlrBsDespdb = values.vlrBsDesp.value.replace(/[^\d]+/g, "");
+      var IRPJdb = values.IRPJ.value.replace(/[^\d]+/g, "");
+      var CSLLdb = values.CSLL.value.replace(/[^\d]+/g, "");
+      var COFINSdb = values.COFINS.value.replace(/[^\d]+/g, "");
+      var PISSdb = values.PIS.value.replace(/[^\d]+/g, "");
+      var INSSdb = values.INSS.value.replace(/[^\d]+/g, "");
+      var ISSdb = values.ISS.value.replace(/[^\d]+/g, "");
+      var PSProLabordb = values.PSProLabor.value.replace(/[^\d]+/g, "");
+      var IRRFProLabordb = values.IRRFProLabor.value.replace(/[^\d]+/g, "");
 
       dispatch(
         ParametrosUpdate(
           id,
           values.empresaId.value,
-          impostosdb,
+          IRPJdb,
+          CSLLdb,
+          COFINSdb,
+          PISSdb,
+          INSSdb,
+          ISSdb,
+          PSProLabordb,
+          IRRFProLabordb,
           vlrMinHrdb,
           vlrBsHrdb,
           vlrBsDespdb,
@@ -227,9 +270,9 @@ function ParametrosUpdatee() {
                           value={values.empresaId.value}
                         >
                           {" "}
-                          <option value={1}>
+                          <option value={data1.id}>
                             {" "}
-                            {data.nome} - {normalizeCnpj(data.idFederal)}
+                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
                           </option>
                         </Input>
                         {values.empresaId.error === "has-danger" ? (
@@ -241,21 +284,172 @@ function ParametrosUpdatee() {
                       <Row>
                         <Col md="4">
                           {" "}
-                          <Label>Impostos</Label>
+                          <Label>IRPJ</Label>
                           <FormGroup
-                            className={`has-label ${values.impostos.error}`}
+                            className={`has-label ${values.IRPJ.error}`}
                           >
                             <Input
-                              name="impostos"
+                              name="IRPJ"
                               type="numeric"
                               onChange={event =>
-                                handleChange(event, "impostos", "currency")
+                                handleChange(event, "IRPJ", "currency")
                               }
-                              value={values.impostos.value}
+                              value={values.IRPJ.value}
                             />
-                            {values.impostos.error === "has-danger" ? (
+                            {values.IRPJ.error === "has-danger" ? (
                               <Label className="error">
-                                {values.impostos.message}
+                                {values.IRPJ.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>CSLL</Label>
+                          <FormGroup
+                            className={`has-label ${values.CSLL.error}`}
+                          >
+                            <Input
+                              name="CSLL"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "CSLL", "currency")
+                              }
+                              value={values.CSLL.value}
+                            />
+                            {values.CSLL.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.CSLL.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>COFINS</Label>
+                          <FormGroup
+                            className={`has-label ${values.COFINS.error}`}
+                          >
+                            <Input
+                              name="COFINS"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "COFINS", "currency")
+                              }
+                              value={values.COFINS.value}
+                            />
+                            {values.COFINS.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.COFINS.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>PIS</Label>
+                          <FormGroup
+                            className={`has-label ${values.PIS.error}`}
+                          >
+                            <Input
+                              name="PIS"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "PIS", "currency")
+                              }
+                              value={values.PIS.value}
+                            />
+                            {values.PIS.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.PIS.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>INSS</Label>
+                          <FormGroup
+                            className={`has-label ${values.INSS.error}`}
+                          >
+                            <Input
+                              name="INSS"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "INSS", "currency")
+                              }
+                              value={values.INSS.value}
+                            />
+                            {values.INSS.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.INSS.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>ISS</Label>
+                          <FormGroup
+                            className={`has-label ${values.ISS.error}`}
+                          >
+                            <Input
+                              name="ISS"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "ISS", "currency")
+                              }
+                              value={values.ISS.value}
+                            />
+                            {values.ISS.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ISS.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>PS PRO LABOR</Label>
+                          <FormGroup
+                            className={`has-label ${values.PSProLabor.error}`}
+                          >
+                            <Input
+                              name="PSProLabor"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "PSProLabor", "currency")
+                              }
+                              value={values.PSProLabor.value}
+                            />
+                            {values.PSProLabor.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.PSProLabor.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>IRRF PRO LABOT</Label>
+                          <FormGroup
+                            className={`has-label ${values.IRRFProLabor.error}`}
+                          >
+                            <Input
+                              name="IRRFProLabor"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "IRRFProLabor", "currency")
+                              }
+                              value={values.IRRFProLabor.value}
+                            />
+                            {values.IRRFProLabor.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.IRRFProLabor.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -281,6 +475,8 @@ function ParametrosUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Valor Base Da Hora</Label>
                           <FormGroup
@@ -301,8 +497,6 @@ function ParametrosUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           {" "}
                           <Label>Valor Base da Despesa</Label>
@@ -333,7 +527,7 @@ function ParametrosUpdatee() {
                               name="adiantaPgmto"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "adiantaPgmto", "currency")
+                                handleChange(event, "adiantaPgmto", "text")
                               }
                               value={values.adiantaPgmto.value}
                             />
@@ -344,6 +538,8 @@ function ParametrosUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           {" "}
                           <Label>Percentual do Adiantamento</Label>
