@@ -92,10 +92,10 @@ class Dashboard extends React.Component {
   }
 
   loadData = async () => {
-    const { id } = store.getState().auth.user;
-    const hrs = await api.get(`horas/${id}/?total=${true}&tipo=month`);
-    const desps = await api.get(`despesas/${id}/?total=${true}&tipo=month`);
-    const vlrHrs = await api.get(`colab/${id}/?vlrHrMes=true`);
+    const { email } = store.getState().auth.user;
+    const hrs = await api.get(`horas/${email}/?total=${true}&tipo=month`);
+    const desps = await api.get(`despesas/${email}/?total=${true}&tipo=month`);
+    const vlrHrs = await api.get(`colab/${email}/?vlrHrMes=true`);
     const date = new Date();
     const month = date.toLocaleString("default", { month: "long" });
     this.setState({
