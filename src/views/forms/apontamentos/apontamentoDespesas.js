@@ -72,12 +72,8 @@ export default function DespesaCadastro() {
   useEffect(() => {
     const { email } = store.getState().auth.user;
     async function loadData() {
-      const response1 = await api.get(
-        `http://localhost:5140/oportunidade/${id}`
-      );
-      const response2 = await api.get(
-        `http://localhost:5140/colab/?email=${email}`
-      );
+      const response1 = await api.get(`/oportunidade/${id}`);
+      const response2 = await api.get(`/colab/?email=${email}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,

@@ -91,7 +91,10 @@ export default function CotacaoCadastro() {
           empresaId: { value: response.data.id },
           OportunidadeId: { value: response1.data.id }
         }));
+        setAuxState(true);
       } else {
+        console.log(response2.data.length);
+        console.log(response2);
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
