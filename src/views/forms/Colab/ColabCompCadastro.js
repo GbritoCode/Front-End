@@ -59,7 +59,7 @@ export default function ColabCompCadastro() {
   useEffect(() => {
     // ------------------- busca de dados das apis, e setar as variáveis que dependem das apis
     async function loadData() {
-      const response = await api.get(`http://localhost:5140/colab/${id}`);
+      const response = await api.get(`/colab/${id}`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,
