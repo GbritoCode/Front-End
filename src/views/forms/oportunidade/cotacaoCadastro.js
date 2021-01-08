@@ -84,6 +84,8 @@ export default function CotacaoCadastro() {
       if (response2.data === null || response2.data.length === 0) {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
+        const response3 = await api.get(`/parametros/?one=true`);
+        setData3(response3.data);
         setData(response.data);
         setData1(response1.data);
         setValues(prevState => ({
