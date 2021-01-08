@@ -55,7 +55,7 @@ export default class ApontTable extends Component {
   };
 
   loadCliente = async () => {
-    const { email } = store.getState().auth.user;
+    const { email, id } = store.getState().auth.user;
     const response = await api.get(
       `/oportunidade/?apont=${true}&colab=${email}`
     );
