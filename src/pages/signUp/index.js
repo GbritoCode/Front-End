@@ -51,7 +51,7 @@ export default function SignUp() {
       }
     }
     if (valid) {
-      dispatch(signUpRequest(name, email, password, colab));
+      dispatch(signUpRequest(name, email, password, 100, colab));
     }
   };
   return (
