@@ -38,6 +38,34 @@ class tipoComissTable extends Component {
     this.loadClients();
   }
 
+  checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
+  };
+
+  checkBsComiss = value => {
+    switch (value) {
+      case 1:
+        return "Lucro Líquido";
+      case 2:
+        return "Lucro Bruto";
+      case 3:
+        return "Total Projeto";
+      case 4:
+        return "Fixado";
+      default:
+    }
+  };
+
   loadClients = async () => {
     const response = await api.get("/tipoComiss");
     this.setState({
@@ -46,9 +74,9 @@ class tipoComissTable extends Component {
           id: key,
           idd: client.id,
           Empresa: client.Empresa.nome,
-          desc: client.desc,
+          desc: this.checkDesc(client.desc),
           prcnt: `${normalizeCurrency(JSON.stringify(client.prcnt))} %`,
-          bsComiss: client.bsComiss,
+          bsComiss: this.checkBsComiss(client.bsComiss),
           actions: (
             // we've added some custom button actions
             <div className="actions-right">

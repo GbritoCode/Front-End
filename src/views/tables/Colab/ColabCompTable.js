@@ -41,41 +41,40 @@ class ColabCompTable extends Component {
   }
 
   checkNivel = value => {
-    if (value == 1) {
-      return "Trainee";
-    }
-    if (value == 2) {
-      return "Júnior";
-    }
-    if (value == 3) {
-      return "Pleno";
-    }
-    if (value == 4) {
-      return "Sênior";
+    switch (value) {
+      case 1:
+        return "Trainee";
+      case 2:
+        return "Júnior";
+      case 3:
+        return "Pleno";
+      case 4:
+        return "Sênior";
+      default:
     }
   };
 
   checkAtend = value => {
-    if (value == 1) {
-      return "Consultoria";
-    }
-    if (value == 2) {
-      return "Tecnologia";
-    }
-    if (value == 3) {
-      return "Desenvolvimento";
-    }
-    if (value == 4) {
-      return "Complementar";
+    switch (value) {
+      case 1:
+        return "Consultoria";
+      case 2:
+        return "Tecnologia";
+      case 3:
+        return "Desenvolvimento";
+      case 4:
+        return "Complementar";
+      default:
     }
   };
 
   checkValor = value => {
-    if (value == 1) {
-      return "Por Hora";
-    }
-    if (value == 2) {
-      return "Fixo";
+    switch (value) {
+      case 1:
+        return "Por Hora";
+      case 2:
+        return "Fixo";
+      default:
     }
   };
 

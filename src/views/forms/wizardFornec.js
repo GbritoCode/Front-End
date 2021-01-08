@@ -36,10 +36,7 @@ import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { normalizeCnpj, normalizeFone, validarCNPJ } from "~/normalize";
 import { store } from "~/store";
-import {
-  condPgmtoRequest,
-  fornecRequest
-} from "~/store/modules/general/actions";
+import { fornecRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
 
 export default function FornecCadastro() {
@@ -75,6 +72,12 @@ export default function FornecCadastro() {
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
     const response = await axios({
@@ -135,21 +138,6 @@ export default function FornecCadastro() {
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
-    async function Aux() {
-      api.get("/empresa").then(result => {
-        setValues(prevState => ({
-          ...prevState,
-          cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
-        }));
-        cnpjRequest(result.data[0].idFederal);
-        const idEmpresa = result.data[0].id;
-        const cod = "000";
-        const desc = "Condição de Pagaento padrão";
-        const diasPrazo = 0;
-        const first = true;
-        dispatch(condPgmtoRequest(idEmpresa, cod, desc, diasPrazo, first));
-      });
-    }
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/condPgmto`);
@@ -160,17 +148,27 @@ export default function FornecCadastro() {
         empresaId: { value: response.data.id }
       }));
     }
+    async function Aux() {
+      await api.get("/empresa").then(async result => {
+        setValues(prevState => ({
+          ...prevState,
+          cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
+        }));
+        cnpjRequest(result.data[0].idFederal);
+        const pgmto = {
+          EmpresaId: result.data[0].id,
+          cod: "000",
+          desc: "Condição de Pagammento padrão",
+          diasPrazo: 0
+        };
+        await api.post("/condPgmto", pgmto);
+      });
+      loadData();
+    }
+
     Aux();
-    loadData();
     // eslint-disable-next-line
   }, [dispatch]);
-
-  var options = {};
-
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
 
   const renderCnpjState = value => {
     if (!validarCNPJ(value)) {

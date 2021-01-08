@@ -563,6 +563,14 @@ const routes = [
     profile: 10,
     views: [
       {
+        path: "/tabelas/general/parametros",
+        name: "Parametros",
+        mini: "PRM",
+        component: ParametrosTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
         path: "/tabelas/aux/perfil",
         name: "Perfis",
         mini: "PRF",
@@ -620,7 +628,7 @@ const routes = [
       {
         path: "/tabelas/oportunidade/cotacao/:id",
         name: "Cotacao",
-        mini: "OPT",
+        mini: "COT",
         component: cotacaoTable,
         layout: "/admin",
         redirect: true
@@ -659,39 +667,6 @@ const routes = [
     profile: 2,
     views: [
       {
-        path: "/tabelas/aux/condPgmto",
-        name: "Condição de Pagamento",
-        mini: "CPG",
-        component: condPgmtoTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/aux/tipoComiss",
-        name: "Tipos de Comissão",
-        mini: "CMS",
-        component: tipoComissTable,
-        layout: "/admin",
-        profile: 10
-      },
-
-      {
-        path: "/tabelas/aux/rec_desp",
-        name: "Receita e Despesa",
-        mini: "RDP",
-        component: RecDespTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/cliente/cliente",
-        name: "Clientes",
-        mini: "RT",
-        component: Tabela_Cliente,
-        layout: "/admin",
-        profile: 3
-      },
-      {
         path: "/cadastro/wizard/empresa",
         name: "wizard",
         mini: "RT",
@@ -716,9 +691,57 @@ const routes = [
         profile: 100
       },
       {
+        path: "/tabelas/aux/condPgmto",
+        name: "Condição de Pagamento",
+        mini: "CPG",
+        component: condPgmtoTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/aux/tipoComiss",
+        name: "Tipos de Comissão",
+        mini: "CMS",
+        component: tipoComissTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/itm_controle",
+        name: "Item Controle",
+        mini: "ITM",
+        component: ItmControleTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/aux/rec_desp",
+        name: "Receita e Despesa",
+        mini: "RDP",
+        component: RecDespTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/representante",
+        name: "Representante",
+        mini: "RPR",
+        component: RepresentanteTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/cliente/cliente",
+        name: "Clientes",
+        mini: "CLI",
+        component: Tabela_Cliente,
+        layout: "/admin",
+        profile: 3
+      },
+      {
         path: "/tabelas/cliente/prospect",
         name: "Prospects",
-        mini: "RT",
+        mini: "CPR",
         component: prospectTable,
         layout: "/admin",
         profile: 2
@@ -748,9 +771,17 @@ const routes = [
         layout: "/admin"
       },
       {
+        path: "/tabelas/general/fornec",
+        name: "Fornecedor",
+        mini: "FRN",
+        component: FornecTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
         path: "/tabelas/colab",
         name: "Colaborador",
-        mini: "RT",
+        mini: "COL",
         component: ColabTable,
         layout: "/admin",
         profile: 10
@@ -766,7 +797,7 @@ const routes = [
       {
         path: "/tabelas/general/area",
         name: "Area",
-        mini: "RT",
+        mini: "AR",
         component: AreaTable,
         layout: "/admin",
         profile: 10
@@ -774,64 +805,32 @@ const routes = [
       {
         path: "/tabelas/general/empresa",
         name: "Empresa",
-        mini: "RT",
+        mini: "EMP",
         component: EmpresaTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/fornec",
-        name: "Fornecedor",
-        mini: "RT",
-        component: FornecTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/itm_controle",
-        name: "Item Controle",
-        mini: "RT",
-        component: ItmControleTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/parametros",
-        name: "Parametros",
-        mini: "RT",
-        component: ParametrosTable,
         layout: "/admin",
         profile: 10
       },
       {
         path: "/tabelas/general/prodt",
         name: "Produto",
-        mini: "RT",
+        mini: "PDT",
         component: ProdtTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/representante",
-        name: "Representante",
-        mini: "RT",
-        component: RepresentanteTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/segmento",
-        name: "Segmento",
-        mini: "RT",
-        component: SegmentoTable,
         layout: "/admin",
         profile: 10
       },
       {
         path: "/tabelas/general/und_neg",
         name: "Unidade de Negócio",
-        mini: "RT",
+        mini: "UNG",
         component: UndNegTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/segmento",
+        name: "Segmento",
+        mini: "SEG",
+        component: SegmentoTable,
         layout: "/admin",
         profile: 10
       }

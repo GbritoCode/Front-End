@@ -62,7 +62,7 @@ export default function SignUp() {
             <Form onSubmit={handleSubmit}>
               <Card className="card-login card-white">
                 <CardHeader>
-                  <img alt="..." src={require("assets/img/card-primary.png")} />
+                  <img alt="..." src={require("assets/img/card-info.png")} />
                   <CardTitle tag="h1">Sign Up</CardTitle>
                 </CardHeader>
                 <CardBody>
@@ -131,6 +131,7 @@ export default function SignUp() {
                       }}
                       name="password"
                       type="password"
+                      minLength={6}
                       placeholder="Senha"
                       {...bindPassword}
                     />
@@ -141,15 +142,15 @@ export default function SignUp() {
                     type="submit"
                     block
                     className="mb-3"
-                    color="primary"
+                    color="info"
                     size="lg"
                   >
                     {loading ? "Carregando..." : "Acessar"}
                   </Button>
                   <div className="pull-left">
                     <h6>
-                      <a className="link footer-link" href="/register">
-                        Criar Conta
+                      <a className="link footer-link" href="/login">
+                        Login
                       </a>
                     </h6>
                   </div>

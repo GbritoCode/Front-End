@@ -289,7 +289,7 @@ export default function DataOport() {
                     </Col>
                   </Row>
 
-                  <Link to={`update/oportunidade/oport/${id}`}>
+                  <Link to={`/update/oportunidade/oport/${id}`}>
                     <Button
                       style={{
                         paddingLeft: 32,

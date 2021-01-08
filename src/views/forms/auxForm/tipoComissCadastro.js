@@ -185,12 +185,21 @@ export default function TipoComissCadastro() {
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
                           name="desc"
-                          type="text"
+                          type="select"
                           onChange={event =>
                             handleChange(event, "desc", "text")
                           }
                           value={values.desc.value}
-                        />
+                        >
+                          <option disabled value="">
+                            {" "}
+                            Selecione o tipo{" "}
+                          </option>
+                          <option value={1}>Indicação</option>
+                          <option value={2}>Representação</option>
+                          <option value={3}>Prospecção</option>
+                          <option value={4}>Interna</option>
+                        </Input>
                         {values.desc.error === "has-danger" ? (
                           <Label className="error">{values.desc.message}</Label>
                         ) : null}

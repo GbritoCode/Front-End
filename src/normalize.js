@@ -133,7 +133,7 @@ export function normalizeCalcCurrency(value) {
 }
 
 export function normalizeHrToMin(minsTotal) {
-  const apontHr = `0${Math.trunc(minsTotal / 60)}`.slice(-2);
+  const apontHr = `${Math.trunc(minsTotal / 60)}`;
   const apontMin = `0${Math.trunc(minsTotal % 60)}`.slice(-2);
   return `${apontHr}:${apontMin}`;
 }

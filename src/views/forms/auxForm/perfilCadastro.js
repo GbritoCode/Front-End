@@ -52,9 +52,7 @@ export default function PerfilCadastro() {
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response = await api.get(
-        `http://localhost:5140/empresa/${empresa}`
-      );
+      const response = await api.get(`/empresa/${empresa}`);
       setData(response.data);
       setValues(prevState => ({
         ...prevState,

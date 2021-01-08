@@ -35,7 +35,7 @@ export function* signUp({ payload }) {
       history.push("/login");
     }
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
