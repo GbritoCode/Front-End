@@ -24,9 +24,9 @@ export function* signIn({ payload }) {
 
 export function* signUp({ payload }) {
   try {
-    const { name, email, senha, profile, colab } = payload;
+    const { nome, email, senha, profile, colab } = payload;
     yield call(api.post, "users", {
-      name,
+      nome,
       email,
       senha,
       profile
