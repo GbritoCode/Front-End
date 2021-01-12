@@ -5,7 +5,6 @@ import AuthLayout from "~/layouts/Auth/Auth.jsx";
 import AdminLayout from "~/layouts/Admin/Admin.jsx";
 
 import { store } from "~/store";
-import history from "~/services/history";
 
 export default function RouteWrapper({
   component: Component,
