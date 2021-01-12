@@ -572,7 +572,7 @@ const routes = [
   {
     collapse: true,
     name: "Apontamentos",
-    icon: "tim-icons icon-molecule-40",
+    icon: "tim-icons icon-money-coins",
     state: "ApontamentosCollapse",
     profile: 1,
     views: [
@@ -604,7 +604,7 @@ const routes = [
   {
     collapse: true,
     name: "Oportunidades",
-    icon: "tim-icons icon-molecule-40",
+    icon: "tim-icons icon-notes",
     state: "OportunidadeCollapse",
     profile: 2,
     views: [

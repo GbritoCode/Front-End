@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Redirect } from "react-router-dom";
 
 import AuthLayout from "~/layouts/Auth/Auth.jsx";
 import AdminLayout from "~/layouts/Admin/Admin.jsx";
 
 import { store } from "~/store";
+import history from "~/services/history";
 
 export default function RouteWrapper({
   component: Component,
@@ -12,13 +13,13 @@ export default function RouteWrapper({
   ...rest
 }) {
   const { signed } = store.getState().auth;
-  /*
-    Axios("http://localhost:5140/empresa").then((result) => {
-      if (signed && result.data.length === 0) {
-        //      history.push("/cadastro/wizard/empresa");
-        return <Redirect to={{ pathname: "/login" }} />;
-      }
-    }) */
+  const { colab } = store.getState().auth.user.Colab.CPF;
+
+  useEffect(() => {
+    if (signed && colab === null) {
+      return history.push("/cadastro/wizard/empresa");
+    }
+  }, [colab, signed]);
 
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;
