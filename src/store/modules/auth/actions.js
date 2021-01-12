@@ -1,7 +1,7 @@
-export function signInRequest(email, password) {
+export function signInRequest(email, senha) {
   return {
     type: "@auth/SIGN_IN_REQUEST",
-    payload: { email, password }
+    payload: { email, senha }
   };
 }
 
@@ -18,10 +18,10 @@ export function signFailure() {
   };
 }
 
-export function signUpRequest(name, email, password, profile, colab) {
+export function signUpRequest(nome, email, senha, profile, colab) {
   return {
     type: "@auth/SIGN_UP_REQUEST",
-    payload: { name, email, password, profile, colab }
+    payload: { nome, email, senha, profile, colab }
   };
 }
 

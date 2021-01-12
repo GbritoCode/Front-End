@@ -8,9 +8,9 @@ import { signInSuccess, signFailure } from "./actions";
 
 export function* signIn({ payload }) {
   try {
-    const { email, password } = payload;
+    const { email, senha } = payload;
 
-    const response = yield call(api.post, "sessions", { email, password });
+    const response = yield call(api.post, "sessions", { email, senha });
     const { token, user } = response.data;
 
     yield put(signInSuccess(token, user));
@@ -24,11 +24,11 @@ export function* signIn({ payload }) {
 
 export function* signUp({ payload }) {
   try {
-    const { name, email, password, profile, colab } = payload;
+    const { name, email, senha, profile, colab } = payload;
     yield call(api.post, "users", {
       name,
       email,
-      password,
+      senha,
       profile
     });
     if (colab === false) {
