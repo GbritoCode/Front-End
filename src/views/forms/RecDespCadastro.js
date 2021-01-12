@@ -44,12 +44,13 @@ export default function RecDespCadastro() {
 
   const dispatch = useDispatch();
   const [data, setData] = useState({});
-  const [data1, setData1] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    ItmControleId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
-    recDesp: { value: "", error: "", message: "" }
+    recDesp: { value: "", error: "", message: "" },
+    tipoItem: { value: "", error: "", message: "" },
+    contaContabil: { value: "", error: "", message: "" },
+    centCusto: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -57,9 +58,7 @@ export default function RecDespCadastro() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
-      const response1 = await api.get(`/itm_controle/`);
       setData(response.data);
-      setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -119,9 +118,11 @@ export default function RecDespCadastro() {
       dispatch(
         recDespRequest(
           values.empresaId.value,
-          values.ItmControleId.value,
           values.desc.value,
-          values.recDesp.value
+          values.recDesp.value,
+          values.tipoItem.value,
+          values.contaContabil.value,
+          values.centCusto.value
         )
       );
     } else {
@@ -178,38 +179,6 @@ export default function RecDespCadastro() {
                   </FormGroup>
                   <Row>
                     <Col md="4">
-                      <Label>Item Controle</Label>
-                      <FormGroup
-                        className={`has-label ${values.ItmControleId.error}`}
-                      >
-                        <Input
-                          name="ItmControleId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ItmControleId", "text")
-                          }
-                          value={values.ItmControleId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o item controle{" "}
-                          </option>
-                          {data1.map(itm => (
-                            <option value={itm.id}>
-                              {" "}
-                              {itm.descItem} - {itm.tipoItem}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.ItmControleId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ItmControleId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
                       <Label>Descrição</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
@@ -256,6 +225,68 @@ export default function RecDespCadastro() {
                         {values.recDesp.error === "has-danger" ? (
                           <Label className="error">
                             {values.recDesp.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Tipo de Item</Label>
+                      <FormGroup
+                        className={`has-label ${values.tipoItem.error}`}
+                      >
+                        <Input
+                          name="tipoItem"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "tipoItem", "text")
+                          }
+                          value={values.tipoItem.value}
+                        />
+                        {values.tipoItem.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.tipoItem.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                      <Label>Conta Contábil</Label>
+                      <FormGroup
+                        className={`has-label ${values.contaContabil.error}`}
+                      >
+                        <Input
+                          name="contaContabil"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "contaContabil", "text")
+                          }
+                          value={values.contaContabil.value}
+                        />
+                        {values.contaContabil.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.contaContabil.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Centro de Custo</Label>
+                      <FormGroup
+                        className={`has-label ${values.centCusto.error}`}
+                      >
+                        <Input
+                          name="centCusto"
+                          type="numeric"
+                          onChange={event =>
+                            handleChange(event, "centCusto", "text")
+                          }
+                          value={values.centCusto.value}
+                        />
+                        {values.centCusto.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.centCusto.message}
                           </Label>
                         ) : null}
                       </FormGroup>

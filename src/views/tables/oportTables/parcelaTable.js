@@ -21,6 +21,7 @@ import { Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
 import history from "~/services/history";
+import { normalizeCurrency } from "~/normalize";
 
 class ParametrosTable extends Component {
   state = {
@@ -49,8 +50,8 @@ class ParametrosTable extends Component {
           notaFiscal: parcela.notaFiscal,
           pedidoCliente: parcela.pedidoCliente,
           situacao: parcela.situacao,
-          vlrPago: parcela.vlrPago,
-          saldo: parcela.saldo,
+          vlrPago: normalizeCurrency(parcela.vlrPago),
+          saldo: normalizeCurrency(parcela.saldo),
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -148,7 +149,7 @@ class ParametrosTable extends Component {
                 <ReactTable
                   data={this.state.data}
                   filterable
-                  resizable={false}
+                  resizable
                   defaultFilterMethod={(filter, row) => {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined

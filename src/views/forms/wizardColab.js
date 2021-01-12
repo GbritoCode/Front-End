@@ -35,7 +35,6 @@ import NotificationAlert from "react-notification-alert";
 import { colabRequest } from "~/store/modules/Colab/actions";
 import { store } from "~/store";
 import { normalizeFone, normalizeCpf, normalizeCnpj } from "~/normalize";
-import { perfilRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
@@ -65,20 +64,6 @@ export default function ColabCadastro() {
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
-    async function Aux() {
-      api.get("/users").then(async result => {
-        setValues(prevState => ({
-          ...prevState,
-          email: { value: result.data[0].email }
-        }));
-        api.get("/empresa").then(results => {
-          const idEmpresa = results.data[0].id;
-          const desc = "Admnistrador";
-          const first = true;
-          dispatch(perfilRequest(idEmpresa, desc, first));
-        });
-      });
-    }
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/fornec`);
@@ -91,8 +76,23 @@ export default function ColabCadastro() {
         empresaId: { value: response.data.id }
       }));
     }
+    async function Aux() {
+      api.get("/users").then(async result => {
+        setValues(prevState => ({
+          ...prevState,
+          email: { value: result.data[0].email }
+        }));
+        api.get("/empresa").then(async results => {
+          const perfil = {
+            idEmpresa: results.data[0].id,
+            desc: "Admnistrador"
+          };
+          await api.post("/perfil", perfil);
+          loadData();
+        });
+      });
+    }
     Aux();
-    loadData();
   }, [dispatch]);
 
   var options = {};
@@ -240,6 +240,7 @@ export default function ColabCadastro() {
     }
 
     if (valid && filled) {
+      const first = true;
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
       var celdb = values.cel.value.replace(/[^\d]+/g, "");
 
@@ -254,7 +255,8 @@ export default function ColabCadastro() {
           values.PerfilId.value,
           values.skype.value,
           values.email.value,
-          values.espec.value
+          values.espec.value,
+          first
         )
       );
     } else {
@@ -293,7 +295,7 @@ export default function ColabCadastro() {
           <Card>
             <CardHeader>
               <CardTitle style={{ textAlign: "center" }} tag="h4">
-                Cadastre a sua Empresa
+                Cadastre um registro de colaborador para si próprio
               </CardTitle>
             </CardHeader>
             <CardBody>

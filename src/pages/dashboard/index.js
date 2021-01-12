@@ -57,7 +57,7 @@ import {
   chartExample4
 } from "~/variables/charts";
 import api from "~/services/api";
-import { normalizeCurrency } from "~/normalize";
+import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 
 var mapData = {
   AU: 760,
@@ -92,17 +92,19 @@ class Dashboard extends React.Component {
   }
 
   loadData = async () => {
-    const { email } = store.getState().auth.user;
-    const hrs = await api.get(`horas/${email}/?total=${true}&tipo=month`);
-    const desps = await api.get(`despesas/${email}/?total=${true}&tipo=month`);
-    const vlrHrs = await api.get(`colab/${email}/?vlrHrMes=true`);
+    const idColab = store.getState().auth.user.Colab.id;
+    const hrs = await api.get(`horas/${idColab}/?total=${true}&tipo=month`);
+    const desps = await api.get(
+      `despesas/${idColab}/?total=${true}&tipo=month`
+    );
+    const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
     const date = new Date();
     const month = date.toLocaleString("default", { month: "long" });
     this.setState({
       mes: month,
       horas: hrs.data,
       vlrDesps: normalizeCurrency(desps.data),
-      vlrHrs: normalizeCurrency(vlrHrs.data)
+      vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data)
     });
   };
 

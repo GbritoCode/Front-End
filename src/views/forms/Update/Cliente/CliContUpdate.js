@@ -361,7 +361,7 @@ export default function CliContUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="3">
-                          <Label>tipo de Contato</Label>
+                          <Label>Tipo de Contato</Label>
                           <FormGroup
                             className={`has-label ${values.tipoConta.error}`}
                           >

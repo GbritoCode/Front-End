@@ -59,6 +59,9 @@ export function* updateCliente({ payload }) {
     const response = yield call(api.put, `cliente/${id}`, Cliente);
 
     toast.success("cliente atualizado");
+    if (prospect === true) {
+      history.push("/tabelas/cliente/prospect");
+    }
     history.push("/tabelas/cliente/cliente");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {

@@ -158,7 +158,7 @@ export default function FornecCadastro() {
         const pgmto = {
           EmpresaId: result.data[0].id,
           cod: "000",
-          desc: "Condição de Pagammento padrão",
+          desc: "Condição Padrão",
           diasPrazo: 0
         };
         await api.post("/condPgmto", pgmto);

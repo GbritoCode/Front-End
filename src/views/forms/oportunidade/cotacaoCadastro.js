@@ -95,8 +95,6 @@ export default function CotacaoCadastro() {
         }));
         setAuxState(true);
       } else {
-        console.log(response2.data.length);
-        console.log(response2);
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
@@ -145,9 +143,7 @@ export default function CotacaoCadastro() {
   }
   function getCliData(cobranca) {
     api
-      .get(
-        `/cliente/rec_desp/${data1.ClienteId}/?ItmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
-      )
+      .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
       .then(result => {
         if (result.data === null) {
           options = {
@@ -247,11 +243,6 @@ export default function CotacaoCadastro() {
       ).toFixed(2);
       const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
 
-      console.log(parseFloat(rLiq));
-      console.log(hr);
-      console.log(data3.vlrBsHr / 100);
-      console.log((hr * data3.vlrBsHr) / 100);
-      console.log(parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100);
       setValues(prevState => ({
         ...prevState,
         vlrLiq: { value: normalizeCalcCurrency(vLiq) }
@@ -324,7 +315,7 @@ export default function CotacaoCadastro() {
           data1.ColabId,
           data1.ClienteId,
           data1.UndNegId,
-          data1.ItmControleId,
+          data1.RecDespId,
           data1.SegmentoId,
           data1.RepresentanteId,
           data1.contato,

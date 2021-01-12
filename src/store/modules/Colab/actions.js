@@ -1,12 +1,12 @@
 export function signFailure() {
   return {
-    type: "@cadastro/CADASTRO_FALHA",
+    type: "@cadastro/CADASTRO_FALHA"
   };
 }
 export function ClienteUpdateSuccess(profile) {
   return {
     type: "@update/CLIENTE_REQUEST_SUCCES",
-    payload: { profile },
+    payload: { profile }
   };
 }
 
@@ -14,13 +14,15 @@ export function colabRequest(
   CPF,
   FornecId,
   EmpresaId,
+  UserId,
   nome,
   dtAdmiss,
   cel,
   PerfilId,
   skype,
   email,
-  espec
+  espec,
+  first
 ) {
   return {
     type: "@cadastro/CADASTRO_COLAB_REQUEST",
@@ -28,6 +30,7 @@ export function colabRequest(
       CPF,
       FornecId,
       EmpresaId,
+      UserId,
       nome,
       dtAdmiss,
       cel,
@@ -35,7 +38,8 @@ export function colabRequest(
       skype,
       email,
       espec,
-    },
+      first
+    }
   };
 }
 
@@ -43,6 +47,7 @@ export function ColabUpdate(
   id,
   CPF,
   FornecId,
+  UserId,
   PerfilId,
   nome,
   dtAdmiss,
@@ -57,14 +62,15 @@ export function ColabUpdate(
       id,
       CPF,
       FornecId,
+      UserId,
       PerfilId,
       nome,
       dtAdmiss,
       cel,
       skype,
       email,
-      espec,
-    },
+      espec
+    }
   };
 }
 
@@ -86,8 +92,8 @@ export function colabCompRequest(
       valor,
       dataInic,
       dataFim,
-      tipoAtend,
-    },
+      tipoAtend
+    }
   };
 }
 
@@ -111,7 +117,7 @@ export function ColabCompUpdate(
       valor,
       dataInic,
       dataFim,
-      tipoAtend,
-    },
+      tipoAtend
+    }
   };
 }

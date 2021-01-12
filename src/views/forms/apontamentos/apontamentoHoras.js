@@ -47,6 +47,7 @@ export default function HorasCadastro() {
   const dispatch = useDispatch();
   const [data1, setData1] = useState({});
   const [data4, setData4] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   const optionalSchema = {
     totalApontDb: { value: 0, error: "", message: "" }
@@ -57,7 +58,7 @@ export default function HorasCadastro() {
     oportunidadeDesc: { value: "", error: "", message: "" },
     Cliente: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" },
-    dataAtivd: { value: "", error: "", message: "" },
+    dataAtivd: { value: `${year}-${month}-${date}`, error: "", message: "" },
     horaInic: { value: "", error: "", message: "" },
     horaIntrv: { value: "01:00", error: "", message: "" },
     horaFim: { value: "", error: "", message: "" },
@@ -76,18 +77,19 @@ export default function HorasCadastro() {
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
-  console.log(values);
   useEffect(() => {
-    const { email } = store.getState().auth.user;
+    const idColab = store.getState().auth.user.Colab.id;
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
+      const response4 = await api.get(`/area/`);
       const response1 = await api.get(`/oportunidade/${id}`);
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
-      const response4 = await api.get(`/area/`);
-      const response5 = await api.get(`/colab/?email=${email}`);
+      const response5 = await api.get(`/colab/?idColab=${idColab}`);
       const response6 = await api.get(
-        `/horas/${id}/?total=${true}&tipo=project&oport=${response1.data.id}`
+        `/horas/${idColab}/?total=${true}&tipo=project&oport=${
+          response1.data.id
+        }`
       );
       setData4(response4.data);
       setData1(response1.data);
@@ -97,15 +99,17 @@ export default function HorasCadastro() {
         OportunidadeId: { value: response1.data.id },
         oportunidadeCod: { value: response1.data.cod },
         oportunidadeDesc: { value: response1.data.desc },
+        AreaId: { values: JSON.stringify(response1.data.Segmento.AreaId) },
         Cliente: { value: response3.data.nomeAbv },
         ColabId: { value: response5.data.id },
         totalAcum: { value: response6.data },
         totalAcumTemp: { value: response6.data }
       }));
+      setIsLoading(false);
     }
     loadData();
   }, [id]);
-
+  console.log(values);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -281,332 +285,357 @@ export default function HorasCadastro() {
   };
   return (
     <>
-      <div className="rna-container">
-        <NotificationAlert ref={notifyElment} />
-      </div>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Horas</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col md="8">
-                      <Label>Oportunidade</Label>
-                      <FormGroup
-                        className={`has-label ${values.OportunidadeId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="OportunidadeId"
-                          onChange={event =>
-                            handleChange(event, "OportunidadeId", "text")
-                          }
-                          value={values.OportunidadeId.value}
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione a Oportunidade{" "}
-                          </option>{" "}
-                          <option value={data1.id}>
-                            {" "}
-                            {data1.cod} - {data1.desc}
-                          </option>
-                        </Input>
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Horas</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
+                      <Row>
+                        <Col md="8">
+                          <Label>Oportunidade</Label>
+                          <FormGroup
+                            className={`has-label ${values.OportunidadeId.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="OportunidadeId"
+                              onChange={event =>
+                                handleChange(event, "OportunidadeId", "text")
+                              }
+                              value={values.OportunidadeId.value}
+                              type="select"
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione a Oportunidade{" "}
+                              </option>{" "}
+                              <option value={data1.id}>
+                                {" "}
+                                {data1.cod} - {data1.desc}
+                              </option>
+                            </Input>
 
-                        {values.OportunidadeId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.OportunidadeId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Cliente</Label>
-                      <FormGroup
-                        className={`has-label ${values.Cliente.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="Cliente"
-                          type="text"
-                          onChange={event => {
-                            handleChange(event, "Cliente", "text");
-                          }}
-                          value={values.Cliente.value}
-                        />
-                        {values.Cliente.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.Cliente.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                            {values.OportunidadeId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.OportunidadeId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Cliente</Label>
+                          <FormGroup
+                            className={`has-label ${values.Cliente.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="Cliente"
+                              type="text"
+                              onChange={event => {
+                                handleChange(event, "Cliente", "text");
+                              }}
+                              value={values.Cliente.value}
+                            />
+                            {values.Cliente.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.Cliente.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
 
-                  <Row>
-                    <Col md="4">
-                      <Label>Hora Inicial</Label>
-                      <FormGroup
-                        className={`has-label ${values.horaInic.error}`}
-                      >
-                        <Input
-                          type="time"
-                          name="horaInic"
-                          placeholder="time placeholder"
-                          onChange={event => {
-                            handleChange(event, "horaInic", "text");
-                            horasChange(
-                              document.getElementsByName("horaInic")[0].value,
-                              document.getElementsByName("horaFim")[0].value,
-                              document.getElementsByName("horaIntrv")[0].value
-                            );
-                          }}
-                        />
-                        {values.horaInic.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.horaInic.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Hora Final</Label>
-                      <FormGroup
-                        className={`has-label ${values.horaFim.error}`}
-                      >
-                        <Input
-                          type="time"
-                          name="horaFim"
-                          placeholder="time placeholder"
-                          onChange={event => {
-                            handleChange(event, "horaFim", "text");
-                            horasChange(
-                              document.getElementsByName("horaInic")[0].value,
-                              document.getElementsByName("horaFim")[0].value,
-                              document.getElementsByName("horaIntrv")[0].value
-                            );
-                          }}
-                        />
-                        {values.horaFim.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.horaFim.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Intervalo</Label>
-                      <FormGroup
-                        className={`has-label ${values.horaIntrv.error}`}
-                      >
-                        <Input
-                          type="time"
-                          name="horaIntrv"
-                          placeholder="time placeholder"
-                          onChange={event => {
-                            handleChange(event, "horaIntrv", "text");
-                            horasChange(
-                              document.getElementsByName("horaInic")[0].value,
-                              document.getElementsByName("horaFim")[0].value,
-                              document.getElementsByName("horaIntrv")[0].value
-                            );
-                          }}
-                          value={values.horaIntrv.value}
-                        />
-                        {values.horaIntrv.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.horaIntrv.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Hora Inicial</Label>
+                          <FormGroup
+                            className={`has-label ${values.horaInic.error}`}
+                          >
+                            <Input
+                              autoFocus
+                              type="time"
+                              name="horaInic"
+                              placeholder="time placeholder"
+                              onChange={event => {
+                                handleChange(event, "horaInic", "text");
+                                horasChange(
+                                  document.getElementsByName("horaInic")[0]
+                                    .value,
+                                  document.getElementsByName("horaFim")[0]
+                                    .value,
+                                  document.getElementsByName("horaIntrv")[0]
+                                    .value
+                                );
+                              }}
+                            />
+                            {values.horaInic.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.horaInic.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Hora Final</Label>
+                          <FormGroup
+                            className={`has-label ${values.horaFim.error}`}
+                          >
+                            <Input
+                              type="time"
+                              name="horaFim"
+                              placeholder="time placeholder"
+                              onChange={event => {
+                                handleChange(event, "horaFim", "text");
+                                horasChange(
+                                  document.getElementsByName("horaInic")[0]
+                                    .value,
+                                  document.getElementsByName("horaFim")[0]
+                                    .value,
+                                  document.getElementsByName("horaIntrv")[0]
+                                    .value
+                                );
+                              }}
+                            />
+                            {values.horaFim.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.horaFim.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Intervalo</Label>
+                          <FormGroup
+                            className={`has-label ${values.horaIntrv.error}`}
+                          >
+                            <Input
+                              type="time"
+                              name="horaIntrv"
+                              placeholder="time placeholder"
+                              onChange={event => {
+                                handleChange(event, "horaIntrv", "text");
+                                horasChange(
+                                  document.getElementsByName("horaInic")[0]
+                                    .value,
+                                  document.getElementsByName("horaFim")[0]
+                                    .value,
+                                  document.getElementsByName("horaIntrv")[0]
+                                    .value
+                                );
+                              }}
+                              value={values.horaIntrv.value}
+                            />
+                            {values.horaIntrv.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.horaIntrv.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
 
-                  <Row>
-                    <Col md="4">
-                      <Label>Data da Atividade</Label>
-                      <FormGroup
-                        className={`has-label ${values.dataAtivd.error}`}
-                      >
-                        <Input
-                          name="dataAtivd"
-                          type="date"
-                          onChange={event =>
-                            handleChange(event, "dataAtivd", "text")
-                          }
-                          value={values.dataAtivd.value}
-                        />
-                        {values.dataAtivd.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.dataAtivd.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Horas Apontadas</Label>
-                      <FormGroup
-                        className={`has-label ${values.totalApont.error}`}
-                      >
-                        <Input
-                          disabled
-                          type="time"
-                          name="totalApont"
-                          placeholder="time placeholder"
-                          onChange={event =>
-                            handleChange(event, "totalApont", "text")
-                          }
-                          value={values.totalApont.value}
-                        />
-                        {values.totalApont.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.totalApont.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Total Acumulado</Label>
-                      <FormGroup
-                        className={`has-label ${values.totalAcum.error}`}
-                      >
-                        <Input
-                          disabled
-                          type="text"
-                          name="totalAcum"
-                          placeholder="time placeholder"
-                          onChange={event =>
-                            handleChange(event, "totalAcum", "text")
-                          }
-                          value={values.totalAcum.value}
-                        />
-                        {values.totalAcum.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.totalAcum.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="4">
-                      <Label>Área</Label>
-                      <FormGroup className={`has-label ${values.AreaId.error}`}>
-                        <Input
-                          name="AreaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "AreaId", "text")
-                          }
-                          value={values.AreaId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione a área{" "}
-                          </option>
-                          {data4.map(area => (
-                            <option value={area.id}> {area.descArea} </option>
-                          ))}
-                        </Input>{" "}
-                        {values.AreaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.AreaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Solicitante</Label>
-                      <FormGroup
-                        className={`has-label ${values.solicitante.error}`}
-                      >
-                        <Input
-                          type="text"
-                          name="solicitante"
-                          onChange={event =>
-                            handleChange(event, "solicitante", "text")
-                          }
-                          value={values.solicitante.value}
-                        />
-                        {values.solicitante.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.solicitante.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Label>Descrição</Label>
-                      <FormGroup className={`has-label ${values.desc.error}`}>
-                        <Input
-                          type="textarea"
-                          name="desc"
-                          onChange={event =>
-                            handleChange(event, "desc", "text")
-                          }
-                          value={values.desc.value}
-                        />
-                        {values.desc.error === "has-danger" ? (
-                          <Label className="error">{values.desc.message}</Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-
-                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
+                      <Row>
+                        <Col md="4">
+                          <Label>Data da Atividade</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataAtivd.error}`}
+                          >
+                            <Input
+                              name="dataAtivd"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataAtivd", "text")
+                              }
+                              value={values.dataAtivd.value}
+                            />
+                            {values.dataAtivd.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataAtivd.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Horas Apontadas</Label>
+                          <FormGroup
+                            className={`has-label ${values.totalApont.error}`}
+                          >
+                            <Input
+                              disabled
+                              type="time"
+                              name="totalApont"
+                              placeholder="time placeholder"
+                              onChange={event =>
+                                handleChange(event, "totalApont", "text")
+                              }
+                              value={values.totalApont.value}
+                            />
+                            {values.totalApont.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.totalApont.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Total Acumulado</Label>
+                          <FormGroup
+                            className={`has-label ${values.totalAcum.error}`}
+                          >
+                            <Input
+                              disabled
+                              type="text"
+                              name="totalAcum"
+                              placeholder="time placeholder"
+                              onChange={event =>
+                                handleChange(event, "totalAcum", "text")
+                              }
+                              value={values.totalAcum.value}
+                            />
+                            {values.totalAcum.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.totalAcum.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Área</Label>
+                          <FormGroup
+                            className={`has-label ${values.AreaId.error}`}
+                          >
+                            <Input
+                              name="AreaId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "AreaId", "text")
+                              }
+                              value={values.AreaId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a área{" "}
+                              </option>
+                              {data4.map(area => (
+                                <option value={area.id}>
+                                  {" "}
+                                  {area.descArea}{" "}
+                                </option>
+                              ))}
+                            </Input>{" "}
+                            {values.AreaId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.AreaId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Solicitante</Label>
+                          <FormGroup
+                            className={`has-label ${values.solicitante.error}`}
+                          >
+                            <Input
+                              type="text"
+                              name="solicitante"
+                              onChange={event =>
+                                handleChange(event, "solicitante", "text")
+                              }
+                              value={values.solicitante.value}
+                            />
+                            {values.solicitante.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.solicitante.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Descrição</Label>
+                          <FormGroup
+                            className={`has-label ${values.desc.error}`}
+                          >
+                            <Input
+                              type="textarea"
+                              name="desc"
+                              onChange={event =>
+                                handleChange(event, "desc", "text")
+                              }
+                              value={values.desc.value}
+                            />
+                            {values.desc.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.desc.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
+                          paddingLeft: 29,
+                          paddingRight: 30
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
-                  <Button
-                    style={{
-                      paddingLeft: 29,
-                      paddingRight: 30
-                    }}
-                    className="form"
-                    color="info"
-                    type="submit"
-                  >
-                    Enviar{" "}
-                    <i
-                      className="tim-icons icon-send"
-                      style={{
-                        paddingBottom: 4,
-                        paddingLeft: 3
-                      }}
-                      size="large"
-                    />
-                  </Button>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                      <Link to="/tabelas/apontamentos/oportunidades/">
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </>
   );
 }

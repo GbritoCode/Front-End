@@ -35,6 +35,7 @@ import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
+import EventNoteIcon from "@material-ui/icons/EventNote";
 import { normalizeCpf, normalizeFone } from "~/normalize";
 import { ColabUpdate } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
@@ -46,7 +47,6 @@ function ColabUpdatee() {
 
   const dispatch = useDispatch();
   const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -68,10 +68,8 @@ function ColabUpdatee() {
     async function loadData() {
       const response = await api.get(`/colab/${id}`);
       const response1 = await api.get(`/fornec`);
-      const response2 = await api.get(`/perfil`);
       const response3 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
-      setData2(response2.data);
       setData3(response3.data);
 
       setValues(prevState => ({
@@ -288,7 +286,7 @@ function ColabUpdatee() {
                           size="sm"
                           className={classNames("btn-icon btn-link like")}
                         >
-                          <i className="tim-icons icon-notes" />
+                          <EventNoteIcon />
                         </Button>
                       </Tooltip>
                     </Link>
@@ -462,12 +460,10 @@ function ColabUpdatee() {
                                 {" "}
                                 Selecione o perfil{" "}
                               </option>
-                              {data2.map(perfil => (
-                                <option value={perfil.id}>
-                                  {" "}
-                                  {perfil.id} - {perfil.desc}{" "}
-                                </option>
-                              ))}
+                              <option value={1}>Analista</option>
+                              <option value={2}>Comercial</option>
+                              <option value={3}>Gestor</option>
+                              <option value={10}>Admin</option>
                             </Input>
                             {values.PerfilId.error === "has-danger" ? (
                               <Label className="error">

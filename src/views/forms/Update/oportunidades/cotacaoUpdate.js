@@ -124,9 +124,7 @@ function CotacaoUpdate() {
 
   function getCliData(cobranca) {
     api
-      .get(
-        `/cliente/rec_desp/${data1.ClienteId}/?itmControleId=${data1.ItmControleId}&cobranca=${cobranca}`
-      )
+      .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
       .then(result => {
         setData3(result.data);
       });

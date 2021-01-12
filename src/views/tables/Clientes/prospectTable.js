@@ -62,11 +62,6 @@ export default function ProspectTable() {
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                     onClick={() => {
-                      console.log(
-                        client.id,
-                        client.nomeAbv,
-                        client.TipoComisseId
-                      );
                       dispatch(
                         ClienteUpdate(
                           client.id,
@@ -84,7 +79,7 @@ export default function ProspectTable() {
                   </Button>
                 </Tooltip>
                 {/* use this button to add a edit kind of action */}
-                <Link to={`/cliente_update/${client.id}/false`}>
+                <Link to={`/cliente_update/${client.id}/true`}>
                   <Button
                     color="default"
                     size="sm"
@@ -148,7 +143,7 @@ export default function ProspectTable() {
               <ReactTable
                 data={data}
                 filterable
-                resizable={false}
+                resizable
                 defaultFilterMethod={(filter, row) => {
                   const id = filter.pivotId || filter.id;
                   return row[id] !== undefined

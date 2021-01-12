@@ -47,8 +47,7 @@ function ClienteUpdatee() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
-  const { prct } = useParams();
-  const { id } = useParams();
+  const { id, prospect } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
@@ -167,6 +166,20 @@ function ClienteUpdatee() {
     return false;
   };
 
+  const checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
+  };
+
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
@@ -218,7 +231,7 @@ function ClienteUpdatee() {
   }
 
   function checkProsp(param) {
-    if (param == "true") {
+    if (param == "false") {
       return (
         <>
           <Link to={`/tabelas/cliente/comp/${id}`}>
@@ -285,7 +298,8 @@ function ClienteUpdatee() {
           optional.fantasia.value,
           values.representante.value,
           values.tipoComiss.value,
-          values.empresaId.value
+          values.empresaId.value,
+          prospect
         )
       );
     } else {
@@ -318,7 +332,7 @@ function ClienteUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {checkProsp(prct)}
+                    {checkProsp(prospect)}
 
                     <Link to={`/tabelas/cliente/cont/${id}`}>
                       <Tooltip title="Contato" placement="top" interactive>
@@ -509,7 +523,7 @@ function ClienteUpdatee() {
                               {data1.map(tipoComiss => (
                                 <option value={tipoComiss.id}>
                                   {" "}
-                                  {tipoComiss.id} - {tipoComiss.desc}{" "}
+                                  {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
                                 </option>
                               ))}
                             </Input>

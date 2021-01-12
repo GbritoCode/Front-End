@@ -51,9 +51,6 @@ import EmpresaCadastro from "~/views/forms/EmpresaCadastro";
 import FornecUpdate from "~/views/forms/Update/General/FornecUpdate";
 import FornecCadastro from "~/views/forms/FornecCadastro";
 
-import ItmControleUpdate from "~/views/forms/Update/General/ItmControleUpdate";
-import ItmControleCadastro from "~/views/forms/ItmControleCadastro";
-
 import ParametrosUpdate from "~/views/forms/Update/General/ParametrosUpdate";
 import ParametrosCadastro from "~/views/forms/ParametrosCadastro";
 
@@ -109,7 +106,6 @@ import ColabCompTable from "~/views/tables/Colab/ColabCompTable";
 import AreaTable from "~/views/tables/General/AreaTable";
 import EmpresaTable from "~/views/tables/General/EmpresaTable";
 import FornecTable from "~/views/tables/General/FornecTable";
-import ItmControleTable from "~/views/tables/General/ItmControleTable";
 import ParametrosTable from "~/views/tables/General/ParametrosTable";
 import ProdtTable from "~/views/tables/General/ProdtTable";
 import RepresentanteTable from "~/views/tables/General/RepresentanteTable";
@@ -148,6 +144,7 @@ import HorasTable from "~/views/tables/apontamentos/tabelaHora";
 import HorasUpdate from "~/views/forms/Update/apontamentos/horasUpdate";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 import DataOport from "~/views/forms/oportunidade/oportunidadeData";
+import ProfileUpdate from "~/views/forms/Update/User/profileUpdate";
 
 const routes = [
   {
@@ -193,7 +190,7 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/cliente_update/:id/:prct?",
+        path: "/cliente_update/:id/:prospect",
         name: "Atualizar Cliente",
         mini: "RF",
         component: ClienteUpdate,
@@ -309,20 +306,6 @@ const routes = [
         name: "Editar Fornecedor",
         mini: "RF",
         component: FornecUpdate,
-        layout: "/admin"
-      },
-      {
-        path: "/cadastro/geral/itm_controle",
-        name: "Cadastro de Item Controle",
-        mini: "RF",
-        component: ItmControleCadastro,
-        layout: "/admin"
-      },
-      {
-        path: "/update/general/itm_controle/:id",
-        name: "Editar Item Controle",
-        mini: "RF",
-        component: ItmControleUpdate,
         layout: "/admin"
       },
       {
@@ -541,6 +524,13 @@ const routes = [
         mini: "DSP",
         component: DespesaUpdate,
         layout: "/admin"
+      },
+      {
+        path: "/update/user/perfil/",
+        name: "Perfil",
+        mini: "UPRF",
+        component: ProfileUpdate,
+        layout: "/admin"
       }
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
@@ -703,14 +693,6 @@ const routes = [
         name: "Tipos de Comissão",
         mini: "CMS",
         component: tipoComissTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/itm_controle",
-        name: "Item Controle",
-        mini: "ITM",
-        component: ItmControleTable,
         layout: "/admin",
         profile: 10
       },

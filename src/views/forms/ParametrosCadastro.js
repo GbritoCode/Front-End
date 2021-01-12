@@ -347,7 +347,7 @@ export default function ParametrosCadastro() {
                   <Row>
                     <Col md="4">
                       {" "}
-                      <Label>PS PRO LABOR</Label>
+                      <Label>PSocial</Label>
                       <FormGroup
                         className={`has-label ${values.PSProLabor.error}`}
                       >
@@ -368,7 +368,7 @@ export default function ParametrosCadastro() {
                     </Col>
                     <Col md="4">
                       {" "}
-                      <Label>IRRF PRO LABOT</Label>
+                      <Label>IRRFSócios</Label>
                       <FormGroup
                         className={`has-label ${values.IRRFProLabor.error}`}
                       >
@@ -452,18 +452,33 @@ export default function ParametrosCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <Label>Adianta Pagamento</Label>
+                      <Label>adianta Pagamemto</Label>
                       <FormGroup
+                        check
                         className={`has-label ${values.adiantaPgmto.error}`}
                       >
-                        <Input
-                          name="adiantaPgmto"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "adiantaPgmto", "text")
-                          }
-                          value={values.adiantaPgmto.value}
-                        />
+                        <Label check>
+                          <Input
+                            name="adiantaPgmto"
+                            type="radio"
+                            onChange={event =>
+                              handleChange(event, "adiantaPgmto", "text")
+                            }
+                            value="Sim"
+                          />
+                          Sim
+                        </Label>
+                        <Label check>
+                          <Input
+                            name="adiantaPgmto"
+                            type="radio"
+                            onChange={event =>
+                              handleChange(event, "adiantaPgmto", "text")
+                            }
+                            value="Não"
+                          />
+                          Não
+                        </Label>
                         {values.adiantaPgmto.error === "has-danger" ? (
                           <Label className="error">
                             {values.adiantaPgmto.message}

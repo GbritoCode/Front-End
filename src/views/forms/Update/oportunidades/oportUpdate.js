@@ -35,7 +35,12 @@ import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
-import { AssignmentInd, CreditCard, LocalOffer } from "@material-ui/icons";
+import {
+  AssignmentInd,
+  CreditCard,
+  LocalOffer,
+  Timeline
+} from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
@@ -62,7 +67,7 @@ export default function UpdateOport() {
     ColabId: { value: "", error: "", message: "" },
     ClienteId: { value: "", error: "", message: "" },
     UndNegId: { value: "", error: "", message: "" },
-    ItmControleId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
     segmetId: { value: "", error: "", message: "" },
     RepresentanteId: { value: "", error: "", message: "" },
     contato: { value: "", error: "", message: "" },
@@ -83,7 +88,7 @@ export default function UpdateOport() {
       const response = await api.get(`/empresa/${empresa}`);
       const response2 = await api.get(`/cliente/`);
       const response4 = await api.get(`/und_neg/`);
-      const response5 = await api.get(`/itm_controle/`);
+      const response5 = await api.get(`/rec_desp/`);
       const response6 = await api.get(`/segmento/`);
       const response7 = await api.get(`/representante/`);
       const response8 = await api.get(`/oportunidade/${id}`);
@@ -102,50 +107,17 @@ export default function UpdateOport() {
 
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response8.data.empresaId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        ColabId: { value: response8.data.ColabId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        data: { value: response8.data.data }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        fase: { value: response8.data.fase }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        ClienteId: { value: response8.data.ClienteId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        contato: { value: response8.data.contato }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        cod: { value: response8.data.cod }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        UndNegId: { value: response8.data.UndNegId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        ItmControleId: { value: response8.data.ItmControleId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        segmetId: { value: response8.data.segmetId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        RepresentanteId: { value: response8.data.RepresentanteId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
+        empresaId: { value: response8.data.empresaId },
+        ColabId: { value: response8.data.ColabId },
+        data: { value: response8.data.data },
+        fase: { value: response8.data.fase },
+        ClienteId: { value: response8.data.ClienteId },
+        contato: { value: response8.data.contato },
+        cod: { value: response8.data.cod },
+        UndNegId: { value: response8.data.UndNegId },
+        RecDespId: { value: response8.data.RecDespId },
+        segmetId: { value: response8.data.segmetId },
+        RepresentanteId: { value: response8.data.RepresentanteId },
         desc: { value: response8.data.desc }
       }));
       setOptional(prevState => ({
@@ -272,7 +244,7 @@ export default function UpdateOport() {
                 size="sm"
                 className={classNames("btn-icon btn-link like")}
               >
-                <AssignmentInd />
+                <Timeline />
               </Button>
             </Tooltip>
           </Link>
@@ -315,7 +287,7 @@ export default function UpdateOport() {
           values.ColabId.value,
           values.ClienteId.value,
           values.UndNegId.value,
-          values.ItmControleId.value,
+          values.RecDespId.value,
           values.segmetId.value,
           values.RepresentanteId.value,
           values.contato.value,
@@ -589,33 +561,33 @@ export default function UpdateOport() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Item Controle</Label>
+                          <Label>Receita</Label>
                           <FormGroup
-                            className={`has-label ${values.ItmControleId.error}`}
+                            className={`has-label ${values.RecDespId.error}`}
                           >
                             <Input
-                              name="ItmControleId"
+                              name="RecDespId"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "ItmControleId", "text")
+                                handleChange(event, "RecDespId", "text")
                               }
-                              value={values.ItmControleId.value}
+                              value={values.RecDespId.value}
                             >
                               {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione o item controle{" "}
+                                Selecione o tipo de receita{" "}
                               </option>
-                              {data5.map(ItmControleId => (
-                                <option value={ItmControleId.id}>
+                              {data5.map(RecDespId => (
+                                <option value={RecDespId.id}>
                                   {" "}
-                                  {ItmControleId.id} - {ItmControleId.descItem}{" "}
+                                  {RecDespId.id} - {RecDespId.desc}{" "}
                                 </option>
                               ))}
                             </Input>
-                            {values.ItmControleId.error === "has-danger" ? (
+                            {values.RecDespId.error === "has-danger" ? (
                               <Label className="error">
-                                {values.ItmControleId.message}
+                                {values.RecDespId.message}
                               </Label>
                             ) : null}
                           </FormGroup>

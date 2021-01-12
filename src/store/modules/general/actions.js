@@ -125,47 +125,6 @@ export function FornecUpdate(
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function itmControleRequest(
-  EmpresaId,
-  descItem,
-  tipoItem,
-  contaContabil,
-  centCusto
-) {
-  return {
-    type: "@cadastro/ITM_CONTROLE_REQUEST",
-    payload: {
-      EmpresaId,
-      descItem,
-      tipoItem,
-      contaContabil,
-      centCusto
-    }
-  };
-}
-export function itmControleUpdate(
-  id,
-  EmpresaId,
-  descItem,
-  tipoItem,
-  contaContabil,
-  centCusto
-) {
-  return {
-    type: "@update/ITM_CONTROLE_REQUEST",
-    payload: {
-      id,
-      EmpresaId,
-      descItem,
-      tipoItem,
-      contaContabil,
-      centCusto
-    }
-  };
-}
-//----------------------------------------------------
-//----------------------------------------------------
-
 export function parametrosRequest(
   EmpresaId,
   IRPJ,
@@ -265,26 +224,45 @@ export function ProdtUpdate(id, EmpresaId, descProdt) {
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function recDespRequest(EmpresaId, ItmControleId, desc, recDesp) {
+export function recDespRequest(
+  EmpresaId,
+  desc,
+  recDesp,
+  tipoItem,
+  contaContabil,
+  centCusto
+) {
   return {
     type: "@cadastro/REC_DESP_REQUEST",
     payload: {
       EmpresaId,
-      ItmControleId,
       desc,
-      recDesp
+      recDesp,
+      tipoItem,
+      contaContabil,
+      centCusto
     }
   };
 }
-export function RecDespUpdate(id, EmpresaId, ItmControleId, desc, recDesp) {
+export function RecDespUpdate(
+  id,
+  EmpresaId,
+  desc,
+  recDesp,
+  tipoItem,
+  contaContabil,
+  centCusto
+) {
   return {
     type: "@update/REC_DESP_REQUEST",
     payload: {
       id,
       EmpresaId,
-      ItmControleId,
       desc,
-      recDesp
+      recDesp,
+      tipoItem,
+      contaContabil,
+      centCusto
     }
   };
 }

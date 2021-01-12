@@ -70,10 +70,10 @@ export default function DespesaCadastro() {
   const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
-    const { email } = store.getState().auth.user;
+    const idColab = store.getState().auth.user.Colab.id;
     async function loadData() {
       const response1 = await api.get(`/oportunidade/${id}`);
-      const response2 = await api.get(`/colab/?email=${email}`);
+      const response2 = await api.get(`/colab/?email=${idColab}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -348,7 +348,7 @@ export default function DespesaCadastro() {
                       size="large"
                     />
                   </Button>
-                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
+                  <Link to="/tabelas/apontamentos/oportunidades/">
                     <Button
                       style={{
                         paddingLeft: 32,

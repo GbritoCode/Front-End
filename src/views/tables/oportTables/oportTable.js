@@ -35,7 +35,6 @@ import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import RemoveCircleSharpIcon from "@material-ui/icons/RemoveCircleOutline";
 import {
-  EditOutlined,
   Close,
   ErrorOutline,
   Message,
@@ -57,6 +56,20 @@ function OportTable() {
   const [modalMini, setModalMini] = useState(false);
   const history = useHistory();
 
+  const checkFase = value => {
+    if (value == 1) {
+      return "Aberta";
+    }
+    if (value == 2) {
+      return "Em Cotação";
+    }
+    if (value == 3) {
+      return "Cotada";
+    }
+    if (value == 4) {
+      return "Aprovada";
+    }
+  };
   useEffect(() => {
     async function loadData() {
       const response = await api.get("/oportunidade");
@@ -73,7 +86,7 @@ function OportTable() {
             contato: oport.contato,
             cod: oport.cod,
             UndNeg: oport.UndNeg.descUndNeg,
-            itmControle: oport.ItmControle.descItem,
+            RecDesp: oport.RecDesp.descItem,
             segmento: oport.Segmento.descSegmt,
             representante: oport.Representante.nome,
             desc: oport.desc,
@@ -95,7 +108,7 @@ function OportTable() {
                             oport.ColabId,
                             oport.ClienteId,
                             oport.UndNegId,
-                            oport.ItmControleId,
+                            oport.RecDespId,
                             oport.SegmentoId,
                             oport.RepresentanteId,
                             oport.contato,
@@ -143,7 +156,7 @@ function OportTable() {
                             oport.ColabId,
                             oport.ClienteId,
                             oport.UndNegId,
-                            oport.ItmControleId,
+                            oport.RecDespId,
                             oport.SegmentoId,
                             oport.RepresentanteId,
                             oport.contato,
@@ -177,7 +190,7 @@ function OportTable() {
                               oport.ColabId,
                               oport.ClienteId,
                               oport.UndNegId,
-                              oport.ItmControleId,
+                              oport.RecDespId,
                               oport.SegmentoId,
                               oport.RepresentanteId,
                               oport.contato,
@@ -208,7 +221,7 @@ function OportTable() {
                               oport.ColabId,
                               oport.ClienteId,
                               oport.UndNegId,
-                              oport.ItmControleId,
+                              oport.RecDespId,
                               oport.SegmentoId,
                               oport.RepresentanteId,
                               oport.contato,
@@ -232,7 +245,7 @@ function OportTable() {
                       size="sm"
                       className={classNames("btn-icon btn-link like")}
                     >
-                      <EditOutlined />
+                      <i className="tim-icons icon-pencil" />
                     </Button>
                   </Link>
                   {/* use this button to remove the data row */}
@@ -245,20 +258,7 @@ function OportTable() {
     }
     loadData();
   }, [dispatch, history]);
-  const checkFase = value => {
-    if (value == 1) {
-      return "Aberta";
-    }
-    if (value == 2) {
-      return "Em Cotação";
-    }
-    if (value == 3) {
-      return "Cotada";
-    }
-    if (value == 4) {
-      return "Aprovada";
-    }
-  };
+
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };

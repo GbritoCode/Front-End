@@ -70,13 +70,13 @@ export default function DespesaUpdate() {
   const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
-    const { email } = store.getState().auth.user;
+    const idColab = store.getState().auth.user.Colab.id;
     async function loadData() {
       const response = await api.get(`/despesas/${id}/?update=true`);
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
-      const response2 = await api.get(`/colab/?email=${email}`);
+      const response2 = await api.get(`/colab/?idColab=${idColab}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,

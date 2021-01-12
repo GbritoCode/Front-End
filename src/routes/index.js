@@ -33,8 +33,6 @@ import EmpresaUpdate from "~/views/forms/Update/General/EmpresaUpdate";
 import EmpresaCadastro from "~/views/forms/EmpresaCadastro";
 import FornecUpdate from "~/views/forms/Update/General/FornecUpdate";
 import FornecCadastro from "~/views/forms/FornecCadastro";
-import ItmControleUpdate from "~/views/forms/Update/General/ItmControleUpdate";
-import ItmControleCadastro from "~/views/forms/ItmControleCadastro";
 import ParametrosUpdate from "~/views/forms/Update/General/ParametrosUpdate";
 import ParametrosCadastro from "~/views/forms/ParametrosCadastro";
 import ProdtUpdate from "~/views/forms/Update/General/ProdtUpdate";
@@ -75,7 +73,6 @@ import colab from "~/views/tables/Colab/ColabCompTable";
 import AreaTable from "~/views/tables/General/AreaTable";
 import EmpresaTable from "~/views/tables/General/EmpresaTable";
 import FornecTable from "~/views/tables/General/FornecTable";
-import ItmControleTable from "~/views/tables/General/ItmControleTable";
 import ParametrosTable from "~/views/tables/General/ParametrosTable";
 import ProdtTable from "~/views/tables/General/ProdtTable";
 import RepresentanteTable from "~/views/tables/General/RepresentanteTable";
@@ -116,6 +113,7 @@ import DespesaCadastro from "~/views/forms/apontamentos/apontamentoDespesas";
 import DespesaTable from "~/views/tables/apontamentos/tabelaDespesa";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 import DataOport from "~/views/forms/oportunidade/oportunidadeData";
+import ProfileUpdate from "~/views/forms/Update/User/profileUpdate";
 
 export default function Routes() {
   return (
@@ -173,11 +171,6 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/tabelas/general/fornec" component={FornecTable} isPrivate />
-      <Route
-        path="/tabelas/general/itm_controle"
-        component={ItmControleTable}
-        isPrivate
-      />
       <Route
         path="/tabelas/general/parametros"
         component={ParametrosTable}
@@ -257,7 +250,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cliente_update/:id/:prct?"
+        path="/cliente_update/:id/:pospect"
         component={ClienteUpdate}
         isPrivate
       />
@@ -330,16 +323,6 @@ export default function Routes() {
       <Route
         path="/update/general/fornec/:id"
         component={FornecUpdate}
-        isPrivate
-      />
-      <Route
-        path="/cadastro/geral/itm_controle"
-        component={ItmControleCadastro}
-        isPrivate
-      />
-      <Route
-        path="/update/general/itm_controle/:id"
-        component={ItmControleUpdate}
         isPrivate
       />
       <Route
@@ -500,6 +483,7 @@ export default function Routes() {
         component={DespesaUpdate}
         isPrivate
       />
+      <Route path="/update/user/perfil" component={ProfileUpdate} isPrivate />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

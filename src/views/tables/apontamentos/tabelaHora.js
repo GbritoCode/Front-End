@@ -110,13 +110,13 @@ export default class HorasTable extends Component {
                 <ReactTable
                   data={this.state.data}
                   filterable
-                  resizable={false}
+                  resizable
                   defaultFilterMethod={(filter, row) => {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined
                       ? String(row[id])
-                        .toLowerCase()
-                        .startsWith(filter.value.toLowerCase())
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"
@@ -173,4 +173,3 @@ export default class HorasTable extends Component {
     );
   }
 }
-

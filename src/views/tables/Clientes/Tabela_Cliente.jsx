@@ -59,7 +59,7 @@ class Tabela_Cliente extends Component {
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
               {/* use this button to add a edit kind of action */}
-              <Link to={`/cliente_update/${client.id}/true`}>
+              <Link to={`/cliente_update/${client.id}/false`}>
                 <Button
                   color="default"
                   size="sm"
@@ -123,7 +123,7 @@ class Tabela_Cliente extends Component {
                 <ReactTable
                   data={this.state.data}
                   filterable
-                  resizable={false}
+                  resizable
                   defaultFilterMethod={(filter, row) => {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined

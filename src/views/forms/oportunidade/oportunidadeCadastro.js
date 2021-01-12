@@ -58,7 +58,7 @@ export default function CadastroOport() {
     ColabId: { value: "", error: "", message: "" },
     ClienteId: { value: "", error: "", message: "" },
     UndNegId: { value: "", error: "", message: "" },
-    ItmControleId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
     segmetId: { value: "", error: "", message: "" },
     RepresentanteId: { value: "", error: "", message: "" },
     contato: { value: "", error: "", message: "" },
@@ -75,22 +75,20 @@ export default function CadastroOport() {
   useEffect(() => {
     const codAux = new Date();
     const { empresa } = store.getState().auth;
-    const { email } = store.getState().auth.user;
+    const idColab = store.getState().auth.user.Colab.id;
 
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
-      const response1 = await api.get(`/colab/?email=${email}`);
+      const response1 = await api.get(`/colab/?idColab=${idColab}`);
       const response2 = await api.get(`/cliente/`);
       const response4 = await api.get(`/und_neg/`);
-      const response5 = await api.get(`/itm_controle/`);
-      const response6 = await api.get(`/segmento/`);
+      const response5 = await api.get(`/rec_desp/?rec=true`);
       const response7 = await api.get(`/representante/`);
       const response8 = await api.get(`/oportunidade/?one=true`);
       setData1(response1.data);
       setData2(response2.data);
       setData4(response4.data);
       setData5(response5.data);
-      setData6(response6.data);
       setData7(response7.data);
       setData(response.data);
       if (response8.data.length !== 0) {
@@ -104,23 +102,30 @@ export default function CadastroOport() {
         ColabId: { value: response1.data.id },
         cod: {
           value: `A${JSON.stringify(codAux.getYear())}${JSON.stringify(
-            codAux.getMonth() + 1
+            `0${codAux.getMonth() + 1}`.slice(-2)
           )}-${zerofilled}`
         }
       }));
     }
     loadData();
   }, []);
-  function getCliData(cliente) {
-    api.get(`/cliente/cont/${cliente}`).then(result => {
-      setData3(result.data);
-    });
-    api.get(`/cliente/${cliente}`).then(result => {
-      setValues(prevState => ({
-        ...prevState,
-        RepresentanteId: { value: result.data.RepresentanteId }
-      }));
-    });
+  function getDynamicData(cliente, undNeg) {
+    if (cliente) {
+      api.get(`/cliente/cont/${cliente}`).then(result => {
+        setData3(result.data);
+      });
+      api.get(`/cliente/${cliente}`).then(result => {
+        setValues(prevState => ({
+          ...prevState,
+          RepresentanteId: { value: result.data.RepresentanteId }
+        }));
+      });
+    }
+    if (undNeg) {
+      api.get(`/segmento/?idUndNeg=${undNeg}`).then(result => {
+        setData6(result.data);
+      });
+    }
   }
 
   const checkFase = value => {
@@ -220,7 +225,7 @@ export default function CadastroOport() {
           values.ColabId.value,
           values.ClienteId.value,
           values.UndNegId.value,
-          values.ItmControleId.value,
+          values.RecDespId.value,
           values.segmetId.value,
           values.RepresentanteId.value,
           values.contato.value,
@@ -350,7 +355,7 @@ export default function CadastroOport() {
                           }
                           value={values.ClienteId.value}
                           onChangeCapture={e => {
-                            getCliData(e.target.value);
+                            getDynamicData(e.target.value, null);
                           }}
                         >
                           {" "}
@@ -450,6 +455,9 @@ export default function CadastroOport() {
                           onChange={event =>
                             handleChange(event, "UndNegId", "text")
                           }
+                          onChangeCapture={e => {
+                            getDynamicData(null, e.target.value);
+                          }}
                           value={values.UndNegId.value}
                         >
                           {" "}
@@ -472,33 +480,33 @@ export default function CadastroOport() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <Label>Item Controle</Label>
+                      <Label>Receita</Label>
                       <FormGroup
-                        className={`has-label ${values.ItmControleId.error}`}
+                        className={`has-label ${values.RecDespId.error}`}
                       >
                         <Input
-                          name="ItmControleId"
+                          name="RecDespId"
                           type="select"
                           onChange={event =>
-                            handleChange(event, "ItmControleId", "text")
+                            handleChange(event, "RecDespId", "text")
                           }
-                          value={values.ItmControleId.value}
+                          value={values.RecDespId.value}
                         >
                           {" "}
                           <option disabled value="">
                             {" "}
-                            Selecione o item controle{" "}
+                            Selecione a receita{" "}
                           </option>
-                          {data5.map(ItmControleId => (
-                            <option value={ItmControleId.id}>
+                          {data5.map(RecDespId => (
+                            <option value={RecDespId.id}>
                               {" "}
-                              {ItmControleId.id} - {ItmControleId.descItem}{" "}
+                              {RecDespId.id} - {RecDespId.desc}{" "}
                             </option>
                           ))}
                         </Input>
-                        {values.ItmControleId.error === "has-danger" ? (
+                        {values.RecDespId.error === "has-danger" ? (
                           <Label className="error">
-                            {values.ItmControleId.message}
+                            {values.RecDespId.message}
                           </Label>
                         ) : null}
                       </FormGroup>

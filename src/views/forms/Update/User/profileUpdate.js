@@ -24,71 +24,52 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
-  Label,
   Form,
+  Label,
   Input,
   Row,
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj } from "~/normalize";
-import { RecDespUpdate } from "~/store/modules/general/actions";
+import { updateProfile } from "~/store/modules/user/actions";
 import api from "~/services/api";
+import { store } from "~/store";
 
 /* eslint-disable eqeqeq */
-function RecDespUpdatee() {
+function ProfileUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
+  const { id } = store.getState().auth.user;
   const dispatch = useDispatch();
-  const { id } = useParams();
-  const [data1, setData1] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
-    empresaId: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" },
-    recDesp: { value: "", error: "", message: "" },
-    tipoItem: { value: "", error: "", message: "" },
-    contaContabil: { value: "", error: "", message: "" },
-    centCusto: { value: "", error: "", message: "" }
+    nome: { value: "", error: "", message: "" },
+    email: { value: "", error: "", message: "" }
+  };
+  const optionalSchema = {
+    senhaAntiga: { value: "", error: "", message: "" },
+    senha: { value: "", error: "", message: "" },
+    confirmSenha: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-
+  const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await api.get(`/rec_desp/${id}`);
-      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
-      setData1(response1.data);
+      const response = await api.get(`/users/${id}`);
+
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.EmpresaId },
-        desc: { value: response.data.desc },
-        recDesp: { value: response.data.recDesp },
-        tipoItem: { value: response.data.tipoItem },
-        contaContabil: { value: response.data.contaContabil },
-        centCusto: { value: response.data.centCusto }
+        nome: { value: response.data.nome },
+        email: { value: response.data.email }
       }));
 
       setIsLoading(false);
     }
     loadData();
   }, [id]);
-
-  const handleChange = (event, name, type) => {
-    event.persist();
-    const target = event.target.value;
-    switch (type) {
-      case "text":
-        setValues(prevState => ({
-          ...prevState,
-          [name]: { value: target }
-        }));
-        break;
-      default:
-    }
-  };
   var options = {};
 
   const notifyElment = useRef(null);
@@ -96,15 +77,23 @@ function RecDespUpdatee() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const checkRec = () => {
-    if (values.recDesp.value === "Rec") {
-      return true;
-    }
-  };
-
-  const checkDesp = () => {
-    if (values.recDesp.value === "Desp") {
-      return true;
+  const handleChange = (event, name, type) => {
+    event.persist();
+    const target = event.target.value;
+    switch (type) {
+      case "optional":
+        setOptional(prevState => ({
+          ...prevState,
+          [name]: { value: target }
+        }));
+        break;
+      case "text":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target }
+        }));
+        break;
+      default:
     }
   };
 
@@ -136,14 +125,13 @@ function RecDespUpdatee() {
 
     if (valid && filled) {
       dispatch(
-        RecDespUpdate(
+        updateProfile(
           id,
-          values.empresaId.value,
-          values.desc.value,
-          values.recDesp.value,
-          values.tipoItem.value,
-          values.contaContabil.value,
-          values.centCusto.value
+          values.nome.value,
+          values.email.value,
+          optional.senhaAntiga.value,
+          optional.senha.value,
+          optional.confirmSenha.value
         )
       );
     } else {
@@ -161,7 +149,6 @@ function RecDespUpdatee() {
       notify();
     }
   };
-
   return (
     <>
       {isLoading ? (
@@ -176,109 +163,68 @@ function RecDespUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Receita e Despesa</CardTitle>
+                    <CardTitle tag="h4">Edição de Empresa</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
-                          <Label>Descrição</Label>
+                          <Label>Nome</Label>
                           <FormGroup
-                            className={`has-label ${values.desc.error}`}
+                            className={`has-label ${values.nome.error}`}
                           >
                             <Input
-                              name="license"
+                              name="nome"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "desc", "text")
+                                handleChange(event, "nome", "text")
                               }
-                              value={values.desc.value}
+                              value={values.nome.value}
                             />
-                            {values.desc.error === "has-danger" ? (
+                            {values.nome.error === "has-danger" ? (
                               <Label className="error">
-                                {values.desc.message}
+                                {values.nome.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Rec/Desp</Label>
+                          <Label>Email</Label>
                           <FormGroup
-                            check
-                            className={`has-label ${values.recDesp.error}`}
-                          >
-                            <Label check>
-                              <Input
-                                checked={checkRec(values)}
-                                name="rec/desp"
-                                type="radio"
-                                onChange={event =>
-                                  handleChange(event, "recDesp", "text")
-                                }
-                                value="Rec"
-                              />
-                              Receita
-                            </Label>
-                            <Label check>
-                              <Input
-                                checked={checkDesp(values)}
-                                name="rec/desp"
-                                type="radio"
-                                onChange={event =>
-                                  handleChange(event, "recDesp", "text")
-                                }
-                                value="Desp"
-                              />
-                              Despesa
-                            </Label>
-                            {values.recDesp.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.recDesp.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Tipo de Item</Label>
-                          <FormGroup
-                            className={`has-label ${values.tipoItem.error}`}
+                            className={`has-label ${values.email.error}`}
                           >
                             <Input
-                              name="tipoItem"
-                              type="numeric"
+                              disabled
+                              name="email"
+                              type="text"
                               onChange={event =>
-                                handleChange(event, "tipoItem", "text")
+                                handleChange(event, "email", "text")
                               }
-                              value={values.tipoItem.value}
+                              value={values.email.value}
                             />
-                            {values.tipoItem.error === "has-danger" ? (
+                            {values.email.error === "has-danger" ? (
                               <Label className="error">
-                                {values.tipoItem.message}
+                                {values.email.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Nova Senha</Label>
+                          <FormGroup
+                            className={`has-label ${optional.senha.error}`}
+                          >
+                            <Input
+                              name="senha"
+                              type="password"
+                              onChange={event =>
+                                handleChange(event, "senha", "optional")
+                              }
+                              value={optional.senha.value}
+                            />
+                            {optional.senha.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.senha.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -286,48 +232,48 @@ function RecDespUpdatee() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Conta Contábil</Label>
+                          <Label>Confirmar Senha</Label>
                           <FormGroup
-                            className={`has-label ${values.contaContabil.error}`}
+                            className={`has-label ${optional.confirmSenha.error}`}
                           >
                             <Input
-                              name="contaContabil"
-                              type="numeric"
+                              name="confirmSenha"
+                              type="password"
                               onChange={event =>
-                                handleChange(event, "contaContabil", "text")
+                                handleChange(event, "confirmSenha", "optional")
                               }
-                              value={values.contaContabil.value}
+                              value={optional.confirmSenha.value}
                             />
-                            {values.contaContabil.error === "has-danger" ? (
+                            {optional.confirmSenha.error === "has-danger" ? (
                               <Label className="error">
-                                {values.contaContabil.message}
+                                {optional.confirmSenha.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Centro de Custo</Label>
+                          <Label>Senha Atual</Label>
                           <FormGroup
-                            className={`has-label ${values.centCusto.error}`}
+                            className={`has-label ${optional.senhaAntiga.error}`}
                           >
                             <Input
-                              name="centCusto"
-                              type="numeric"
+                              name="senhaAntiga"
+                              type="password"
                               onChange={event =>
-                                handleChange(event, "centCusto", "text")
+                                handleChange(event, "senhaAntiga", "optional")
                               }
-                              value={values.centCusto.value}
+                              value={optional.senhaAntiga.value}
                             />
-                            {values.centCusto.error === "has-danger" ? (
+                            {optional.senhaAntiga.error === "has-danger" ? (
                               <Label className="error">
-                                {values.centCusto.message}
+                                {optional.senhaAntiga.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                       </Row>
 
-                      <Link to="/tabelas/aux/rec_desp">
+                      <Link to="/dashboard">
                         <Button
                           style={{
                             paddingLeft: 32,
@@ -335,7 +281,7 @@ function RecDespUpdatee() {
                           }}
                           color="secundary"
                           size="small"
-                          className="text-left"
+                          className="form"
                         >
                           <i
                             className="tim-icons icon-double-left"
@@ -378,4 +324,4 @@ function RecDespUpdatee() {
     </>
   );
 }
-export default RecDespUpdatee;
+export default ProfileUpdate;

@@ -55,9 +55,9 @@ export default class ApontTable extends Component {
   };
 
   loadCliente = async () => {
-    const { email, id } = store.getState().auth.user;
+    const idColab = store.getState().auth.user.Colab.id;
     const response = await api.get(
-      `/oportunidade/?apont=${true}&colab=${email}`
+      `/oportunidade/?apont=${true}&colab=${idColab}`
     );
     this.setState({
       data: response.data.map((horas, key) => {
@@ -73,7 +73,7 @@ export default class ApontTable extends Component {
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/cadastro/apontamentos/horas/${id}`}>
+              <Link to={`/cadastro/apontamentos/horas/${horas.id}`}>
                 <Tooltip title="Horas" placement="top" interactive>
                   <Button className={classNames("btn-icon btn-link like")}>
                     <Schedule />
@@ -81,7 +81,7 @@ export default class ApontTable extends Component {
                 </Tooltip>
               </Link>
               {/* use this button to remove the data row */}
-              <Link to={`/cadastro/apontamentos/despesas/${id}`}>
+              <Link to={`/cadastro/apontamentos/despesas/${horas.id}`}>
                 <Tooltip title="Despesas" placement="top" interactive>
                   <Button className={classNames("btn-icon btn-link like")}>
                     <AttachMoney />
@@ -108,7 +108,7 @@ export default class ApontTable extends Component {
                 <ReactTable
                   data={this.state.data}
                   filterable
-                  resizable={false}
+                  resizable
                   defaultFilterMethod={(filter, row) => {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined

@@ -15,7 +15,7 @@ export function oportRequest(
   ColabId,
   ClienteId,
   UndNegId,
-  ItmControleId,
+  RecDespId,
   SegmentoId,
   RepresentanteId,
   contato,
@@ -32,7 +32,7 @@ export function oportRequest(
       ColabId,
       ClienteId,
       UndNegId,
-      ItmControleId,
+      RecDespId,
       SegmentoId,
       RepresentanteId,
       contato,
@@ -51,7 +51,7 @@ export function oportUpdate(
   ColabId,
   ClienteId,
   UndNegId,
-  ItmControleId,
+  RecDespId,
   SegmentoId,
   RepresentanteId,
   contato,
@@ -69,7 +69,7 @@ export function oportUpdate(
       ColabId,
       ClienteId,
       UndNegId,
-      ItmControleId,
+      RecDespId,
       SegmentoId,
       RepresentanteId,
       contato,
@@ -162,6 +162,8 @@ export function cotacaoUpdate(
 export function recursoReqest(
   OportunidadeId,
   ColabId,
+  tipoValor,
+  tipoAtend,
   custoPrev,
   dataInclusao,
   hrsPrevst,
@@ -172,6 +174,8 @@ export function recursoReqest(
     payload: {
       OportunidadeId,
       ColabId,
+      tipoValor,
+      tipoAtend,
       custoPrev,
       dataInclusao,
       hrsPrevst,
@@ -184,6 +188,8 @@ export function recursoUpdate(
   id,
   OportunidadeId,
   ColabId,
+  tipoValor,
+  tipoAtend,
   custoPrev,
   dataInclusao,
   hrsPrevst,
@@ -195,6 +201,8 @@ export function recursoUpdate(
       id,
       OportunidadeId,
       ColabId,
+      tipoValor,
+      tipoAtend,
       custoPrev,
       dataInclusao,
       hrsPrevst,
@@ -284,7 +292,7 @@ export function horaRequest(
   totalApont,
   solicitante,
   AreaId,
-  desc,
+  desc
 ) {
   return {
     type: "@cadastro/HORA_REQUEST",
@@ -299,7 +307,7 @@ export function horaRequest(
       totalApont,
       solicitante,
       AreaId,
-      desc,
+      desc
     }
   };
 }
@@ -339,7 +347,6 @@ export function horaUpdate(
   };
 }
 
-
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 
@@ -349,7 +356,7 @@ export function despesaRequest(
   dataDespesa,
   tipoDespesa,
   valorDespesa,
-  desc,
+  desc
 ) {
   return {
     type: "@cadastro/DESPESA_REQUEST",
@@ -359,7 +366,7 @@ export function despesaRequest(
       dataDespesa,
       tipoDespesa,
       valorDespesa,
-      desc,
+      desc
     }
   };
 }
@@ -371,7 +378,7 @@ export function despesaUpdate(
   dataDespesa,
   tipoDespesa,
   valorDespesa,
-  desc,
+  desc
 ) {
   return {
     type: "@update/DESPESA_REQUEST",
@@ -382,7 +389,7 @@ export function despesaUpdate(
       dataDespesa,
       tipoDespesa,
       valorDespesa,
-      desc,
+      desc
     }
   };
 }

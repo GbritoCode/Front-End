@@ -148,7 +148,7 @@ class RecursoTable extends Component {
                 <ReactTable
                   data={this.state.data}
                   filterable
-                  resizable={false}
+                  resizable
                   defaultFilterMethod={(filter, row) => {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined

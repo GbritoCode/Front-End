@@ -74,9 +74,8 @@ export default function HorasUpdate() {
     desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-  console.log(values);
   useEffect(() => {
-    const { email } = store.getState().auth.user;
+    const idColab = store.getState().auth.user.Colab.id;
     async function loadData() {
       const response = await api.get(`/horas/${id}/?update=true`);
       const response1 = await api.get(
@@ -84,7 +83,7 @@ export default function HorasUpdate() {
       );
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
       const response4 = await api.get(`/area/`);
-      const response5 = await api.get(`/colab/?email=${email}`);
+      const response5 = await api.get(`/colab/?idColab=${idColab}`);
       const response6 = await api.get(
         `/horas/${response5.data.id}/?total=${true}&tipo=project&oport=${
           response1.data.id
@@ -92,7 +91,6 @@ export default function HorasUpdate() {
       );
       setData4(response4.data);
       setData1(response1.data);
-      console.log(response.data);
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response1.data.id },

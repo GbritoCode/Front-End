@@ -120,7 +120,19 @@ function RepresentanteUpdatee() {
     }
   };
   var options = {};
-
+  const checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
+  };
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
@@ -261,7 +273,7 @@ function RepresentanteUpdatee() {
                               {data2.map(tipoComiss => (
                                 <option value={tipoComiss.id}>
                                   {" "}
-                                  {tipoComiss.id} - {tipoComiss.desc}{" "}
+                                  {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
                                 </option>
                               ))}
                             </Input>

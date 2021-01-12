@@ -1,10 +1,10 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import history from "~/services/history.js";
-import api from "~/services/api.js";
+import history from "~/services/history";
+import api from "~/services/api";
 
-import { signFailure, UpdateSuccess } from "./actions.js";
+import { signFailure, UpdateSuccess } from "./actions";
 
 export function* oportCadastro({ payload }) {
   try {
@@ -13,7 +13,7 @@ export function* oportCadastro({ payload }) {
       ColabId,
       ClienteId,
       UndNegId,
-      ItmControleId,
+      RecDespId,
       SegmentoId,
       RepresentanteId,
       contato,
@@ -28,7 +28,7 @@ export function* oportCadastro({ payload }) {
       ColabId,
       ClienteId,
       UndNegId,
-      ItmControleId,
+      RecDespId,
       SegmentoId,
       RepresentanteId,
       contato,
@@ -53,7 +53,7 @@ export function* updateOport({ payload }) {
       ColabId,
       ClienteId,
       UndNegId,
-      ItmControleId,
+      RecDespId,
       SegmentoId,
       RepresentanteId,
       contato,
@@ -64,12 +64,12 @@ export function* updateOport({ payload }) {
       narrativa
     } = payload;
 
-    const Oport = Object.assign({
+    const Oport = {
       EmpresaId,
       ColabId,
       ClienteId,
       UndNegId,
-      ItmControleId,
+      RecDespId,
       SegmentoId,
       RepresentanteId,
       contato,
@@ -78,7 +78,7 @@ export function* updateOport({ payload }) {
       cod,
       desc,
       narrativa
-    });
+    };
 
     const response = yield call(api.put, `oportunidade/${id}`, Oport);
     toast.success("cliente atualizado");
@@ -149,7 +149,7 @@ export function* updateCotacao({ payload }) {
       desc
     } = payload;
 
-    const Oport = Object.assign({
+    const Oport = {
       EmpresaId,
       OportunidadeId,
       probVend,
@@ -163,7 +163,7 @@ export function* updateCotacao({ payload }) {
       numParcelas,
       motivo,
       desc
-    });
+    };
 
     const response = yield call(api.put, `cotacao/${id}`, Oport);
     toast.success("cliente atualizado");
@@ -176,24 +176,27 @@ export function* updateCotacao({ payload }) {
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-
 export function* recursoCadastro({ payload }) {
   try {
     const {
       OportunidadeId,
       ColabId,
+      tipoValor,
+      tipoAtend,
       custoPrev,
       dataInclusao,
       hrsPrevst,
-      colabVlrHr,
+      colabVlrHr
     } = payload;
     yield call(api.post, "recurso", {
       OportunidadeId,
       ColabId,
+      tipoValor,
+      tipoAtend,
       custoPrev,
       dataInclusao,
       hrsPrevst,
-      colabVlrHr,
+      colabVlrHr
     });
     history.push(`/tabelas/oportunidade/recurso/${OportunidadeId}`);
   } catch (err) {
@@ -207,20 +210,24 @@ export function* updateRecurso({ payload }) {
       id,
       OportunidadeId,
       ColabId,
+      tipoValor,
+      tipoAtend,
       custoPrev,
       dataInclusao,
       hrsPrevst,
-      colabVlrHr,
+      colabVlrHr
     } = payload;
 
-    const recurso = Object.assign({
+    const recurso = {
       OportunidadeId,
       ColabId,
+      tipoValor,
+      tipoAtend,
       custoPrev,
       dataInclusao,
       hrsPrevst,
-      colabVlrHr,
-    });
+      colabVlrHr
+    };
 
     const response = yield call(api.put, `recurso/${id}`, recurso);
     history.push(`/update/oportunidade/oport/${OportunidadeId}`);
@@ -235,7 +242,6 @@ export function* updateRecurso({ payload }) {
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-
 export function* parcelaCadastro({ payload }) {
   try {
     const {
@@ -249,7 +255,7 @@ export function* parcelaCadastro({ payload }) {
       situacao,
       dtLiquidacao,
       vlrPago,
-      saldo,
+      saldo
     } = payload;
     yield call(api.post, "parcela", {
       OportunidadeId,
@@ -262,7 +268,7 @@ export function* parcelaCadastro({ payload }) {
       situacao,
       dtLiquidacao,
       vlrPago,
-      saldo,
+      saldo
     });
     history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
   } catch (err) {
@@ -284,10 +290,10 @@ export function* updateParcela({ payload }) {
       situacao,
       dtLiquidacao,
       vlrPago,
-      saldo,
+      saldo
     } = payload;
 
-    const recurso = Object.assign({
+    const recurso = {
       OportunidadeId,
       parcela,
       vlrParcela,
@@ -298,8 +304,8 @@ export function* updateParcela({ payload }) {
       situacao,
       dtLiquidacao,
       vlrPago,
-      saldo,
-    });
+      saldo
+    };
 
     const response = yield call(api.put, `parcela/${id}`, recurso);
     history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
@@ -311,11 +317,9 @@ export function* updateParcela({ payload }) {
   }
 }
 
-
 //---------
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
-
 
 export function* horaCadastro({ payload }) {
   try {
@@ -330,7 +334,7 @@ export function* horaCadastro({ payload }) {
       totalApont,
       solicitante,
       AreaId,
-      desc,
+      desc
     } = payload;
     yield call(api.post, "horas", {
       OportunidadeId,
@@ -343,7 +347,7 @@ export function* horaCadastro({ payload }) {
       totalApont,
       solicitante,
       AreaId,
-      desc,
+      desc
     });
     history.go(0);
   } catch (err) {
@@ -369,7 +373,7 @@ export function* updateHora({ payload }) {
       apontDiff
     } = payload;
 
-    const recurso = Object.assign({
+    const recurso = {
       OportunidadeId,
       ColabId,
       dataAtivd,
@@ -382,11 +386,11 @@ export function* updateHora({ payload }) {
       AreaId,
       desc,
       apontDiff
-    });
+    };
 
     const response = yield call(api.put, `horas/${id}`, recurso);
     toast.success("cliente atualizado");
-    history.go(0)
+    history.go(0);
     yield put(UpdateSuccess(response.data));
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
@@ -394,11 +398,9 @@ export function* updateHora({ payload }) {
   }
 }
 
-
 //---------
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
-
 
 export function* despesaCadastro({ payload }) {
   try {
@@ -408,7 +410,7 @@ export function* despesaCadastro({ payload }) {
       dataDespesa,
       tipoDespesa,
       valorDespesa,
-      desc,
+      desc
     } = payload;
     yield call(api.post, "despesas", {
       OportunidadeId,
@@ -416,7 +418,7 @@ export function* despesaCadastro({ payload }) {
       dataDespesa,
       tipoDespesa,
       valorDespesa,
-      desc,
+      desc
     });
     history.go(0);
   } catch (err) {
@@ -433,17 +435,17 @@ export function* updateDespesa({ payload }) {
       dataDespesa,
       tipoDespesa,
       valorDespesa,
-      desc,
+      desc
     } = payload;
 
-    const recurso = Object.assign({
+    const recurso = {
       OportunidadeId,
       ColabId,
       dataDespesa,
       tipoDespesa,
       valorDespesa,
-      desc,
-    });
+      desc
+    };
 
     const response = yield call(api.put, `despesas/${id}`, recurso);
     toast.success("cliente atualizado");
@@ -466,5 +468,5 @@ export default all([
   takeLatest("@cadastro/HORA_REQUEST", horaCadastro),
   takeLatest("@update/HORA_REQUEST", updateHora),
   takeLatest("@cadastro/DESPESA_REQUEST", despesaCadastro),
-  takeLatest("@update/DESPESA_REQUEST", updateDespesa),
+  takeLatest("@update/DESPESA_REQUEST", updateDespesa)
 ]);

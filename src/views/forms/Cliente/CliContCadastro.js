@@ -333,7 +333,7 @@ export default function CliContCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <Label>tipo de Contato</Label>
+                      <Label>Tipo de Contato</Label>
                       <FormGroup
                         className={`has-label ${values.tipoConta.error}`}
                       >

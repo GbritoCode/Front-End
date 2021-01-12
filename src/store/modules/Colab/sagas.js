@@ -1,10 +1,10 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
 
-import history from "~/services/history.js";
-import api from "~/services/api.js";
+import history from "~/services/history";
+import api from "~/services/api";
 
-import { signFailure, ClienteUpdateSuccess } from "./actions.js";
+import { signFailure, ClienteUpdateSuccess } from "./actions";
 
 export function* colabCadastro({ payload }) {
   try {
@@ -12,18 +12,21 @@ export function* colabCadastro({ payload }) {
       CPF,
       FornecId,
       EmpresaId,
+      UserId,
       nome,
       dtAdmiss,
       cel,
       PerfilId,
       skype,
       email,
-      espec
+      espec,
+      first
     } = payload;
     yield call(api.post, "colab", {
       CPF,
       FornecId,
       EmpresaId,
+      UserId,
       nome,
       dtAdmiss,
       cel,
@@ -32,6 +35,9 @@ export function* colabCadastro({ payload }) {
       email,
       espec
     });
+    if (first === true) {
+      history.push("/dashboard");
+    }
     history.push("/tabelas/colab");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
@@ -45,6 +51,7 @@ export function* updateColab({ payload }) {
       id,
       CPF,
       FornecId,
+      UserId,
       PerfilId,
       nome,
       dtAdmiss,
@@ -57,6 +64,7 @@ export function* updateColab({ payload }) {
     const Colab = {
       CPF,
       FornecId,
+      UserId,
       PerfilId,
       nome,
       dtAdmiss,

@@ -74,7 +74,6 @@ class Sidebar extends React.Component {
       if (prop.collapse === true) {
         var st = {};
         st[prop["state"]] = !this.state[prop.state];
-        console.log(st)
         return (
           <li
             className={this.getCollapseInitialState(prop.views) ? "active" : ""}
@@ -150,7 +149,6 @@ class Sidebar extends React.Component {
       : "";
   };
   componentDidMount() {
-    console.log(this.props)
     // if you are using a Windows Machine, the scrollbars will have a Mac look
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar);

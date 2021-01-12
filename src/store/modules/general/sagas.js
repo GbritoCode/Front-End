@@ -179,48 +179,6 @@ export function* updateFornec({ payload }) {
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-export function* itmControleCadastro({ payload }) {
-  try {
-    const { EmpresaId, descItem, tipoItem, contaContabil, centCusto } = payload;
-    yield call(api.post, "itm_controle", {
-      EmpresaId,
-      descItem,
-      tipoItem,
-      contaContabil,
-      centCusto
-    });
-    history.push("/tabelas/general/itm_controle");
-  } catch (err) {
-    toast.error("Ops! Algo deu errado");
-    yield put(requestFailure());
-  }
-}
-export function* updateItmControle({ payload }) {
-  try {
-    const {
-      id,
-      EmpresaId,
-      descItem,
-      tipoItem,
-      contaContabil,
-      centCusto
-    } = payload;
-
-    const Colab = { EmpresaId, descItem, tipoItem, contaContabil, centCusto };
-
-    const response = yield call(api.put, `itm_controle/${id}`, Colab);
-
-    history.push("/tabelas/general/itm_controle");
-    toast.success("Atualizado com Sucesso");
-    yield put(ClienteUpdateSuccess(response.data));
-  } catch (err) {
-    toast.error("Ops! Algo deu errado");
-    yield put(requestFailure());
-  }
-}
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-
 export function* parametrosCadastro({ payload }) {
   try {
     const {
@@ -345,12 +303,21 @@ export function* updateProdt({ payload }) {
 
 export function* recDespCadastro({ payload }) {
   try {
-    const { EmpresaId, ItmControleId, desc, recDesp } = payload;
+    const {
+      EmpresaId,
+      desc,
+      recDesp,
+      tipoItem,
+      contaContabil,
+      centCusto
+    } = payload;
     yield call(api.post, "rec_desp", {
       EmpresaId,
-      ItmControleId,
       desc,
-      recDesp
+      recDesp,
+      tipoItem,
+      contaContabil,
+      centCusto
     });
     history.push("/tabelas/aux/rec_desp");
   } catch (err) {
@@ -360,9 +327,24 @@ export function* recDespCadastro({ payload }) {
 }
 export function* updateRecDesp({ payload }) {
   try {
-    const { id, EmpresaId, ItmControleId, desc, recDesp } = payload;
+    const {
+      id,
+      EmpresaId,
+      desc,
+      recDesp,
+      tipoItem,
+      contaContabil,
+      centCusto
+    } = payload;
 
-    const Colab = { EmpresaId, ItmControleId, desc, recDesp };
+    const Colab = {
+      EmpresaId,
+      desc,
+      recDesp,
+      tipoItem,
+      contaContabil,
+      centCusto
+    };
 
     const response = yield call(api.put, `rec_desp/${id}`, Colab);
 
@@ -592,8 +574,6 @@ export default all([
   takeLatest("@update/EMPRESA_REQUEST", updateEmpresa),
   takeLatest("@cadastro/FORNEC_REQUEST", fornecCadastro),
   takeLatest("@update/FORNEC_REQUEST", updateFornec),
-  takeLatest("@cadastro/ITM_CONTROLE_REQUEST", itmControleCadastro),
-  takeLatest("@update/ITM_CONTROLE_REQUEST", updateItmControle),
   takeLatest("@cadastro/PARAMETROS_REQUEST", parametrosCadastro),
   takeLatest("@update/PARAMETROS_REQUEST", updateParametros),
   takeLatest("@cadastro/PRODT_REQUEST", prodtCadastro),
