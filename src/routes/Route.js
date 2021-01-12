@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
 import AuthLayout from "~/layouts/Auth/Auth.jsx";
@@ -13,13 +13,6 @@ export default function RouteWrapper({
   ...rest
 }) {
   const { signed } = store.getState().auth;
-  const { colab } = store.getState().auth.user.Colab.CPF;
-
-  useEffect(() => {
-    if (signed && colab === null) {
-      return history.push("/cadastro/wizard/empresa");
-    }
-  }, [colab, signed]);
 
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;
