@@ -82,14 +82,7 @@ export default function ColabCadastro() {
           ...prevState,
           email: { value: result.data[0].email }
         }));
-        api.get("/empresa").then(async results => {
-          const perfil = {
-            idEmpresa: results.data[0].id,
-            desc: "Admnistrador"
-          };
-          await api.post("/perfil", perfil);
-          loadData();
-        });
+        loadData();
       });
     }
     Aux();
@@ -419,12 +412,10 @@ export default function ColabCadastro() {
                           {" "}
                           Selecione o perfil{" "}
                         </option>
-                        {data2.map(perfil => (
-                          <option value={perfil.id}>
-                            {" "}
-                            {perfil.id} - {perfil.desc}{" "}
-                          </option>
-                        ))}
+                        <option value={1}>Analista</option>
+                        <option value={2}>Comercial</option>
+                        <option value={3}>Gestor</option>
+                        <option value={10}>Admin</option>
                       </Input>
                       {values.PerfilId.error === "has-danger" ? (
                         <Label className="error">
