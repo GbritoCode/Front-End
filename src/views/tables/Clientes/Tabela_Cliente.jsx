@@ -51,7 +51,7 @@ class Tabela_Cliente extends Component {
           RepresentanteId: client.RepresentanteId,
           Representante: client.Representante.nome,
           TipoComisseId: client.TipoComisseId,
-          TipoComiss: client.TipoComisse.desc,
+          TipoComiss: this.checkDesc(client.TipoComisse.desc),
           EmpresaId: client.EmpresaId,
           prospect: client.prospect,
           actions: (
@@ -94,6 +94,20 @@ class Tabela_Cliente extends Component {
         };
       })
     });
+  };
+
+  checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
   };
 
   render() {

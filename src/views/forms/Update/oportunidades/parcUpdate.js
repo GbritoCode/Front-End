@@ -80,7 +80,7 @@ export default function ParcelaUpdate() {
         OportunidadeId: { value: response.data.OportunidadeId },
         parcela: { value: response.data.parcela },
         vlrParcela: {
-          value: normalizeCalcCurrency(JSON.stringify(response.data.vlrParcela))
+          value: normalizeCalcCurrency(response.data.vlrParcela)
         },
         dtEmissao: { value: response.data.dtEmissao },
         dtVencimento: { value: response.data.dtVencimento },
@@ -111,11 +111,13 @@ export default function ParcelaUpdate() {
 
   const valorPagoChange = value => {
     const vPago = value.replace(/[.,]+/g, "");
+    console.log(vPago);
     var parc = document
       .getElementsByName("vlrParcela")[0]
       .value.replace(/[.,]+/g, "");
+    console.log(parc);
     const saldo = parc - vPago;
-    if (vPago > parc) {
+    if (vPago - parc > 0) {
       setOptional(prevState => ({
         ...prevState,
         vlrPago: {
@@ -127,7 +129,7 @@ export default function ParcelaUpdate() {
     }
     setOptional(prevState => ({
       ...prevState,
-      saldo: { value: normalizeCalcCurrency(JSON.stringify(saldo)) }
+      saldo: { value: normalizeCalcCurrency(saldo) }
     }));
   };
   const handleChange = (event, name, type) => {

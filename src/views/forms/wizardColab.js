@@ -46,7 +46,6 @@ export default function ColabCadastro() {
 
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState([]);
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -67,10 +66,8 @@ export default function ColabCadastro() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/fornec`);
-      const response2 = await api.get(`/perfil`);
       setData(response.data);
       setData1(response1.data);
-      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }

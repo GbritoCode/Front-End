@@ -78,7 +78,7 @@ export default function DespesaCadastro() {
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response1.data.id },
-        ColabId: { value: response2.data.id }
+        ColabId: { value: response2.data[0].id }
       }));
     }
     loadData();

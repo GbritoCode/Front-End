@@ -49,16 +49,25 @@ export default function ParcelaCadastro() {
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" }
   };
+  const optionalSchema = {
+    vlrProjeto: { value: "", error: "", message: "" }
+  };
 
   const [values, setValues] = useState(stateSchema);
+  const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     async function loadData() {
+      const response = await api.get(`/cotacao/${id}`);
       const response1 = await api.get(`/oportunidade/${id}`);
       setData1(response1.data);
 
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response1.data.id }
+      }));
+      setOptional(prevState => ({
+        ...prevState,
+        vlrProjeto: { value: normalizeCurrency(response.data[0].vlrLiq) }
       }));
     }
     loadData();
@@ -247,6 +256,26 @@ export default function ParcelaCadastro() {
                         {values.vlrParcela.error === "has-danger" ? (
                           <Label className="error">
                             {values.vlrParcela.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      {" "}
+                      <Label>Valor do Projeto</Label>
+                      <FormGroup
+                        className={`has-label ${optional.vlrProjeto.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="vlrProjeto"
+                          type="text"
+                          value={optional.vlrProjeto.value}
+                        />
+
+                        {optional.vlrProjeto.error === "has-danger" ? (
+                          <Label className="error">
+                            {optional.vlrProjeto.message}
                           </Label>
                         ) : null}
                       </FormGroup>

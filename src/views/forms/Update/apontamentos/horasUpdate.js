@@ -48,7 +48,9 @@ export default function HorasUpdate() {
   const [data1, setData1] = useState({});
   const [data4, setData4] = useState([]);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
-
+  const optionalSchema = {
+    totalApontDb: { value: 0, error: "", message: "" }
+  };
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     oportunidadeCod: { value: "", error: "", message: "" },
@@ -65,14 +67,15 @@ export default function HorasUpdate() {
       message: ""
     },
     totalApont: { value: "", error: "", message: "" },
-    totalApontDb: { value: "", error: "", message: "" },
     totalApontTemp: { value: "", error: "", message: "" },
     totalAcum: { value: "", error: "", message: "" },
     totalAcumTemp: { value: "", error: "", message: "" },
     solicitante: { value: "", error: "", message: "" },
     AreaId: { value: "", error: "", message: "" },
+    RecursoId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" }
   };
+  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     const idColab = store.getState().auth.user.Colab.id;
@@ -80,6 +83,9 @@ export default function HorasUpdate() {
       const response = await api.get(`/horas/${id}/?update=true`);
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
+      );
+      const response2 = await api.get(
+        `/oportunidade/?idOport=${response.data.OportunidadeId}&colab=${idColab}`
       );
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
       const response4 = await api.get(`/area/`);
@@ -109,12 +115,13 @@ export default function HorasUpdate() {
         totalApontTemp: { value: response.data.totalApont },
         solicitante: { value: response.data.solicitante },
         AreaId: { value: response.data.AreaId },
+        RecursoId: { value: response2.data.Recurso.id },
         desc: { value: response.data.desc }
       }));
     }
     loadData();
   }, [id]);
-
+  console.log(values);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -152,20 +159,23 @@ export default function HorasUpdate() {
         const apontBruto = differenceInMinutes(fimParsed, inicParsed);
         const apontHr = `0${Math.trunc(apontBruto / 60)}`.slice(-2);
         const apontMin = `0${Math.trunc(apontBruto % 60)}`.slice(-2);
-        const acumMin = `0${Math.trunc(
-          (parseInt(acum[1], 10) + parseInt(apontMin, 10)) % 60
-        )}`.slice(-2);
+        const acumMin = `0${Math.trunc((acum[1] + apontMin) % 60)}`.slice(-2);
         const acumHr = `0${parseInt(acum[0], 10) +
           parseInt(apontHr, 10) +
           Math.trunc(
             (parseInt(acum[1], 10) + parseInt(apontMin, 10)) / 60
           )}`.slice(-2);
 
+        // const acumMin = `0${Math.trunc(acum % 60)}`.slice(-2);
+
         setValues(prevState => ({
           ...prevState,
-          totalApontDb: { value: apontBruto },
           totalApont: { value: `${apontHr}:${apontMin}` },
           totalAcum: { value: `${acumHr}:${acumMin}` }
+        }));
+        setOptional(prevState => ({
+          ...prevState,
+          totalApontDb: { value: apontBruto }
         }));
       } else if (differenceInMinutes(fimParsed, inicParsed) < 0) {
         setValues(prevState => ({
@@ -190,7 +200,6 @@ export default function HorasUpdate() {
       }
     }
   };
-
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
@@ -268,9 +277,10 @@ export default function HorasUpdate() {
           values.horaIntrv.value,
           values.horaFim.value,
           values.dataLancamento.value,
-          values.totalApontDb.value,
+          optional.totalApontDb.value,
           values.solicitante.value,
           values.AreaId.value,
+          values.RecursoId.value,
           values.desc.value,
           apontDiff
         )
@@ -586,7 +596,7 @@ export default function HorasUpdate() {
                     </Col>
                   </Row>
 
-                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
+                  <Link to={`/tabelas/apontamentos/horas/${data1.id}`}>
                     <Button
                       style={{
                         paddingLeft: 32,

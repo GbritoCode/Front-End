@@ -24,6 +24,10 @@ export default function auth(state = INITIAL_STATE, action) {
         draft.empresa = 1;
         break;
       }
+      case "@colab/FIRST_COLAB_SUCCESS": {
+        draft.user = action.payload.user;
+        break;
+      }
       case "@auth/SIGN_FAILURE": {
         draft.loading = false;
         break;

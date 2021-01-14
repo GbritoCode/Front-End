@@ -47,7 +47,7 @@ class Tabela_Cliente extends Component {
           idd: client.id,
           Empresa: client.Empresa.nome,
           nome: client.nome,
-          TipoComisse: client.TipoComisse.desc,
+          TipoComisse: this.checkDesc(client.TipoComisse.desc),
           vlrFixMens: normalizeCurrency(JSON.stringify(client.vlrFixMens)),
           actions: (
             // we've added some custom button actions
@@ -88,6 +88,20 @@ class Tabela_Cliente extends Component {
         };
       })
     });
+  };
+
+  checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
   };
 
   render() {

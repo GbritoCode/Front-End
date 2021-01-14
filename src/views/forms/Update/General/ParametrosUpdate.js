@@ -115,13 +115,13 @@ function ParametrosUpdatee() {
   }, [id]);
 
   const checkAdianta = () => {
-    if (values.recDesp.value === "Sim") {
+    if (values.adiantaPgmto.value === "Sim") {
       return true;
     }
   };
 
   const checkNAdianta = () => {
-    if (values.recDesp.value === "Não") {
+    if (values.adiantaPgmto.value === "Não") {
       return true;
     }
   };

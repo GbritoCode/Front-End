@@ -230,8 +230,8 @@ function ClienteUpdatee() {
     notifyElment.current.notificationAlert(options);
   }
 
-  function checkProsp(param) {
-    if (param == "false") {
+  function checkProsp(param, aux) {
+    if (param == "false" && aux === "icons") {
       return (
         <>
           <Link to={`/tabelas/cliente/comp/${id}`}>
@@ -259,6 +259,64 @@ function ClienteUpdatee() {
             </Tooltip>
           </Link>
         </>
+      );
+    }
+    if (param == "false" && aux === "title") {
+      return "Edição de Cliente";
+    }
+    if (param == "true" && aux === "title") {
+      return "Edição de Prospect";
+    }
+    if (param == "false" && aux === "backButton") {
+      return (
+        <Link to="/tabelas/cliente/cliente">
+          <Button
+            style={{
+              paddingLeft: 32,
+              paddingRight: 33,
+              float: "left"
+            }}
+            color="secundary"
+            size="small"
+            className="text-left"
+          >
+            <i
+              className="tim-icons icon-double-left"
+              style={{
+                paddingBottom: 4,
+                paddingRight: 1
+              }}
+              size="large"
+            />{" "}
+            Voltar
+          </Button>
+        </Link>
+      );
+    }
+    if (param == "true" && aux === "backButton") {
+      return (
+        <Link to="/tabelas/cliente/prospect">
+          <Button
+            style={{
+              paddingLeft: 32,
+              paddingRight: 33,
+              float: "left"
+            }}
+            color="secundary"
+            size="small"
+            className="text-left"
+          >
+            <i
+              className="tim-icons icon-double-left"
+              style={{
+                paddingBottom: 4,
+                paddingRight: 1
+              }}
+              size="large"
+            />{" "}
+            Voltar
+          </Button>
+        </Link>
       );
     }
   }
@@ -298,7 +356,6 @@ function ClienteUpdatee() {
           optional.fantasia.value,
           values.representante.value,
           values.tipoComiss.value,
-          values.empresaId.value,
           prospect
         )
       );
@@ -332,7 +389,7 @@ function ClienteUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {checkProsp(prospect)}
+                    {checkProsp(prospect, "icons")}
 
                     <Link to={`/tabelas/cliente/cont/${id}`}>
                       <Tooltip title="Contato" placement="top" interactive>
@@ -346,7 +403,9 @@ function ClienteUpdatee() {
                         </Button>
                       </Tooltip>
                     </Link>
-                    <CardTitle tag="h4">Edição do cliente</CardTitle>
+                    <CardTitle tag="h4">
+                      {checkProsp(prospect, "title")}
+                    </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -489,7 +548,10 @@ function ClienteUpdatee() {
                                 Selecione o representante{" "}
                               </option>
                               {data2.map(representante => (
-                                <option value={representante.id}>
+                                <option
+                                  key={representante.id}
+                                  value={representante.id}
+                                >
                                   {" "}
                                   {representante.nome}{" "}
                                 </option>
@@ -521,7 +583,10 @@ function ClienteUpdatee() {
                                 Selecione o tipo de comissão{" "}
                               </option>
                               {data1.map(tipoComiss => (
-                                <option value={tipoComiss.id}>
+                                <option
+                                  key={tipoComiss.id}
+                                  value={tipoComiss.id}
+                                >
                                   {" "}
                                   {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
                                 </option>
@@ -535,27 +600,6 @@ function ClienteUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tabelas/cliente/cliente">
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="text-left"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -575,6 +619,7 @@ function ClienteUpdatee() {
                           size="large"
                         />
                       </Button>
+                      {checkProsp(prospect, "backButton")}
                     </Form>
                   </CardBody>
                 </Card>

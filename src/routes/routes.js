@@ -572,7 +572,7 @@ const routes = [
   {
     collapse: true,
     name: "Apontamentos",
-    icon: "tim-icons icon-money-coins",
+    icon: "tim-icons icon-calendar-60",
     state: "ApontamentosCollapse",
     profile: 1,
     views: [

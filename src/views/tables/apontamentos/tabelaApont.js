@@ -23,7 +23,6 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Schedule, AttachMoney } from "@material-ui/icons";
 import api from "~/services/api";
 import { store } from "~/store";
 
@@ -76,7 +75,7 @@ export default class ApontTable extends Component {
               <Link to={`/cadastro/apontamentos/horas/${horas.id}`}>
                 <Tooltip title="Horas" placement="top" interactive>
                   <Button className={classNames("btn-icon btn-link like")}>
-                    <Schedule />
+                    <i className="tim-icons icon-watch-time" />
                   </Button>
                 </Tooltip>
               </Link>
@@ -84,7 +83,7 @@ export default class ApontTable extends Component {
               <Link to={`/cadastro/apontamentos/despesas/${horas.id}`}>
                 <Tooltip title="Despesas" placement="top" interactive>
                   <Button className={classNames("btn-icon btn-link like")}>
-                    <AttachMoney />
+                    <i className="tim-icons icon-wallet-43" />
                   </Button>
                 </Tooltip>
               </Link>

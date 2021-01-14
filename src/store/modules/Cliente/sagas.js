@@ -28,6 +28,10 @@ export function* clienteCadastro({ payload }) {
       EmpresaId,
       prospect
     });
+    if (prospect === "true") {
+      history.push("/tabelas/cliente/prospect");
+      return;
+    }
     history.push("/tabelas/cliente/cliente");
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
@@ -57,10 +61,10 @@ export function* updateCliente({ payload }) {
     };
 
     const response = yield call(api.put, `cliente/${id}`, Cliente);
-
     toast.success("cliente atualizado");
-    if (prospect === true) {
+    if (prospect === "true") {
       history.push("/tabelas/cliente/prospect");
+      return;
     }
     history.push("/tabelas/cliente/cliente");
     yield put(ClienteUpdateSuccess(response.data));

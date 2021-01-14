@@ -292,6 +292,7 @@ export function horaRequest(
   totalApont,
   solicitante,
   AreaId,
+  RecursoId,
   desc
 ) {
   return {
@@ -307,6 +308,7 @@ export function horaRequest(
       totalApont,
       solicitante,
       AreaId,
+      RecursoId,
       desc
     }
   };
@@ -324,6 +326,7 @@ export function horaUpdate(
   totalApont,
   solicitante,
   AreaId,
+  RecursoId,
   desc,
   apontDiff
 ) {
@@ -341,6 +344,7 @@ export function horaUpdate(
       totalApont,
       solicitante,
       AreaId,
+      RecursoId,
       desc,
       apontDiff
     }

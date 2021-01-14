@@ -75,7 +75,7 @@ export default function ParcelaUpdate() {
         OportunidadeId: { value: response.data.OportunidadeId },
         parcela: { value: response.data.parcela },
         vlrParcela: {
-          value: normalizeCalcCurrency(JSON.stringify(response.data.vlrParcela))
+          value: normalizeCalcCurrency(response.data.vlrParcela)
         },
         dtEmissao: { value: response.data.dtEmissao },
         dtVencimento: { value: response.data.dtVencimento },
@@ -229,7 +229,7 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Cotação</CardTitle>
+                    <CardTitle tag="h4">Nota Fiscal da Parcela</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

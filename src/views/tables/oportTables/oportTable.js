@@ -33,15 +33,7 @@ import {
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
-import RemoveCircleSharpIcon from "@material-ui/icons/RemoveCircleOutline";
-import {
-  Close,
-  ErrorOutline,
-  Message,
-  MonetizationOnOutlined,
-  CheckCircleOutline,
-  RadioButtonCheckedOutlined
-} from "@material-ui/icons";
+import { Close, Message } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
@@ -124,7 +116,7 @@ function OportTable() {
                         );
                       }}
                     >
-                      <MonetizationOnOutlined />
+                      <i className="tim-icons icon-money-coins" />
                     </Button>
                   </Tooltip>
                   <Tooltip title="revisar">
@@ -139,7 +131,7 @@ function OportTable() {
                         );
                       }}
                     >
-                      <ErrorOutline />
+                      <i className="tim-icons icon-bulb-63" />
                     </Button>
                   </Tooltip>
                   <Tooltip title="Aprovar">
@@ -172,7 +164,7 @@ function OportTable() {
                         );
                       }}
                     >
-                      <CheckCircleOutline />
+                      <i className="tim-icons icon-spaceship" />
                     </Button>
                   </Tooltip>
                   {oport.fase != 4 ? (
@@ -203,7 +195,7 @@ function OportTable() {
                           );
                         }}
                       >
-                        <RemoveCircleSharpIcon />
+                        <i className="tim-icons icon-lock-circle" />
                       </Button>
                     </Tooltip>
                   ) : (
@@ -234,20 +226,22 @@ function OportTable() {
                           );
                         }}
                       >
-                        <RadioButtonCheckedOutlined />
+                        <i className="tim-icons icon-trophy" />
                       </Button>
                     </Tooltip>
                   )}
                   {/* use this button to add a edit kind of action */}
-                  <Link to={`/update/oportunidade/oport/${oport.id}`}>
-                    <Button
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <i className="tim-icons icon-pencil" />
-                    </Button>
-                  </Link>
+                  <Tooltip title="Editar">
+                    <Link to={`/update/oportunidade/oport/${oport.id}`}>
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <i className="tim-icons icon-pencil" />
+                      </Button>
+                    </Link>
+                  </Tooltip>
                   {/* use this button to remove the data row */}
                 </div>
               </>

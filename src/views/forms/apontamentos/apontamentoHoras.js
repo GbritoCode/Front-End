@@ -72,6 +72,7 @@ export default function HorasCadastro() {
     totalAcumTemp: { value: "", error: "", message: "" },
     solicitante: { value: "", error: "", message: "" },
     AreaId: { value: "", error: "", message: "" },
+    RecursoId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
@@ -82,9 +83,12 @@ export default function HorasCadastro() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
-      const response4 = await api.get(`/area/`);
       const response1 = await api.get(`/oportunidade/${id}`);
+      const response2 = await api.get(
+        `/oportunidade/?idOport=${id}&colab=${idColab}`
+      );
       const response3 = await api.get(`/cliente/${response1.data.ClienteId}`);
+      const response4 = await api.get(`/area/`);
       const response5 = await api.get(`/colab/?idColab=${idColab}`);
       const response6 = await api.get(
         `/horas/${idColab}/?total=${true}&tipo=project&oport=${
@@ -99,7 +103,8 @@ export default function HorasCadastro() {
         OportunidadeId: { value: response1.data.id },
         oportunidadeCod: { value: response1.data.cod },
         oportunidadeDesc: { value: response1.data.desc },
-        AreaId: { values: JSON.stringify(response1.data.Segmento.AreaId) },
+        AreaId: { value: response1.data.Segmento.AreaId },
+        RecursoId: { value: response2.data.Recurso.id },
         Cliente: { value: response3.data.nomeAbv },
         ColabId: { value: response5.data.id },
         totalAcum: { value: response6.data },
@@ -109,7 +114,6 @@ export default function HorasCadastro() {
     }
     loadData();
   }, [id]);
-  console.log(values);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -265,6 +269,7 @@ export default function HorasCadastro() {
           optional.totalApontDb.value,
           values.solicitante.value,
           values.AreaId.value,
+          values.RecursoId.value,
           values.desc.value
         )
       );

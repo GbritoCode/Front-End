@@ -232,30 +232,29 @@ export default function CotacaoCadastro() {
       10000;
 
     const value = descont.replace(/[.,]+/g, "");
-    if (value >= 100) {
-      const vHr = data2.valorRec;
-      const hr = document.getElementsByName("hrsPrevst")[0].value;
-      var prop = hr * vHr;
-      const vLiq = prop - value;
-      const rLiq = (
-        (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
-        100
-      ).toFixed(2);
-      const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
 
-      setValues(prevState => ({
-        ...prevState,
-        vlrLiq: { value: normalizeCalcCurrency(vLiq) }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        recLiq: { value: normalizeCalcCurrency(rLiq) }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        prevLucro: { value: normalizeCalcCurrency(lucro) }
-      }));
-    }
+    const vHr = data2.valorRec;
+    const hr = document.getElementsByName("hrsPrevst")[0].value;
+    var prop = hr * vHr;
+    const vLiq = prop - value;
+    const rLiq = (
+      (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
+      100
+    ).toFixed(2);
+    const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
+
+    setValues(prevState => ({
+      ...prevState,
+      vlrLiq: { value: normalizeCalcCurrency(vLiq) }
+    }));
+    setValues(prevState => ({
+      ...prevState,
+      recLiq: { value: normalizeCalcCurrency(rLiq) }
+    }));
+    setValues(prevState => ({
+      ...prevState,
+      prevLucro: { value: normalizeCalcCurrency(lucro) }
+    }));
   };
 
   const handleSubmit = evt => {

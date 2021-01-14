@@ -46,6 +46,10 @@ class recDespTable extends Component {
           idd: client.id,
           Empresa: client.Empresa.nome,
           desc: client.desc,
+          recDesp: this.checkRecDesp(client.recDesp),
+          tipoItem: client.tipoItem,
+          contaContabil: client.contaContabil,
+          centCusto: client.centCusto,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -85,6 +89,16 @@ class recDespTable extends Component {
         };
       })
     });
+  };
+
+  checkRecDesp = recDesp => {
+    switch (recDesp) {
+      case "Rec":
+        return "Receita";
+      case "Desp":
+        return "Despesa";
+      default:
+    }
   };
 
   render() {
@@ -132,12 +146,16 @@ class recDespTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "Código",
-                      accessor: "idd"
-                    },
-                    {
                       Header: "Descrição",
                       accessor: "desc"
+                    },
+                    {
+                      Header: "Tipo de Item",
+                      accessor: "tipoItem"
+                    },
+                    {
+                      Header: "Receita/Despesa",
+                      accessor: "recDesp"
                     },
                     {
                       Header: "Ações",

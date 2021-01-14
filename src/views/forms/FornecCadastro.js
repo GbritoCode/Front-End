@@ -720,7 +720,8 @@ export default function FornecCadastro() {
                               {data1.map(condPgmto => (
                                 <option value={condPgmto.id}>
                                   {" "}
-                                  {condPgmto.id} - {condPgmto.desc}{" "}
+                                  {condPgmto.cod} - {condPgmto.diasPrazo} -{" "}
+                                  {condPgmto.desc}{" "}
                                 </option>
                               ))}
                             </Input>

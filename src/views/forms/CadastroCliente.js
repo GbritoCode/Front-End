@@ -203,6 +203,67 @@ export default function CadastroCliente() {
     }
   };
 
+  function checkProsp(param, aux) {
+    if (param == "false" && aux === "title") {
+      return "Cliente";
+    }
+    if (param == "true" && aux === "title") {
+      return "Prospect";
+    }
+    if (param == "false" && aux === "backButton") {
+      return (
+        <Link to="/tabelas/cliente/cliente">
+          <Button
+            style={{
+              paddingLeft: 32,
+              paddingRight: 33,
+              float: "left"
+            }}
+            color="secundary"
+            size="small"
+            className="text-left"
+          >
+            <i
+              className="tim-icons icon-double-left"
+              style={{
+                paddingBottom: 4,
+                paddingRight: 1
+              }}
+              size="large"
+            />{" "}
+            Voltar
+          </Button>
+        </Link>
+      );
+    }
+    if (param == "true" && aux === "backButton") {
+      return (
+        <Link to="/tabelas/cliente/prospect">
+          <Button
+            style={{
+              paddingLeft: 32,
+              paddingRight: 33,
+              float: "left"
+            }}
+            color="secundary"
+            size="small"
+            className="text-left"
+          >
+            <i
+              className="tim-icons icon-double-left"
+              style={{
+                paddingBottom: 4,
+                paddingRight: 1
+              }}
+              size="large"
+            />{" "}
+            Voltar
+          </Button>
+        </Link>
+      );
+    }
+  }
+
   const verifyNumber = value => {
     const numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -320,7 +381,7 @@ export default function CadastroCliente() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Cliente</CardTitle>
+                <CardTitle tag="h4">{checkProsp(prospect, "title")}</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
@@ -500,27 +561,6 @@ export default function CadastroCliente() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to="/tabelas/cliente/cliente">
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
                   <Button
                     style={{
                       paddingLeft: 29,
@@ -540,6 +580,7 @@ export default function CadastroCliente() {
                       size="large"
                     />
                   </Button>
+                  {checkProsp(prospect, "backButton")}
                 </Form>
               </CardBody>
             </Card>

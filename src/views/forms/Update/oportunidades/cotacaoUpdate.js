@@ -156,26 +156,24 @@ function CotacaoUpdate() {
 
   const descontoChange = descont => {
     const value = descont.replace(/[.,]+/g, "");
-    if (value >= 100) {
-      const vHr = data2.valorRec;
-      var prop = document.getElementsByName("hrsPrevst")[0].value * vHr;
-      const hr = document.getElementsByName("hrsPrevst")[0].value;
-      const vLiq = prop - value;
-      const rLiq = vLiq - vLiq * imposto;
-      const lucro = rLiq - hr * 6000;
-      setValues(prevState => ({
-        ...prevState,
-        vlrLiq: { value: normalizeCalcCurrency(JSON.stringify(vLiq)) }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        recLiq: { value: normalizeCalcCurrency(JSON.stringify(rLiq)) }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        prevLucro: { value: normalizeCalcCurrency(JSON.stringify(lucro)) }
-      }));
-    }
+    const vHr = data2.valorRec;
+    var prop = document.getElementsByName("hrsPrevst")[0].value * vHr;
+    const hr = document.getElementsByName("hrsPrevst")[0].value;
+    const vLiq = prop - value;
+    const rLiq = vLiq - vLiq * imposto;
+    const lucro = rLiq - hr * 6000;
+    setValues(prevState => ({
+      ...prevState,
+      vlrLiq: { value: normalizeCalcCurrency(JSON.stringify(vLiq)) }
+    }));
+    setValues(prevState => ({
+      ...prevState,
+      recLiq: { value: normalizeCalcCurrency(JSON.stringify(rLiq)) }
+    }));
+    setValues(prevState => ({
+      ...prevState,
+      prevLucro: { value: normalizeCalcCurrency(JSON.stringify(lucro)) }
+    }));
   };
   const handleChange = (event, name, type) => {
     event.persist();

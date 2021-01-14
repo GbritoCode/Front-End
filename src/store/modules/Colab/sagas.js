@@ -4,7 +4,12 @@ import { toast } from "react-toastify";
 import history from "~/services/history";
 import api from "~/services/api";
 
-import { signFailure, ClienteUpdateSuccess } from "./actions";
+import {
+  signFailure,
+  ClienteUpdateSuccess,
+  firstColabSuccess
+} from "./actions";
+import { store } from "~/store";
 
 export function* colabCadastro({ payload }) {
   try {
@@ -12,7 +17,6 @@ export function* colabCadastro({ payload }) {
       CPF,
       FornecId,
       EmpresaId,
-      UserId,
       nome,
       dtAdmiss,
       cel,
@@ -22,25 +26,57 @@ export function* colabCadastro({ payload }) {
       espec,
       first
     } = payload;
-    yield call(api.post, "colab", {
-      CPF,
-      FornecId,
-      EmpresaId,
-      UserId,
-      nome,
-      dtAdmiss,
-      cel,
-      PerfilId,
-      skype,
-      email,
-      espec
-    });
+
+    if (!first) {
+      const result = yield call(api.post, "users", {
+        nome,
+        email,
+        senha: "Aidera2020"
+      });
+      yield call(api.post, "colab", {
+        CPF,
+        FornecId,
+        EmpresaId,
+        nome,
+        dtAdmiss,
+        cel,
+        PerfilId,
+        skype,
+        email,
+        espec,
+        UserId: result.data.id
+      });
+    }
+    if (first) {
+      const { id } = store.getState().auth.user;
+      yield call(api.post, "colab", {
+        CPF,
+        FornecId,
+        EmpresaId,
+        nome,
+        dtAdmiss,
+        cel,
+        PerfilId,
+        skype,
+        email,
+        espec,
+        UserId: id
+      });
+      const user = yield call(api.get, `users/${id}`);
+      console.log(user);
+      yield put(firstColabSuccess(user.data));
+    }
+
     if (first === true) {
       history.push("/dashboard");
+      return;
     }
     history.push("/tabelas/colab");
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    console.log(err.response);
+    console.log(err);
+    console.error(err.response);
+    console.error(err);
     yield put(signFailure());
   }
 }

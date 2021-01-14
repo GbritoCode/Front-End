@@ -101,9 +101,9 @@ export default function CadastroOport() {
         empresaId: { value: response.data.id },
         ColabId: { value: response1.data.id },
         cod: {
-          value: `A${JSON.stringify(codAux.getYear())}${JSON.stringify(
-            `0${codAux.getMonth() + 1}`.slice(-2)
-          )}-${zerofilled}`
+          value: `A${JSON.stringify(codAux.getYear()).slice(
+            -2
+          )}${`0${codAux.getMonth() + 1}`.slice(-2)}-${zerofilled}`
         }
       }));
     }

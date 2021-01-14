@@ -92,20 +92,22 @@ class Dashboard extends React.Component {
   }
 
   loadData = async () => {
-    const idColab = store.getState().auth.user.Colab.id;
-    const hrs = await api.get(`horas/${idColab}/?total=${true}&tipo=month`);
-    const desps = await api.get(
-      `despesas/${idColab}/?total=${true}&tipo=month`
-    );
-    const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
-    const date = new Date();
-    const month = date.toLocaleString("default", { month: "long" });
-    this.setState({
-      mes: month,
-      horas: hrs.data,
-      vlrDesps: normalizeCurrency(desps.data),
-      vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data)
-    });
+    if (store.getState().auth.user.Colab) {
+      const idColab = store.getState().auth.user.Colab.id;
+      const hrs = await api.get(`horas/${idColab}/?total=${true}&tipo=month`);
+      const desps = await api.get(
+        `despesas/${idColab}/?total=${true}&tipo=month`
+      );
+      const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
+      const date = new Date();
+      const month = date.toLocaleString("default", { month: "long" });
+      this.setState({
+        mes: month,
+        horas: hrs.data,
+        vlrDesps: normalizeCurrency(desps.data),
+        vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data)
+      });
+    }
   };
 
   setBgChartData = name => {

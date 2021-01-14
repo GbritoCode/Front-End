@@ -35,7 +35,6 @@ import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { normalizeFone, normalizeCpf, normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
-import { signUpRequest } from "~/store/modules/auth/actions";
 import { colabRequest } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
 
@@ -47,7 +46,6 @@ export default function ColabCadastro() {
   const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
-  // const [data2, setData2] = useState([]);
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -68,10 +66,8 @@ export default function ColabCadastro() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/fornec`);
-      // const response2 = await api.get(`/perfil`);
       setData(response.data);
       setData1(response1.data);
-      // setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -198,7 +194,6 @@ export default function ColabCadastro() {
     }
   };
 
-  const colab = true;
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -228,6 +223,7 @@ export default function ColabCadastro() {
     if (valid && filled) {
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
       var celdb = values.cel.value.replace(/[^\d]+/g, "");
+      const first = false;
 
       dispatch(
         colabRequest(
@@ -240,16 +236,8 @@ export default function ColabCadastro() {
           1,
           values.skype.value,
           values.email.value,
-          values.espec.value
-        )
-      );
-      dispatch(
-        signUpRequest(
-          values.nome.value,
-          values.email.value,
-          "Aidera2020",
-          values.PerfilIdaux.value,
-          colab
+          values.espec.value,
+          first
         )
       );
     } else {
@@ -488,9 +476,7 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="4" />
                   </Row>
-
                   <Row>
                     <Col md="6">
                       {" "}
@@ -514,28 +500,6 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-
-                  <Link to="/tabelas/colab">
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
                   <Button
                     style={{
                       paddingLeft: 29,
@@ -555,6 +519,28 @@ export default function ColabCadastro() {
                       size="large"
                     />
                   </Button>
+                  <Link to="/tabelas/colab">
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                        float: "left"
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="text-left"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                 </Form>
               </CardBody>
             </Card>

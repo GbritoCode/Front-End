@@ -44,7 +44,7 @@ class ParametrosTable extends Component {
           idd: parcela.id,
           OportunidadeId: parcela.OportunidadeId,
           parcela: parcela.parcela,
-          vlrParcela: parcela.vlrParcela,
+          vlrParcela: normalizeCurrency(parcela.vlrParcela),
           dtEmissao: parcela.dtEmissao,
           dtVencimento: parcela.dtVencimento,
           notaFiscal: parcela.notaFiscal,

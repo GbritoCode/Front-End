@@ -3,6 +3,14 @@ export function signFailure() {
     type: "@cadastro/CADASTRO_FALHA"
   };
 }
+
+export function firstColabSuccess(user) {
+  return {
+    type: "@colab/FIRST_COLAB_SUCCESS",
+    payload: { user }
+  };
+}
+
 export function ClienteUpdateSuccess(profile) {
   return {
     type: "@update/CLIENTE_REQUEST_SUCCES",
@@ -14,7 +22,6 @@ export function colabRequest(
   CPF,
   FornecId,
   EmpresaId,
-  UserId,
   nome,
   dtAdmiss,
   cel,
@@ -30,7 +37,6 @@ export function colabRequest(
       CPF,
       FornecId,
       EmpresaId,
-      UserId,
       nome,
       dtAdmiss,
       cel,
@@ -47,7 +53,6 @@ export function ColabUpdate(
   id,
   CPF,
   FornecId,
-  UserId,
   PerfilId,
   nome,
   dtAdmiss,
@@ -62,7 +67,6 @@ export function ColabUpdate(
       id,
       CPF,
       FornecId,
-      UserId,
       PerfilId,
       nome,
       dtAdmiss,

@@ -334,6 +334,7 @@ export function* horaCadastro({ payload }) {
       totalApont,
       solicitante,
       AreaId,
+      RecursoId,
       desc
     } = payload;
     yield call(api.post, "horas", {
@@ -347,6 +348,7 @@ export function* horaCadastro({ payload }) {
       totalApont,
       solicitante,
       AreaId,
+      RecursoId,
       desc
     });
     history.go(0);
@@ -369,6 +371,7 @@ export function* updateHora({ payload }) {
       totalApont,
       solicitante,
       AreaId,
+      RecursoId,
       desc,
       apontDiff
     } = payload;
@@ -384,6 +387,7 @@ export function* updateHora({ payload }) {
       totalApont,
       solicitante,
       AreaId,
+      RecursoId,
       desc,
       apontDiff
     };

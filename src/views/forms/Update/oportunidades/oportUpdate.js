@@ -294,7 +294,8 @@ export default function UpdateOport() {
           values.data.value,
           values.fase.value,
           values.cod.value,
-          values.desc.value
+          values.desc.value,
+          optional.narrativa.value
         )
       );
     } else {

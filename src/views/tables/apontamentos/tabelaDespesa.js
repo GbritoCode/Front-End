@@ -39,6 +39,7 @@ export default class DespesasTable extends Component {
     document.body.classList.add("white-content");
     this.loadCliente();
   }
+
   checkTipo = value => {
     if (value == 1) {
       return "Alimentação";
@@ -59,9 +60,10 @@ export default class DespesasTable extends Component {
       return "Estacionamento";
     }
   };
+
   loadCliente = async () => {
-    const { id } = store.getState().auth.user;
-    const response = await api.get(`/despesas/${id}`);
+    const idColab = store.getState().auth.user.Colab.id;
+    const response = await api.get(`/despesas/${idColab}`);
     this.setState({
       data: response.data.map((desps, key) => {
         return {
@@ -133,8 +135,8 @@ export default class DespesasTable extends Component {
                     const id = filter.pivotId || filter.id;
                     return row[id] !== undefined
                       ? String(row[id])
-                        .toLowerCase()
-                        .startsWith(filter.value.toLowerCase())
+                          .toLowerCase()
+                          .startsWith(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"
@@ -186,4 +188,3 @@ export default class DespesasTable extends Component {
     );
   }
 }
-

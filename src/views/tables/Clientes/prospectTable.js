@@ -33,7 +33,19 @@ export default function ProspectTable() {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [data, setData] = useState();
-
+  const checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
+  };
   useEffect(() => {
     async function loadData() {
       const response = await api.get("/cliente/?prospect=true");
@@ -49,7 +61,7 @@ export default function ProspectTable() {
             RepresentanteId: client.RepresentanteId,
             Representante: client.Representante.nome,
             TipoComisseId: client.TipoComisseId,
-            TipoComiss: client.TipoComisse.desc,
+            TipoComiss: checkDesc(client.TipoComisse.desc),
             EmpresaId: client.EmpresaId,
             prospect: client.prospect,
             actions: (

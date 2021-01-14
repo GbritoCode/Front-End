@@ -40,8 +40,8 @@ export default class HorasTable extends Component {
   }
 
   loadCliente = async () => {
-    const { id } = store.getState().auth.user;
-    const response = await api.get(`/horas/${id}`);
+    const idColab = store.getState().auth.user.Colab.id;
+    const response = await api.get(`/horas/${idColab}`);
     this.setState({
       data: response.data.map((horas, key) => {
         return {
