@@ -46,6 +46,7 @@ export default function ColabCadastro() {
 
   const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -66,8 +67,10 @@ export default function ColabCadastro() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/fornec`);
+      const response2 = await api.get(`/perfil`);
       setData(response.data);
       setData1(response1.data);
+      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -79,8 +82,15 @@ export default function ColabCadastro() {
           ...prevState,
           email: { value: result.data[0].email }
         }));
-        loadData();
+        api.get("/empresa").then(async results => {
+          const perfil = {
+            EmpresaId: results.data[0].id,
+            desc: "Admnistrador"
+          };
+          await api.post("/perfil", perfil);
+        });
       });
+      loadData();
     }
     Aux();
   }, [dispatch]);
@@ -409,10 +419,12 @@ export default function ColabCadastro() {
                           {" "}
                           Selecione o perfil{" "}
                         </option>
-                        <option value={1}>Analista</option>
-                        <option value={2}>Comercial</option>
-                        <option value={3}>Gestor</option>
-                        <option value={10}>Admin</option>
+                        {data2.map(perfil => (
+                          <option value={perfil.id}>
+                            {" "}
+                            {perfil.id} - {perfil.desc}{" "}
+                          </option>
+                        ))}
                       </Input>
                       {values.PerfilId.error === "has-danger" ? (
                         <Label className="error">
