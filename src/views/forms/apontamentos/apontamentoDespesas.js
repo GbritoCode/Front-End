@@ -73,12 +73,12 @@ export default function DespesaCadastro() {
     const idColab = store.getState().auth.user.Colab.id;
     async function loadData() {
       const response1 = await api.get(`/oportunidade/${id}`);
-      const response2 = await api.get(`/colab/?email=${idColab}`);
+      const response2 = await api.get(`/colab/?idColab=${idColab}`);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response1.data.id },
-        ColabId: { value: response2.data[0].id }
+        ColabId: { value: response2.data.id }
       }));
     }
     loadData();
