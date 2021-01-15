@@ -30,31 +30,18 @@ class Footer extends React.Component {
         <Container fluid={this.props.fluid ? true : false}>
           <ul className="nav">
             <li className="nav-item">
-              <a className="nav-link" href="https://www.creative-tim.com">
-                Creative Tim
+              <a className="nav-link" href="https://www.aidera.com.br">
+                Aidera
               </a>
             </li>{" "}
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                href="https://www.creative-tim.com/presentation"
-              >
-                About us
-              </a>
-            </li>{" "}
-            <li className="nav-item">
-              <a className="nav-link" href="https://blog.creative-tim.com">
-                Blog
-              </a>
-            </li>
           </ul>
           <div className="copyright">
-            © {new Date().getFullYear()} made with{" "}
+            © {new Date().getFullYear()} Feito com {" "}
             <i className="tim-icons icon-heart-2" /> by{" "}
-            <a href="https://www.creative-tim.com/contact-us" target="_blank">
-              Creative Tim
+            <a href="https://www.aidera.com.br/" target="_blank">
+              Aidera
             </a>{" "}
-            for a better web.
+            por uma web melhor.
           </div>
         </Container>
       </footer>

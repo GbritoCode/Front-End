@@ -54,7 +54,7 @@ export default function ColabCadastro() {
     nome: { value: "", error: "", message: "" },
     dtAdmiss: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
-    PerfilIdaux: { value: "", error: "", message: "" },
+    PerfilUser: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
     espec: { value: "", error: "", message: "" }
@@ -237,7 +237,8 @@ export default function ColabCadastro() {
           values.skype.value,
           values.email.value,
           values.espec.value,
-          first
+          first,
+          values.PerfilUser.value
         )
       );
     } else {
@@ -410,15 +411,15 @@ export default function ColabCadastro() {
                       {" "}
                       <Label>Perfil</Label>
                       <FormGroup
-                        className={`has-label ${values.PerfilIdaux.error}`}
+                        className={`has-label ${values.PerfilUser.error}`}
                       >
                         <Input
                           name="FornecId"
                           type="select"
                           onChange={event =>
-                            handleChange(event, "PerfilIdaux", "text")
+                            handleChange(event, "PerfilUser", "text")
                           }
-                          value={values.PerfilIdaux.value}
+                          value={values.PerfilUser.value}
                         >
                           {" "}
                           <option disabled value="">
@@ -430,9 +431,9 @@ export default function ColabCadastro() {
                           <option value={3}>Gestor</option>
                           <option value={10}>Admin</option>
                         </Input>
-                        {values.PerfilIdaux.error === "has-danger" ? (
+                        {values.PerfilUser.error === "has-danger" ? (
                           <Label className="error">
-                            {values.PerfilIdaux.message}
+                            {values.PerfilUser.message}
                           </Label>
                         ) : null}
                       </FormGroup>

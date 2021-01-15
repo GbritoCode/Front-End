@@ -67,7 +67,11 @@ export default function RecursoCadastro() {
     hrsPrevst: { value: "", error: "", message: "" },
     colabVlrHr: { value: "", error: "", message: "" }
   };
+  const optionalSchema = {
+    HorasTotais: { value: "", error: "", message: "" }
+  };
   const [values, setValues] = useState(stateSchema);
+  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
@@ -75,12 +79,17 @@ export default function RecursoCadastro() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/oportunidade/${id}`);
       const response2 = await api.get(`/colab/`);
+      const response3 = await api.get(`/cotacao/${id}`);
       setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
         OportunidadeId: { value: response1.data.id }
+      }));
+      setOptional(prevState => ({
+        ...prevState,
+        HorasTotais: { value: response3.data[0].hrsPrevst }
       }));
     }
     loadData();
@@ -429,6 +438,30 @@ export default function RecursoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
+                      <Label>Horas Previstas Para O Projeto</Label>
+                      <FormGroup
+                        className={`has-label ${optional.HorasTotais.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="HorasTotais"
+                          type="numeric"
+                          onChange={event => {
+                            handleChange(event, "HorasTotais", "number");
+                            custoPrevst(event.target.value);
+                          }}
+                          value={optional.HorasTotais.value}
+                        />
+                        {optional.HorasTotais.error === "has-danger" ? (
+                          <Label className="error">
+                            {optional.HorasTotais.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
                       <Label>Valor Hora </Label>
                       <FormGroup
                         className={`has-label ${values.colabVlrHr.error}`}
@@ -449,8 +482,6 @@ export default function RecursoCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
                     <Col md="4">
                       <Label>Custo Previsto</Label>
                       <FormGroup
@@ -473,27 +504,6 @@ export default function RecursoCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
                   <Button
                     style={{
                       paddingLeft: 29,
@@ -513,6 +523,28 @@ export default function RecursoCadastro() {
                       size="large"
                     />
                   </Button>
+                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                        float: "left"
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="form"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                 </Form>
               </CardBody>
             </Card>

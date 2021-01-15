@@ -24,14 +24,16 @@ export function* colabCadastro({ payload }) {
       skype,
       email,
       espec,
-      first
+      first,
+      PerfilUser
     } = payload;
 
     if (!first) {
       const result = yield call(api.post, "users", {
         nome,
         email,
-        senha: "Aidera2020"
+        senha: "Aidera2020",
+        profile: PerfilUser
       });
       yield call(api.post, "colab", {
         CPF,
@@ -73,10 +75,6 @@ export function* colabCadastro({ payload }) {
     }
     history.push("/tabelas/colab");
   } catch (err) {
-    console.log(err.response);
-    console.log(err);
-    console.error(err.response);
-    console.error(err);
     yield put(signFailure());
   }
 }

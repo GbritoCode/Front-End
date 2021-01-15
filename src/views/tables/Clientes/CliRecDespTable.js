@@ -123,7 +123,7 @@ class Tabela_Cliente extends Component {
                 <CardTitle tag="h4">
                   Receita do Cliente
                   <Link to={`/cadastro/cliente/rec_desp/${id}`}>
-                    <Tooltip titlle="Novo">
+                    <Tooltip title="Novo">
                       <Button
                         style={{
                           float: "right"

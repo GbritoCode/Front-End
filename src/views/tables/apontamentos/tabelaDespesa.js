@@ -23,7 +23,6 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { EditOutlined } from "@material-ui/icons";
 import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
@@ -86,7 +85,7 @@ export default class DespesasTable extends Component {
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                   >
-                    <EditOutlined />
+                    <i className="tim-icons icon-pencil" />
                   </Button>
                 </Tooltip>
               </Link>

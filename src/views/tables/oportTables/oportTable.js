@@ -343,7 +343,7 @@ function OportTable() {
                 rowsText="Linhas"
                 columns={[
                   {
-                    Header: "cod",
+                    Header: "Código",
                     accessor: "cod"
                   },
                   {

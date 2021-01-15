@@ -98,7 +98,7 @@ export function* cliContCadastro({ payload }) {
       aniver,
       tipoConta
     });
-    history.push(`/cliente_update/${ClienteId}/true`);
+    history.push(`/tabelas/cliente/cont/${ClienteId}`);
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");
     yield put(signFailure());
@@ -236,7 +236,7 @@ export function* cliRecDespCadastro({ payload }) {
       dataInic,
       dataFim
     });
-    history.push(`/cliente_update/${ClienteId}/true`);
+    history.push(`/tabelas/cliente/rec_desp/${ClienteId}`);
   } catch (err) {
     toast.error("Value already exists in period");
     yield put(signFailure());

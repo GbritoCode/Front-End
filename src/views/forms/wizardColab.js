@@ -77,12 +77,12 @@ export default function ColabCadastro() {
       }));
     }
     async function Aux() {
-      api.get("/users").then(async result => {
+      await api.get("/users").then(async result => {
         setValues(prevState => ({
           ...prevState,
           email: { value: result.data[0].email }
         }));
-        api.get("/empresa").then(async results => {
+        await api.get("/empresa").then(async results => {
           const perfil = {
             EmpresaId: results.data[0].id,
             desc: "Admnistrador"
@@ -256,7 +256,8 @@ export default function ColabCadastro() {
           values.skype.value,
           values.email.value,
           values.espec.value,
-          first
+          first,
+          "fake"
         )
       );
     } else {

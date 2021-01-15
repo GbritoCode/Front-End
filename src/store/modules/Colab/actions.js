@@ -29,7 +29,8 @@ export function colabRequest(
   skype,
   email,
   espec,
-  first
+  first,
+  PerfilUser
 ) {
   return {
     type: "@cadastro/CADASTRO_COLAB_REQUEST",
@@ -44,7 +45,8 @@ export function colabRequest(
       skype,
       email,
       espec,
-      first
+      first,
+      PerfilUser
     }
   };
 }

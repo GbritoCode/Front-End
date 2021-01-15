@@ -126,24 +126,6 @@ export default function SignIn() {
                   >
                     {loading ? "Carregando..." : "Acessar"}
                   </Button>
-                  <div className="pull-left">
-                    <h6>
-                      <a className="link footer-link" href="/register">
-                        Criar Conta
-                      </a>
-                    </h6>
-                  </div>
-                  <div className="pull-right">
-                    <h6>
-                      <a
-                        className="link footer-link"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        Need Help?
-                      </a>
-                    </h6>
-                  </div>
                 </CardFooter>
               </Card>
             </Form>

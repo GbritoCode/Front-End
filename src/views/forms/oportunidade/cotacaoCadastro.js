@@ -53,6 +53,7 @@ export default function CotacaoCadastro() {
   const dispatch = useDispatch();
   const [isloading, setIsLoading] = useState(true);
   const [auxState, setAuxState] = useState(false);
+  const [disabledVlrProp, setDisabledVlrProp] = useState();
   const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
@@ -142,29 +143,34 @@ export default function CotacaoCadastro() {
     notifyElment.current.notificationAlert(options);
   }
   function getCliData(cobranca) {
-    api
-      .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
-      .then(result => {
-        if (result.data === null) {
-          options = {
-            place: "tr",
-            message: (
-              <div>
+    if (!(cobranca === "2")) {
+      setDisabledVlrProp(true);
+      api
+        .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
+        .then(result => {
+          if (result.data === null) {
+            options = {
+              place: "tr",
+              message: (
                 <div>
-                  Ops! Parece que não há uma receita cadastrada para o caso
-                  dessa oportunidade, casdastre uma!
+                  <div>
+                    Ops! Parece que não há uma receita cadastrada para o caso
+                    dessa oportunidade, casdastre uma!
+                  </div>
                 </div>
-              </div>
-            ),
-            type: "danger",
-            icon: "tim-icons icon-alert-circle-exc",
-            autoDismiss: 7
-          };
-          notify();
-        } else {
-          setData2(result.data);
-        }
-      });
+              ),
+              type: "danger",
+              icon: "tim-icons icon-alert-circle-exc",
+              autoDismiss: 7
+            };
+            notify();
+          } else {
+            setData2(result.data);
+          }
+        });
+    } else {
+      setDisabledVlrProp(false);
+    }
   }
 
   if (!isloading && !auxState) {
@@ -203,7 +209,7 @@ export default function CotacaoCadastro() {
       case "currency":
         setValues(prevState => ({
           ...prevState,
-          [name]: { value: normalizeCurrency(target) }
+          [name]: { value: normalizeCalcCurrency(target) }
         }));
         break;
       case "optional":
@@ -222,39 +228,78 @@ export default function CotacaoCadastro() {
     }
   };
   const descontoChange = descont => {
-    const imposto =
-      (data3.IRPJ +
-        data3.CSLL +
-        data3.COFINS +
-        data3.PIS +
-        data3.INSS +
-        data3.ISS) /
-      10000;
+    if (document.getElementsByName("tipoCobranca")[0].value === "2") {
+      const imposto =
+        (data3.IRPJ +
+          data3.CSLL +
+          data3.COFINS +
+          data3.PIS +
+          data3.INSS +
+          data3.ISS) /
+        10000;
 
-    const value = descont.replace(/[.,]+/g, "");
+      const value = descont.replace(/[.,]+/g, "");
 
-    const vHr = data2.valorRec;
-    const hr = document.getElementsByName("hrsPrevst")[0].value;
-    var prop = hr * vHr;
-    const vLiq = prop - value;
-    const rLiq = (
-      (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
-      100
-    ).toFixed(2);
-    const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
+      const hr = document.getElementsByName("hrsPrevst")[0].value;
+      const prop = document
+        .getElementsByName("vlrProp")[0]
+        .value.replace(/[.,]+/g, "");
+      const vLiq = prop - value;
+      const rLiq = (
+        (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
+        100
+      ).toFixed(2);
+      const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
 
-    setValues(prevState => ({
-      ...prevState,
-      vlrLiq: { value: normalizeCalcCurrency(vLiq) }
-    }));
-    setValues(prevState => ({
-      ...prevState,
-      recLiq: { value: normalizeCalcCurrency(rLiq) }
-    }));
-    setValues(prevState => ({
-      ...prevState,
-      prevLucro: { value: normalizeCalcCurrency(lucro) }
-    }));
+      setValues(prevState => ({
+        ...prevState,
+        vlrLiq: { value: normalizeCalcCurrency(vLiq) }
+      }));
+      setValues(prevState => ({
+        ...prevState,
+        recLiq: { value: normalizeCalcCurrency(rLiq) }
+      }));
+      setValues(prevState => ({
+        ...prevState,
+        prevLucro: { value: normalizeCalcCurrency(lucro) }
+      }));
+      return;
+    }
+    if (!(document.getElementsByName("tipoCobranca")[0].value === "2")) {
+      const imposto =
+        (data3.IRPJ +
+          data3.CSLL +
+          data3.COFINS +
+          data3.PIS +
+          data3.INSS +
+          data3.ISS) /
+        10000;
+
+      const value = descont.replace(/[.,]+/g, "");
+
+      const vHr = data2.valorRec;
+      const hr = document.getElementsByName("hrsPrevst")[0].value;
+      const prop = hr * vHr;
+      const vLiq = prop - value;
+      const rLiq = (
+        (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
+        100
+      ).toFixed(2);
+      const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
+
+      setValues(prevState => ({
+        ...prevState,
+        vlrLiq: { value: normalizeCalcCurrency(vLiq) }
+      }));
+      setValues(prevState => ({
+        ...prevState,
+        recLiq: { value: normalizeCalcCurrency(rLiq) }
+      }));
+      setValues(prevState => ({
+        ...prevState,
+        prevLucro: { value: normalizeCalcCurrency(lucro) }
+      }));
+    }
   };
 
   const handleSubmit = evt => {
@@ -478,16 +523,23 @@ export default function CotacaoCadastro() {
                           type="numeric"
                           onChange={event => {
                             handleChange(event, "hrsPrevst", "number");
-                            setValues(prevState => ({
-                              ...prevState,
-                              vlrProp: {
-                                value: normalizeCalcCurrency(
-                                  JSON.stringify(
-                                    event.target.value * data2.valorRec
+                            if (
+                              !(
+                                document.getElementsByName("tipoCobranca")[0]
+                                  .value === "2"
+                              )
+                            ) {
+                              setValues(prevState => ({
+                                ...prevState,
+                                vlrProp: {
+                                  value: normalizeCalcCurrency(
+                                    JSON.stringify(
+                                      event.target.value * data2.valorRec
+                                    )
                                   )
-                                )
-                              }
-                            }));
+                                }
+                              }));
+                            }
                             descontoChange(
                               document.getElementsByName("vlrDesc")[0].value
                             );
@@ -508,12 +560,16 @@ export default function CotacaoCadastro() {
                         className={`has-label ${values.vlrProp.error}`}
                       >
                         <Input
-                          disabled
+                          disabled={disabledVlrProp}
                           name="vlrProp"
                           type="numeric"
-                          onChange={event =>
-                            handleChange(event, "vlrProp", "currency")
-                          }
+                          onChange={event => {
+                            handleChange(event, "vlrProp", "currency");
+
+                            descontoChange(
+                              document.getElementsByName("vlrDesc")[0].value
+                            );
+                          }}
                           value={values.vlrProp.value}
                         />
                         {values.vlrProp.error === "has-danger" ? (

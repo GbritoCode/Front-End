@@ -253,7 +253,7 @@ class Dashboard extends React.Component {
                           style={{ textTransform: "capitalize" }}
                           className="card-category"
                         >
-                          despesa {this.state.mes}
+                          despesas {this.state.mes}
                         </p>
                         <CardTitle tag="h3">{this.state.vlrDesps}</CardTitle>
                       </div>

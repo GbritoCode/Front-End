@@ -50,7 +50,7 @@ class ParametrosTable extends Component {
           EmpresaId: cotacao.EmpresaId,
           OportunidadeId: cotacao.OportunidadeId,
           probVend: cotacao.probVend,
-          tipoCobranca: cotacao.tipoCobranca,
+          tipoCobranca: this.checkCobranca(cotacao.tipoCobranca),
           hrsPrevst: cotacao.hrsPrevst,
           vlrProp: normalizeCurrency(JSON.stringify(cotacao.vlrProp)),
           vlrDesc: normalizeCurrency(JSON.stringify(cotacao.vlrDesc)),
@@ -97,6 +97,16 @@ class ParametrosTable extends Component {
         };
       })
     });
+  };
+
+  checkCobranca = value => {
+    switch (value) {
+      case 1:
+        return "Por Hora";
+      case 2:
+        return "Por Projeto";
+      default:
+    }
   };
 
   render() {
@@ -171,6 +181,10 @@ class ParametrosTable extends Component {
                     {
                       Header: "Valor do desconto",
                       accessor: "vlrDesc"
+                    },
+                    {
+                      Header: "Valor Líquido",
+                      accessor: "vlrLiq"
                     },
                     {
                       Header: "Ações",

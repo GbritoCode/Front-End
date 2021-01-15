@@ -23,9 +23,9 @@ import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
 
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { EditOutlined } from "@material-ui/icons";
 import api from "~/services/api";
 import { store } from "~/store";
+import { normalizeHrToMin } from "~/normalize";
 
 /* eslint-disable eqeqeq */
 export default class HorasTable extends Component {
@@ -53,7 +53,8 @@ export default class HorasTable extends Component {
           horaIntrv: horas.horaIntrv,
           horaFim: horas.horaFim,
           dataAtivd: horas.dataAtivd,
-          TotalApont: horas.TotalApont,
+          TotalApont: normalizeHrToMin(horas.totalApont),
+          Cliente: horas.Oportunidade.Cliente.nomeAbv,
 
           actions: (
             // we've added some custom button actions
@@ -66,7 +67,7 @@ export default class HorasTable extends Component {
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                   >
-                    <EditOutlined />
+                    <i className="tim-icons icon-pencil" />
                   </Button>
                 </Tooltip>
               </Link>
@@ -95,6 +96,7 @@ export default class HorasTable extends Component {
         };
       })
     });
+    console.log(typeof this.state.data.dataAtivd);
   };
 
   render() {
@@ -136,22 +138,17 @@ export default class HorasTable extends Component {
                       accessor: "desc"
                     },
                     {
-                      Header: "Hora Ínicial",
-                      accessor: "horaInic"
-                    },
-                    {
-                      Header: "Intervalo",
-                      accessor: "horaIntrv"
-                    },
-                    {
-                      Header: "Hora Final",
-                      accessor: "horaFim"
+                      Header: "Cliente",
+                      accessor: "Cliente"
                     },
                     {
                       Header: "Data",
                       accessor: "dataAtivd"
                     },
-
+                    {
+                      Header: "Total do Dia",
+                      accessor: "TotalApont"
+                    },
                     {
                       Header: "Ações",
                       accessor: "actions",

@@ -286,7 +286,6 @@ export default function CliRecDespUpdatee() {
                                 Selecione o tipo de cobrança{" "}
                               </option>
                               <option value={1}>Por Hora</option>
-                              <option value={2}>Por Projeto</option>
                               <option value={3}>Por Dia</option>
                               <option value={4}>Por Quilometro</option>
                               <option value={5}>Por Refeição</option>

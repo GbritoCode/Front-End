@@ -38,6 +38,7 @@ class condPgmtoTable extends Component {
         return {
           id: key,
           idd: client.id,
+          cod: client.cod,
           Empresa: client.Empresa.nome,
           desc: client.desc,
           diasPrazo: client.diasPrazo,
@@ -126,6 +127,10 @@ class condPgmtoTable extends Component {
                   ofText="de"
                   rowsText="Linhas"
                   columns={[
+                    {
+                      Header: "Código",
+                      accessor: "cod"
+                    },
                     {
                       Header: "dias de prazo",
                       accessor: "diasPrazo"

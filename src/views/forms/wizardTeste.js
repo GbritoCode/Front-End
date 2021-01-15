@@ -272,10 +272,6 @@ export default function WizardCadastro() {
           first
         )
       );
-      api
-        .get("/empresa")
-        .then(results => {})
-        .catch(error => {});
     } else {
       options = {
         place: "tr",
@@ -390,7 +386,7 @@ export default function WizardCadastro() {
                         {data.map(user => (
                           <option key={user.id} value={user.id}>
                             {" "}
-                            {user.name} - {user.email}{" "}
+                            {user.nome} - {user.email}{" "}
                           </option>
                         ))}
                       </Input>{" "}

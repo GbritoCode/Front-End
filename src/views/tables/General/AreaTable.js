@@ -132,7 +132,7 @@ class Tabela_Cliente extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "Id Área",
+                      Header: "Código Área",
                       accessor: "idd"
                     },
                     {

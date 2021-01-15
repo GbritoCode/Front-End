@@ -158,6 +158,14 @@ class recDespTable extends Component {
                       accessor: "recDesp"
                     },
                     {
+                      Header: "Conta Contábil",
+                      accessor: "contaContabil"
+                    },
+                    {
+                      Header: "centro de Custo",
+                      accessor: "centCusto"
+                    },
+                    {
                       Header: "Ações",
                       accessor: "actions",
                       sortable: false,

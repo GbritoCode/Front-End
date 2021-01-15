@@ -45,6 +45,9 @@ function ProfileUpdate() {
   const { id } = store.getState().auth.user;
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [passwordShown1, setPasswordShown1] = useState(false);
+  const [passwordShown2, setPasswordShown2] = useState(false);
   const stateSchema = {
     nome: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" }
@@ -70,6 +73,15 @@ function ProfileUpdate() {
     }
     loadData();
   }, [id]);
+  const togglePasswordVisiblity = () => {
+    setPasswordShown(!passwordShown);
+  };
+  const togglePassword1Visiblity = () => {
+    setPasswordShown1(!passwordShown1);
+  };
+  const togglePassword2Visiblity = () => {
+    setPasswordShown2(!passwordShown2);
+  };
   var options = {};
 
   const notifyElment = useRef(null);
@@ -149,6 +161,7 @@ function ProfileUpdate() {
       notify();
     }
   };
+  console.log(passwordShown);
   return (
     <>
       {isLoading ? (
@@ -163,7 +176,7 @@ function ProfileUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Empresa</CardTitle>
+                    <CardTitle tag="h4">Edição de Usuário</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -174,6 +187,7 @@ function ProfileUpdate() {
                             className={`has-label ${values.nome.error}`}
                           >
                             <Input
+                              disabled
                               name="nome"
                               type="text"
                               onChange={event =>
@@ -215,8 +229,10 @@ function ProfileUpdate() {
                             className={`has-label ${optional.senha.error}`}
                           >
                             <Input
+                              onMouseEnter={togglePasswordVisiblity}
+                              onMouseLeave={togglePasswordVisiblity}
                               name="senha"
-                              type="password"
+                              type={passwordShown ? "text" : "password"}
                               onChange={event =>
                                 handleChange(event, "senha", "optional")
                               }
@@ -237,8 +253,10 @@ function ProfileUpdate() {
                             className={`has-label ${optional.confirmSenha.error}`}
                           >
                             <Input
+                              onMouseEnter={togglePassword1Visiblity}
+                              onMouseLeave={togglePassword1Visiblity}
                               name="confirmSenha"
-                              type="password"
+                              type={passwordShown1 ? "text" : "password"}
                               onChange={event =>
                                 handleChange(event, "confirmSenha", "optional")
                               }
@@ -257,8 +275,10 @@ function ProfileUpdate() {
                             className={`has-label ${optional.senhaAntiga.error}`}
                           >
                             <Input
+                              onMouseEnter={togglePassword2Visiblity}
+                              onMouseLeave={togglePassword2Visiblity}
                               name="senhaAntiga"
-                              type="password"
+                              type={passwordShown2 ? "text" : "password"}
                               onChange={event =>
                                 handleChange(event, "senhaAntiga", "optional")
                               }
