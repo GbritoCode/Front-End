@@ -32,7 +32,7 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { normalizeFone } from "~/normalize";
 import { CliContRequest } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
@@ -76,6 +76,54 @@ export default function CliContCadastro() {
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
+  }
+  const query = new URLSearchParams(useLocation().search);
+  const prospect = query.get("prospect");
+
+  function checkProsp(param, aux) {
+    switch (aux) {
+      case "title":
+        switch (param) {
+          case "false":
+            return "Contato Cliente";
+          case "true":
+            return "Contato Prospect";
+          default:
+            break;
+        }
+        break;
+      case "backButton":
+        return (
+          <>
+            <Link
+              to={`/tabelas/cliente/cont/${values.ClienteId.value}/?prospect=${prospect}`}
+            >
+              <Button
+                style={{
+                  paddingLeft: 32,
+                  paddingRight: 33,
+                  float: "left"
+                }}
+                color="secundary"
+                size="small"
+                className="text-left"
+              >
+                <i
+                  className="tim-icons icon-double-left"
+                  style={{
+                    paddingBottom: 4,
+                    paddingRight: 1
+                  }}
+                  size="large"
+                />{" "}
+                Voltar
+              </Button>
+            </Link>
+          </>
+        );
+      default:
+        break;
+    }
   }
 
   const verifyNumber = value => {
@@ -214,7 +262,7 @@ export default function CliContCadastro() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Contato do cliente</CardTitle>
+                <CardTitle tag="h4">{checkProsp(prospect, "title")}</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form id="RegisterValidation" onSubmit={handleSubmit}>
@@ -398,27 +446,7 @@ export default function CliContCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to={`/tabelas/cliente/cont/${values.ClienteId.value}`}>
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="text-left"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
+
                   <Button
                     style={{
                       paddingLeft: 29,
@@ -438,6 +466,7 @@ export default function CliContCadastro() {
                       size="large"
                     />
                   </Button>
+                  {checkProsp(prospect, "backButton")}
                 </Form>
               </CardBody>
             </Card>

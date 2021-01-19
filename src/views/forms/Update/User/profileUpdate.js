@@ -50,7 +50,8 @@ function ProfileUpdate() {
   const [passwordShown2, setPasswordShown2] = useState(false);
   const stateSchema = {
     nome: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" }
+    email: { value: "", error: "", message: "" },
+    aniver: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     senhaAntiga: { value: "", error: "", message: "" },
@@ -66,7 +67,8 @@ function ProfileUpdate() {
       setValues(prevState => ({
         ...prevState,
         nome: { value: response.data.nome },
-        email: { value: response.data.email }
+        email: { value: response.data.email },
+        aniver: { value: response.data.aniver }
       }));
 
       setIsLoading(false);
@@ -134,13 +136,32 @@ function ProfileUpdate() {
         break;
       }
     }
-
+    if (
+      !(
+        optional.senha.value &&
+        optional.senhaAntiga.value &&
+        optional.confirmSenha.value
+      )
+    ) {
+      if (valid && filled) {
+        dispatch(
+          updateProfile(
+            id,
+            values.nome.value,
+            values.email.value,
+            values.aniver.value
+          )
+        );
+        return;
+      }
+    }
     if (valid && filled) {
       dispatch(
         updateProfile(
           id,
           values.nome.value,
           values.email.value,
+          values.aniver.value,
           optional.senhaAntiga.value,
           optional.senha.value,
           optional.confirmSenha.value
@@ -287,6 +308,26 @@ function ProfileUpdate() {
                             {optional.senhaAntiga.error === "has-danger" ? (
                               <Label className="error">
                                 {optional.senhaAntiga.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Aniversário</Label>
+                          <FormGroup
+                            className={`has-label ${values.aniver.error}`}
+                          >
+                            <Input
+                              name="aniver"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "aniver", "text")
+                              }
+                              value={values.aniver.value}
+                            />
+                            {values.aniver.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.aniver.message}
                               </Label>
                             ) : null}
                           </FormGroup>

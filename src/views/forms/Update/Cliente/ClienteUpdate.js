@@ -234,7 +234,7 @@ function ClienteUpdatee() {
     if (param == "false" && aux === "icons") {
       return (
         <>
-          <Link to={`/tabelas/cliente/comp/${id}`}>
+          <Link to={`/cliente/comp_update/${id}`}>
             <Tooltip title="Complemento" placement="top" interactive>
               <Button
                 style={{ float: "right" }}
@@ -261,66 +261,113 @@ function ClienteUpdatee() {
         </>
       );
     }
-    if (param == "false" && aux === "title") {
-      return "Edição de Cliente";
-    }
-    if (param == "true" && aux === "title") {
-      return "Edição de Prospect";
-    }
-    if (param == "false" && aux === "backButton") {
-      return (
-        <Link to="/tabelas/cliente/cliente">
-          <Button
-            style={{
-              paddingLeft: 32,
-              paddingRight: 33,
-              float: "left"
-            }}
-            color="secundary"
-            size="small"
-            className="text-left"
-          >
-            <i
-              className="tim-icons icon-double-left"
-              style={{
-                paddingBottom: 4,
-                paddingRight: 1
-              }}
-              size="large"
-            />{" "}
-            Voltar
-          </Button>
-        </Link>
-      );
-    }
-    if (param == "true" && aux === "backButton") {
-      return (
-        <Link to="/tabelas/cliente/prospect">
-          <Button
-            style={{
-              paddingLeft: 32,
-              paddingRight: 33,
-              float: "left"
-            }}
-            color="secundary"
-            size="small"
-            className="text-left"
-          >
-            <i
-              className="tim-icons icon-double-left"
-              style={{
-                paddingBottom: 4,
-                paddingRight: 1
-              }}
-              size="large"
-            />{" "}
-            Voltar
-          </Button>
-        </Link>
-      );
+    switch (aux) {
+      case "icon":
+        switch (param) {
+          case "false":
+            return (
+              <>
+                <Link to={`/cliente/comp_update/${id}`}>
+                  <Tooltip title="Complemento" placement="top" interactive>
+                    <Button
+                      style={{ float: "right" }}
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <EventNoteIcon />
+                    </Button>
+                  </Tooltip>
+                </Link>
+                <Link to={`/tabelas/cliente/rec_desp/${id}`}>
+                  <Tooltip title="Receita" placement="top" interactive>
+                    <Button
+                      style={{ float: "right" }}
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <AttachMoney />
+                    </Button>
+                  </Tooltip>
+                </Link>
+              </>
+            );
+
+          default:
+            break;
+        }
+        break;
+      case "title":
+        switch (param) {
+          case "false":
+            return "Cliente";
+          case "true":
+            return "Prospect";
+          default:
+            break;
+        }
+        break;
+      case "backButton":
+        switch (param) {
+          case "false":
+            return (
+              <Link to="/tabelas/cliente/cliente">
+                <Button
+                  style={{
+                    paddingLeft: 32,
+                    paddingRight: 33,
+                    float: "left"
+                  }}
+                  color="secundary"
+                  size="small"
+                  className="text-left"
+                >
+                  <i
+                    className="tim-icons icon-double-left"
+                    style={{
+                      paddingBottom: 4,
+                      paddingRight: 1
+                    }}
+                    size="large"
+                  />{" "}
+                  Voltar
+                </Button>
+              </Link>
+            );
+          case "true":
+            return (
+              <Link to="/tabelas/cliente/prospect">
+                <Button
+                  style={{
+                    paddingLeft: 32,
+                    paddingRight: 33,
+                    float: "left"
+                  }}
+                  color="secundary"
+                  size="small"
+                  className="text-left"
+                >
+                  <i
+                    className="tim-icons icon-double-left"
+                    style={{
+                      paddingBottom: 4,
+                      paddingRight: 1
+                    }}
+                    size="large"
+                  />{" "}
+                  Voltar
+                </Button>
+              </Link>
+            );
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
     }
   }
-
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -391,7 +438,9 @@ function ClienteUpdatee() {
                   <CardHeader>
                     {checkProsp(prospect, "icons")}
 
-                    <Link to={`/tabelas/cliente/cont/${id}`}>
+                    <Link
+                      to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
+                    >
                       <Tooltip title="Contato" placement="top" interactive>
                         <Button
                           style={{ float: "right" }}

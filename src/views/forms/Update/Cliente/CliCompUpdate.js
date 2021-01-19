@@ -514,29 +514,6 @@ export default function CliCompUpdatee() {
                         </Col>
                         <Col md="4" />
                       </Row>
-                      <Link
-                        to={`/tabelas/cliente/comp/${values.ClienteId.value}`}
-                      >
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="text-left"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -556,6 +533,30 @@ export default function CliCompUpdatee() {
                           size="large"
                         />
                       </Button>
+                      <Link
+                        to={`/cliente_update/${values.ClienteId.value}/false`}
+                      >
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="text-left"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
                     </Form>
                   </CardBody>
                 </Card>

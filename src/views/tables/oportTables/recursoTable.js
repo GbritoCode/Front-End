@@ -46,7 +46,7 @@ class RecursoTable extends Component {
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
-    this.loadCliente();
+    this.loadData();
   }
 
   checkFase = value => {

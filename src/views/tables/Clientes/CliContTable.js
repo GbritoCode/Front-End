@@ -61,6 +61,8 @@ class Tabela_Cliente extends Component {
 
   loadData = async () => {
     const { id } = this.props.match.params;
+    const query = new URLSearchParams(this.props.location.search);
+    const prospect = query.get("prospect");
     const response = await api.get(`/cliente/cont/${id}`);
     this.setState({
       data: response.data.map((cliCont, key) => {
@@ -79,7 +81,10 @@ class Tabela_Cliente extends Component {
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/cliente/cont_update/${cliCont.id}`}>
+              <Link
+                to={`/cliente/cont_update/${cliCont.id}/?prospect=${prospect}`}
+              >
+                {" "}
                 <Button
                   color="default"
                   size="sm"
@@ -109,7 +114,13 @@ class Tabela_Cliente extends Component {
 
   render() {
     const { id } = this.props.match.params;
-
+    const query = new URLSearchParams(this.props.location.search);
+    const prospect = query.get("prospect");
+    if (prospect === "true") {
+      var prospAux = true;
+    } else {
+      prospAux = false;
+    }
     return (
       <>
         <div className="content">
@@ -171,8 +182,10 @@ class Tabela_Cliente extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Contato de Cliente
-                  <Link to={`/cadastro/cliente/cont/${id}`}>
+                  {prospAux ? "Contatos Prospect" : "Contatos Cliente"}
+                  <Link
+                    to={`/cadastro/cliente/cont/${id}/?prospect=${prospect}`}
+                  >
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
@@ -184,7 +197,7 @@ class Tabela_Cliente extends Component {
                       </Button>
                     </Tooltip>
                   </Link>{" "}
-                  <Link to={`/cliente_update/${id}/true`}>
+                  <Link to={`/cliente_update/${id}/${prospect}`}>
                     <Tooltip title="Voltar">
                       <Button
                         style={{

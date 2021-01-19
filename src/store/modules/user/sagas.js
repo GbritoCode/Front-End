@@ -8,10 +8,19 @@ import { signFailure } from "./actions";
 
 export function* profileUpdate({ payload }) {
   try {
-    const { id, nome, email, senhaAntiga, senha, confirmSenha } = payload;
+    const {
+      id,
+      nome,
+      email,
+      aniver,
+      senhaAntiga,
+      senha,
+      confirmSenha
+    } = payload;
     yield call(api.put, `users/${id}`, {
       nome,
       email,
+      aniver,
       senhaAntiga,
       senha,
       confirmSenha

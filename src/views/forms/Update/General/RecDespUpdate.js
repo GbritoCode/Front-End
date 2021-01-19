@@ -95,6 +95,22 @@ function RecDespUpdatee() {
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
+  const recDespChange = value => {
+    if (value === "Rec") {
+      setValues(prevState => ({
+        ...prevState,
+        centCusto: { value: "0000" }
+      }));
+      document.getElementsByName("centCusto")[0].disabled = true;
+    }
+    if (value === "Desp") {
+      setValues(prevState => ({
+        ...prevState,
+        centCusto: { value: "" }
+      }));
+      document.getElementsByName("centCusto")[0].disabled = false;
+    }
+  };
 
   const checkRec = () => {
     if (values.recDesp.value === "Rec") {
@@ -112,6 +128,22 @@ function RecDespUpdatee() {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
+
+    if (
+      values.recDesp.value === "Desp" &&
+      /^0*$/.test(values.centCusto.value)
+    ) {
+      setValues(prevState => ({
+        ...prevState,
+        centCusto: {
+          error: "has-danger",
+          message: "Centros de custo de despesas não podem ser 0"
+        }
+      }));
+      var validateCentCusto = false;
+    } else {
+      validateCentCusto = true;
+    }
 
     for (let i = 0; i < tamanho; i++) {
       if (!(aux[i][1].error === "has-danger")) {
@@ -134,7 +166,7 @@ function RecDespUpdatee() {
       }
     }
 
-    if (valid && filled) {
+    if (valid && filled && validateCentCusto) {
       dispatch(
         RecDespUpdate(
           id,
@@ -231,6 +263,7 @@ function RecDespUpdatee() {
                           <FormGroup
                             check
                             className={`has-label ${values.recDesp.error}`}
+                            onChangeCapture={e => recDespChange(e.target.value)}
                           >
                             <Label check>
                               <Input

@@ -8,12 +8,13 @@ export function updateProfile(
   id,
   nome,
   email,
+  aniver,
   senhaAntiga,
   senha,
   confirmSenha
 ) {
   return {
     type: "@update/USER_REQUEST",
-    payload: { id, nome, email, senhaAntiga, senha, confirmSenha }
+    payload: { id, nome, email, aniver, senhaAntiga, senha, confirmSenha }
   };
 }

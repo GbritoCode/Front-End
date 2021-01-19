@@ -553,7 +553,7 @@ const routes = [
     profile: 10,
     views: [
       {
-        path: "/tabelas/general/parametros",
+        path: `/update/general/parametros/1`,
         name: "Parametros",
         mini: "PRM",
         component: ParametrosTable,

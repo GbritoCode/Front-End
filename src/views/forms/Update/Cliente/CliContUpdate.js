@@ -31,7 +31,7 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { CliContUpdate } from "~/store/modules/Cliente/actions";
@@ -100,6 +100,61 @@ export default function CliContUpdatee() {
     }
     loadData();
   }, [id]);
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+  const query = new URLSearchParams(useLocation().search);
+  const prospect = query.get("prospect");
+
+  function checkProsp(param, aux) {
+    switch (aux) {
+      case "title":
+        switch (param) {
+          case "false":
+            return "Edição de Contato Cliente";
+          case "true":
+            return "Edição de Contato Prospect";
+          default:
+            break;
+        }
+        break;
+      case "backButton":
+        return (
+          <>
+            <Link
+              to={`/tabelas/cliente/cont/${values.ClienteId.value}/?prospect=${prospect}`}
+            >
+              <Button
+                style={{
+                  paddingLeft: 32,
+                  paddingRight: 33,
+                  float: "left"
+                }}
+                color="secundary"
+                size="small"
+                className="text-left"
+              >
+                <i
+                  className="tim-icons icon-double-left"
+                  style={{
+                    paddingBottom: 4,
+                    paddingRight: 1
+                  }}
+                  size="large"
+                />{" "}
+                Voltar
+              </Button>
+            </Link>
+          </>
+        );
+      default:
+        break;
+    }
+  }
+
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -163,12 +218,6 @@ export default function CliContUpdatee() {
       default:
     }
   };
-  var options = {};
-
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -239,7 +288,9 @@ export default function CliContUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de contato de cliente</CardTitle>
+                    <CardTitle tag="h4">
+                      {checkProsp(prospect, "title")}
+                    </CardTitle>{" "}
                   </CardHeader>
                   <CardBody>
                     <Form id="RegisterValidation" onSubmit={handleSubmit}>
@@ -430,30 +481,6 @@ export default function CliContUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
-
-                      <Link
-                        to={`/tabelas/cliente/cont/${values.ClienteId.value}`}
-                      >
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="text-left"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -473,6 +500,7 @@ export default function CliContUpdatee() {
                           size="large"
                         />
                       </Button>
+                      {checkProsp(prospect, "backButton")}
                     </Form>
                   </CardBody>
                 </Card>

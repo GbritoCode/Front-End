@@ -62,6 +62,11 @@ function ColabUpdatee() {
     email: { value: "", error: "", message: "" },
     espec: { value: "", error: "", message: "" }
   };
+  const optionalSchema = {
+    aniver: { value: "", error: "", message: "" }
+  };
+  const [optional, setOptional] = useState(optionalSchema);
+
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -85,7 +90,10 @@ function ColabUpdatee() {
         email: { value: response.data.email },
         espec: { value: response.data.espec }
       }));
-
+      setOptional(prevState => ({
+        ...prevState,
+        aniver: { value: response.data.aniver }
+      }));
       setIsLoading(false);
     }
     loadData();
@@ -319,25 +327,32 @@ function ColabUpdatee() {
                           </Label>
                         ) : null}
                       </FormGroup>
-
-                      <Label>CPF</Label>
-                      <FormGroup className={`has-label ${values.cpf.error}`}>
-                        <Input
-                          maxLength={18}
-                          name="cpf"
-                          type="text"
-                          onChange={event => handleChange(event, "cpf", "cpf")}
-                          value={values.cpf.value}
-                          onBlur={e => {
-                            const { value } = e.target;
-                            renderCpfState(value);
-                          }}
-                        />
-                        {values.cpf.error === "has-danger" ? (
-                          <Label className="error">{values.cpf.message}</Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
+                        <Col md="4">
+                          <Label>CPF</Label>
+                          <FormGroup
+                            className={`has-label ${values.cpf.error}`}
+                          >
+                            <Input
+                              maxLength={18}
+                              name="cpf"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cpf", "cpf")
+                              }
+                              value={values.cpf.value}
+                              onBlur={e => {
+                                const { value } = e.target;
+                                renderCpfState(value);
+                              }}
+                            />
+                            {values.cpf.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cpf.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>{" "}
                         <Col md="4">
                           {" "}
                           <Label>Nome</Label>
@@ -379,6 +394,9 @@ function ColabUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+
+                      <Row>
                         <Col md="4">
                           {" "}
                           <Label>Celular</Label>
@@ -407,9 +425,7 @@ function ColabUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
-                        <Col md="6">
+                        <Col md="4">
                           {" "}
                           <Label>Fornecedor</Label>
                           <FormGroup
@@ -442,7 +458,7 @@ function ColabUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="6">
+                        <Col md="4">
                           <Label>Perfil</Label>
                           <FormGroup
                             className={`has-label ${values.PerfilId.error}`}
@@ -473,9 +489,10 @@ function ColabUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <Row />
 
                       <Row>
-                        <Col md="6">
+                        <Col md="4">
                           {" "}
                           <Label>Skype</Label>
                           <FormGroup
@@ -496,7 +513,7 @@ function ColabUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="6">
+                        <Col md="4">
                           {" "}
                           <Label>Email</Label>
                           <FormGroup
@@ -513,6 +530,28 @@ function ColabUpdatee() {
                             {values.email.error === "has-danger" ? (
                               <Label className="error">
                                 {values.email.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Aniversário</Label>
+                          <FormGroup
+                            className={`has-label ${optional.aniver.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="aniver"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "aniver", "text")
+                              }
+                              value={optional.aniver.value}
+                            />
+                            {optional.aniver.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.aniver.message}
                               </Label>
                             ) : null}
                           </FormGroup>
