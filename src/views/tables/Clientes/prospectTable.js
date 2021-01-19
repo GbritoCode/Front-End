@@ -19,8 +19,18 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Button,
+  Modal,
+  ModalBody
+} from "reactstrap";
+import { Close, Message } from "@material-ui/icons";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
@@ -33,6 +43,8 @@ export default function ProspectTable() {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [data, setData] = useState();
+  const [modalMini, setModalMini] = useState(false);
+  const [excluding, setExcluding] = useState(false);
   const checkDesc = value => {
     switch (value) {
       case "1":
@@ -103,16 +115,8 @@ export default function ProspectTable() {
                 {/* use this button to remove the data row */}
                 <Button
                   onClick={() => {
-                    var data1 = [];
-                    data1.find((o, i) => {
-                      if (o.idd === key) {
-                        api.delete(`/cliente/${o.id}`);
-                        data1.splice(i, 1);
-
-                        return true;
-                      }
-                      return false;
-                    });
+                    setExcluding(client.id);
+                    setModalMini(!modalMini);
                   }}
                   color="danger"
                   size="sm"
@@ -127,11 +131,67 @@ export default function ProspectTable() {
       );
     }
     loadData();
-  }, [dispatch]);
+  }, [dispatch, modalMini]);
+  const toggleModalMini = () => {
+    setModalMini(!modalMini);
+  };
 
   return (
     <>
       <div className="content">
+        <Modal
+          modalClassName="modal-mini "
+          isOpen={modalMini}
+          toggle={toggleModalMini}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalMini}
+            >
+              <Close />
+            </button>
+            <div>
+              <Message fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <p>Você quer mesmo deletar esse registro ?</p>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalMini}
+            >
+              Não
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={async () => {
+                await api
+                  .delete(`recurso/${excluding}`)
+                  .then(result => {
+                    toast.success(result.data);
+                    setExcluding(undefined);
+                  })
+                  .catch(err => {
+                    toast.error(err.response.data.error);
+                  });
+                toggleModalMini();
+              }}
+            >
+              Sim
+            </Button>
+          </div>
+        </Modal>
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>

@@ -46,6 +46,7 @@ function OportTable() {
   const dispatch = useDispatch();
   const [data, setData] = useState();
   const [modalMini, setModalMini] = useState(false);
+  const [excluding, setExcluding] = useState(false);
   const history = useHistory();
 
   const checkFase = value => {
@@ -232,15 +233,17 @@ function OportTable() {
                   )}
                   {/* use this button to add a edit kind of action */}
                   <Tooltip title="Editar">
-                    <Link to={`/update/oportunidade/oport/${oport.id}`}>
-                      <Button
-                        color="default"
-                        size="sm"
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <i className="tim-icons icon-pencil" />
-                      </Button>
-                    </Link>
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        setExcluding(oport.id);
+                        setModalMini(!modalMini);
+                      }}
+                    >
+                      <i className="tim-icons icon-pencil" />
+                    </Button>
                   </Tooltip>
                   {/* use this button to remove the data row */}
                 </div>
@@ -251,7 +254,7 @@ function OportTable() {
       );
     }
     loadData();
-  }, [dispatch, history]);
+  }, [dispatch, history, modalMini]);
 
   const toggleModalMini = () => {
     setModalMini(!modalMini);
@@ -260,6 +263,48 @@ function OportTable() {
   return (
     <>
       <div className="content">
+        <Modal
+          modalClassName="modal-mini "
+          isOpen={modalMini}
+          toggle={toggleModalMini}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalMini}
+            >
+              <Close />
+            </button>
+            <div>
+              <Message fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <p>Você quer mesmo reprovar/aprovar</p>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={() => console.log(excluding)}
+            >
+              Back
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalMini}
+            >
+              Close
+            </Button>
+          </div>
+        </Modal>
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>
@@ -280,48 +325,6 @@ function OportTable() {
               </CardTitle>
             </CardHeader>
             <CardBody>
-              <Modal
-                modalClassName="modal-mini "
-                isOpen={modalMini}
-                toggle={toggleModalMini}
-              >
-                <div className="modal-header justify-content-center">
-                  <button
-                    aria-hidden
-                    className="close"
-                    data-dismiss="modal"
-                    type="button"
-                    color="primary"
-                    onClick={toggleModalMini}
-                  >
-                    <Close />
-                  </button>
-                  <div>
-                    <Message fontSize="large" />
-                  </div>
-                </div>
-                <ModalBody className="text-center">
-                  <p>Você quer mesmo reprovar/aprovar</p>
-                </ModalBody>
-                <div className="modal-footer">
-                  <Button
-                    style={{ color: "#000" }}
-                    className="btn-neutral"
-                    type="button"
-                    onClick={toggleModalMini}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    style={{ color: "#7E7E7E" }}
-                    className="btn-neutral"
-                    type="button"
-                    onClick={toggleModalMini}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </Modal>
               <ReactTable
                 data={data}
                 filterable

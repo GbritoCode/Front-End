@@ -19,8 +19,18 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Button,
+  Modal,
+  ModalBody
+} from "reactstrap";
+import { Close, Message } from "@material-ui/icons";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
@@ -35,8 +45,19 @@ class tipoComissTable extends Component {
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
-    this.loadClients();
+    this.loadData();
   }
+
+  toggleModalMini = () => {
+    this.setState({ modalMini: !this.state.modalMini });
+  };
+
+  delay = ms => new Promise(res => setTimeout(res, ms));
+
+  reloadData = async () => {
+    await this.delay(500);
+    this.loadData();
+  };
 
   checkDesc = value => {
     switch (value) {
@@ -66,22 +87,22 @@ class tipoComissTable extends Component {
     }
   };
 
-  loadClients = async () => {
+  loadData = async () => {
     const response = await api.get("/tipoComiss");
     this.setState({
-      data: response.data.map((client, key) => {
+      data: response.data.map((tipoComiss, key) => {
         return {
           id: key,
-          idd: client.id,
-          Empresa: client.Empresa.nome,
-          desc: this.checkDesc(client.desc),
-          prcnt: `${normalizeCurrency(JSON.stringify(client.prcnt))} %`,
-          bsComiss: this.checkBsComiss(client.bsComiss),
+          idd: tipoComiss.id,
+          Empresa: tipoComiss.Empresa.nome,
+          desc: this.checkDesc(tipoComiss.desc),
+          prcnt: `${normalizeCurrency(JSON.stringify(tipoComiss.prcnt))} %`,
+          bsComiss: this.checkBsComiss(tipoComiss.bsComiss),
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/update/aux/tipoComiss/${client.id}`}>
+              <Link to={`/update/aux/tipoComiss/${tipoComiss.id}`}>
                 <Button
                   color="default"
                   size="sm"
@@ -93,17 +114,8 @@ class tipoComissTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var { data } = this.state;
-                  data.find((o, i) => {
-                    if (o.id === key) {
-                      // here you should add some custom code so you can delete the data
-                      // from this component and from your server as well
-                      data.splice(i, 1);
-                      return true;
-                    }
-                    return false;
-                  });
-                  this.setState({ data });
+                  this.setState({ excluding: tipoComiss.id });
+                  this.toggleModalMini();
                 }}
                 color="danger"
                 size="sm"
@@ -122,6 +134,60 @@ class tipoComissTable extends Component {
     return (
       <>
         <div className="content">
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalMini}
+            toggle={this.toggleModalMini}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalMini}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <p>Você quer mesmo deletar esse registro ?</p>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalMini}
+              >
+                Não
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={async () => {
+                  await api
+                    .delete(`tipoComiss/${this.state.excluding}`)
+                    .then(result => {
+                      toast.success(result.data);
+                      this.reloadData();
+                      this.setState({ excluding: undefined });
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                  this.toggleModalMini();
+                }}
+              >
+                Sim
+              </Button>
+            </div>
+          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>

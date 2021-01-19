@@ -19,8 +19,18 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Button,
+  Modal,
+  ModalBody
+} from "reactstrap";
+import { Close, Message } from "@material-ui/icons";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
@@ -36,7 +46,7 @@ export default class DespesasTable extends Component {
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
-    this.loadCliente();
+    this.loadData();
   }
 
   checkTipo = value => {
@@ -60,7 +70,18 @@ export default class DespesasTable extends Component {
     }
   };
 
-  loadCliente = async () => {
+  toggleModalMini = () => {
+    this.setState({ modalMini: !this.state.modalMini });
+  };
+
+  delay = ms => new Promise(res => setTimeout(res, ms));
+
+  reloadData = async () => {
+    await this.delay(500);
+    this.loadData();
+  };
+
+  loadData = async () => {
     const idColab = store.getState().auth.user.Colab.id;
     const response = await api.get(`/despesas/${idColab}`);
     this.setState({
@@ -70,6 +91,7 @@ export default class DespesasTable extends Component {
           id: desps.id,
           cod: desps.Oportunidade.cod,
           oportDesc: desps.Oportunidade.desc,
+          dataDespesa: desps.dataDespesa,
           tipoDespesa: this.checkTipo(desps.tipoDespesa),
           valorDespesa: normalizeCurrency(JSON.stringify(desps.valorDespesa)),
           desc: desps.desc,
@@ -92,16 +114,8 @@ export default class DespesasTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var { data } = this.state;
-                  data.find((o, i) => {
-                    if (o.idd === key) {
-                      data.splice(i, 1);
-
-                      return true;
-                    }
-                    return false;
-                  });
-                  this.setState({ data });
+                  this.setState({ excluding: desps.id });
+                  this.toggleModalMini();
                 }}
                 color="danger"
                 size="sm"
@@ -120,6 +134,60 @@ export default class DespesasTable extends Component {
     return (
       <>
         <div className="content">
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalMini}
+            toggle={this.toggleModalMini}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalMini}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <p>Você quer mesmo deletar esse registro ?</p>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalMini}
+              >
+                Não
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={async () => {
+                  await api
+                    .delete(`despesas/${this.state.excluding}`)
+                    .then(result => {
+                      toast.success(result.data);
+                      this.reloadData();
+                      this.setState({ excluding: undefined });
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                  this.toggleModalMini();
+                }}
+              >
+                Sim
+              </Button>
+            </div>
+          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
@@ -163,8 +231,8 @@ export default class DespesasTable extends Component {
                       accessor: "valorDespesa"
                     },
                     {
-                      Header: "Comentário",
-                      accessor: "desc"
+                      Header: "Data",
+                      accessor: "dataDespesa"
                     },
                     {
                       Header: "Ações",

@@ -272,7 +272,7 @@ export function* parcelaCadastro({ payload }) {
     });
     history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }

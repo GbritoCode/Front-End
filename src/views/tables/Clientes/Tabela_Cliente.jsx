@@ -19,8 +19,18 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
-
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Button,
+  Modal,
+  ModalBody
+} from "reactstrap";
+import { Close, Message } from "@material-ui/icons";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
@@ -38,7 +48,18 @@ class Tabela_Cliente extends Component {
     this.loadCliente();
   }
 
-  loadCliente = async () => {
+  toggleModalMini = () => {
+    this.setState({ modalMini: !this.state.modalMini });
+  };
+
+  delay = ms => new Promise(res => setTimeout(res, ms));
+
+  reloadData = async () => {
+    await this.delay(500);
+    this.loadData();
+  };
+
+  loadData = async () => {
     const response = await api.get("/cliente/?prospect=false");
 
     this.setState({
@@ -71,17 +92,8 @@ class Tabela_Cliente extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  var { data } = this.state;
-                  data.find((o, i) => {
-                    if (o.idd === key) {
-                      api.delete(`http://localhost:5140/cliente/${o.id}`);
-                      data.splice(i, 1);
-
-                      return true;
-                    }
-                    return false;
-                  });
-                  this.setState({ data });
+                  this.setState({ excluding: client.id });
+                  this.toggleModalMini();
                 }}
                 color="danger"
                 size="sm"
@@ -114,6 +126,60 @@ class Tabela_Cliente extends Component {
     return (
       <>
         <div className="content">
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalMini}
+            toggle={this.toggleModalMini}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalMini}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <p>Você quer mesmo deletar esse registro ?</p>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalMini}
+              >
+                Não
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={async () => {
+                  await api
+                    .delete(`cliente/${this.state.excluding}`)
+                    .then(result => {
+                      toast.success(result.data);
+                      this.reloadData();
+                      this.setState({ excluding: undefined });
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                  this.toggleModalMini();
+                }}
+              >
+                Sim
+              </Button>
+            </div>
+          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
