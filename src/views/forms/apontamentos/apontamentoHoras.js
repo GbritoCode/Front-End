@@ -130,7 +130,6 @@ export default function HorasCadastro() {
   console.log(values);
   const horasChange = (hrInic, hrFim, hrIntvrl) => {
     const acum = values.totalAcumTemp.value.split(":");
-
     if (hrInic && hrFim && hrIntvrl) {
       const inicAux = hrInic.split(":");
       var inic = new Date();
@@ -138,7 +137,6 @@ export default function HorasCadastro() {
       inic.setMinutes(inicAux[1]);
       inic.setSeconds(0);
       const inicParsed = Date.parse(inic);
-
       const fimAux = hrFim.split(":");
       const intervalAux = hrIntvrl.split(":");
       var fim = new Date();
@@ -147,12 +145,15 @@ export default function HorasCadastro() {
       fim.setSeconds(0);
       fim = subHours(fim, intervalAux[0]);
       fim = subMinutes(fim, intervalAux[1]);
+
       const fimParsed = Date.parse(fim);
       if (differenceInMinutes(fimParsed, inicParsed) > 0) {
         const apontBruto = differenceInMinutes(fimParsed, inicParsed);
         const apontHr = `0${Math.trunc(apontBruto / 60)}`.slice(-2);
         const apontMin = `0${Math.trunc(apontBruto % 60)}`.slice(-2);
-        const acumMin = `0${Math.trunc((acum[1] + apontMin) % 60)}`.slice(-2);
+        const acumMin = `0${Math.trunc(
+          (parseInt(acum[1], 10) + parseInt(apontMin, 10)) % 60
+        )}`.slice(-2);
         const acumHr = `0${parseInt(acum[0], 10) +
           parseInt(apontHr, 10) +
           Math.trunc(

@@ -40,7 +40,9 @@ import { normalizeHrToMin } from "~/normalize";
 /* eslint-disable eqeqeq */
 export default class HorasTable extends Component {
   state = {
-    data: []
+    data: [],
+    monthStart: new Date(),
+    monthEnd: new Date()
   };
 
   componentDidMount() {

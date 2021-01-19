@@ -233,18 +233,21 @@ function OportTable() {
                   )}
                   {/* use this button to add a edit kind of action */}
                   <Tooltip title="Editar">
-                    <Button
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        setExcluding(oport.id);
-                        setModalMini(!modalMini);
-                      }}
-                    >
-                      <i className="tim-icons icon-pencil" />
-                    </Button>
+                    <Link to={`/update/oportunidade/oport/${oport.id}`}>
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          setExcluding(oport.id);
+                          setModalMini(!modalMini);
+                        }}
+                      >
+                        <i className="tim-icons icon-pencil" />
+                      </Button>
+                    </Link>
                   </Tooltip>
+
                   {/* use this button to remove the data row */}
                 </div>
               </>
