@@ -57,7 +57,7 @@ export default function ParcelaCadastro() {
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     async function loadData() {
-      const response = await api.get(`/cotacao/${id}`);
+      const response = await api.get(`/cotacao/${id}/?one=true`);
       const response1 = await api.get(`/oportunidade/${id}`);
       setData1(response1.data);
 
@@ -65,10 +65,19 @@ export default function ParcelaCadastro() {
         ...prevState,
         OportunidadeId: { value: response1.data.id }
       }));
-      setOptional(prevState => ({
-        ...prevState,
-        vlrProjeto: { value: normalizeCurrency(response.data[0].vlrLiq) }
-      }));
+      if (response.data[0].vlrLiq) {
+        setOptional(prevState => ({
+          ...prevState,
+          vlrProjeto: {
+            value: normalizeCurrency(response.data[0].vlrLiq)
+          }
+        }));
+      } else {
+        setOptional(prevState => ({
+          ...prevState,
+          vlrProjeto: { value: normalizeCurrency(0) }
+        }));
+      }
     }
     loadData();
   }, [id]);

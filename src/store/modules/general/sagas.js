@@ -258,7 +258,7 @@ export function* updateParametros({ payload }) {
 
     const response = yield call(api.put, `parametros/${id}`, Colab);
 
-    history.push("/tabelas/general/parametros");
+    history.push("/dashboard");
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {

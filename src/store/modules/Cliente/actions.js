@@ -66,11 +66,22 @@ export function CliContRequest(
   skype,
   email,
   aniver,
-  tipoConta
+  tipoConta,
+  prospect
 ) {
   return {
     type: "@cadastro/CADASTRO_CONT_REQUEST",
-    payload: { ClienteId, nome, cel, fone, skype, email, aniver, tipoConta }
+    payload: {
+      ClienteId,
+      nome,
+      cel,
+      fone,
+      skype,
+      email,
+      aniver,
+      tipoConta,
+      prospect
+    }
   };
 }
 
@@ -83,7 +94,8 @@ export function CliContUpdate(
   skype,
   email,
   aniver,
-  tipoConta
+  tipoConta,
+  prospect
 ) {
   return {
     type: "@update/CONT_REQUEST",
@@ -96,7 +108,8 @@ export function CliContUpdate(
       skype,
       email,
       aniver,
-      tipoConta
+      tipoConta,
+      prospect
     }
   };
 }

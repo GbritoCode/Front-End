@@ -453,7 +453,7 @@ export default function RecursoCadastro() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <Label>Horas Previstas Para O Projeto</Label>
+                      <Label>Horas Previstas Projeto</Label>
                       <FormGroup
                         className={`has-label ${optional.HorasTotais.error}`}
                       >
@@ -482,7 +482,6 @@ export default function RecursoCadastro() {
                         className={`has-label ${values.colabVlrHr.error}`}
                       >
                         <Input
-                          disabled
                           name="colabVlrHr"
                           type="numeric"
                           onChange={event =>

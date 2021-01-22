@@ -531,7 +531,7 @@ function ParametrosUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>adianta Pagamemto</Label>
+                          <Label>Adianta Pagamemto</Label>
                           <FormGroup
                             check
                             className={`has-label ${values.adiantaPgmto.error}`}

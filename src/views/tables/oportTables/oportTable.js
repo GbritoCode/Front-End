@@ -27,7 +27,9 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  Input,
+  Label
 } from "reactstrap";
 
 import { Link, useHistory } from "react-router-dom";
@@ -46,7 +48,7 @@ function OportTable() {
   const dispatch = useDispatch();
   const [data, setData] = useState();
   const [modalMini, setModalMini] = useState(false);
-  const [excluding, setExcluding] = useState(false);
+  const [altering, setAltering] = useState(false);
   const history = useHistory();
 
   const checkFase = value => {
@@ -142,27 +144,13 @@ function OportTable() {
                       size="sm"
                       className={classNames("btn-icon btn-link like")}
                       onClick={() => {
-                        dispatch(
-                          oportUpdate(
-                            oport.id,
-                            oport.EmpresaId,
-                            oport.ColabId,
-                            oport.ClienteId,
-                            oport.UndNegId,
-                            oport.RecDespId,
-                            oport.SegmentoId,
-                            oport.RepresentanteId,
-                            oport.contato,
-                            oport.data,
-                            4,
-                            oport.cod,
-                            oport.desc,
-                            oport.narrativa
-                          )
-                        );
-                        history.push(
-                          `/cadastro/oportunidade/parcela/${oport.id}`
-                        );
+                        setAltering({
+                          altering: oport.id,
+                          status: "aprovar",
+                          fase: 4,
+                          textHidden: true
+                        });
+                        setModalMini(!modalMini);
                       }}
                     >
                       <i className="tim-icons icon-spaceship" />
@@ -175,25 +163,13 @@ function OportTable() {
                         size="sm"
                         className={classNames("btn-icon btn-link like")}
                         onClick={() => {
-                          history.go(0);
-                          dispatch(
-                            oportUpdate(
-                              oport.id,
-                              oport.EmpresaId,
-                              oport.ColabId,
-                              oport.ClienteId,
-                              oport.UndNegId,
-                              oport.RecDespId,
-                              oport.SegmentoId,
-                              oport.RepresentanteId,
-                              oport.contato,
-                              oport.data,
-                              5,
-                              oport.cod,
-                              oport.desc,
-                              oport.narrativa
-                            )
-                          );
+                          setAltering({
+                            altering: oport.id,
+                            status: "reprovar",
+                            fase: 5,
+                            textHidden: false
+                          });
+                          setModalMini(!modalMini);
                         }}
                       >
                         <i className="tim-icons icon-lock-circle" />
@@ -206,25 +182,13 @@ function OportTable() {
                         size="sm"
                         className={classNames("btn-icon btn-link like")}
                         onClick={() => {
-                          history.go(0);
-                          dispatch(
-                            oportUpdate(
-                              oport.id,
-                              oport.EmpresaId,
-                              oport.ColabId,
-                              oport.ClienteId,
-                              oport.UndNegId,
-                              oport.RecDespId,
-                              oport.SegmentoId,
-                              oport.RepresentanteId,
-                              oport.contato,
-                              oport.data,
-                              5,
-                              oport.cod,
-                              oport.desc,
-                              oport.narrativa
-                            )
-                          );
+                          setAltering({
+                            altering: oport.id,
+                            status: "finalizar",
+                            fase: 6,
+                            textHidden: true
+                          });
+                          setModalMini(!modalMini);
                         }}
                       >
                         <i className="tim-icons icon-trophy" />
@@ -239,7 +203,7 @@ function OportTable() {
                         size="sm"
                         className={classNames("btn-icon btn-link like")}
                         onClick={() => {
-                          setExcluding(oport.id);
+                          setAltering(oport.id);
                           setModalMini(!modalMini);
                         }}
                       >
@@ -287,24 +251,76 @@ function OportTable() {
             </div>
           </div>
           <ModalBody className="text-center">
-            <p>Você quer mesmo reprovar/aprovar</p>
+            <p> Deseja {altering.status} essa oportunidade ? </p>
+            <Label hidden={altering.textHidden} style={{ float: "left" }}>
+              Motivo
+            </Label>
+            <Input
+              hidden={altering.textHidden}
+              name="motivo"
+              type="textarea"
+              onChange={e => {
+                var { value } = e.target;
+                setAltering(prevState => ({
+                  ...prevState,
+                  motivo: value
+                }));
+              }}
+            />
           </ModalBody>
           <div className="modal-footer">
             <Button
               style={{ color: "#000" }}
               className="btn-neutral"
               type="button"
-              onClick={() => console.log(excluding)}
+              onClick={toggleModalMini}
             >
-              Back
+              Não
             </Button>
             <Button
               style={{ color: "#7E7E7E" }}
               className="btn-neutral"
               type="button"
-              onClick={toggleModalMini}
+              onClick={() => {
+                if (altering.fase === 5) {
+                  if (altering.motivo) {
+                    api.put(`oportunidade/${altering.altering}`, {
+                      fase: altering.fase,
+                      motivo: altering.motivo
+                    });
+                    switch (altering.fase) {
+                      case 4:
+                        history.push(
+                          `/cadastro/oportunidade/parcela/${altering.altering}`
+                        );
+                        break;
+                      case 5 || 4:
+                        history.go(0);
+                        break;
+                      default:
+                        break;
+                    }
+                  }
+                } else {
+                  api.put(`oportunidade/${altering.altering}`, {
+                    fase: altering.fase
+                  });
+                  switch (altering.fase) {
+                    case 4:
+                      history.push(
+                        `/cadastro/oportunidade/parcela/${altering.altering}`
+                      );
+                      break;
+                    case 5 || 4:
+                      history.go(0);
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              }}
             >
-              Close
+              Sim
             </Button>
           </div>
         </Modal>

@@ -143,7 +143,9 @@ export default function CotacaoCadastro() {
     notifyElment.current.notificationAlert(options);
   }
   function getCliData(cobranca) {
-    if (!(cobranca === "2")) {
+    console.log(cobranca);
+    if (!(cobranca === "2" || cobranca === 2)) {
+      console.log(cobranca);
       setDisabledVlrProp(true);
       api
         .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
@@ -154,8 +156,8 @@ export default function CotacaoCadastro() {
               message: (
                 <div>
                   <div>
-                    Ops! Parece que não há uma receita cadastrada para o caso
-                    dessa oportunidade, casdastre uma!
+                    Ops! Parece que não há uma receita cadastrada para este
+                    cliente
                   </div>
                 </div>
               ),
@@ -175,6 +177,7 @@ export default function CotacaoCadastro() {
 
   if (!isloading && !auxState) {
     getCliData(data4[0].tipoCobranca);
+    console.log(data4[0].tipoCobranca);
     setAuxState(true);
   }
 
@@ -681,15 +684,15 @@ export default function CotacaoCadastro() {
                             {" "}
                             Selecione a quantidade de parcelas{" "}
                           </option>{" "}
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5</option>
-                          <option value={6}>6</option>
-                          <option value={7}>7</option>
-                          <option value={8}>8</option>
-                          <option value={9}>9</option>
+                          <option value={1}>01</option>
+                          <option value={2}>02</option>
+                          <option value={3}>03</option>
+                          <option value={4}>04</option>
+                          <option value={5}>05</option>
+                          <option value={6}>06</option>
+                          <option value={7}>07</option>
+                          <option value={8}>08</option>
+                          <option value={9}>09</option>
                           <option value={10}>10</option>
                           <option value={11}>11</option>
                           <option value={12}>12</option>

@@ -36,6 +36,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 
 import api from "~/services/api";
+import { normalizeFone } from "~/normalize";
 
 class Tabela_Cliente extends Component {
   state = {
@@ -71,8 +72,8 @@ class Tabela_Cliente extends Component {
           idd: cliCont.id,
           Cliente: cliCont.ClienteId,
           nome: cliCont.nome,
-          cel: cliCont.cel,
-          fone: cliCont.fone,
+          cel: normalizeFone(cliCont.cel),
+          fone: normalizeFone(cliCont.fone),
           skype: cliCont.skype,
           email: cliCont.email,
           aniver: cliCont.aniver,
@@ -237,7 +238,7 @@ class Tabela_Cliente extends Component {
                       accessor: "nome"
                     },
                     {
-                      Header: "Email",
+                      Header: "Celular",
                       accessor: "cel"
                     },
                     {

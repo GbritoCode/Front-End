@@ -66,7 +66,7 @@ export default function SignIn() {
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle tag="h1">Log in</CardTitle>
+                  <CardTitle tag="h1">Conta</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <InputGroup

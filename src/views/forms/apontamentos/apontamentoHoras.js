@@ -127,7 +127,7 @@ export default function HorasCadastro() {
     }
     return false;
   };
-  console.log(values);
+
   const horasChange = (hrInic, hrFim, hrIntvrl) => {
     const acum = values.totalAcumTemp.value.split(":");
     if (hrInic && hrFim && hrIntvrl) {

@@ -111,17 +111,23 @@ export default function HorasUpdate() {
         horaIntrv: { value: response.data.horaIntrv },
         horaFim: { value: response.data.horaFim },
         dataLancamento: { value: response.data.dataLancamento },
-        totalApont: { value: normalizeHrToMin(response.data.totalApont) },
+        totalApont: {
+          value: `0${normalizeHrToMin(response.data.totalApont)}`.slice(-5)
+        },
         totalApontTemp: { value: response.data.totalApont },
         solicitante: { value: response.data.solicitante },
         AreaId: { value: response.data.AreaId },
         RecursoId: { value: response2.data.Recurso.id },
         desc: { value: response.data.desc }
       }));
+      setOptional(prevState => ({
+        ...prevState,
+        totalApontDb: { value: response.data.totalApont }
+      }));
     }
     loadData();
   }, [id]);
-  console.log(values);
+
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -267,6 +273,7 @@ export default function HorasUpdate() {
       const apont = values.totalApont.value.split(":");
       const apontMins = Math.trunc(apont[0] * 60 + parseInt(apont[1], 10));
       const apontDiff = apontMins - values.totalApontTemp.value;
+
       dispatch(
         horaUpdate(
           id,

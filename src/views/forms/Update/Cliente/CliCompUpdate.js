@@ -72,7 +72,7 @@ export default function CliCompUpdatee() {
       const response2 = await api.get(`/cliente/${response.data.ClienteId}`);
       setData1(response1.data);
       setData2(response2.data);
-
+      console.log(response.data);
       setValues(prevState => ({
         ...prevState,
         ClienteId: { value: response.data.ClienteId },
@@ -178,9 +178,6 @@ export default function CliCompUpdatee() {
           id,
           values.ClienteId.value,
           values.CondPgmtoId.value,
-          values.rzSoc.value,
-          values.nomeAbv.value,
-          values.fantasia.value,
           values.cep.value,
           values.rua.value,
           values.numero.value,
@@ -499,9 +496,7 @@ export default function CliCompUpdatee() {
                               </option>
                               {data1.map(condPgmto => (
                                 <option value={condPgmto.id}>
-                                  {" "}
-                                  {condPgmto.cod} - {condPgmto.diasPrazo} -{" "}
-                                  {condPgmto.desc}{" "}
+                                  {condPgmto.cod} - {condPgmto.desc}
                                 </option>
                               ))}
                             </Input>

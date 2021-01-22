@@ -33,7 +33,8 @@ export function* colabCadastro({ payload }) {
         nome,
         email,
         senha: "Aidera2020",
-        profile: PerfilUser
+        profile: PerfilUser,
+        CPF
       });
       yield call(api.post, "colab", {
         CPF,
@@ -75,7 +76,7 @@ export function* colabCadastro({ payload }) {
     }
     history.push("/tabelas/colab");
   } catch (err) {
-    yield put(signFailure());
+    toast.error(err.response.data.error);
   }
 }
 
@@ -108,12 +109,19 @@ export function* updateColab({ payload }) {
       espec
     };
 
+    yield call(api.put, `users/${UserId}`, {
+      nome,
+      email,
+      CPF,
+      colabId: id
+    });
+
     const response = yield call(api.put, `colab/${id}`, Colab);
     history.push("/tabelas/colab");
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }

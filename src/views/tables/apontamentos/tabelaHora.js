@@ -18,7 +18,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
-
+import { getDaysInMonth } from "date-fns";
 import {
   Card,
   CardBody,
@@ -27,9 +27,13 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  Input,
+  Label,
+  Row,
+  FormGroup
 } from "reactstrap";
-import { Close, Message } from "@material-ui/icons";
+import { Close, Message, SearchOutlined } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
@@ -41,15 +45,25 @@ import { normalizeHrToMin } from "~/normalize";
 export default class HorasTable extends Component {
   state = {
     data: [],
-    monthStart: new Date(),
-    monthEnd: new Date()
+    initialDate: null,
+    finalDate: null
   };
 
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
-    this.loadData();
+    this.createInitialDateState();
   }
+
+  createInitialDateState = () => {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
+    this.setState({ initialDate: `${year}-${month}-01` });
+    this.setState({ finalDate: `${year}-${month}-${lastDayMonth}` });
+    this.reloadData();
+  };
 
   toggleModalMini = () => {
     this.setState({ modalMini: !this.state.modalMini });
@@ -58,13 +72,15 @@ export default class HorasTable extends Component {
   delay = ms => new Promise(res => setTimeout(res, ms));
 
   reloadData = async () => {
-    await this.delay(500);
+    await this.delay(100);
     this.loadData();
   };
 
   loadData = async () => {
     const idColab = store.getState().auth.user.Colab.id;
-    const response = await api.get(`/horas/${idColab}`);
+    const response = await api.get(
+      `/horas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+    );
     this.setState({
       data: response.data.map((horas, key) => {
         return {
@@ -114,6 +130,10 @@ export default class HorasTable extends Component {
   };
 
   render() {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
     return (
       <>
         <div className="content">
@@ -174,7 +194,49 @@ export default class HorasTable extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Horas</CardTitle>
+                <CardTitle>
+                  <Row>
+                    <Col md="2">
+                      <h4>Horas</h4>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup inline>
+                        <Label> Data Inicial</Label>
+                        <Input
+                          name="dataAtivd"
+                          type="date"
+                          defaultValue={`${year}-${month}-01`}
+                          onChange={e =>
+                            this.setState({ initialDate: e.target.value })
+                          }
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup inline>
+                        <Label> Data Final</Label>
+                        <Input
+                          name="dataAtivd"
+                          type="date"
+                          defaultValue={`${year}-${month}-${lastDayMonth}`}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Tooltip title="Filtrar" placement="top" interactive>
+                      <Button
+                        style={{
+                          marginTop: 20
+                        }}
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          this.loadData();
+                        }}
+                      >
+                        <SearchOutlined fontSize="large" />
+                      </Button>
+                    </Tooltip>
+                  </Row>
+                </CardTitle>
               </CardHeader>
               <CardBody>
                 <ReactTable
@@ -214,7 +276,7 @@ export default class HorasTable extends Component {
                       accessor: "dataAtivd"
                     },
                     {
-                      Header: "Total do Dia",
+                      Header: "Total",
                       accessor: "TotalApont"
                     },
                     {

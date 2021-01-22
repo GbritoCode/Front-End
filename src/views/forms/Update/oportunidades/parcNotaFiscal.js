@@ -46,11 +46,12 @@ export default function ParcelaUpdate() {
   const { id } = useParams();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" },
-    dtEmissao: { value: "", error: "", message: "" },
+    dtEmissao: { value: `${year}-${month}-${date}`, error: "", message: "" },
     dtVencimento: { value: "", error: "", message: "" },
     notaFiscal: { value: "", error: "", message: "" }
   };
@@ -77,7 +78,6 @@ export default function ParcelaUpdate() {
         vlrParcela: {
           value: normalizeCalcCurrency(response.data.vlrParcela)
         },
-        dtEmissao: { value: response.data.dtEmissao },
         dtVencimento: { value: response.data.dtVencimento },
         notaFiscal: { value: response.data.notaFiscal }
       }));
@@ -92,12 +92,16 @@ export default function ParcelaUpdate() {
         },
         saldo: { value: normalizeCurrency(JSON.stringify(response.data.saldo)) }
       }));
-
+      if (normalizeCurrency(JSON.stringify(response.data.saldo)) === "0,00") {
+        setOptional(prevState => ({
+          ...prevState,
+          saldo: { value: normalizeCalcCurrency(response.data.vlrParcela) }
+        }));
+      }
       setIsLoading(false);
     }
     loadData();
   }, [id]);
-
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -312,6 +316,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${values.dtEmissao.error}`}
                           >
                             <Input
+                              autoFocus
                               name="dtEmissao"
                               type="date"
                               onChange={event =>

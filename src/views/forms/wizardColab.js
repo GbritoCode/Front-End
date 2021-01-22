@@ -289,8 +289,7 @@ export default function ColabCadastro() {
           >
             <h3 className="card-title">Bem Vindo!</h3>
             <h4 className="description">
-              Esse é o primeiro login dessa aplicação, cadastre alguns dados
-              necessários.
+              Crie o seu cadastro como Colaborador
             </h4>
           </div>
           <Card>
@@ -355,7 +354,7 @@ export default function ColabCadastro() {
                     </FormGroup>
                   </Col>
                   <Col md="4">
-                    <Label>Data de Adimissão</Label>
+                    <Label>Data de Admissão</Label>
                     <FormGroup className={`has-label ${values.dtAdmiss.error}`}>
                       <Input
                         name="dtAdmiss"

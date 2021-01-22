@@ -25,7 +25,7 @@ export function* profileUpdate({ payload }) {
       senha,
       confirmSenha
     });
-    history.push(0);
+    history.push("/dashboard");
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());

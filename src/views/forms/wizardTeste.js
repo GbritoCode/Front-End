@@ -301,8 +301,8 @@ export default function WizardCadastro() {
           >
             <h3 className="card-title">Bem Vindo!</h3>
             <h4 className="description">
-              Esse é o primeiro login dessa aplicação, cadastre alguns dados
-              necessários.
+              Bem Vindo ao Tovo! Esse é o seu primeiro acesso. Vamos criar
+              alguns cadastros básicos para começar.
             </h4>
           </div>
           <Card>
