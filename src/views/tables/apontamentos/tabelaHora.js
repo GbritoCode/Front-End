@@ -37,6 +37,7 @@ import { Close, Message, SearchOutlined } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
+import { CSVLink } from "react-csv";
 import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeHrToMin } from "~/normalize";
@@ -74,6 +75,25 @@ export default class HorasTable extends Component {
   reloadData = async () => {
     await this.delay(100);
     this.loadData();
+  };
+
+  camelCase = str => {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+  };
+
+  filterColumns = data => {
+    if (data.length !== 0) {
+      // Get column names
+      const columns = Object.keys(data[0]);
+      const headers = [];
+      columns.forEach((col, idx) => {
+        if (col !== "actions" && col !== "idd") {
+          // OR if (idx !== 0)
+          headers.push({ label: this.camelCase(col), key: col });
+        }
+      });
+      return headers;
+    }
   };
 
   loadData = async () => {
@@ -237,6 +257,13 @@ export default class HorasTable extends Component {
                     </Tooltip>
                   </Row>
                 </CardTitle>
+                <CSVLink
+                  data={this.state.data}
+                  headers={this.filterColumns(this.state.data)}
+                  filename="test.csv"
+                >
+                  Download as CSV
+                </CSVLink>
               </CardHeader>
               <CardBody>
                 <ReactTable
