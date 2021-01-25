@@ -239,6 +239,9 @@ export default class HorasTable extends Component {
                           name="dataAtivd"
                           type="date"
                           defaultValue={`${year}-${month}-${lastDayMonth}`}
+                          onChange={e =>
+                            this.setState({ finalDate: e.target.value })
+                          }
                         />
                       </FormGroup>
                     </Col>
@@ -249,7 +252,7 @@ export default class HorasTable extends Component {
                         }}
                         className={classNames("btn-icon btn-link like")}
                         onClick={() => {
-                          this.loadData();
+                          this.reloadData();
                         }}
                       >
                         <SearchOutlined fontSize="large" />
@@ -260,7 +263,7 @@ export default class HorasTable extends Component {
                 <CSVLink
                   data={this.state.data}
                   headers={this.filterColumns(this.state.data)}
-                  filename="test.csv"
+                  filename="Horas.csv"
                 >
                   Download as CSV
                 </CSVLink>
