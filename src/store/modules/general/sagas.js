@@ -308,16 +308,16 @@ export function* recDespCadastro({ payload }) {
       desc,
       recDesp,
       tipoItem,
-      contaContabil,
-      centCusto
+      ContaContabilId,
+      CentroCustoId
     } = payload;
     yield call(api.post, "rec_desp", {
       EmpresaId,
       desc,
       recDesp,
       tipoItem,
-      contaContabil,
-      centCusto
+      ContaContabilId,
+      CentroCustoId
     });
     history.push("/tabelas/aux/rec_desp");
   } catch (err) {
@@ -333,8 +333,8 @@ export function* updateRecDesp({ payload }) {
       desc,
       recDesp,
       tipoItem,
-      contaContabil,
-      centCusto
+      ContaContabilId,
+      CentroCustoId
     } = payload;
 
     const Colab = {
@@ -342,8 +342,8 @@ export function* updateRecDesp({ payload }) {
       desc,
       recDesp,
       tipoItem,
-      contaContabil,
-      centCusto
+      ContaContabilId,
+      CentroCustoId
     };
 
     const response = yield call(api.put, `rec_desp/${id}`, Colab);
@@ -567,6 +567,72 @@ export function* updateUndNeg({ payload }) {
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
+export function* contaContabilCadastro({ payload }) {
+  try {
+    const { EmpresaId, cod, desc } = payload;
+    yield call(api.post, "contaContabil", {
+      EmpresaId,
+      cod,
+      desc
+    });
+    history.push("/tabelas/general/contaContabil");
+  } catch (err) {
+    toast.error("Ops! Algo deu errado");
+    yield put(requestFailure());
+  }
+}
+export function* updateContaContabil({ payload }) {
+  try {
+    const { id, cod, desc } = payload;
+
+    const Colab = { cod, desc };
+
+    const response = yield call(api.put, `contaContabil/${id}`, Colab);
+
+    history.push("/tabelas/general/contaContabil");
+    toast.success("Atualizado com Sucesso");
+    yield put(ClienteUpdateSuccess(response.data));
+  } catch (err) {
+    toast.error("Ops! Algo deu errado");
+    yield put(requestFailure());
+  }
+}
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
+export function* centroCustoCadastro({ payload }) {
+  try {
+    const { EmpresaId, cod, desc } = payload;
+    yield call(api.post, "centroCusto", {
+      EmpresaId,
+      cod,
+      desc
+    });
+    history.push("/tabelas/general/centroCusto");
+  } catch (err) {
+    toast.error("Ops! Algo deu errado");
+    yield put(requestFailure());
+  }
+}
+export function* updateCentroCusto({ payload }) {
+  try {
+    const { id, cod, desc } = payload;
+
+    const Colab = { cod, desc };
+
+    const response = yield call(api.put, `centroCusto/${id}`, Colab);
+
+    history.push("/tabelas/general/centroCusto");
+    toast.success("Atualizado com Sucesso");
+    yield put(ClienteUpdateSuccess(response.data));
+  } catch (err) {
+    toast.error("Ops! Algo deu errado");
+    yield put(requestFailure());
+  }
+}
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
 export default all([
   takeLatest("@cadastro/AREA_REQUEST", areaCadastro),
   takeLatest("@update/AREA_REQUEST", updateArea),
@@ -591,5 +657,9 @@ export default all([
   takeLatest("@cadastro/TIPO_COMISS_REQUEST", tipoComissCadastro),
   takeLatest("@update/TIPO_COMISS_REQUEST", updateTipoComiss),
   takeLatest("@cadastro/PERFIL_REQUEST", perfilCadastro),
-  takeLatest("@update/PERFIL_REQUEST", updatePerfil)
+  takeLatest("@update/PERFIL_REQUEST", updatePerfil),
+  takeLatest("@cadastro/CONTA_CONTABIL_REQUEST", contaContabilCadastro),
+  takeLatest("@update/CONTA_CONTABIL_REQUEST", updateContaContabil),
+  takeLatest("@cadastro/CENTRO_CUSTO_REQUEST", centroCustoCadastro),
+  takeLatest("@update/CENTRO_CUSTO_REQUEST", updateCentroCusto)
 ]);

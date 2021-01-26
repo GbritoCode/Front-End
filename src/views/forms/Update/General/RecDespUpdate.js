@@ -45,14 +45,16 @@ function RecDespUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data1, setData1] = useState({});
+  const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
     recDesp: { value: "", error: "", message: "" },
     tipoItem: { value: "", error: "", message: "" },
-    contaContabil: { value: "", error: "", message: "" },
-    centCusto: { value: "", error: "", message: "" }
+    ContaContabilId: { value: "", error: "", message: "" },
+    CentroCustoId: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -60,15 +62,19 @@ function RecDespUpdatee() {
     async function loadData() {
       const response = await api.get(`/rec_desp/${id}`);
       const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
+      const response2 = await api.get(`/contaContabil/`);
+      const response3 = await api.get(`/centroCusto/`);
       setData1(response1.data);
+      setData2(response2.data);
+      setData3(response3.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
         desc: { value: response.data.desc },
         recDesp: { value: response.data.recDesp },
         tipoItem: { value: response.data.tipoItem },
-        contaContabil: { value: response.data.contaContabil },
-        centCusto: { value: response.data.centCusto }
+        ContaContabilId: { value: response.data.ContaContabilId },
+        CentroCustoId: { value: response.data.CentroCustoId }
       }));
 
       setIsLoading(false);
@@ -99,16 +105,16 @@ function RecDespUpdatee() {
     if (value === "Rec") {
       setValues(prevState => ({
         ...prevState,
-        centCusto: { value: "0000" }
+        CentroCustoId: { value: 1 }
       }));
-      document.getElementsByName("centCusto")[0].disabled = true;
+      document.getElementsByName("CentroCustoId")[0].disabled = true;
     }
     if (value === "Desp") {
       setValues(prevState => ({
         ...prevState,
-        centCusto: { value: "" }
+        CentroCustoId: { value: "" }
       }));
-      document.getElementsByName("centCusto")[0].disabled = false;
+      document.getElementsByName("CentroCustoId")[0].disabled = false;
     }
   };
 
@@ -129,13 +135,10 @@ function RecDespUpdatee() {
     var aux = Object.entries(values);
     const tamanho = aux.length;
 
-    if (
-      values.recDesp.value === "Desp" &&
-      /^0*$/.test(values.centCusto.value)
-    ) {
+    if (values.recDesp.value === "Desp" && values.CentroCustoId.value === "1") {
       setValues(prevState => ({
         ...prevState,
-        centCusto: {
+        CentroCustoId: {
           error: "has-danger",
           message: "Centros de custo de despesas não podem ser 0"
         }
@@ -174,8 +177,8 @@ function RecDespUpdatee() {
           values.desc.value,
           values.recDesp.value,
           values.tipoItem.value,
-          values.contaContabil.value,
-          values.centCusto.value
+          values.ContaContabilId.value,
+          values.CentroCustoId.value
         )
       );
     } else {
@@ -321,19 +324,34 @@ function RecDespUpdatee() {
                         <Col md="4">
                           <Label>Conta Contábil</Label>
                           <FormGroup
-                            className={`has-label ${values.contaContabil.error}`}
+                            className={`has-label ${values.ContaContabilId.error}`}
                           >
                             <Input
-                              name="contaContabil"
-                              type="numeric"
+                              name="ContaContabilId"
+                              type="select"
                               onChange={event =>
-                                handleChange(event, "contaContabil", "text")
+                                handleChange(event, "ContaContabilId", "text")
                               }
-                              value={values.contaContabil.value}
-                            />
-                            {values.contaContabil.error === "has-danger" ? (
+                              value={values.ContaContabilId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a Conta Contábil{" "}
+                              </option>
+                              {data2.map(contContabil => (
+                                <option
+                                  key={contContabil.id}
+                                  value={contContabil.id}
+                                >
+                                  {" "}
+                                  {contContabil.cod} - {contContabil.desc}{" "}
+                                </option>
+                              ))}
+                            </Input>{" "}
+                            {values.ContaContabilId.error === "has-danger" ? (
                               <Label className="error">
-                                {values.contaContabil.message}
+                                {values.ContaContabilId.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -341,19 +359,34 @@ function RecDespUpdatee() {
                         <Col md="4">
                           <Label>Centro de Custo</Label>
                           <FormGroup
-                            className={`has-label ${values.centCusto.error}`}
+                            className={`has-label ${values.CentroCustoId.error}`}
                           >
                             <Input
-                              name="centCusto"
-                              type="numeric"
+                              name="CentroCustoId"
+                              type="select"
                               onChange={event =>
-                                handleChange(event, "centCusto", "text")
+                                handleChange(event, "CentroCustoId", "text")
                               }
-                              value={values.centCusto.value}
-                            />
-                            {values.centCusto.error === "has-danger" ? (
+                              value={values.CentroCustoId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione o Centro de Custo{" "}
+                              </option>
+                              {data3.map(CentroCustoId => (
+                                <option
+                                  key={CentroCustoId.id}
+                                  value={CentroCustoId.id}
+                                >
+                                  {" "}
+                                  {CentroCustoId.cod} - {CentroCustoId.desc}{" "}
+                                </option>
+                              ))}
+                            </Input>{" "}
+                            {values.CentroCustoId.error === "has-danger" ? (
                               <Label className="error">
-                                {values.centCusto.message}
+                                {values.CentroCustoId.message}
                               </Label>
                             ) : null}
                           </FormGroup>

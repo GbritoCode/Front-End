@@ -114,6 +114,12 @@ import DespesaTable from "~/views/tables/apontamentos/tabelaDespesa";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 import DataOport from "~/views/forms/oportunidade/oportunidadeData";
 import ProfileUpdate from "~/views/forms/Update/User/profileUpdate";
+import ContaContabilTable from "~/views/tables/auxTables/contaContabilTable";
+import CadastroContaContabil from "~/views/forms/auxForm/contaContabilCadastro";
+import UpdateContaContabil from "~/views/forms/Update/auxUpdate/contaContabilupdate";
+import CadastroCentroCusto from "~/views/forms/auxForm/centroCustoCadastro";
+import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate";
+import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 
 export default function Routes() {
   return (
@@ -185,6 +191,16 @@ export default function Routes() {
       <Route
         path="/tabelas/general/segmento"
         component={SegmentoTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/general/contaContabil"
+        component={ContaContabilTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/general/centroCusto"
+        component={CentroCustoTable}
         isPrivate
       />
       <Route
@@ -484,6 +500,26 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/update/user/perfil" component={ProfileUpdate} isPrivate />
+      <Route
+        path="/cadastro/geral/contaContabil"
+        component={CadastroContaContabil}
+        isPrivate
+      />
+      <Route
+        path="/update/general/contaContabil/:id"
+        component={UpdateContaContabil}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/geral/centroCusto"
+        component={CadastroCentroCusto}
+        isPrivate
+      />
+      <Route
+        path="/update/general/centroCusto/:id"
+        component={UpdateCentroCusto}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

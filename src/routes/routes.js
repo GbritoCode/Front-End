@@ -149,6 +149,12 @@ import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 import DataOport from "~/views/forms/oportunidade/oportunidadeData";
 import ProfileUpdate from "~/views/forms/Update/User/profileUpdate";
 import { store } from "~/store";
+import ContaContabilTable from "~/views/tables/auxTables/contaContabilTable";
+import CadastroContaContabil from "~/views/forms/auxForm/contaContabilCadastro";
+import UpdateContaContabil from "~/views/forms/Update/auxUpdate/contaContabilupdate";
+import CadastroCentroCusto from "~/views/forms/auxForm/centroCustoCadastro";
+import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate";
+import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -552,6 +558,34 @@ const routes = [
         mini: "UPRF",
         component: ProfileUpdate,
         layout: "/admin"
+      },
+      {
+        path: "/cadastro/geral/contaContabil",
+        name: "Cadastro de Conta Contábil",
+        mini: "RF",
+        component: CadastroContaContabil,
+        layout: "/admin"
+      },
+      {
+        path: "/update/general/contaContabil/:id",
+        name: "Editar Conta Contábil",
+        mini: "RF",
+        component: UpdateContaContabil,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/geral/centroCusto",
+        name: "Cadastro de Centro Custo",
+        mini: "RF",
+        component: CadastroCentroCusto,
+        layout: "/admin"
+      },
+      {
+        path: "/update/general/centroCusto/:id",
+        name: "Editar conta Contábil",
+        mini: "RF",
+        component: UpdateCentroCusto,
+        layout: "/admin"
       }
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
@@ -637,6 +671,22 @@ const routes = [
         name: "Tipos de Comissão",
         mini: "CMS",
         component: tipoComissTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/contaContabil",
+        name: "Conta Contábil",
+        mini: "CONT",
+        component: ContaContabilTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/centroCusto",
+        name: "Centro de Custo",
+        mini: "CENT",
+        component: CentroCustoTable,
         layout: "/admin",
         profile: 10
       },

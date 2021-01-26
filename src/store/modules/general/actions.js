@@ -229,8 +229,8 @@ export function recDespRequest(
   desc,
   recDesp,
   tipoItem,
-  contaContabil,
-  centCusto
+  ContaContabilId,
+  CentroCustoId
 ) {
   return {
     type: "@cadastro/REC_DESP_REQUEST",
@@ -239,8 +239,8 @@ export function recDespRequest(
       desc,
       recDesp,
       tipoItem,
-      contaContabil,
-      centCusto
+      ContaContabilId,
+      CentroCustoId
     }
   };
 }
@@ -250,8 +250,8 @@ export function RecDespUpdate(
   desc,
   recDesp,
   tipoItem,
-  contaContabil,
-  centCusto
+  ContaContabilId,
+  CentroCustoId
 ) {
   return {
     type: "@update/REC_DESP_REQUEST",
@@ -261,8 +261,8 @@ export function RecDespUpdate(
       desc,
       recDesp,
       tipoItem,
-      contaContabil,
-      centCusto
+      ContaContabilId,
+      CentroCustoId
     }
   };
 }
@@ -444,5 +444,34 @@ export function SegmentoUpdate(
   };
 }
 
+//----------------------------------------------------
+//----------------------------------------------------
+
+export function contaContabilRequest(EmpresaId, cod, desc) {
+  return {
+    type: "@cadastro/CONTA_CONTABIL_REQUEST",
+    payload: { EmpresaId, cod, desc }
+  };
+}
+export function ContaContabilUpdate(id, cod, desc) {
+  return {
+    type: "@update/CONTA_CONTABIL_REQUEST",
+    payload: { id, cod, desc }
+  };
+}
+//----------------------------------------------------
+//----------------------------------------------------
+export function centroCustoRequest(EmpresaId, cod, desc) {
+  return {
+    type: "@cadastro/CENTRO_CUSTO_REQUEST",
+    payload: { EmpresaId, cod, desc }
+  };
+}
+export function CentroCustoUpdate(id, cod, desc) {
+  return {
+    type: "@update/CENTRO_CUSTO_REQUEST",
+    payload: { id, cod, desc }
+  };
+}
 //----------------------------------------------------
 //----------------------------------------------------

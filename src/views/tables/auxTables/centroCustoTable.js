@@ -36,7 +36,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
 
-class recDespTable extends Component {
+class CentroCustoTable extends Component {
   state = {
     data: []
   };
@@ -59,23 +59,20 @@ class recDespTable extends Component {
   };
 
   loadData = async () => {
-    const response = await api.get("/rec_desp");
+    const response = await api.get("/centroCusto");
     this.setState({
-      data: response.data.map((recDesps, key) => {
+      data: response.data.map((centroCusto, key) => {
         return {
           id: key,
-          idd: recDesps.id,
-          Empresa: recDesps.Empresa.nome,
-          desc: recDesps.desc,
-          recDesp: this.checkRecDesp(recDesps.recDesp),
-          tipoItem: recDesps.tipoItem,
-          contaContabil: recDesps.ContaContabil.desc,
-          centCusto: recDesps.CentroCusto.desc,
+          idd: centroCusto.id,
+          Empresa: centroCusto.Empresa.nome,
+          cod: centroCusto.cod,
+          desc: centroCusto.desc,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/update/general/rec_desp/${recDesps.id}`}>
+              <Link to={`/update/general/centroCusto/${centroCusto.id}`}>
                 <Button
                   color="default"
                   size="sm"
@@ -87,7 +84,7 @@ class recDespTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  this.setState({ excluding: recDesps.id });
+                  this.setState({ excluding: centroCusto.id });
                   this.toggleModalMini();
                 }}
                 color="danger"
@@ -101,16 +98,6 @@ class recDespTable extends Component {
         };
       })
     });
-  };
-
-  checkRecDesp = recDesp => {
-    switch (recDesp) {
-      case "Rec":
-        return "Receita";
-      case "Desp":
-        return "Despesa";
-      default:
-    }
   };
 
   render() {
@@ -155,7 +142,7 @@ class recDespTable extends Component {
                 type="button"
                 onClick={async () => {
                   await api
-                    .delete(`rec_desp/${this.state.excluding}`)
+                    .delete(`centroCusto/${this.state.excluding}`)
                     .then(result => {
                       toast.success(result.data);
                       this.reloadData();
@@ -175,8 +162,8 @@ class recDespTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Receita e Despesa
-                  <Link to="/cadastro/geral/rec_desp">
+                  Conta Contábil
+                  <Link to="/cadastro/geral/centroCusto">
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
@@ -212,24 +199,12 @@ class recDespTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
+                      Header: "Código ",
+                      accessor: "cod"
+                    },
+                    {
                       Header: "Descrição",
                       accessor: "desc"
-                    },
-                    {
-                      Header: "Tipo de Item",
-                      accessor: "tipoItem"
-                    },
-                    {
-                      Header: "Receita/Despesa",
-                      accessor: "recDesp"
-                    },
-                    {
-                      Header: "Conta Contábil",
-                      accessor: "contaContabil"
-                    },
-                    {
-                      Header: "centro de Custo",
-                      accessor: "centCusto"
                     },
                     {
                       Header: "Ações",
@@ -253,4 +228,4 @@ class recDespTable extends Component {
   }
 }
 
-export default recDespTable;
+export default CentroCustoTable;
