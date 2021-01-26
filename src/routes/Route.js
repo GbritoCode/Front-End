@@ -15,7 +15,7 @@ export default function RouteWrapper({
   const { Colab } = store.getState().auth.user;
 
   if (
-    Colab &&
+    !Colab &&
     isPrivate &&
     signed &&
     rest.path !== "/cadastro/wizard/empresa" &&
