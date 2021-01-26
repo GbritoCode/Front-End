@@ -287,9 +287,9 @@ export default function ColabCadastro() {
             className="text-center card-header"
             style={{ backgroundColor: "#f5f6fa", borderBottomWidth: 0 }}
           >
-            <h3 className="card-title">Bem Vindo!</h3>
+            <h3 className="card-title">Bem Vindo ao App Tovo!</h3>
             <h4 className="description">
-              Crie o seu cadastro como Colaborador
+              Esse é o seu primeiro acesso. Preencha o wizard para começar.
             </h4>
           </div>
           <Card>

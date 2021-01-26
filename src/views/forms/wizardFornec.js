@@ -315,10 +315,9 @@ export default function FornecCadastro() {
             className="text-center card-header"
             style={{ backgroundColor: "#f5f6fa", borderBottomWidth: 0 }}
           >
-            <h3 className="card-title">Bem Vindo!</h3>
+            <h3 className="card-title">Bem Vindo ao App Tovo!</h3>
             <h4 className="description">
-              Esse é o primeiro login dessa aplicação, cadastre alguns dados
-              necessários.
+              Esse é o seu primeiro acesso. Preencha o wizard para começar.
             </h4>
           </div>
           <Card>
