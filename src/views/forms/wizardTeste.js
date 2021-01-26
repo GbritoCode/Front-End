@@ -301,7 +301,8 @@ export default function WizardCadastro() {
           >
             <h3 className="card-title">Bem Vindo ao App Tovo!</h3>
             <h4 className="description">
-              Esse é o seu primeiro acesso. Preencha o wizard para começar.
+              No seu primeiro acesso algumas informações serão necessárias.
+              Vamos lá ?
             </h4>
           </div>
           <Card>

@@ -82,13 +82,6 @@ export default function ColabCadastro() {
           ...prevState,
           email: { value: result.data[0].email }
         }));
-        await api.get("/empresa").then(async results => {
-          const perfil = {
-            EmpresaId: results.data[0].id,
-            desc: "Admnistrador"
-          };
-          await api.post("/perfil", perfil);
-        });
       });
       loadData();
     }
@@ -289,7 +282,7 @@ export default function ColabCadastro() {
           >
             <h3 className="card-title">Bem Vindo ao App Tovo!</h3>
             <h4 className="description">
-              Esse é o seu primeiro acesso. Preencha o wizard para começar.
+              Efetue o seu cadastro coomo Colaborador
             </h4>
           </div>
           <Card>

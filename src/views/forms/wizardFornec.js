@@ -316,7 +316,7 @@ export default function FornecCadastro() {
           <Card>
             <CardHeader>
               <CardTitle style={{ textAlign: "center" }} tag="h4">
-                Cadastre o primeiro Fornecedor, neste caso, sua própria empresa
+                Efetue o cadastro da sua empresa como fornecedor
               </CardTitle>
             </CardHeader>
             <CardBody>
