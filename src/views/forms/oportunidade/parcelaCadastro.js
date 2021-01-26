@@ -65,7 +65,7 @@ export default function ParcelaCadastro() {
         ...prevState,
         OportunidadeId: { value: response1.data.id }
       }));
-      if (response.data[0].vlrLiq) {
+      if (response.data[0]) {
         setOptional(prevState => ({
           ...prevState,
           vlrProjeto: {

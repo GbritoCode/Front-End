@@ -42,6 +42,8 @@ function ProfileUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
+  const { CPF } = store.getState().auth.user.Colab;
+  const ColabId = store.getState().auth.user.Colab.id;
   const { id } = store.getState().auth.user;
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -110,7 +112,6 @@ function ProfileUpdate() {
       default:
     }
   };
-
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -162,6 +163,8 @@ function ProfileUpdate() {
           values.nome.value,
           values.email.value,
           values.aniver.value,
+          ColabId,
+          CPF,
           optional.senhaAntiga.value,
           optional.senha.value,
           optional.confirmSenha.value
@@ -182,7 +185,6 @@ function ProfileUpdate() {
       notify();
     }
   };
-  console.log(passwordShown);
   return (
     <>
       {isLoading ? (

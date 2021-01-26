@@ -143,12 +143,12 @@ export default function CotacaoCadastro() {
     notifyElment.current.notificationAlert(options);
   }
   function getCliData(cobranca) {
-    console.log(cobranca);
     if (!(cobranca === "2" || cobranca === 2)) {
-      console.log(cobranca);
       setDisabledVlrProp(true);
       api
-        .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
+        .get(
+          `/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}&idRecDesp=${data1.RecDespId}`
+        )
         .then(result => {
           if (result.data === null) {
             options = {
@@ -166,6 +166,12 @@ export default function CotacaoCadastro() {
               autoDismiss: 7
             };
             notify();
+            setValues(prevState => ({
+              ...prevState,
+              vlrLiq: { value: "" },
+              recLiq: { value: "" },
+              prevLucro: { value: "" }
+            }));
           } else {
             setData2(result.data);
           }
@@ -177,7 +183,6 @@ export default function CotacaoCadastro() {
 
   if (!isloading && !auxState) {
     getCliData(data4[0].tipoCobranca);
-    console.log(data4[0].tipoCobranca);
     setAuxState(true);
   }
 
@@ -231,7 +236,11 @@ export default function CotacaoCadastro() {
     }
   };
   const descontoChange = descont => {
-    if (document.getElementsByName("tipoCobranca")[0].value === "2") {
+    if (
+      document.getElementsByName("tipoCobranca")[0].value === "2" &&
+      data2.valorRec
+    ) {
+      console.log(data2.valorRec);
       const imposto =
         (data3.IRPJ +
           data3.CSLL +
@@ -268,7 +277,11 @@ export default function CotacaoCadastro() {
       }));
       return;
     }
-    if (!(document.getElementsByName("tipoCobranca")[0].value === "2")) {
+    if (
+      !(document.getElementsByName("tipoCobranca")[0].value === "2") &&
+      data2.valorRec
+    ) {
+      console.log(data2.valorRec);
       const imposto =
         (data3.IRPJ +
           data3.CSLL +

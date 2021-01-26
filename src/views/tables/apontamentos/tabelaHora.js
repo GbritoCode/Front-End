@@ -178,7 +178,7 @@ export default class HorasTable extends Component {
               </div>
             </div>
             <ModalBody className="text-center">
-              <p>Você quer mesmo deletar esse registro ?</p>
+              <p>Deseja deletar o registro?</p>
             </ModalBody>
             <div className="modal-footer">
               <Button

@@ -394,7 +394,7 @@ export function* updateHora({ payload }) {
 
     const response = yield call(api.put, `horas/${id}`, recurso);
     toast.success("cliente atualizado");
-    history.go(0);
+    history.push(`/tabelas/apontamentos/horas/${ColabId}`);
     yield put(UpdateSuccess(response.data));
   } catch (err) {
     toast.error("Falha no cadastro, este email já existe");

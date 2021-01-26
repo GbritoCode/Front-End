@@ -12,7 +12,16 @@ export default function RouteWrapper({
   ...rest
 }) {
   const { signed } = store.getState().auth;
+  const { Colab } = store.getState().auth.user;
 
+  if (
+    !Colab &&
+    isPrivate &&
+    signed &&
+    rest.path !== "/cadastro/wizard/empresa"
+  ) {
+    return <Redirect to="/cadastro/wizard/empresa" />;
+  }
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;
   }

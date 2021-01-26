@@ -13,6 +13,8 @@ export function* profileUpdate({ payload }) {
       nome,
       email,
       aniver,
+      ColabId,
+      CPF,
       senhaAntiga,
       senha,
       confirmSenha
@@ -21,6 +23,8 @@ export function* profileUpdate({ payload }) {
       nome,
       email,
       aniver,
+      ColabId,
+      CPF,
       senhaAntiga,
       senha,
       confirmSenha

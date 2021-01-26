@@ -79,7 +79,7 @@ export default function RecursoCadastro() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/oportunidade/${id}`);
       const response2 = await api.get(`/colab/`);
-      const response3 = await api.get(`/cotacao/${id}`);
+      const response3 = await api.get(`/cotacao/${id}/?one=true`);
       setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({
@@ -87,10 +87,17 @@ export default function RecursoCadastro() {
         empresaId: { value: response.data.id },
         OportunidadeId: { value: response1.data.id }
       }));
-      setOptional(prevState => ({
-        ...prevState,
-        HorasTotais: { value: response3.data[0].hrsPrevst }
-      }));
+      if (response.data[0]) {
+        setOptional(prevState => ({
+          ...prevState,
+          HorasTotais: { value: response3.data[0].hrsPrevst }
+        }));
+      } else {
+        setOptional(prevState => ({
+          ...prevState,
+          HorasTotais: { value: 0 }
+        }));
+      }
     }
     loadData();
   }, [id]);
@@ -130,7 +137,7 @@ export default function RecursoCadastro() {
     }
   }
 
-  function custoPrevst(hr) {
+  function custoPrevst(hr, vlrHr) {
     const { value } = document.getElementsByName("colabVlrHr")[0];
     const vlrHrColab = value.replace(/[.,]+/g, "");
 
@@ -426,7 +433,10 @@ export default function RecursoCadastro() {
                           type="numeric"
                           onChange={event => {
                             handleChange(event, "hrsPrevst", "number");
-                            custoPrevst(event.target.value);
+                            custoPrevst(
+                              event.target.value,
+                              document.getElementsByName("colabVlrHr")[0].value
+                            );
                           }}
                           value={values.hrsPrevst.value}
                         />
@@ -469,9 +479,13 @@ export default function RecursoCadastro() {
                         <Input
                           name="colabVlrHr"
                           type="numeric"
-                          onChange={event =>
-                            handleChange(event, "colabVlrHr", "currency")
-                          }
+                          onChange={event => {
+                            handleChange(event, "colabVlrHr", "currency");
+                            custoPrevst(
+                              document.getElementsByName("hrsPrevst")[0].value,
+                              event.target.value
+                            );
+                          }}
                           value={values.colabVlrHr.value}
                         />
                         {values.colabVlrHr.error === "has-danger" ? (

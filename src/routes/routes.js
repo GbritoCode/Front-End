@@ -17,7 +17,10 @@
 
 import signIn from "~/pages/signIn";
 
-import Dashboard from "~/pages/dashboard";
+import AdminDashboard from "~/pages/dashboard/dashboardAdmin";
+import AnalistaDashboard from "~/pages/dashboard/dashboardAnalista";
+import ComercialDashboard from "~/pages/dashboard/dashboardComercial";
+import GestorDashboard from "~/pages/dashboard/dashboardGestor";
 import SignUp from "~/pages/signUp";
 
 //----
@@ -145,13 +148,31 @@ import HorasUpdate from "~/views/forms/Update/apontamentos/horasUpdate";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 import DataOport from "~/views/forms/oportunidade/oportunidadeData";
 import ProfileUpdate from "~/views/forms/Update/User/profileUpdate";
+import { store } from "~/store";
 
+const checkProfile = profile => {
+  switch (profile) {
+    case 100:
+      return AdminDashboard;
+    case 1:
+      return AnalistaDashboard;
+    case 2:
+      return ComercialDashboard;
+    case 3:
+      return GestorDashboard;
+
+    default:
+      break;
+  }
+};
+
+const { profile } = store.getState().auth.user;
 const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     icon: "tim-icons icon-chart-pie-36",
-    component: Dashboard,
+    component: checkProfile(profile),
     layout: "/admin"
   },
   {
@@ -553,6 +574,33 @@ const routes = [
     profile: 10,
     views: [
       {
+        path: "/cadastro/wizard/empresa",
+        name: "wizard",
+        mini: "RT",
+        component: WizardCadastro,
+        layout: "/admin",
+        profile: 100,
+        redirect: true
+      },
+      {
+        path: "/cadastro/wizard/fornec",
+        name: "wizardFornec",
+        mini: "RT",
+        component: WizardFornec,
+        layout: "/admin",
+        profile: 100,
+        redirect: true
+      },
+      {
+        path: "/cadastro/wizard/colab",
+        name: "wizardColab",
+        mini: "RT",
+        component: WizardColab,
+        layout: "/admin",
+        profile: 100,
+        redirect: true
+      },
+      {
         path: `/update/general/parametros/1`,
         name: "Parametros",
         mini: "PRM",
@@ -571,115 +619,11 @@ const routes = [
   },
   {
     collapse: true,
-    name: "Apontamentos",
-    icon: "tim-icons icon-calendar-60",
-    state: "ApontamentosCollapse",
-    profile: 1,
-    views: [
-      {
-        path: "/tabelas/apontamentos/oportunidades/",
-        name: "Projetos",
-        mini: "PJT",
-        component: ApontTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/apontamentos/despesas/:id",
-        name: "Despesas",
-        mini: "DSP",
-        component: DespesaTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/tabelas/apontamentos/horas/:id",
-        name: "Horas",
-        mini: "HRS",
-        component: HorasTable,
-        layout: "/admin",
-        redirect: true
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Oportunidades",
-    icon: "tim-icons icon-notes",
-    state: "OportunidadeCollapse",
-    profile: 2,
-    views: [
-      {
-        path: "/tabelas/oportunidade/oport",
-        name: "Oportunidades",
-        mini: "OPT",
-        component: OportTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/oportunidade/cotacao/:id",
-        name: "Cotacao",
-        mini: "COT",
-        component: cotacaoTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/tabelas/oportunidade/recurso/:id",
-        name: "Recursos",
-        mini: "rec",
-        component: RecursoTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/tabelas/oportunidade/parcela/:id",
-        name: "Recursos",
-        mini: "rec",
-        component: ParcelaTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/view/oportunidade/dados/:id",
-        name: "Dados OPT",
-        mini: "DOP",
-        component: DataOport,
-        layout: "/admin",
-        redirect: true
-      }
-    ]
-  },
-  {
-    collapse: true,
     name: "Cadastros",
     icon: "tim-icons icon-puzzle-10",
     state: "tablesCollapse",
     profile: 2,
     views: [
-      {
-        path: "/cadastro/wizard/empresa",
-        name: "wizard",
-        mini: "RT",
-        component: WizardCadastro,
-        layout: "/admin",
-        profile: 100
-      },
-      {
-        path: "/cadastro/wizard/fornec",
-        name: "wizardFornec",
-        mini: "RT",
-        component: WizardFornec,
-        layout: "/admin",
-        profile: 100
-      },
-      {
-        path: "/cadastro/wizard/colab",
-        name: "wizardColab",
-        mini: "RT",
-        component: WizardColab,
-        layout: "/admin",
-        profile: 100
-      },
       {
         path: "/tabelas/aux/condPgmto",
         name: "Condição de Pagamento",
@@ -815,6 +759,86 @@ const routes = [
         component: SegmentoTable,
         layout: "/admin",
         profile: 10
+      }
+    ]
+  },
+  {
+    collapse: true,
+    name: "Apontamentos",
+    icon: "tim-icons icon-calendar-60",
+    state: "ApontamentosCollapse",
+    profile: 1,
+    views: [
+      {
+        path: "/tabelas/apontamentos/oportunidades/",
+        name: "Projetos",
+        mini: "PJT",
+        component: ApontTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/apontamentos/despesas/:id",
+        name: "Despesas",
+        mini: "DSP",
+        component: DespesaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/apontamentos/horas/:id",
+        name: "Horas",
+        mini: "HRS",
+        component: HorasTable,
+        layout: "/admin",
+        redirect: true
+      }
+    ]
+  },
+  {
+    collapse: true,
+    name: "Oportunidades",
+    icon: "tim-icons icon-notes",
+    state: "OportunidadeCollapse",
+    profile: 2,
+    views: [
+      {
+        path: "/tabelas/oportunidade/oport",
+        name: "Oportunidades",
+        mini: "OPT",
+        component: OportTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/oportunidade/cotacao/:id",
+        name: "Cotacao",
+        mini: "COT",
+        component: cotacaoTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/oportunidade/recurso/:id",
+        name: "Recursos",
+        mini: "rec",
+        component: RecursoTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/oportunidade/parcela/:id",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/view/oportunidade/dados/:id",
+        name: "Dados OPT",
+        mini: "DOP",
+        component: DataOport,
+        layout: "/admin",
+        redirect: true
       }
     ]
   }
