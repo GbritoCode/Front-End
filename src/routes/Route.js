@@ -18,7 +18,9 @@ export default function RouteWrapper({
     !Colab &&
     isPrivate &&
     signed &&
-    rest.path !== "/cadastro/wizard/empresa"
+    (rest.path !== "/cadastro/wizard/empresa" ||
+      rest.path !== "/cadastro/wizard/fornec" ||
+      rest.path !== "/cadastro/wizard/colab")
   ) {
     return <Redirect to="/cadastro/wizard/empresa" />;
   }
