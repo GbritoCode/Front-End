@@ -155,13 +155,6 @@ export default function FornecCadastro() {
           cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
         }));
         cnpjRequest(result.data[0].idFederal);
-        const pgmto = {
-          EmpresaId: result.data[0].id,
-          cod: "000",
-          desc: "Condição Padrão",
-          diasPrazo: 0
-        };
-        await api.post("/condPgmto", pgmto);
       });
       loadData();
     }
