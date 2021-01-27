@@ -148,7 +148,6 @@ import HorasUpdate from "~/views/forms/Update/apontamentos/horasUpdate";
 import DespesaUpdate from "~/views/forms/Update/apontamentos/despesasUpdate";
 import DataOport from "~/views/forms/oportunidade/oportunidadeData";
 import ProfileUpdate from "~/views/forms/Update/User/profileUpdate";
-import { store } from "~/store";
 import ContaContabilTable from "~/views/tables/auxTables/contaContabilTable";
 import CadastroContaContabil from "~/views/forms/auxForm/contaContabilCadastro";
 import UpdateContaContabil from "~/views/forms/Update/auxUpdate/contaContabilupdate";
@@ -158,27 +157,32 @@ import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 
 const checkProfile = profile => {
   switch (profile) {
-    case 100:
+    case ":100,\\":
       return AdminDashboard;
-    case 1:
+    case ":1,\\":
       return AnalistaDashboard;
-    case 2:
+    case ":2,\\":
       return ComercialDashboard;
-    case 3:
+    case ":3,\\":
       return GestorDashboard;
 
     default:
       break;
   }
 };
+let profile;
+profile = localStorage.getItem("persist:gobarber");
+let arr;
+if (typeof profile === "string") {
+  arr = profile.split('"');
+}
 
-const { profile } = store.getState().auth.user;
 const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     icon: "tim-icons icon-chart-pie-36",
-    component: checkProfile(profile),
+    component: arr === undefined ? null : checkProfile(arr[23]),
     layout: "/admin"
   },
   {

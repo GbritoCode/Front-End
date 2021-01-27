@@ -87,7 +87,7 @@ export default function RecursoCadastro() {
         empresaId: { value: response.data.id },
         OportunidadeId: { value: response1.data.id }
       }));
-      if (response.data[0]) {
+      if (response3.data[0]) {
         setOptional(prevState => ({
           ...prevState,
           HorasTotais: { value: response3.data[0].hrsPrevst }
@@ -280,7 +280,7 @@ export default function RecursoCadastro() {
                         {" "}
                         Selecione a Oportunidade{" "}
                       </option>{" "}
-                      <option value={data1.id}>
+                      <option key={data1.id} value={data1.id}>
                         {" "}
                         {data1.cod} - {data1.desc}
                       </option>
@@ -318,7 +318,10 @@ export default function RecursoCadastro() {
                             Selecione o colaborador{" "}
                           </option>
                           {data2.map(colab => (
-                            <option value={colab.id}> {colab.nome} </option>
+                            <option key={colab.id} value={colab.id}>
+                              {" "}
+                              {colab.nome}{" "}
+                            </option>
                           ))}
                         </Input>
 
@@ -353,8 +356,12 @@ export default function RecursoCadastro() {
                             {" "}
                             Selecione o tipo de valor{" "}
                           </option>
-                          <option value={1}>Por Hora</option>
-                          <option value={2}>Fixo</option>
+                          <option key={1} value={1}>
+                            Por Hora
+                          </option>
+                          <option key={2} value={2}>
+                            Fixo
+                          </option>
                         </Input>
 
                         {values.tipoValor.error === "has-danger" ? (
@@ -388,10 +395,18 @@ export default function RecursoCadastro() {
                             {" "}
                             Selecione o tipo de atendimento{" "}
                           </option>
-                          <option value={1}>Consultoria</option>
-                          <option value={2}>Tecnologia</option>
-                          <option value={3}>Desenvolvimento</option>
-                          <option value={4}>Complementar</option>
+                          <option key={1} value={1}>
+                            Consultoria
+                          </option>
+                          <option key={2} value={2}>
+                            Tecnologia
+                          </option>
+                          <option key={3} value={3}>
+                            Desenvolvimento
+                          </option>
+                          <option key={4} value={4}>
+                            Complementar
+                          </option>
                         </Input>
 
                         {values.tipoAtend.error === "has-danger" ? (

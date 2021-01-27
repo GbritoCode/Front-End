@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   signed: false,
   loading: false,
   empresa: null,
-  user: { profile: 100 }
+  user: { Colab: null }
 };
 
 export default function auth(state = INITIAL_STATE, action) {

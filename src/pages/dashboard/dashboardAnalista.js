@@ -42,6 +42,7 @@ import { store } from "~/store";
 import { chartExample1 } from "~/variables/charts";
 import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
+import history from "~/services/history";
 
 class AdminDashboard extends React.Component {
   constructor(props) {
@@ -62,6 +63,7 @@ class AdminDashboard extends React.Component {
   }
 
   loadData = async () => {
+    history.push(0);
     if (store.getState().auth.user.Colab) {
       const idColab = store.getState().auth.user.Colab.id;
       const hrs = await api.get(`horas/${idColab}/?total=${true}&tipo=month`);

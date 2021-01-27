@@ -30,7 +30,6 @@ import routes from "~/routes/routes";
 import logo from "~/assets/img/tovoLogo.png";
 
 var ps;
-console.log(routes.then);
 class Admin extends React.Component {
   constructor(props) {
     super(props);
@@ -42,6 +41,7 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
+    console.log(routes);
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");
