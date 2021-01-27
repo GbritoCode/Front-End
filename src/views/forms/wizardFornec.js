@@ -310,7 +310,8 @@ export default function FornecCadastro() {
           >
             <h3 className="card-title">Bem Vindo ao App Tovo!</h3>
             <h4 className="description">
-              Esse é o seu primeiro acesso. Preencha o wizard para começar.
+              No seu primeiro acesso algumas informações serão necessárias.
+              Vamos lá ?
             </h4>
           </div>
           <Card>
@@ -648,6 +649,8 @@ export default function FornecCadastro() {
                         <option value="033">
                           033: Banco Santander (Brasil) S.A.
                         </option>
+                        <option value="077">077: Banco Inter S.A.</option>
+                        <option value="260">260: Nu Pagamentos S.A.</option>
                       </Input>
                       {values.banco.error === "has-danger" ? (
                         <Label className="error">{values.banco.message}</Label>

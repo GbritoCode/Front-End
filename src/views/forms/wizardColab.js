@@ -282,13 +282,14 @@ export default function ColabCadastro() {
           >
             <h3 className="card-title">Bem Vindo ao App Tovo!</h3>
             <h4 className="description">
-              Efetue o seu cadastro coomo Colaborador
+              No seu primeiro acesso algumas informações serão necessárias.
+              Vamos lá ?
             </h4>
           </div>
           <Card>
             <CardHeader>
               <CardTitle style={{ textAlign: "center" }} tag="h4">
-                Cadastre um registro de colaborador para si próprio
+                Efetue o seu cadastro coomo Colaborador
               </CardTitle>
             </CardHeader>
             <CardBody>
