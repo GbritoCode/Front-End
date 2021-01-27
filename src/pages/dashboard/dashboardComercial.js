@@ -127,8 +127,7 @@ class AdminDashboard extends React.Component {
                 <CardHeader>
                   <Row>
                     <Col className="text-left" sm="6">
-                      <h5 className="card-category">Total Shipments</h5>
-                      <CardTitle tag="h2">Teste</CardTitle>
+                      <CardTitle tag="h2">Histórico</CardTitle>
                     </Col>
                     <Col sm="6">
                       <ButtonGroup
@@ -147,7 +146,7 @@ class AdminDashboard extends React.Component {
                         >
                           <input defaultChecked name="options" type="radio" />
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Accounts
+                            Horas
                           </span>
                           <span className="d-block d-sm-none">
                             <i className="tim-icons icon-single-02" />
@@ -165,7 +164,7 @@ class AdminDashboard extends React.Component {
                         >
                           <input name="options" type="radio" />
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Purchases
+                            Despesas
                           </span>
                           <span className="d-block d-sm-none">
                             <i className="tim-icons icon-gift-2" />
@@ -183,7 +182,7 @@ class AdminDashboard extends React.Component {
                         >
                           <input name="options" type="radio" />
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Sessions
+                            À receber
                           </span>
                           <span className="d-block d-sm-none">
                             <i className="tim-icons icon-tap-02" />
