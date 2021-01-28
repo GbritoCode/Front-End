@@ -66,7 +66,6 @@ export function* colabCadastro({ payload }) {
         UserId: id
       });
       const user = yield call(api.get, `users/${id}`);
-      console.log(user);
       yield put(firstColabSuccess(user.data));
     }
 

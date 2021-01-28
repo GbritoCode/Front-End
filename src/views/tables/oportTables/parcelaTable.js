@@ -23,13 +23,7 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import {
-  Close,
-  Message,
-  ArrowBackIos,
-  AttachMoney,
-  Receipt
-} from "@material-ui/icons";
+import { Close, Message, ArrowBackIos } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
@@ -106,7 +100,7 @@ class ParametrosTable extends Component {
                     history.push(`/update/oportunidade/parcNota/${parcela.id}`);
                   }}
                 >
-                  <Receipt />
+                  <i className="tim-icons icon-paper" />
                 </Button>
               </Tooltip>
               <Tooltip title="Liquidar">
@@ -119,7 +113,7 @@ class ParametrosTable extends Component {
                     history.push(`/update/oportunidade/parc/${parcela.id}`);
                   }}
                 >
-                  <AttachMoney />
+                  <i className="tim-icons icon-coins" />
                 </Button>
               </Tooltip>
               {/* use this button to remove the data row */}
