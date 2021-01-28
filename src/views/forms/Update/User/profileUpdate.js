@@ -247,51 +247,27 @@ function ProfileUpdate() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Nova Senha</Label>
+                          <Label>Aniversário</Label>
                           <FormGroup
-                            className={`has-label ${optional.senha.error}`}
+                            className={`has-label ${values.aniver.error}`}
                           >
                             <Input
-                              onMouseEnter={togglePasswordVisiblity}
-                              onMouseLeave={togglePasswordVisiblity}
-                              name="senha"
-                              type={passwordShown ? "text" : "password"}
+                              name="aniver"
+                              type="date"
                               onChange={event =>
-                                handleChange(event, "senha", "optional")
+                                handleChange(event, "aniver", "text")
                               }
-                              value={optional.senha.value}
+                              value={values.aniver.value}
                             />
-                            {optional.senha.error === "has-danger" ? (
+                            {values.aniver.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.senha.message}
+                                {values.aniver.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                       </Row>
                       <Row>
-                        <Col md="4">
-                          <Label>Confirmar Senha</Label>
-                          <FormGroup
-                            className={`has-label ${optional.confirmSenha.error}`}
-                          >
-                            <Input
-                              onMouseEnter={togglePassword1Visiblity}
-                              onMouseLeave={togglePassword1Visiblity}
-                              name="confirmSenha"
-                              type={passwordShown1 ? "text" : "password"}
-                              onChange={event =>
-                                handleChange(event, "confirmSenha", "optional")
-                              }
-                              value={optional.confirmSenha.value}
-                            />
-                            {optional.confirmSenha.error === "has-danger" ? (
-                              <Label className="error">
-                                {optional.confirmSenha.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
                         <Col md="4">
                           <Label>Senha Atual</Label>
                           <FormGroup
@@ -315,21 +291,45 @@ function ProfileUpdate() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Aniversário</Label>
+                          <Label>Nova Senha</Label>
                           <FormGroup
-                            className={`has-label ${values.aniver.error}`}
+                            className={`has-label ${optional.senha.error}`}
                           >
                             <Input
-                              name="aniver"
-                              type="date"
+                              onMouseEnter={togglePasswordVisiblity}
+                              onMouseLeave={togglePasswordVisiblity}
+                              name="senha"
+                              type={passwordShown ? "text" : "password"}
                               onChange={event =>
-                                handleChange(event, "aniver", "text")
+                                handleChange(event, "senha", "optional")
                               }
-                              value={values.aniver.value}
+                              value={optional.senha.value}
                             />
-                            {values.aniver.error === "has-danger" ? (
+                            {optional.senha.error === "has-danger" ? (
                               <Label className="error">
-                                {values.aniver.message}
+                                {optional.senha.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Confirmar Senha</Label>
+                          <FormGroup
+                            className={`has-label ${optional.confirmSenha.error}`}
+                          >
+                            <Input
+                              onMouseEnter={togglePassword1Visiblity}
+                              onMouseLeave={togglePassword1Visiblity}
+                              name="confirmSenha"
+                              type={passwordShown1 ? "text" : "password"}
+                              onChange={event =>
+                                handleChange(event, "confirmSenha", "optional")
+                              }
+                              value={optional.confirmSenha.value}
+                            />
+                            {optional.confirmSenha.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.confirmSenha.message}
                               </Label>
                             ) : null}
                           </FormGroup>
