@@ -619,7 +619,7 @@ function ParametrosUpdatee() {
                           style={{
                             paddingLeft: 32,
                             paddingRight: 33,
-                            float: "right"
+                            float: "left"
                           }}
                           color="secundary"
                           size="small"

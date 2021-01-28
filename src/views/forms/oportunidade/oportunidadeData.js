@@ -84,13 +84,14 @@ export default function DataOport() {
           },
           receitaPrev: { value: normalizeCurrency(response1.data[0].recLiq) },
           rentabilidade: {
-            value: (
-              (response1.data[0].vlrProp - response3.data) /
-              response1.data[0].vlrProp
-            ).toFixed(2)
+            value: `${Math.trunc(
+              ((response1.data[0].vlrProp - response3.data) /
+                response1.data[0].vlrProp) *
+                100
+            )}%`
           },
           efetividade: {
-            value: (response3.data / custoprevCalculado).toFixed(2)
+            value: `${Math.trunc((response3.data / custoprevCalculado) * 100)}%`
           }
         }));
       } else {

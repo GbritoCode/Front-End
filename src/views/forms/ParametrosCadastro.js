@@ -510,27 +510,6 @@ export default function ParametrosCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to="/tabelas/general/parametros">
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
                   <Button
                     style={{
                       paddingLeft: 29,
@@ -550,6 +529,28 @@ export default function ParametrosCadastro() {
                       size="large"
                     />
                   </Button>
+                  <Link to="/tabelas/general/parametros">
+                    <Button
+                      style={{
+                        paddingLeft: 32,
+                        paddingRight: 33,
+                        float: "left"
+                      }}
+                      color="secundary"
+                      size="small"
+                      className="form"
+                    >
+                      <i
+                        className="tim-icons icon-double-left"
+                        style={{
+                          paddingBottom: 4,
+                          paddingRight: 1
+                        }}
+                        size="large"
+                      />{" "}
+                      Voltar
+                    </Button>
+                  </Link>
                 </Form>
               </CardBody>
             </Card>
