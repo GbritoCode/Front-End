@@ -151,7 +151,7 @@ export default function RecursoCadastro() {
     }
   }
 
-  function custoPrevst(hr) {
+  function custoPrevst(hr, vlrHr) {
     const { value } = document.getElementsByName("colabVlrHr")[0];
     const vlrHrColab = value.replace(/[.,]+/g, "");
 
@@ -449,7 +449,10 @@ export default function RecursoCadastro() {
                           type="numeric"
                           onChange={event => {
                             handleChange(event, "hrsPrevst", "number");
-                            custoPrevst(event.target.value);
+                            custoPrevst(
+                              event.target.value,
+                              document.getElementsByName("colabVlrHr")[0].value
+                            );
                           }}
                           value={values.hrsPrevst.value}
                         />
@@ -471,7 +474,6 @@ export default function RecursoCadastro() {
                           type="numeric"
                           onChange={event => {
                             handleChange(event, "HorasTotais", "number");
-                            custoPrevst(event.target.value);
                           }}
                           value={optional.HorasTotais.value}
                         />
@@ -492,9 +494,13 @@ export default function RecursoCadastro() {
                         <Input
                           name="colabVlrHr"
                           type="numeric"
-                          onChange={event =>
-                            handleChange(event, "colabVlrHr", "currency")
-                          }
+                          onChange={event => {
+                            handleChange(event, "colabVlrHr", "currency");
+                            custoPrevst(
+                              document.getElementsByName("hrsPrevst")[0].value,
+                              event.target.value
+                            );
+                          }}
                           value={values.colabVlrHr.value}
                         />
                         {values.colabVlrHr.error === "has-danger" ? (

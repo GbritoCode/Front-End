@@ -473,7 +473,6 @@ export default function RecursoCadastro() {
                           type="numeric"
                           onChange={event => {
                             handleChange(event, "HorasTotais", "number");
-                            custoPrevst(event.target.value);
                           }}
                           value={optional.HorasTotais.value}
                         />
