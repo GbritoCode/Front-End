@@ -38,7 +38,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { Close, Message } from "@material-ui/icons";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
-import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
@@ -91,29 +90,14 @@ function OportTable() {
                 <div className="actions-right">
                   <Tooltip title="Cotar">
                     <Button
-                      disabled={oport.fase > 2}
+                      hidden={oport.fase >= 2}
                       color="default"
                       size="sm"
                       className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        dispatch(
-                          oportUpdate(
-                            oport.id,
-                            oport.EmpresaId,
-                            oport.ColabId,
-                            oport.ClienteId,
-                            oport.UndNegId,
-                            oport.RecDespId,
-                            oport.SegmentoId,
-                            oport.RepresentanteId,
-                            oport.contato,
-                            oport.data,
-                            2,
-                            oport.cod,
-                            oport.desc,
-                            oport.narrativa
-                          )
-                        );
+                      onClick={async () => {
+                        await api.put(`oportunidade/${oport.id}`, {
+                          fase: 2
+                        });
                         history.push(
                           `/cadastro/oportunidade/cotacao/${oport.id}`
                         );
@@ -122,9 +106,9 @@ function OportTable() {
                       <i className="tim-icons icon-money-coins" />
                     </Button>
                   </Tooltip>
-                  <Tooltip title="revisar">
+                  <Tooltip title="Revisar">
                     <Button
-                      disabled={oport.fase > 3}
+                      hidden={oport.fase > 3 || oport.fase < 2}
                       color="default"
                       size="sm"
                       className={classNames("btn-icon btn-link like")}
@@ -139,7 +123,7 @@ function OportTable() {
                   </Tooltip>
                   <Tooltip title="Aprovar">
                     <Button
-                      disabled={oport.fase >= 4}
+                      hidden={oport.fase >= 4}
                       color="default"
                       size="sm"
                       className={classNames("btn-icon btn-link like")}

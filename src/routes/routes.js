@@ -17,6 +17,7 @@
 
 import signIn from "~/pages/signIn";
 
+import Dashboard from "~/pages/dashboard/index";
 import AdminDashboard from "~/pages/dashboard/dashboardAdmin";
 import AnalistaDashboard from "~/pages/dashboard/dashboardAnalista";
 import ComercialDashboard from "~/pages/dashboard/dashboardComercial";
@@ -185,7 +186,7 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     icon: "tim-icons icon-chart-pie-36",
-    component: arr === undefined ? null : checkProfile(arr[23]),
+    component: arr === undefined ? Dashboard : checkProfile(arr[23]),
     layout: "/admin"
   },
   {
@@ -822,7 +823,7 @@ const routes = [
   {
     collapse: true,
     name: "Apontamentos",
-    icon: "tim-icons icon-calendar-60",
+    icon: "tim-icons icon-notes",
     state: "ApontamentosCollapse",
     profile: 1,
     views: [
@@ -854,7 +855,7 @@ const routes = [
   {
     collapse: true,
     name: "Oportunidades",
-    icon: "tim-icons icon-notes",
+    icon: "tim-icons icon-pin",
     state: "OportunidadeCollapse",
     profile: 2,
     views: [
