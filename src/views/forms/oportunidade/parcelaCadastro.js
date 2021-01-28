@@ -291,7 +291,7 @@ export default function ParcelaCadastro() {
                     </Col>
                   </Row>
 
-                  <Link to="/tabelas/oportunidade/oport">
+                  <Link to={`/tabelas/oportunidade/parcela/${id}`}>
                     <Button
                       style={{
                         paddingLeft: 32,

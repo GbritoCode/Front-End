@@ -131,7 +131,7 @@ class ParametrosTable extends Component {
                       </Button>
                     </Tooltip>
                   </Link>
-                  <Link to="/tabelas/oportunidade/oport">
+                  <Link to={`/update/oportunidade/oport/${id}`}>
                     <Tooltip title="Voltar">
                       <Button
                         style={{
