@@ -66,7 +66,7 @@ export default function DataOport() {
         setValues(prevState => ({
           ...prevState,
           totalHrsPrev: {
-            value: normalizeHrToMin(response1.data[0].hrsPrevst)
+            value: response1.data[0].hrsPrevst
           },
           receitaPrev: { value: normalizeCurrency(response1.data[0].recLiq) },
           rentabilidade: {
