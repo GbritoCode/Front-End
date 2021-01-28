@@ -36,6 +36,7 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { store } from "~/store";
 
 class AdminNavbar extends React.Component {
   constructor(props) {
@@ -165,6 +166,7 @@ class AdminNavbar extends React.Component {
                     nav
                     onClick={e => e.preventDefault()}
                   >
+                    <p>{store.getState().auth.user.nome}</p>
                     <div className="photo" />
                     <b className="caret d-none d-lg-block d-xl-block" />
                     <p className="d-lg-none">Log out</p>
