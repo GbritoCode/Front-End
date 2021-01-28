@@ -230,7 +230,7 @@ export function* updateRecurso({ payload }) {
     };
 
     const response = yield call(api.put, `recurso/${id}`, recurso);
-    history.push(`/update/oportunidade/oport/${OportunidadeId}`);
+    history.push(`/tabelas/oportunidade/recurso/${OportunidadeId}`);
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
