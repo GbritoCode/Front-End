@@ -551,7 +551,9 @@ export default function RecursoCadastro() {
                       size="large"
                     />
                   </Button>
-                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
+                  <Link
+                    to={`/tabelas/oportunidade/recurso/${data1.OportunidadeId}`}
+                  >
                     <Button
                       style={{
                         paddingLeft: 32,

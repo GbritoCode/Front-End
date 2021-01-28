@@ -62,13 +62,32 @@ export default function DataOport() {
       const response2 = await api.get(`/recurso/${id}/?total=true`);
       const response3 = await api.get(`/colab/?data=true&oport=${id}`);
       setData(response.data);
+      if (response1.data[0]) {
+        setValues(prevState => ({
+          ...prevState,
+          totalHrsPrev: {
+            value: normalizeHrToMin(response1.data[0].hrsPrevst)
+          },
+          receitaPrev: { value: normalizeCurrency(response1.data[0].recLiq) },
+          rentabilidade: {
+            value: normalizeCalcCurrency(
+              (response1.data[0].vlrProp - response3.data) /
+                response1.data[0].vlrProp
+            )
+          }
+        }));
+      } else {
+        setValues(prevState => ({
+          ...prevState,
+          totalHrsPrev: { value: 0 },
+          receitaPrev: { value: 0 },
+          rentabilidade: { value: 0 }
+        }));
+      }
       setValues(prevState => ({
         ...prevState,
         totalHrsAtual: { value: normalizeHrToMin(response.data.totalHoras) },
-        totalHrsPrev: {
-          value: normalizeHrToMin(response1.data[0].hrsPrevst)
-        },
-        receitaPrev: { value: normalizeCurrency(response1.data[0].recLiq) },
+
         custoPrev: {
           value: normalizeCurrency(response2.data)
         },
@@ -77,12 +96,6 @@ export default function DataOport() {
         },
         efetividade: {
           value: normalizeCurrency(response3.data / response2.data)
-        },
-        rentabilidade: {
-          value: normalizeCalcCurrency(
-            (response1.data[0].vlrProp - response3.data) /
-              response1.data[0].vlrProp
-          )
         }
       }));
       setIsLoading(false);
@@ -114,11 +127,11 @@ export default function DataOport() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Oportunidade</h3>
-                    <p>
+                    <h3 style={{ marginBottom: 0 }}>Análise</h3>
+                    <p style={{ fontSize: 11 }}>
                       {data.cod} - {data.desc}
                     </p>
-                    <p>{data.Cliente.nomeAbv}</p>
+                    <p style={{ fontSize: 11 }}>{data.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form>
