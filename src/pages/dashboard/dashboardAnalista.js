@@ -99,7 +99,7 @@ class AdminDashboard extends React.Component {
                 <CardHeader>
                   <Row>
                     <Col className="text-left" sm="6">
-                      <CardTitle tag="h2">Histórico</CardTitle>
+                      <CardTitle tag="h2">VOU TE CHUPAR</CardTitle>
                     </Col>
                     <Col sm="6">
                       <ButtonGroup
