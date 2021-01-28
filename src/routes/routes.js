@@ -157,7 +157,9 @@ import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 
 const checkProfile = profile => {
   switch (profile) {
-    case ":100,\\" || ":10,\\":
+    case ":100,\\":
+      return AdminDashboard;
+    case ":10,\\":
       return AdminDashboard;
     case ":1,\\":
       return AnalistaDashboard;
@@ -175,6 +177,7 @@ profile = localStorage.getItem("persist:gobarber");
 let arr;
 if (typeof profile === "string") {
   arr = profile.split('"');
+  console.log(arr[23]);
 }
 
 const routes = [
