@@ -157,7 +157,7 @@ import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 
 const checkProfile = profile => {
   switch (profile) {
-    case ":100,\\":
+    case ":100,\\" || ":10,\\":
       return AdminDashboard;
     case ":1,\\":
       return AnalistaDashboard;
