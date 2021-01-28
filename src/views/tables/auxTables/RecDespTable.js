@@ -69,8 +69,8 @@ class recDespTable extends Component {
           desc: recDesps.desc,
           recDesp: this.checkRecDesp(recDesps.recDesp),
           tipoItem: recDesps.tipoItem,
-          contaContabil: recDesps.ContaContabil.desc,
-          centCusto: recDesps.CentroCusto.desc,
+          contaContabil: recDesps.ContaContabil.cod,
+          centCusto: recDesps.CentroCusto.cod,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">

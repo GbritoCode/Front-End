@@ -295,7 +295,8 @@ class AdminDashboard extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="tim-icons icon-trophy" /> Customers feedback
+                    <i className="tim-icons icon-trophy" /> Solicitar
+                    Adiantamento
                   </div>
                 </CardFooter>
               </Card>
