@@ -94,10 +94,18 @@ export default function RecursoCadastro() {
           value: normalizeCurrency(JSON.stringify(response1.data.custoPrev))
         }
       }));
-      setOptional(prevState => ({
-        ...prevState,
-        HorasTotais: { value: response3.data[0].hrsPrevst }
-      }));
+
+      if (response3.data[0]) {
+        setOptional(prevState => ({
+          ...prevState,
+          HorasTotais: { value: response3.data[0].hrsPrevst }
+        }));
+      } else {
+        setOptional(prevState => ({
+          ...prevState,
+          HorasTotais: { value: 0 }
+        }));
+      }
     }
     loadData();
   }, [id]);
