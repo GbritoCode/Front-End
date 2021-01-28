@@ -30,11 +30,7 @@ import {
   Col
 } from "reactstrap";
 import { Link, useParams } from "react-router-dom";
-import {
-  normalizeHrToMin,
-  normalizeCurrency,
-  normalizeCalcCurrency
-} from "~/normalize";
+import { normalizeHrToMin, normalizeCurrency } from "~/normalize";
 import api from "~/services/api";
 
 export default function DataOport() {
@@ -59,21 +55,42 @@ export default function DataOport() {
     async function loadData() {
       const response = await api.get(`/oportunidade/${id}`);
       const response1 = await api.get(`/cotacao/${id}/?one=true`);
-      const response2 = await api.get(`/recurso/${id}/?total=true`);
       const response3 = await api.get(`/colab/?data=true&oport=${id}`);
+      const response4 = await api.get(`/parametros/?one=true`);
       setData(response.data);
+      const imposto =
+        (response4.data.IRPJ +
+          response4.data.CSLL +
+          response4.data.COFINS +
+          response4.data.PIS +
+          response4.data.INSS +
+          response4.data.ISS) /
+        100;
       if (response1.data[0]) {
+        const custoprevCalculado =
+          response4.data.vlrBsHr * response1.data[0].hrsPrevst;
+        const impostoCalculado = (
+          (imposto * (response1.data[0].vlrLiq / 100)) /
+          100
+        ).toFixed(2);
         setValues(prevState => ({
           ...prevState,
+          impostoPrev: { value: normalizeCurrency(impostoCalculado) },
           totalHrsPrev: {
             value: response1.data[0].hrsPrevst
           },
+          custoPrev: {
+            value: normalizeCurrency(custoprevCalculado)
+          },
           receitaPrev: { value: normalizeCurrency(response1.data[0].recLiq) },
           rentabilidade: {
-            value: normalizeCalcCurrency(
+            value: (
               (response1.data[0].vlrProp - response3.data) /
-                response1.data[0].vlrProp
-            )
+              response1.data[0].vlrProp
+            ).toFixed(2)
+          },
+          efetividade: {
+            value: (response3.data / custoprevCalculado).toFixed(2)
           }
         }));
       } else {
@@ -88,14 +105,8 @@ export default function DataOport() {
         ...prevState,
         totalHrsAtual: { value: normalizeHrToMin(response.data.totalHoras) },
 
-        custoPrev: {
-          value: normalizeCurrency(response2.data)
-        },
         custoReal: {
           value: normalizeCurrency(response3.data)
-        },
-        efetividade: {
-          value: normalizeCurrency(response3.data / response2.data)
         }
       }));
       setIsLoading(false);
