@@ -30,22 +30,25 @@ import {
   ModalBody,
   Input,
   Label,
-  Row,
   FormGroup
 } from "reactstrap";
 import { Close, Message, SearchOutlined } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { CSVLink } from "react-csv";
+import ReactExport from "react-export-excel";
 import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeHrToMin } from "~/normalize";
+import iconExcel from "~/assets/img/iconExcel.png";
 
+const { ExcelFile } = ReactExport;
+const { ExcelSheet } = ReactExport.ExcelFile;
+const { ExcelColumn } = ReactExport.ExcelFile;
 /* eslint-disable eqeqeq */
 export default class HorasTable extends Component {
   state = {
-    data: [],
+    data: [{}],
     initialDate: null,
     finalDate: null
   };
@@ -70,6 +73,10 @@ export default class HorasTable extends Component {
     this.setState({ modalMini: !this.state.modalMini });
   };
 
+  toggleModalFilter = () => {
+    this.setState({ modalFilter: !this.state.modalFilter });
+  };
+
   delay = ms => new Promise(res => setTimeout(res, ms));
 
   reloadData = async () => {
@@ -83,16 +90,14 @@ export default class HorasTable extends Component {
 
   filterColumns = data => {
     if (data.length !== 0) {
-      // Get column names
       const columns = Object.keys(data[0]);
-      const headers = [];
-      columns.forEach((col, idx) => {
-        if (col !== "actions" && col !== "idd") {
-          // OR if (idx !== 0)
-          headers.push({ label: this.camelCase(col), key: col });
-        }
-      });
-      return headers;
+      console.log(columns);
+      // Remove by key ()
+      const filterColsByKey = columns.filter(
+        c => c !== "actions" && c !== "idd"
+      );
+
+      return filterColsByKey;
     }
   };
 
@@ -106,14 +111,18 @@ export default class HorasTable extends Component {
         return {
           idd: key,
           id: horas.id,
-          cod: horas.Oportunidade.cod,
-          desc: horas.Oportunidade.desc,
-          horaInic: horas.horaInic,
-          horaIntrv: horas.horaIntrv,
-          horaFim: horas.horaFim,
-          dataAtivd: horas.dataAtivd,
-          TotalApont: normalizeHrToMin(horas.totalApont),
           Cliente: horas.Oportunidade.Cliente.nomeAbv,
+          Oportunidade: horas.Oportunidade.cod,
+          "Descrição Oportunidade": horas.Oportunidade.desc,
+          "Data Atividade": horas.dataAtivd,
+          Analista: horas.Colab.nome,
+          "Hora Inicial": horas.horaInic,
+          Intervalo: horas.horaIntrv,
+          "Hora Final": horas.horaFim,
+          Total: normalizeHrToMin(horas.totalApont),
+          "Id Área": horas.AreaId,
+          Solicitante: horas.solicitante,
+          Descrição: horas.desc,
 
           actions: (
             // we've added some custom button actions
@@ -147,6 +156,35 @@ export default class HorasTable extends Component {
         };
       })
     });
+  };
+
+  checkData = () => {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    if (this.state.data.length === 0) {
+      return (
+        <Tooltip title="Exportar para excel" placement="top" interactive>
+          <img alt="Exportar para excel" src={iconExcel} />
+        </Tooltip>
+      );
+    }
+    return (
+      <ExcelFile
+        element={
+          <Tooltip title="Exportar para excel" placement="top" interactive>
+            <img alt="Exportar para excel" src={iconExcel} />
+          </Tooltip>
+        }
+        filename={`Horas_${year}-${month}-${date}`}
+      >
+        <ExcelSheet data={this.state.data} name="Test">
+          {this.filterColumns(this.state.data).map(col => {
+            return <ExcelColumn label={this.camelCase(col)} value={col} />;
+          })}
+        </ExcelSheet>
+      </ExcelFile>
+    );
   };
 
   render() {
@@ -211,62 +249,98 @@ export default class HorasTable extends Component {
               </Button>
             </div>
           </Modal>
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalFilter}
+            toggle={this.toggleModalFilter}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalFilter}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <FormGroup inline>
+                <Label> Data Inicial</Label>
+                <Input
+                  name="dataAtivd"
+                  type="date"
+                  defaultValue={
+                    this.state.initialDate
+                      ? this.state.initialDate
+                      : `${year}-${month}-01`
+                  }
+                  onChange={e => this.setState({ initialDate: e.target.value })}
+                />
+              </FormGroup>
+              <FormGroup inline>
+                <Label> Data Final</Label>
+                <Input
+                  name="dataAtivd"
+                  type="date"
+                  defaultValue={
+                    this.state.finalDate
+                      ? this.state.finalDate
+                      : `${year}-${month}-${lastDayMonth}`
+                  }
+                  onChange={e => this.setState({ finalDate: e.target.value })}
+                />
+              </FormGroup>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalFilter}
+              >
+                Cancelar
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={() => {
+                  this.loadData();
+                  this.toggleModalFilter();
+                }}
+              >
+                Filtrar
+              </Button>
+            </div>
+          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle>
-                  <Row>
-                    <Col md="2">
-                      <h4>Horas</h4>
-                    </Col>
-                    <Col md="4">
-                      <FormGroup inline>
-                        <Label> Data Inicial</Label>
-                        <Input
-                          name="dataAtivd"
-                          type="date"
-                          defaultValue={`${year}-${month}-01`}
-                          onChange={e =>
-                            this.setState({ initialDate: e.target.value })
-                          }
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <FormGroup inline>
-                        <Label> Data Final</Label>
-                        <Input
-                          name="dataAtivd"
-                          type="date"
-                          defaultValue={`${year}-${month}-${lastDayMonth}`}
-                          onChange={e =>
-                            this.setState({ finalDate: e.target.value })
-                          }
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Tooltip title="Filtrar" placement="top" interactive>
-                      <Button
-                        style={{
-                          marginTop: 20
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                        onClick={() => {
-                          this.reloadData();
-                        }}
-                      >
-                        <SearchOutlined fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Row>
+                <CardTitle tag="h4">
+                  Horas
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    {this.checkData()}
+                  </div>
+                  <Tooltip title="Filtrar" placement="top" interactive>
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        this.toggleModalFilter();
+                      }}
+                    >
+                      <SearchOutlined />
+                    </Button>
+                  </Tooltip>
                 </CardTitle>
-                <CSVLink
-                  data={this.state.data}
-                  headers={this.filterColumns(this.state.data)}
-                  filename="Horas.csv"
-                >
-                  Download as CSV
-                </CSVLink>
               </CardHeader>
               <CardBody>
                 <ReactTable
@@ -291,11 +365,11 @@ export default class HorasTable extends Component {
                   columns={[
                     {
                       Header: "Código",
-                      accessor: "cod"
+                      accessor: "Oportunidade"
                     },
                     {
                       Header: "Oportunidade",
-                      accessor: "desc"
+                      accessor: "Descrição Oportunidade"
                     },
                     {
                       Header: "Cliente",
@@ -303,11 +377,11 @@ export default class HorasTable extends Component {
                     },
                     {
                       Header: "Data",
-                      accessor: "dataAtivd"
+                      accessor: "Data Atividade"
                     },
                     {
                       Header: "Total",
-                      accessor: "TotalApont"
+                      accessor: "Total"
                     },
                     {
                       Header: "Ações",

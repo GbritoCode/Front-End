@@ -240,7 +240,6 @@ export default function CotacaoCadastro() {
       document.getElementsByName("tipoCobranca")[0].value === "2" &&
       data2.valorRec
     ) {
-      console.log(data2.valorRec);
       const imposto =
         (data3.IRPJ +
           data3.CSLL +
@@ -281,7 +280,6 @@ export default function CotacaoCadastro() {
       !(document.getElementsByName("tipoCobranca")[0].value === "2") &&
       data2.valorRec
     ) {
-      console.log(data2.valorRec);
       const imposto =
         (data3.IRPJ +
           data3.CSLL +

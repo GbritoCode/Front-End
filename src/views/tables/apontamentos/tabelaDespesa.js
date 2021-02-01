@@ -27,16 +27,25 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  Input,
+  Label,
+  FormGroup
 } from "reactstrap";
-import { Close, Message } from "@material-ui/icons";
+import { Close, Message, SearchOutlined } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
+import ReactExport from "react-export-excel";
+import { getDaysInMonth } from "date-fns";
 import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
+import iconExcel from "~/assets/img/iconExcel.png";
 
+const { ExcelFile } = ReactExport;
+const { ExcelSheet } = ReactExport.ExcelFile;
+const { ExcelColumn } = ReactExport.ExcelFile;
 /* eslint-disable eqeqeq */
 export default class DespesasTable extends Component {
   state = {
@@ -46,7 +55,7 @@ export default class DespesasTable extends Component {
   componentDidMount() {
     // --------- colocando no modo claro do template
     document.body.classList.add("white-content");
-    this.loadData();
+    this.createInitialDateState();
   }
 
   checkTipo = value => {
@@ -70,8 +79,22 @@ export default class DespesasTable extends Component {
     }
   };
 
+  createInitialDateState = () => {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
+    this.setState({ initialDate: `${year}-${month}-01` });
+    this.setState({ finalDate: `${year}-${month}-${lastDayMonth}` });
+    this.reloadData();
+  };
+
   toggleModalMini = () => {
     this.setState({ modalMini: !this.state.modalMini });
+  };
+
+  toggleModalFilter = () => {
+    this.setState({ modalFilter: !this.state.modalFilter });
   };
 
   delay = ms => new Promise(res => setTimeout(res, ms));
@@ -81,20 +104,41 @@ export default class DespesasTable extends Component {
     this.loadData();
   };
 
+  camelCase = str => {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+  };
+
+  filterColumns = data => {
+    if (data.length !== 0) {
+      const columns = Object.keys(data[0]);
+      console.log(columns);
+      // Remove by key ()
+      const filterColsByKey = columns.filter(
+        c => c !== "actions" && c !== "idd"
+      );
+
+      return filterColsByKey;
+    }
+  };
+
   loadData = async () => {
     const idColab = store.getState().auth.user.Colab.id;
-    const response = await api.get(`/despesas/${idColab}`);
+    const response = await api.get(
+      `/despesas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+    );
     this.setState({
       data: response.data.map((desps, key) => {
         return {
           idd: key,
           id: desps.id,
-          cod: desps.Oportunidade.cod,
-          oportDesc: desps.Oportunidade.desc,
-          dataDespesa: desps.dataDespesa,
-          tipoDespesa: this.checkTipo(desps.tipoDespesa),
-          valorDespesa: normalizeCurrency(JSON.stringify(desps.valorDespesa)),
-          desc: desps.desc,
+          Oportunidade: desps.Oportunidade.cod,
+          "Descrição Oportunidade": desps.Oportunidade.desc,
+          "Data Despesa": desps.dataDespesa,
+          "Tipo Despesa": this.checkTipo(desps.tipoDespesa),
+          "Valor Despesa": normalizeCurrency(
+            JSON.stringify(desps.valorDespesa)
+          ),
+          Descrição: desps.desc,
 
           actions: (
             // we've added some custom button actions
@@ -130,7 +174,40 @@ export default class DespesasTable extends Component {
     });
   };
 
+  checkData = () => {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    if (this.state.data.length === 0) {
+      return (
+        <Tooltip title="Exportar para excel" placement="top" interactive>
+          <img alt="Exportar para excel" src={iconExcel} />
+        </Tooltip>
+      );
+    }
+    return (
+      <ExcelFile
+        element={
+          <Tooltip title="Exportar para excel" placement="top" interactive>
+            <img alt="Exportar para excel" src={iconExcel} />
+          </Tooltip>
+        }
+        filename={`Despesa_${year}-${month}-${date}`}
+      >
+        <ExcelSheet data={this.state.data} name="Test">
+          {this.filterColumns(this.state.data).map(col => {
+            return <ExcelColumn label={this.camelCase(col)} value={col} />;
+          })}
+        </ExcelSheet>
+      </ExcelFile>
+    );
+  };
+
   render() {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
     return (
       <>
         <div className="content">
@@ -188,10 +265,98 @@ export default class DespesasTable extends Component {
               </Button>
             </div>
           </Modal>
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalFilter}
+            toggle={this.toggleModalFilter}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalFilter}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <FormGroup inline>
+                <Label> Data Inicial</Label>
+                <Input
+                  name="dataAtivd"
+                  type="date"
+                  defaultValue={
+                    this.state.initialDate
+                      ? this.state.initialDate
+                      : `${year}-${month}-01`
+                  }
+                  onChange={e => this.setState({ initialDate: e.target.value })}
+                />
+              </FormGroup>
+              <FormGroup inline>
+                <Label> Data Final</Label>
+                <Input
+                  name="dataAtivd"
+                  type="date"
+                  defaultValue={
+                    this.state.finalDate
+                      ? this.state.finalDate
+                      : `${year}-${month}-${lastDayMonth}`
+                  }
+                  onChange={e => this.setState({ finalDate: e.target.value })}
+                />
+              </FormGroup>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalFilter}
+              >
+                Cancelar
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={() => {
+                  this.loadData();
+                  this.toggleModalFilter();
+                }}
+              >
+                Filtrar
+              </Button>
+            </div>
+          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Despesas</CardTitle>
+                <CardTitle tag="h4">
+                  Despesas
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    {this.checkData()}
+                  </div>
+                  <Tooltip title="Filtrar" placement="top" interactive>
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        this.toggleModalFilter();
+                      }}
+                    >
+                      <SearchOutlined />
+                    </Button>
+                  </Tooltip>
+                </CardTitle>
               </CardHeader>
               <CardBody>
                 <ReactTable
@@ -216,23 +381,23 @@ export default class DespesasTable extends Component {
                   columns={[
                     {
                       Header: "Código",
-                      accessor: "cod"
+                      accessor: "Oportunidade"
                     },
                     {
                       Header: "Oportunidade",
-                      accessor: "oportDesc"
+                      accessor: "Descrição Oportunidade"
                     },
                     {
                       Header: "Tipo da Despesa",
-                      accessor: "tipoDespesa"
+                      accessor: "Tipo Despesa"
                     },
                     {
                       Header: "Valor da Despesa",
-                      accessor: "valorDespesa"
+                      accessor: "Valor Despesa"
                     },
                     {
                       Header: "Data",
-                      accessor: "dataDespesa"
+                      accessor: "Data Despesa"
                     },
                     {
                       Header: "Ações",

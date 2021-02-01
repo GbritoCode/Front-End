@@ -178,7 +178,6 @@ profile = localStorage.getItem("persist:gobarber");
 let arr;
 if (typeof profile === "string") {
   arr = profile.split('"');
-  console.log(arr[23]);
 }
 
 const routes = [

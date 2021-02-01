@@ -72,7 +72,6 @@ export default function CliCompUpdatee() {
       const response2 = await api.get(`/cliente/${response.data.ClienteId}`);
       setData1(response1.data);
       setData2(response2.data);
-      console.log(response.data);
       setValues(prevState => ({
         ...prevState,
         ClienteId: { value: response.data.ClienteId },

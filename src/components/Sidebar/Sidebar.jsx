@@ -35,7 +35,6 @@ class Sidebar extends React.Component {
   // this creates the intial state of this component based on the collapse routes
   // that it gets through this.props.routes
   getCollapseStates = (routes) => {
-    console.log(this.props)
     let initialState = {};
     routes.map((prop, key) => {
       if (prop.collapse) {

@@ -30,7 +30,6 @@ export default function RouteWrapper({
     signed &&
     rest.path !== "/update/user/perfil"
   ) {
-    console.log(window.location);
     return <Redirect to="/update/user/perfil" />;
   }
   if (!signed && isPrivate) {

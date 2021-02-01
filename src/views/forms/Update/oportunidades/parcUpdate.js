@@ -111,11 +111,9 @@ export default function ParcelaUpdate() {
 
   const valorPagoChange = value => {
     const vPago = value.replace(/[.,]+/g, "");
-    console.log(vPago);
     var parc = document
       .getElementsByName("vlrParcela")[0]
       .value.replace(/[.,]+/g, "");
-    console.log(parc);
     const saldo = parc - vPago;
     if (vPago - parc > 0) {
       setOptional(prevState => ({
