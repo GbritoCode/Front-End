@@ -182,11 +182,36 @@ if (typeof profile === "string") {
 
 const routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    collapse: true,
+    name: "dsa",
     icon: "tim-icons icon-chart-pie-36",
-    component: arr === undefined ? Dashboard : checkProfile(arr[23]),
-    layout: "/admin"
+    state: "dashboardCollapse",
+    profile: 1,
+    views: [
+      {
+        path: "/dashboardPessoal",
+        name: "Pessoal",
+        mini: "R",
+        component: arr === undefined ? Dashboard : checkProfile(arr[23]),
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardGerencial",
+        name: "Gerencial",
+        mini: "R",
+        component: arr === undefined ? Dashboard : checkProfile(arr[23]),
+        profile: 10,
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardComercial",
+        name: "Comercial",
+        mini: "R",
+        component: arr === undefined ? Dashboard : checkProfile(arr[23]),
+        profile: 10,
+        layout: "/admin"
+      }
+    ]
   },
   {
     path: "/login",

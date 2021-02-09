@@ -126,7 +126,9 @@ export default function Routes() {
     <Switch>
       <Route path="/login" exact component={signIn} />
       <Route path="/register" component={singUp} />
-      <Route path="/dashboard" component={Dashboard} isPrivate />
+      <Route path="/dashboardPessoal" component={Dashboard} isPrivate />
+      <Route path="/dashboardGerencial" component={Dashboard} isPrivate />
+      <Route path="/dashboardComercial" component={Dashboard} isPrivate />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
