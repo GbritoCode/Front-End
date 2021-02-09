@@ -25,6 +25,7 @@ export default function RouteWrapper({
     return <Redirect to="/cadastro/wizard/empresa" />;
   }
   if (
+    Colab &&
     isFirstLogin &&
     isPrivate &&
     signed &&

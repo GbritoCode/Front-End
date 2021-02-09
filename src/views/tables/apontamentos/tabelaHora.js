@@ -91,7 +91,6 @@ export default class HorasTable extends Component {
   filterColumns = data => {
     if (data.length !== 0) {
       const columns = Object.keys(data[0]);
-      console.log(columns);
       // Remove by key ()
       const filterColsByKey = columns.filter(
         c => c !== "actions" && c !== "idd"

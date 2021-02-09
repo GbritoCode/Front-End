@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Label,
   Form,
@@ -259,36 +258,14 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Liquidação de Parcela</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Liquidação de Parcela</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data1.cod} | {data1.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Oportunidade</Label>
-                      <FormGroup
-                        className={`has-label ${values.OportunidadeId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="OportunidadeId"
-                          onChange={event =>
-                            handleChange(event, "OportunidadeId", "text")
-                          }
-                          value={values.OportunidadeId.value}
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione a Oportunidade{" "}
-                          </option>{" "}
-                          <option value={data1.id}> {data1.desc}</option>
-                        </Input>
-
-                        {values.OportunidadeId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.OportunidadeId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           {" "}

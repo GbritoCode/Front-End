@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Label,
   Form,
@@ -33,11 +32,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import {
-  normalizeCnpj,
-  normalizeCurrency,
-  normalizeCalcCurrency
-} from "~/normalize";
+import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { cotacaoUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
@@ -304,35 +299,14 @@ function CotacaoUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Cotação</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Edição de Cotação</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data2.cod} | {data2.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data2.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>Oportunidade</Label>

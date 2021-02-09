@@ -141,7 +141,7 @@ export default function DataOport() {
                   <CardHeader>
                     <h3 style={{ marginBottom: 0 }}>Análise</h3>
                     <p style={{ fontSize: 11 }}>
-                      {data.cod} - {data.desc}
+                      {data.cod} | {data.desc}
                     </p>
                     <p style={{ fontSize: 11 }}>{data.Cliente.nomeAbv}</p>
                   </CardHeader>

@@ -33,7 +33,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj, normalizeCurrency } from "~/normalize";
+import { normalizeCurrency } from "~/normalize";
 import { RepresentanteUpdate } from "~/store/modules/general/actions";
 import api from "~/services/api";
 
@@ -44,7 +44,6 @@ function RepresentanteUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -56,9 +55,7 @@ function RepresentanteUpdatee() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/representante/${id}`);
-      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
       const response2 = await api.get(`/tipoComiss/`);
-      setData1(response1.data);
       setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
@@ -210,32 +207,6 @@ function RepresentanteUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
                       <Label>Nome</Label>
                       <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input

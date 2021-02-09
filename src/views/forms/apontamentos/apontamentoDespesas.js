@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Form,
   Label,
   Input,
@@ -44,6 +43,7 @@ export default function DespesaCadastro() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   var options = {};
@@ -80,6 +80,7 @@ export default function DespesaCadastro() {
         OportunidadeId: { value: response1.data.id },
         ColabId: { value: response2.data.id }
       }));
+      setIsLoading(false);
     }
     loadData();
   }, [id]);
@@ -190,192 +191,172 @@ export default function DespesaCadastro() {
   };
   return (
     <>
-      <div className="rna-container">
-        <NotificationAlert ref={notifyElment} />
-      </div>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Despesa</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col md="8">
-                      <Label>Oportunidade</Label>
-                      <FormGroup
-                        className={`has-label ${values.OportunidadeId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="OportunidadeId"
-                          onChange={event =>
-                            handleChange(event, "OportunidadeId", "text")
-                          }
-                          value={values.OportunidadeId.value}
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione a Oportunidade{" "}
-                          </option>{" "}
-                          <option value={data1.id}>
-                            {" "}
-                            {data1.cod} - {data1.desc}
-                          </option>
-                        </Input>
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          {" "}
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <h3 style={{ marginBottom: 0 }}>Apontamento Despesa</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data1.cod} | {data1.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
+                      <Row>
+                        <Col md="4">
+                          <Label>Data da Despesa</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataDespesa.error}`}
+                          >
+                            <Input
+                              name="dataDespesa"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataDespesa", "text")
+                              }
+                              value={values.dataDespesa.value}
+                            />
+                            {values.dataDespesa.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataDespesa.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo da Despesa</Label>
+                          <FormGroup
+                            className={`has-label ${values.tipoDespesa.error}`}
+                          >
+                            <Input
+                              name="tipoDespesa"
+                              type="select"
+                              onChange={event => {
+                                handleChange(event, "tipoDespesa", "text");
+                              }}
+                              value={values.tipoDespesa.value}
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione o tipo da despesa{" "}
+                              </option>
+                              <option value={1}>Alimentação</option>
+                              <option value={2}>Deslocamento</option>
+                              <option value={3}>Hospedagem</option>
+                              <option value={4}>Passagem</option>
+                              <option value={5}>Pedágio</option>
+                              <option value={6}>Estacionamento</option>
+                            </Input>
+                            {values.tipoDespesa.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.tipoDespesa.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Valor da Despesa </Label>
+                          <FormGroup
+                            className={`has-label ${values.valorDespesa.error}`}
+                          >
+                            <Input
+                              name="valorDespesa"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "valorDespesa", "currency")
+                              }
+                              value={values.valorDespesa.value}
+                            />
+                            {values.valorDespesa.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.valorDespesa.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Descrição</Label>
+                          <FormGroup
+                            className={`has-label ${optional.desc.error}`}
+                          >
+                            <Input
+                              name="desc"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "desc", "optional")
+                              }
+                              value={optional.desc.value}
+                            />
+                            {optional.desc.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.desc.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
 
-                        {values.OportunidadeId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.OportunidadeId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Data da Despesa</Label>
-                      <FormGroup
-                        className={`has-label ${values.dataDespesa.error}`}
-                      >
-                        <Input
-                          name="dataDespesa"
-                          type="date"
-                          onChange={event =>
-                            handleChange(event, "dataDespesa", "text")
-                          }
-                          value={values.dataDespesa.value}
-                        />
-                        {values.dataDespesa.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.dataDespesa.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="4">
-                      <Label>Tipo da Despesa</Label>
-                      <FormGroup
-                        className={`has-label ${values.tipoDespesa.error}`}
-                      >
-                        <Input
-                          name="tipoDespesa"
-                          type="select"
-                          onChange={event => {
-                            handleChange(event, "tipoDespesa", "text");
-                          }}
-                          value={values.tipoDespesa.value}
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o tipo da despesa{" "}
-                          </option>
-                          <option value={1}>Alimentação</option>
-                          <option value={2}>Deslocamento</option>
-                          <option value={3}>Hospedagem</option>
-                          <option value={4}>Passagem</option>
-                          <option value={5}>Pedágio</option>
-                          <option value={6}>Estacionamento</option>
-                        </Input>
-                        {values.tipoDespesa.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.tipoDespesa.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Valor da Despesa </Label>
-                      <FormGroup
-                        className={`has-label ${values.valorDespesa.error}`}
-                      >
-                        <Input
-                          name="valorDespesa"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "valorDespesa", "currency")
-                          }
-                          value={values.valorDespesa.value}
-                        />
-                        {values.valorDespesa.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.valorDespesa.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Label>Descrição</Label>
-                      <FormGroup className={`has-label ${optional.desc.error}`}>
-                        <Input
-                          name="desc"
-                          type="textarea"
-                          onChange={event =>
-                            handleChange(event, "desc", "optional")
-                          }
-                          value={optional.desc.value}
-                        />
-                        {optional.desc.error === "has-danger" ? (
-                          <Label className="error">
-                            {optional.desc.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-
-                  <Button
-                    style={{
-                      paddingLeft: 29,
-                      paddingRight: 30
-                    }}
-                    className="form"
-                    color="info"
-                    type="submit"
-                  >
-                    Enviar{" "}
-                    <i
-                      className="tim-icons icon-send"
-                      style={{
-                        paddingBottom: 4,
-                        paddingLeft: 3
-                      }}
-                      size="large"
-                    />
-                  </Button>
-                  <Link to="/tabelas/apontamentos/oportunidades/">
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33,
-                        float: "left"
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
+                          paddingLeft: 29,
+                          paddingRight: 30
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                      <Link to="/tabelas/apontamentos/oportunidades/">
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </>
   );
 }

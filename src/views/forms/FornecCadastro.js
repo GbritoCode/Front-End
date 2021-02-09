@@ -45,7 +45,6 @@ export default function FornecCadastro() {
 
   const jsonpAdapter = require("axios-jsonp");
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -79,7 +78,6 @@ export default function FornecCadastro() {
       setIsLoading(true);
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/condPgmto`);
-      setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -301,31 +299,6 @@ export default function FornecCadastro() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data.nome} - {normalizeCnpj(data.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>CNPJ</Label>

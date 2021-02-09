@@ -35,7 +35,6 @@ import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { condPgmtoUpdate } from "~/store/modules/general/actions";
 import { store } from "~/store";
-import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 
 function AreaUpdatee() {
@@ -45,7 +44,6 @@ function AreaUpdatee() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -61,7 +59,6 @@ function AreaUpdatee() {
       setIsLoading(true);
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/condPgmto/${id}`);
-      setData(response.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -189,31 +186,6 @@ function AreaUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data.nome} -{normalizeCnpj(data.idFederal)}
-                          </option>
-                        </Input>{" "}
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>Código</Label>

@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Form,
   Label,
   Input,
@@ -304,65 +303,14 @@ export default function HorasCadastro() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Horas</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Apontamento Horas</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data1.cod} | {data1.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Row>
-                        <Col md="8">
-                          <Label>Oportunidade</Label>
-                          <FormGroup
-                            className={`has-label ${values.OportunidadeId.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="OportunidadeId"
-                              onChange={event =>
-                                handleChange(event, "OportunidadeId", "text")
-                              }
-                              value={values.OportunidadeId.value}
-                              type="select"
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Oportunidade{" "}
-                              </option>{" "}
-                              <option value={data1.id}>
-                                {" "}
-                                {data1.cod} - {data1.desc}
-                              </option>
-                            </Input>
-
-                            {values.OportunidadeId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.OportunidadeId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Cliente</Label>
-                          <FormGroup
-                            className={`has-label ${values.Cliente.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="Cliente"
-                              type="text"
-                              onChange={event => {
-                                handleChange(event, "Cliente", "text");
-                              }}
-                              value={values.Cliente.value}
-                            />
-                            {values.Cliente.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.Cliente.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-
                       <Row>
                         <Col md="4">
                           <Label>Hora Inicial</Label>

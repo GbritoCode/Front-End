@@ -47,7 +47,6 @@ function ColabUpdatee() {
 
   const dispatch = useDispatch();
   const [data1, setData1] = useState([]);
-  const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const stateSchema = {
@@ -74,9 +73,7 @@ function ColabUpdatee() {
     async function loadData() {
       const response = await api.get(`/colab/${id}`);
       const response1 = await api.get(`/fornec`);
-      const response3 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
-      setData3(response3.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -305,31 +302,6 @@ function ColabUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data3.nome} - {data3.idFederal}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>CPF</Label>

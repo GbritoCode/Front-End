@@ -33,7 +33,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj, normalizeCurrency } from "~/normalize";
+import { normalizeCurrency } from "~/normalize";
 import { ParametrosUpdate } from "~/store/modules/general/actions";
 import api from "~/services/api";
 
@@ -43,7 +43,6 @@ function ParametrosUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -66,9 +65,7 @@ function ParametrosUpdatee() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parametros/${id}`);
-      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
 
-      setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
@@ -268,31 +265,6 @@ function ParametrosUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={data1.id}>
-                            {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           {" "}

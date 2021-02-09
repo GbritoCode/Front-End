@@ -33,7 +33,7 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
-import { normalizeCnpj, normalizeCurrency } from "~/normalize";
+import { normalizeCurrency } from "~/normalize";
 import { store } from "~/store";
 import { representanteRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
@@ -43,7 +43,6 @@ export default function RepresentanteCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -58,7 +57,6 @@ export default function RepresentanteCadastro() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/tipoComiss/`);
-      setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -198,29 +196,6 @@ export default function RepresentanteCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Empresa</Label>
-                  <FormGroup className={`has-label ${values.empresaId.error}`}>
-                    <Input
-                      disabled
-                      name="EmpresaId"
-                      type="select"
-                      onChange={event =>
-                        handleChange(event, "empresaId", "text")
-                      }
-                      value={values.empresaId.value}
-                    >
-                      {" "}
-                      <option value={1}>
-                        {" "}
-                        {data.nome} - {normalizeCnpj(data.idFederal)}
-                      </option>
-                    </Input>
-                    {values.empresaId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.empresaId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
                   <Row>
                     <Col md="4">
                       <Label>Nome</Label>

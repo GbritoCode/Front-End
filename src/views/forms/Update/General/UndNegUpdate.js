@@ -42,7 +42,6 @@ function UndNegUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -54,9 +53,6 @@ function UndNegUpdatee() {
     async function loadData() {
       setIsLoading(true);
       const response = await api.get(`/und_neg/${id}`);
-      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
-      setData(response.data);
-      setData(response1.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
@@ -67,33 +63,6 @@ function UndNegUpdatee() {
     }
     loadData();
   }, [id]);
-
-  const normalizeInput = (value, previousValue) => {
-    if (!value) return value;
-    const currentValue = value.replace(/[^\d]/g, "");
-    const cvLength = currentValue.length;
-
-    if (cvLength < 3) return currentValue;
-    if (cvLength < 6)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
-    if (cvLength < 9)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5)}`;
-    if (cvLength < 13)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
-    return `${currentValue.slice(0, 2)}.${currentValue.slice(
-      2,
-      5
-    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
-      8,
-      12
-    )}-${currentValue.slice(12, 14)}`;
-  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -178,32 +147,6 @@ function UndNegUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data.nome} - {normalizeInput(data.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
                       <Label>Descrição da Unidade de Negócio</Label>
                       <FormGroup
                         className={`has-label ${values.descUndNeg.error}`}

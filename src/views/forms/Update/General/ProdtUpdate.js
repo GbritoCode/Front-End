@@ -42,7 +42,6 @@ function ProdtUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data1, setData1] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -53,8 +52,6 @@ function ProdtUpdatee() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/prodt/${id}`);
-      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
-      setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
@@ -64,33 +61,6 @@ function ProdtUpdatee() {
     setIsLoading(false);
     loadData();
   }, [id]);
-
-  const normalizeInput = value => {
-    if (!value) return value;
-    const currentValue = value.replace(/[^\d]/g, "");
-    const cvLength = currentValue.length;
-
-    if (cvLength < 3) return currentValue;
-    if (cvLength < 6)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
-    if (cvLength < 9)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5)}`;
-    if (cvLength < 13)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
-    return `${currentValue.slice(0, 2)}.${currentValue.slice(
-      2,
-      5
-    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
-      8,
-      12
-    )}-${currentValue.slice(12, 14)}`;
-  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -174,32 +144,6 @@ function ProdtUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data1.nome} - {normalizeInput(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
                       <Label>Descrição do Produto</Label>
                       <FormGroup
                         className={`has-label ${values.descProdt.error}`}

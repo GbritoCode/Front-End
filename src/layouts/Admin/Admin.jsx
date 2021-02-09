@@ -28,6 +28,7 @@ import Sidebar from "~/components/Sidebar/Sidebar.jsx";
 import routes from "~/routes/routes";
 
 import logo from "~/assets/img/tovoLogo.png";
+import FooterSigned from "~/components/Footer/FooterSigned";
 
 var ps;
 class Admin extends React.Component {
@@ -203,6 +204,7 @@ class Admin extends React.Component {
             toggleSidebar={this.toggleSidebar}
           />
           <Switch>{this.getRoutes(routes)} </Switch>
+          <FooterSigned style={{ paddingTop: 0 }} fluid />
         </div>
       </div>
     );

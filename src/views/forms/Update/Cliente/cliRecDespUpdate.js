@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Form,
   Input,
@@ -203,38 +202,12 @@ export default function CliRecDespUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Receita do Cliente</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Receita do Cliente</h3>
+                    <p style={{ fontSize: 11 }}>{data1.rzSoc}</p>
+                    <p style={{ fontSize: 11 }}>{normalizeCnpj(data1.CNPJ)}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Cliente</Label>
-                      <FormGroup
-                        className={`has-label ${values.ClienteId.error}`}
-                      >
-                        <Input
-                          disabled
-                          onChange={event =>
-                            handleChange(event, "ClienteId", "text")
-                          }
-                          value={values.ClienteId.value}
-                          name="ClienteId"
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o Cliente{" "}
-                          </option>{" "}
-                          <option value={data1.id}>
-                            {" "}
-                            {data1.nomeAbv} - {normalizeCnpj(data1.CNPJ)}
-                          </option>
-                        </Input>
-                        {values.ClienteId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ClienteId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>Receita</Label>

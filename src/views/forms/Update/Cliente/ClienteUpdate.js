@@ -51,7 +51,6 @@ function ClienteUpdatee() {
   const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
-  const [data3, setData3] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
@@ -76,10 +75,9 @@ function ClienteUpdatee() {
       const response3 = await api.get(`/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
-      setData3(response3.data);
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.EmpresaId },
+        empresaId: { value: response3.data.id },
         cnpj: { value: normalizeCnpj(response.data.CNPJ) },
         nomeAbv: { value: response.data.nomeAbv },
         representante: { value: response.data.RepresentanteId },
@@ -458,31 +456,6 @@ function ClienteUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data3.nome} - {normalizeCnpj(data3.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>CNPJ</Label>

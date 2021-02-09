@@ -33,7 +33,6 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj } from "~/normalize";
 import { RecDespUpdate } from "~/store/modules/general/actions";
 import api from "~/services/api";
 
@@ -44,7 +43,6 @@ function RecDespUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -61,10 +59,8 @@ function RecDespUpdatee() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/rec_desp/${id}`);
-      const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
       const response2 = await api.get(`/contaContabil/`);
       const response3 = await api.get(`/centroCusto/`);
-      setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
       setValues(prevState => ({
@@ -215,31 +211,6 @@ function RecDespUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data1.nome} - {normalizeCnpj(data1.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>Descrição</Label>

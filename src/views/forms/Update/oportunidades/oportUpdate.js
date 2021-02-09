@@ -42,7 +42,6 @@ import {
   Timeline
 } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
-import { store } from "~/store";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
@@ -53,7 +52,6 @@ export default function UpdateOport() {
   const firstRender = useRef(true);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -82,10 +80,8 @@ export default function UpdateOport() {
   const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
-    const { empresa } = store.getState().auth;
     async function loadData() {
       setIsLoading(true);
-      const response = await api.get(`/empresa/${empresa}`);
       const response2 = await api.get(`/cliente/`);
       const response4 = await api.get(`/und_neg/`);
       const response5 = await api.get(`/rec_desp/`);
@@ -103,7 +99,6 @@ export default function UpdateOport() {
       setData5(response5.data);
       setData6(response6.data);
       setData7(response7.data);
-      setData(response.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -346,31 +341,6 @@ export default function UpdateOport() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data.nome} - {normalizeCnpj(data.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>Colaborador</Label>
