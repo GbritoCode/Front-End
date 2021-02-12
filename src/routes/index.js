@@ -7,6 +7,8 @@ import singUp from "~/pages/signUp";
 // import ClienteCadastro from "~/pages/Cliente";
 
 import Dashboard from "~/pages/dashboard";
+import DashboardComercial from "~/pages/dashboard/dashboardComercial";
+import DashboardGerencial from "~/pages/dashboard/dashboardGerencial";
 
 // -----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
 // -----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
@@ -120,6 +122,8 @@ import UpdateContaContabil from "~/views/forms/Update/auxUpdate/contaContabilupd
 import CadastroCentroCusto from "~/views/forms/auxForm/centroCustoCadastro";
 import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate";
 import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
+import PeriodosTable from "~/views/tables/Fechamento/periodos";
+import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
 
 export default function Routes() {
   return (
@@ -127,8 +131,16 @@ export default function Routes() {
       <Route path="/login" exact component={signIn} />
       <Route path="/register" component={singUp} />
       <Route path="/dashboardPessoal" component={Dashboard} isPrivate />
-      <Route path="/dashboardGerencial" component={Dashboard} isPrivate />
-      <Route path="/dashboardComercial" component={Dashboard} isPrivate />
+      <Route
+        path="/dashboardGerencial"
+        component={DashboardGerencial}
+        isPrivate
+      />
+      <Route
+        path="/dashboardComercial"
+        component={DashboardComercial}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -250,6 +262,11 @@ export default function Routes() {
       <Route
         path="/tabelas/apontamentos/horas/:id"
         component={HorasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/fechamento/periodo"
+        component={PeriodosTable}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -522,6 +539,11 @@ export default function Routes() {
         component={UpdateCentroCusto}
         isPrivate
       />
+      <Route
+        path="/cadastro/fechamento/periodo"
+        component={CadastroPeriodo}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -530,7 +552,6 @@ export default function Routes() {
     </Switch>
   );
 }
-
 /* {
   path: "/dashboard",
   name: "Dashboard",

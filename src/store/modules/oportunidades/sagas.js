@@ -40,7 +40,7 @@ export function* oportCadastro({ payload }) {
     });
     history.push("/tabelas/oportunidade/oport");
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -84,7 +84,7 @@ export function* updateOport({ payload }) {
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -125,7 +125,7 @@ export function* cotacaoCadastro({ payload }) {
     });
     history.push(`/tabelas/oportunidade/oport`);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -169,7 +169,7 @@ export function* updateCotacao({ payload }) {
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -200,7 +200,7 @@ export function* recursoCadastro({ payload }) {
     });
     history.push(`/tabelas/oportunidade/recurso/${OportunidadeId}`);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -234,7 +234,7 @@ export function* updateRecurso({ payload }) {
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -312,7 +312,7 @@ export function* updateParcela({ payload }) {
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -353,7 +353,7 @@ export function* horaCadastro({ payload }) {
     });
     history.go(0);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -397,7 +397,7 @@ export function* updateHora({ payload }) {
     history.push(`/tabelas/apontamentos/horas/${ColabId}`);
     yield put(UpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -426,7 +426,7 @@ export function* despesaCadastro({ payload }) {
     });
     history.go(0);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -455,7 +455,7 @@ export function* updateDespesa({ payload }) {
     toast.success("cliente atualizado");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
