@@ -86,7 +86,6 @@ class DashboardGerencial extends React.Component {
   };
 
   render() {
-    const { id } = store.getState().auth.user;
     return (
       <>
         <div className="content">
@@ -196,7 +195,7 @@ class DashboardGerencial extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <Link to={`tabelas/apontamentos/horas/${id}`}>
+                    <Link to="tabelas/apontamentos/gerencial/horas">
                       <i className="tim-icons icon-refresh-01" /> Ver horas
                     </Link>
                   </div>
@@ -231,7 +230,7 @@ class DashboardGerencial extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <Link to={`tabelas/apontamentos/despesas/${id}`}>
+                    <Link to="tabelas/apontamentos/gerencial/despesas">
                       <i className="tim-icons icon-sound-wave" /> Ver despesas
                     </Link>
                   </div>

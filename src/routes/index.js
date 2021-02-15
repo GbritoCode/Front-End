@@ -124,6 +124,8 @@ import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate"
 import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 import PeriodosTable from "~/views/tables/Fechamento/periodos";
 import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
+import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
+import GerencialDespesasTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
 
 export default function Routes() {
   return (
@@ -269,6 +271,16 @@ export default function Routes() {
         component={PeriodosTable}
         isPrivate
       />
+      <Route
+        path="/tabelas/apontamentos/gerencial/horas"
+        component={GerencialHorasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/apontamentos/gerencial/despesas"
+        component={GerencialDespesasTable}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -366,7 +378,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/update/general/parametros/:id"
+        path="/update/general/parametros/1"
         component={ParametrosUpdate}
         isPrivate
       />

@@ -51,6 +51,10 @@ class PeriodosTable extends Component {
     this.setState({ modalMini: !this.state.modalMini });
   };
 
+  toggleModalFinaliza = () => {
+    this.setState({ modalFinaliza: !this.state.modalFinaliza });
+  };
+
   delay = ms => new Promise(res => setTimeout(res, ms));
 
   reloadData = async () => {
@@ -85,17 +89,9 @@ class PeriodosTable extends Component {
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
-                  onClick={async () => {
-                    await api
-                      .put(`fechamentoPeriodo/${periodo.id}`, { aberto: false })
-                      .then(result => {
-                        toast.success(result.data);
-                        this.reloadData();
-                        this.setState({ excluding: undefined });
-                      })
-                      .catch(err => {
-                        toast.error(err.response.data.error);
-                      });
+                  onClick={() => {
+                    this.setState({ finaliza: periodo.id });
+                    this.toggleModalFinaliza();
                   }}
                 >
                   <i className="tim-icons icon-check-2" />
@@ -172,6 +168,62 @@ class PeriodosTable extends Component {
                       toast.error(err.response.data.error);
                     });
                   this.toggleModalMini();
+                }}
+              >
+                Sim
+              </Button>
+            </div>
+          </Modal>
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalFinaliza}
+            toggle={this.toggleModalFinaliza}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalFinaliza}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <p>Deseja finalizar o período?</p>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalFinaliza}
+              >
+                Não
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={async () => {
+                  await api
+                    .put(`fechamentoPeriodo/${this.state.finaliza}`, {
+                      aberto: false
+                    })
+                    .then(result => {
+                      toast.success(result.data);
+                      this.reloadData();
+                      this.setState({ finaliza: undefined });
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                  this.toggleModalFinaliza();
                 }}
               >
                 Sim

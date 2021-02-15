@@ -64,7 +64,7 @@ function ParametrosUpdatee() {
 
   useEffect(() => {
     async function loadData() {
-      const response = await api.get(`/parametros/${id}`);
+      const response = await api.get(`/parametros/1`);
 
       setValues(prevState => ({
         ...prevState,
@@ -110,7 +110,6 @@ function ParametrosUpdatee() {
     }
     loadData();
   }, [id]);
-
   const checkAdianta = () => {
     if (values.adiantaPgmto.value === "Sim") {
       return true;

@@ -111,7 +111,6 @@ import ColabCompTable from "~/views/tables/Colab/ColabCompTable";
 import AreaTable from "~/views/tables/General/AreaTable";
 import EmpresaTable from "~/views/tables/General/EmpresaTable";
 import FornecTable from "~/views/tables/General/FornecTable";
-import ParametrosTable from "~/views/tables/General/ParametrosTable";
 import ProdtTable from "~/views/tables/General/ProdtTable";
 import RepresentanteTable from "~/views/tables/General/RepresentanteTable";
 import SegmentoTable from "~/views/tables/General/SegmentoTable";
@@ -158,6 +157,8 @@ import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate"
 import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
 import PeriodosTable from "~/views/tables/Fechamento/periodos";
 import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
+import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
+import GerencialDespesaTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -274,7 +275,7 @@ const routes = [
         path: `/update/general/parametros/1`,
         name: "Parametros",
         mini: "PRM",
-        component: ParametrosTable,
+        component: ParametrosUpdate,
         layout: "/admin",
         profile: 10
       },
@@ -479,10 +480,26 @@ const routes = [
         redirect: true
       },
       {
+        path: "/tabelas/apontamentos/gerencial/despesas",
+        name: "Despesas",
+        mini: "DSP",
+        component: GerencialDespesaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
         path: "/tabelas/apontamentos/horas/:id",
         name: "Horas",
         mini: "HRS",
         component: HorasTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/apontamentos/gerencial/horas",
+        name: "Horas Gerencial",
+        mini: "HRS",
+        component: GerencialHorasTable,
         layout: "/admin",
         redirect: true
       }
@@ -685,13 +702,6 @@ const routes = [
         name: "Parametros",
         mini: "RF",
         component: ParametrosCadastro,
-        layout: "/admin"
-      },
-      {
-        path: "/update/general/parametros/:id",
-        name: "Editar Parâmetros",
-        mini: "RF",
-        component: ParametrosUpdate,
         layout: "/admin"
       },
       {
