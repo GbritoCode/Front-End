@@ -113,9 +113,9 @@ export default function CliContUpdatee() {
       case "title":
         switch (param) {
           case "false":
-            return "Edição de Contato Cliente";
+            return "Contato Cliente";
           case "true":
-            return "Edição de Contato Prospect";
+            return "Contato Prospect";
           default:
             break;
         }

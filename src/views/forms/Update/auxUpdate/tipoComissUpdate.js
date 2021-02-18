@@ -167,7 +167,7 @@ function AreaUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Tipo de Comissão</CardTitle>
+                    <CardTitle tag="h4">Tipo de Comissão</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

@@ -152,10 +152,8 @@ function PeriodTokenTable() {
               <>
                 <p>
                   {" "}
-                  Qual periodo deseja liberar para o colaborador {
-                    altering.nome
-                  }{" "}
-                  ?{" "}
+                  Informe período que deseja liberar para o colaborador{" "}
+                  {altering.nome}{" "}
                 </p>
                 <Label style={{ float: "left" }}>Período</Label>
                 <Input
@@ -218,7 +216,7 @@ function PeriodTokenTable() {
               <>
                 <p>
                   {" "}
-                  deseja cancelar o período liberado para o colaborador{" "}
+                  Deseja cancelar o período liberado para o colaborador{" "}
                   {altering.nome} ?{" "}
                 </p>
                 <div className="modal-footer">

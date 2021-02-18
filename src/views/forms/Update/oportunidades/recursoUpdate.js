@@ -279,7 +279,7 @@ export default function RecursoCadastro() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Edição de Recurso</h3>
+                    <h3 style={{ marginBottom: 0 }}>Recurso</h3>
                     <p style={{ fontSize: 11 }}>
                       {data4.cod} | {data4.desc}
                     </p>

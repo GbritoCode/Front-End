@@ -203,7 +203,7 @@ function RepresentanteUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Representante</CardTitle>
+                    <CardTitle tag="h4">Representante</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

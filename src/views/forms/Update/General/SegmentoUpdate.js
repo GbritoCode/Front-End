@@ -166,7 +166,7 @@ function SegmentoUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Segmento</CardTitle>
+                    <CardTitle tag="h4">Segmento</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

@@ -140,7 +140,7 @@ function ProdtUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Produto</CardTitle>
+                    <CardTitle tag="h4">Produto</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

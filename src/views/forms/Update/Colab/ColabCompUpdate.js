@@ -199,7 +199,7 @@ function ColabCompUpdatee() {
                 <Card>
                   <CardHeader>
                     <h3 style={{ marginBottom: 0 }}>
-                      Edição de Complemento de Colaborador
+                      Complemento de Colaborador
                     </h3>
                     <p style={{ fontSize: 11 }}>{data1.nome}</p>
                     <p style={{ fontSize: 11 }}>{normalizeCpf(data1.CPF)}</p>
@@ -360,7 +360,7 @@ function ColabCompUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tables/colab/comp/1">
+                      <Link to={`/tables/colab/comp/${id}`}>
                         <Button
                           style={{
                             paddingLeft: 32,

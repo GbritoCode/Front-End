@@ -304,7 +304,7 @@ function FornecUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Forncedor</CardTitle>
+                    <CardTitle tag="h4">Forncedor</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

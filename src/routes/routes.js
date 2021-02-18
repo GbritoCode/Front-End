@@ -187,7 +187,7 @@ if (typeof profile === "string") {
 const routes = [
   {
     collapse: true,
-    name: "dsa",
+    name: "Dashboards",
     icon: "tim-icons icon-chart-pie-36",
     state: "dashboardCollapse",
     profile: 1,

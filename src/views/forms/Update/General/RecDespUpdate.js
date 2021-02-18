@@ -207,33 +207,13 @@ function RecDespUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Receita e Despesa</CardTitle>
+                    <CardTitle tag="h4">Receita e Despesa</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <Row>
                         <Col md="4">
-                          <Label>Descrição</Label>
-                          <FormGroup
-                            className={`has-label ${values.desc.error}`}
-                          >
-                            <Input
-                              name="license"
-                              type="text"
-                              onChange={event =>
-                                handleChange(event, "desc", "text")
-                              }
-                              value={values.desc.value}
-                            />
-                            {values.desc.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.desc.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Rec/Desp</Label>
+                          <Label>Categoria</Label>
                           <FormGroup
                             check
                             className={`has-label ${values.recDesp.error}`}
@@ -271,7 +251,7 @@ function RecDespUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Tipo de Item</Label>
+                          <Label>Tipo</Label>
                           <FormGroup
                             className={`has-label ${values.tipoItem.error}`}
                           >
@@ -286,6 +266,26 @@ function RecDespUpdatee() {
                             {values.tipoItem.error === "has-danger" ? (
                               <Label className="error">
                                 {values.tipoItem.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Descrição</Label>
+                          <FormGroup
+                            className={`has-label ${values.desc.error}`}
+                          >
+                            <Input
+                              name="license"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "desc", "text")
+                              }
+                              value={values.desc.value}
+                            />
+                            {values.desc.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.desc.message}
                               </Label>
                             ) : null}
                           </FormGroup>

@@ -166,7 +166,7 @@ function AreaUpdatee() {
                         Novo
                       </Button>
                     </Link>
-                    <CardTitle tag="h4">Edição de Perfil</CardTitle>
+                    <CardTitle tag="h4">Perfil</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

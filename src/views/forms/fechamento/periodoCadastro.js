@@ -36,7 +36,7 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
-import { AssignmentInd, Close, Message } from "@material-ui/icons";
+import { Close, DateRange, Message } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
 import { toast } from "react-toastify";
 import { store } from "~/store";
@@ -166,7 +166,7 @@ export default function CadastroPeriodo() {
             </div>
           </div>
           <ModalBody className="text-center">
-            <p> Deseja criar um período mensal (dia 1 ao 31) para o ano ? </p>
+            <p> Geração automátca do período mensal </p>
             <Label style={{ float: "left" }}>Ano</Label>
             <Input
               name="ano"
@@ -197,7 +197,7 @@ export default function CadastroPeriodo() {
               type="button"
               onClick={toggleModalMini}
             >
-              Não
+              Cancelar
             </Button>
             <Button
               style={{ color: "#7E7E7E" }}
@@ -212,7 +212,7 @@ export default function CadastroPeriodo() {
                   });
               }}
             >
-              Sim
+              Gerar
             </Button>
           </div>
         </Modal>
@@ -221,7 +221,7 @@ export default function CadastroPeriodo() {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Período</CardTitle>
-                <Tooltip title="Recurso" placement="top" interactive>
+                <Tooltip title="Geração" placement="top" interactive>
                   <Button
                     style={{ float: "right" }}
                     color="default"
@@ -229,7 +229,7 @@ export default function CadastroPeriodo() {
                     className={classNames("btn-icon btn-link like")}
                     onClick={() => setModalMini(!modalMini)}
                   >
-                    <AssignmentInd />
+                    <DateRange />
                   </Button>
                 </Tooltip>
               </CardHeader>
@@ -296,7 +296,7 @@ export default function CadastroPeriodo() {
                     </Col>
                   </Row>
 
-                  <Link to="/tabelas/general/area">
+                  <Link to="/tabelas/fechamento/periodo">
                     <Button
                       style={{
                         paddingLeft: 32,

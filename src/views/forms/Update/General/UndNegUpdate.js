@@ -143,7 +143,7 @@ function UndNegUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Unidade de Negócio</CardTitle>
+                    <CardTitle tag="h4">Unidade de Negócio</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

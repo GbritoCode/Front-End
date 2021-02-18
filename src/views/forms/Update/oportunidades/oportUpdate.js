@@ -337,7 +337,7 @@ export default function UpdateOport() {
                       </Tooltip>
                     </Link>
 
-                    <CardTitle tag="h4">Edição de Oportunidade</CardTitle>
+                    <CardTitle tag="h4">Oportunidade</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

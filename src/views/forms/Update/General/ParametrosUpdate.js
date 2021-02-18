@@ -260,7 +260,7 @@ function ParametrosUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Parâmetros</CardTitle>
+                    <CardTitle tag="h4">Parâmetros</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

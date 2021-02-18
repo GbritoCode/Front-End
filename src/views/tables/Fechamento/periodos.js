@@ -283,7 +283,7 @@ class PeriodosTable extends Component {
                       accessor: "dataFim"
                     },
                     {
-                      Header: "Status",
+                      Header: "Situação",
                       accessor: "aberto"
                     },
                     {

@@ -199,7 +199,7 @@ function ProfileUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Usuário</CardTitle>
+                    <CardTitle tag="h4">Usuário</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

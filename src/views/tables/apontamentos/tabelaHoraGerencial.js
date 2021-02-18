@@ -218,10 +218,10 @@ export default class GerencialHorasTable extends Component {
         filename={`Horas_${year}-${month}-${date}`}
       >
         <ExcelSheet
-          data={this.state.dataForCsv}
+          data={this.state.dataForCsv || []}
           name={`Horas_${year}-${month}-${date}`}
         >
-          {this.filterColumns(this.state.dataForCsv).map(col => {
+          {this.filterColumns(this.state.dataForCsv || []).map(col => {
             return <ExcelColumn label={this.camelCase(col)} value={col} />;
           })}
         </ExcelSheet>
@@ -236,6 +236,9 @@ export default class GerencialHorasTable extends Component {
         filteredData.push(entry[1]._original);
       }
     );
+    if (filteredData.length === 0) {
+      return this.setState({ dataForCsv: [{}] });
+    }
     return this.setState({ dataForCsv: filteredData });
   };
 

@@ -322,7 +322,7 @@ export default function HorasUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Edição de Horas</h3>
+                    <h3 style={{ marginBottom: 0 }}>Horas</h3>
                     <p style={{ fontSize: 11 }}>
                       {data1.cod} | {data1.desc}
                     </p>

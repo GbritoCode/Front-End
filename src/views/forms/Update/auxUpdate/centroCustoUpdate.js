@@ -140,7 +140,7 @@ export default function UpdateCentroCusto() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Edição de Centro de Custo</CardTitle>
+                <CardTitle tag="h4">Centro de Custo</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>

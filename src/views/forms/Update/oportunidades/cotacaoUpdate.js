@@ -299,7 +299,7 @@ function CotacaoUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Edição de Cotação</h3>
+                    <h3 style={{ marginBottom: 0 }}>Cotação</h3>
                     <p style={{ fontSize: 11 }}>
                       {data2.cod} | {data2.desc}
                     </p>

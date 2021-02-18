@@ -253,7 +253,7 @@ class DashboardGerencial extends React.Component {
                           className="card-category"
                         >
                           {" "}
-                          a Receber {this.state.mes}
+                          a Pagar {this.state.mes}
                         </p>
                         <CardTitle tag="h3">{this.state.vlrHrs}</CardTitle>
                       </div>

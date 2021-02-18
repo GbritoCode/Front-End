@@ -180,9 +180,7 @@ function AreaUpdatee() {
                         Novo
                       </Button>
                     </Link>
-                    <CardTitle tag="h4">
-                      Edição de Condição de Pagamento
-                    </CardTitle>
+                    <CardTitle tag="h4">Condição de Pagamento</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
