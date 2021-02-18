@@ -159,6 +159,7 @@ import PeriodosTable from "~/views/tables/Fechamento/periodos";
 import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
 import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
 import GerencialDespesaTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
+import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -291,6 +292,14 @@ const routes = [
         name: "Períodos",
         mini: "PER",
         component: PeriodosTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: `/tabelas/fechamento/acesso`,
+        name: "Liberar Períodos",
+        mini: "PER",
+        component: PeriodTokenTable,
         layout: "/admin",
         profile: 10
       }

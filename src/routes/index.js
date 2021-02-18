@@ -126,6 +126,7 @@ import PeriodosTable from "~/views/tables/Fechamento/periodos";
 import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
 import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
 import GerencialDespesasTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
+import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
 
 export default function Routes() {
   return (
@@ -279,6 +280,11 @@ export default function Routes() {
       <Route
         path="/tabelas/apontamentos/gerencial/despesas"
         component={GerencialDespesasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/fechamento/acesso"
+        component={PeriodTokenTable}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
