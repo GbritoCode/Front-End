@@ -450,7 +450,9 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <h5 className="card-category">Parcelas Pendentes</h5>
+                      <Link to="tabelas/parcela/pendentes">
+                        Parcelas Pendentes
+                      </Link>
                       <CardTitle tag="h3">
                         <ErrorOutline /> {this.state.parcsState.totalPendente}
                       </CardTitle>
@@ -468,7 +470,9 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <h5 className="card-category">Parcelas Atrasadas</h5>
+                      <Link to="tabelas/parcela/atrasadas">
+                        Parcelas Atrasadas
+                      </Link>{" "}
                       <CardTitle tag="h3">
                         <EventBusy />
                         {this.state.parcsState.totalAtrasada}
@@ -487,7 +491,7 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <h5 className="card-category">Parcelas Abertas</h5>
+                      <Link to="tabelas/parcela/abertas">Parcelas Abertas</Link>
                       <CardTitle tag="h3">
                         <AlarmOnOutlined />
                         {this.state.parcsState.totalAberta}

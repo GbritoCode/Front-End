@@ -160,6 +160,9 @@ import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
 import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
 import GerencialDespesaTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
 import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
+import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTable";
+import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
+import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -549,6 +552,30 @@ const routes = [
         name: "Recursos",
         mini: "rec",
         component: ParcelaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/pendentes",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaPendentesTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/abertas",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaAbertaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/atrasadas",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaAtrasadaTable,
         layout: "/admin",
         redirect: true
       },

@@ -127,6 +127,9 @@ import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
 import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
 import GerencialDespesasTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
 import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
+import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTable";
+import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
+import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 
 export default function Routes() {
   return (
@@ -245,6 +248,26 @@ export default function Routes() {
       <Route
         path="/tabelas/oportunidade/cotacao/:id"
         component={cotacaoTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/oportunidade/parcela/:id"
+        component={ParcelaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/pendentes"
+        component={ParcelaPendentesTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/atrasadas"
+        component={ParcelaAtrasadaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/abertas"
+        component={ParcelaAbertaTable}
         isPrivate
       />
       <Route
@@ -489,11 +512,6 @@ export default function Routes() {
       <Route
         path="/update/oportunidade/recurso/:id"
         component={RecursoUpdate}
-        isPrivate
-      />
-      <Route
-        path="/tabelas/oportunidade/parcela/:id"
-        component={ParcelaTable}
         isPrivate
       />
       <Route
