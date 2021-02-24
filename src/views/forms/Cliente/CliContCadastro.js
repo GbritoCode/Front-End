@@ -256,7 +256,7 @@ export default function CliContCadastro() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container">

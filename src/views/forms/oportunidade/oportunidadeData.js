@@ -130,7 +130,7 @@ export default function DataOport() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container" />

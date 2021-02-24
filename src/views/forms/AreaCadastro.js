@@ -44,6 +44,7 @@ export default function CadastroCliente() {
   const dispatch = useDispatch();
 
   const stateSchema = {
+    id: { value: "", error: "", message: "" },
     empresaId: { value: "", error: "", message: "" },
     descArea: { value: "", error: "", message: "" }
   };
@@ -53,8 +54,16 @@ export default function CadastroCliente() {
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/area/?one=true`);
+
+      if (response1.data.length !== 0) {
+        var id = response1.data[0].id + 1;
+      } else {
+        id = 1;
+      }
       setValues(prevState => ({
         ...prevState,
+        id: { value: id },
         empresaId: { value: response.data.id }
       }));
     }
@@ -139,20 +148,43 @@ export default function CadastroCliente() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Descrição Área</Label>
-                  <FormGroup className={`has-label ${values.descArea.error}`}>
-                    <Input
-                      name="descArea"
-                      type="text"
-                      onChange={event =>
-                        handleChange(event, "descArea", "text")
-                      }
-                      value={values.descArea.value}
-                    />{" "}
-                    {values.descArea.error === "has-danger" ? (
-                      <Label className="error">{values.descArea.message}</Label>
-                    ) : null}
-                  </FormGroup>
+                  <Row>
+                    <Col md="4">
+                      <Label>Id</Label>
+                      <FormGroup className={`has-label ${values.id.error}`}>
+                        <Input
+                          disabled
+                          name="id"
+                          type="text"
+                          onChange={event => handleChange(event, "id", "text")}
+                          value={values.id.value}
+                        />{" "}
+                        {values.id.error === "has-danger" ? (
+                          <Label className="error">{values.id.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Descrição Área</Label>
+                      <FormGroup
+                        className={`has-label ${values.descArea.error}`}
+                      >
+                        <Input
+                          name="descArea"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descArea", "text")
+                          }
+                          value={values.descArea.value}
+                        />{" "}
+                        {values.descArea.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descArea.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
 
                   <Link to="/tabelas/general/area">
                     <Button

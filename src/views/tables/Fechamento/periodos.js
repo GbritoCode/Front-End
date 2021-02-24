@@ -62,13 +62,6 @@ class PeriodosTable extends Component {
     this.loadData();
   };
 
-  checkAberto = status => {
-    if (status) {
-      return "Aberto";
-    }
-    return "Fechado";
-  };
-
   loadData = async () => {
     const response = await api.get("/fechamentoPeriodo");
     this.setState({
@@ -79,7 +72,7 @@ class PeriodosTable extends Component {
           nome: periodo.nome,
           dataInic: periodo.dataInic,
           dataFim: periodo.dataFim,
-          aberto: this.checkAberto(periodo.aberto),
+          situacao: periodo.situacao,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -213,7 +206,7 @@ class PeriodosTable extends Component {
                 onClick={async () => {
                   await api
                     .put(`fechamentoPeriodo/${this.state.finaliza}`, {
-                      aberto: false
+                      situacao: "Fechado"
                     })
                     .then(result => {
                       toast.success(result.data);
@@ -284,7 +277,7 @@ class PeriodosTable extends Component {
                     },
                     {
                       Header: "Situação",
-                      accessor: "aberto"
+                      accessor: "situacao"
                     },
                     {
                       Header: "Ações",

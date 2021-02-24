@@ -311,7 +311,7 @@ export default function UpdateOport() {
   return (
     <>
       {isLoading ? (
-        <> </>
+        <><div className='content' /> </>
       ) : (
         <>
           <div className="rna-container">

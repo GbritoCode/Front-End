@@ -292,7 +292,9 @@ export default function HorasCadastro() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">

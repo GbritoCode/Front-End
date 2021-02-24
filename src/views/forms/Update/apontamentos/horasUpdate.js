@@ -311,7 +311,7 @@ export default function HorasUpdate() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container">

@@ -189,7 +189,7 @@ export default function CliRecDespCadastro() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container">

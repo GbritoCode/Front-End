@@ -423,7 +423,9 @@ function ClienteUpdatee() {
   return (
     <>
       {isLoading ? (
-        <div> </div>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">

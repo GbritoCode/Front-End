@@ -205,7 +205,7 @@ export default function DespesaUpdate() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container">

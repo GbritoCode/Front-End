@@ -253,7 +253,7 @@ export default function RecursoCadastro() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container">

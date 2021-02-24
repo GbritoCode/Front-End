@@ -138,22 +138,29 @@ export default function ProdtCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Descrição do Produto</Label>
-                  <FormGroup className={`has-label ${values.descProdt.error}`}>
-                    <Input
-                      name="descProdt"
-                      type="text"
-                      onChange={event =>
-                        handleChange(event, "descProdt", "text")
-                      }
-                      value={values.descProdt.value}
-                    />
-                    {values.descProdt.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.descProdt.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                  <Row>
+                    <Col md="4">
+                      <Label>Descrição do Produto</Label>
+                      <FormGroup
+                        className={`has-label ${values.descProdt.error}`}
+                      >
+                        <Input
+                          name="descProdt"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descProdt", "text")
+                          }
+                          value={values.descProdt.value}
+                        />
+                        {values.descProdt.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descProdt.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+
                   <Link to="/tabelas/general/prodt">
                     <Button
                       style={{

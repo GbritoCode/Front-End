@@ -59,7 +59,8 @@ function PeriodTokenTable() {
       setData1(response1.data);
       setAltering(prevState => ({
         ...prevState,
-        periodo: response1.data[0].nome
+        periodo: response1.data[0].nome,
+        ano: response1.data[0].ano
       }));
       setData(
         response.data.map((colab, key) => {
@@ -93,7 +94,9 @@ function PeriodTokenTable() {
                     setModalMini(!modalMini);
                   }}
                 >
-                  <i className="tim-icons icon-pencil" />
+                  <Tooltip title="Gerar Token">
+                    <i className="tim-icons icon-simple-add" />
+                  </Tooltip>
                 </Button>
                 {/* use this button to remove the data row */}
                 <Button
@@ -109,7 +112,9 @@ function PeriodTokenTable() {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                 >
-                  <i className="tim-icons icon-simple-remove" />
+                  <Tooltip title="Excluir Token">
+                    <i className="tim-icons icon-simple-remove" />
+                  </Tooltip>
                 </Button>{" "}
               </div>
             )
@@ -161,9 +166,11 @@ function PeriodTokenTable() {
                   type="select"
                   onChange={e => {
                     var { value } = e.target;
+                    var i = value.replace(/[^a-zA-Z0-9,ç ]/g, "").split(",");
                     setAltering(prevState => ({
                       ...prevState,
-                      periodo: value
+                      periodo: i[0],
+                      ano: i[1]
                     }));
                   }}
                 >
@@ -171,7 +178,10 @@ function PeriodTokenTable() {
                     Selecione o período
                   </option>
                   {data1.map(periodo => (
-                    <option key={periodo.id} value={periodo.nome}>
+                    <option
+                      key={periodo.id}
+                      value={JSON.stringify([periodo.nome, periodo.ano])}
+                    >
                       {" "}
                       {periodo.nome} - {periodo.ano}{" "}
                     </option>
@@ -195,7 +205,8 @@ function PeriodTokenTable() {
                         await api
                           .post("liberaPeriodo", {
                             ColabId: altering.ColabId,
-                            periodo: altering.periodo
+                            periodo: altering.periodo,
+                            ano: altering.ano
                           })
                           .then(result => {
                             toast.success(result.data);
@@ -256,7 +267,7 @@ function PeriodTokenTable() {
           <Card>
             <CardHeader>
               <CardTitle tag="h4">
-                Oportunidades
+                Liberar Períodos
                 <Link to="/cadastro/oportunidade/oport">
                   <Tooltip title="Novo" placement="top" interactive>
                     <Button
@@ -297,16 +308,12 @@ function PeriodTokenTable() {
                     accessor: "nome"
                   },
                   {
-                    Header: "CPF",
-                    accessor: "CPF"
+                    Header: "Celular",
+                    accessor: "cel"
                   },
                   {
-                    Header: "Data de Adimissão",
-                    accessor: "dtAdmiss"
-                  },
-                  {
-                    Header: "Especialidade",
-                    accessor: "espec"
+                    Header: "Email",
+                    accessor: "email"
                   },
                   {
                     Header: "Ações",

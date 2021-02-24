@@ -41,21 +41,35 @@ export default function ParcelaUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
+  // eslint-disable-next-line no-extend-native
+  Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data1, setData1] = useState();
+  const [data3, setData3] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
+  const today = new Date();
+  const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
+  // const dtVenc = today
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" },
     dtEmissao: { value: `${year}-${month}-${date}`, error: "", message: "" },
-    dtVencimento: { value: "", error: "", message: "" },
+    dtVencimento: {
+      value: "",
+      error: "",
+      message: ""
+    },
     notaFiscal: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
-    pedidoCliente: { value: "", error: "", message: "" },
+    pedidoCliente: { value: "Não informado", error: "", message: "" },
     situacao: { value: "", error: "", message: "" },
     dtLiquidacao: { value: "", error: "", message: "" },
     vlrPago: { value: "", error: "", message: "" },
@@ -70,7 +84,18 @@ export default function ParcelaUpdate() {
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
+      const response2 = await api.get(
+        `/cliente/complem/${response1.data.ClienteId}`
+      );
+      const response3 = await api.get(
+        `/condPgmto/${response2.data.CondPgmtoId}`
+      );
       setData1(response1.data);
+      setData3(response3.data);
+      const [dateVenc, monthVenc, yearVenc] = new Date()
+        .addDays(data3.diasPrazo)
+        .toLocaleDateString("pt-BR")
+        .split("/");
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response.data.OportunidadeId },
@@ -78,7 +103,10 @@ export default function ParcelaUpdate() {
         vlrParcela: {
           value: normalizeCalcCurrency(response.data.vlrParcela)
         },
-        dtVencimento: { value: response.data.dtVencimento },
+        dtVencimento: {
+          value:
+            response.data.dtVencimento || `${yearVenc}-${monthVenc}-${dateVenc}`
+        },
         notaFiscal: { value: response.data.notaFiscal }
       }));
 
@@ -101,7 +129,7 @@ export default function ParcelaUpdate() {
       setIsLoading(false);
     }
     loadData();
-  }, [id]);
+  }, [data3.diasPrazo, id]);
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -222,7 +250,9 @@ export default function ParcelaUpdate() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">

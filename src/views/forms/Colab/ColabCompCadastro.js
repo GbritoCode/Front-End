@@ -179,7 +179,7 @@ export default function ColabCompCadastro() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <><div className='content' /></>
       ) : (
         <>
           <div className="rna-container">

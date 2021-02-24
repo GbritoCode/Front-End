@@ -42,6 +42,7 @@ export default function RecDespCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
+  const [radioAux, setRadioAux] = useState({ desp: undefined });
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const stateSchema = {
@@ -88,7 +89,7 @@ export default function RecDespCadastro() {
     if (value === "Desp") {
       setValues(prevState => ({
         ...prevState,
-        CentroCustoId: { value: "" }
+        CentroCustoId: { value: radioAux || "" }
       }));
       document.getElementsByName("CentroCustoId")[0].disabled = false;
     }
@@ -192,42 +193,6 @@ export default function RecDespCadastro() {
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
-                      <Label>Categoria</Label>
-                      <FormGroup
-                        check
-                        className={`has-label ${values.recDesp.error}`}
-                        onChangeCapture={e => recDespChange(e.target.value)}
-                      >
-                        <Label check>
-                          <Input
-                            name="rec/desp"
-                            type="radio"
-                            onChange={event =>
-                              handleChange(event, "recDesp", "text")
-                            }
-                            value="Rec"
-                          />
-                          Receita
-                        </Label>
-                        <Label check>
-                          <Input
-                            name="rec/desp"
-                            type="radio"
-                            onChange={event =>
-                              handleChange(event, "recDesp", "text")
-                            }
-                            value="Desp"
-                          />
-                          Despesa
-                        </Label>
-                        {values.recDesp.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.recDesp.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
                       <Label>Tipo</Label>
                       <FormGroup
                         className={`has-label ${values.tipoItem.error}`}
@@ -263,8 +228,6 @@ export default function RecDespCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
                     <Col md="4">
                       <Label>Conta Contábil</Label>
                       <FormGroup
@@ -300,6 +263,8 @@ export default function RecDespCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
+                  </Row>
+                  <Row>
                     <Col md="4">
                       <Label>Centro de Custo</Label>
                       <FormGroup
@@ -308,9 +273,10 @@ export default function RecDespCadastro() {
                         <Input
                           name="CentroCustoId"
                           type="select"
-                          onChange={event =>
-                            handleChange(event, "CentroCustoId", "text")
-                          }
+                          onChange={event => {
+                            handleChange(event, "CentroCustoId", "text");
+                            setRadioAux(event.target.value);
+                          }}
                           value={values.CentroCustoId.value}
                         >
                           {" "}
@@ -328,6 +294,42 @@ export default function RecDespCadastro() {
                         {values.CentroCustoId.error === "has-danger" ? (
                           <Label className="error">
                             {values.CentroCustoId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Categoria</Label>
+                      <FormGroup
+                        check
+                        className={`has-label ${values.recDesp.error}`}
+                        onChangeCapture={e => recDespChange(e.target.value)}
+                      >
+                        <Label check>
+                          <Input
+                            name="rec/desp"
+                            type="radio"
+                            onChange={event => {
+                              handleChange(event, "recDesp", "text");
+                            }}
+                            value="Rec"
+                          />
+                          Receita
+                        </Label>
+                        <Label check>
+                          <Input
+                            name="rec/desp"
+                            type="radio"
+                            onChange={event =>
+                              handleChange(event, "recDesp", "text")
+                            }
+                            value="Desp"
+                          />
+                          Despesa
+                        </Label>
+                        {values.recDesp.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.recDesp.message}
                           </Label>
                         ) : null}
                       </FormGroup>

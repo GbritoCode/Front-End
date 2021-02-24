@@ -192,7 +192,9 @@ export default function DespesaCadastro() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           {" "}

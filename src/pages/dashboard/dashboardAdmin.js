@@ -328,9 +328,10 @@ class AdminDashboard extends React.Component {
     const { id } = store.getState().auth.user;
     return (
       <>
-        {console.log(this.state.bigChartData)}
         {this.state.isLoading ? (
-          <></>
+          <>
+            <div className="content" />
+          </>
         ) : (
           <>
             <div className="content">
