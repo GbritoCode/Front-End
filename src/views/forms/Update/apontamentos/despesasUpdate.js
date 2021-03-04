@@ -205,7 +205,9 @@ export default function DespesaUpdate() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -225,37 +227,6 @@ export default function DespesaUpdate() {
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <Row>
-                        <Col md="4">
-                          <Label>Oportunidade</Label>
-                          <FormGroup
-                            className={`has-label ${values.OportunidadeId.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="OportunidadeId"
-                              onChange={event =>
-                                handleChange(event, "OportunidadeId", "text")
-                              }
-                              value={values.OportunidadeId.value}
-                              type="select"
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Oportunidade{" "}
-                              </option>{" "}
-                              <option value={data1.id}>
-                                {" "}
-                                {data1.cod} - {data1.desc}
-                              </option>
-                            </Input>
-
-                            {values.OportunidadeId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.OportunidadeId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
                         <Col md="4">
                           <Label>Data da Despesa</Label>
                           <FormGroup
@@ -307,8 +278,6 @@ export default function DespesaUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Valor da Despesa </Label>
                           <FormGroup
@@ -350,6 +319,7 @@ export default function DespesaUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <Row />
                       <Button
                         style={{
                           paddingLeft: 29,

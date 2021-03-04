@@ -198,14 +198,14 @@ const routes = [
       {
         path: "/dashboardPessoal",
         name: "Pessoal",
-        mini: "R",
+        mini: "PER",
         component: arr === undefined ? Dashboard : checkProfile(arr[23]),
         layout: "/admin"
       },
       {
         path: "/dashboardGerencial",
         name: "Gerencial",
-        mini: "R",
+        mini: "GER",
         component: DashboardGerencial,
         profile: 10,
         layout: "/admin"
@@ -213,7 +213,7 @@ const routes = [
       {
         path: "/dashboardComercial",
         name: "Comercial",
-        mini: "R",
+        mini: "COM",
         component: DashboardComercial,
         profile: 10,
         layout: "/admin"

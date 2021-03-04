@@ -97,7 +97,9 @@ class ParcelaAbertaTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parcNota/${parcela.id}`);
+                    history.push(
+                      `/update/oportunidade/parcNota/${parcela.id}/?fromDash=true`
+                    );
                   }}
                 >
                   <i className="tim-icons icon-paper" />
@@ -110,24 +112,14 @@ class ParcelaAbertaTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parc/${parcela.id}`);
+                    history.push(
+                      `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
+                    );
                   }}
                 >
                   <i className="tim-icons icon-coins" />
                 </Button>
               </Tooltip>
-              {/* use this button to remove the data row */}
-              <Button
-                onClick={() => {
-                  this.setState({ excluding: parcela.id });
-                  this.toggleModalMini();
-                }}
-                color="danger"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-simple-remove" />
-              </Button>{" "}
             </div>
           )
         };
@@ -238,16 +230,16 @@ class ParcelaAbertaTable extends Component {
                       accessor: "parcela"
                     },
                     {
-                      Header: "Valor Parcela",
-                      accessor: "vlrParcela"
+                      Header: "Cliente",
+                      accessor: "Cliente"
                     },
                     {
                       Header: "Oportunidade",
                       accessor: "Oportunidade"
                     },
                     {
-                      Header: "Cliente",
-                      accessor: "Cliente"
+                      Header: "Saldo",
+                      accessor: "saldo"
                     },
                     {
                       Header: "Nota Fiscal",
@@ -258,8 +250,8 @@ class ParcelaAbertaTable extends Component {
                       accessor: "dtVencimento"
                     },
                     {
-                      Header: "Saldo",
-                      accessor: "saldo"
+                      Header: "Situação",
+                      accessor: "situacao"
                     },
                     {
                       Header: "Ações",

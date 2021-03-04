@@ -42,6 +42,7 @@ import { toast } from "react-toastify";
 import { store } from "~/store";
 import { areaRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
+import history from "~/services/history";
 
 export default function CadastroPeriodo() {
   // --------- colocando no modo claro do template
@@ -166,7 +167,7 @@ export default function CadastroPeriodo() {
             </div>
           </div>
           <ModalBody className="text-center">
-            <p> Geração automátca do período mensal </p>
+            <p> Geração automática do período mensal </p>
             <Label style={{ float: "left" }}>Ano</Label>
             <Input
               name="ano"
@@ -206,7 +207,10 @@ export default function CadastroPeriodo() {
               onClick={async () => {
                 await api
                   .post("fechamentoPeriodo/?auto=true&tipo=mensal", modalVar)
-                  .then(setModalMini(!modalMini))
+                  .then(() => {
+                    setModalMini(!modalMini);
+                    history.push("/tabelas/fechamento/periodo");
+                  })
                   .catch(err => {
                     toast.error(err.response.data.error);
                   });

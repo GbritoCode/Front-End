@@ -119,7 +119,7 @@ export default class HorasTable extends Component {
           Intervalo: horas.horaIntrv,
           "Hora Final": horas.horaFim,
           Total: normalizeHrToMin(horas.totalApont),
-          "Id Área": horas.AreaId,
+          Área: horas.areaNome,
           Solicitante: horas.solicitante,
           Descrição: horas.desc,
 
@@ -389,7 +389,7 @@ export default class HorasTable extends Component {
                       filterable: false
                     }
                   ]}
-                  defaultPageSize={10}
+                  defaultPageSize={30}
                   showPagination
                   showPageJump
                   showPaginationBottom

@@ -116,18 +116,6 @@ class ParametrosTable extends Component {
                   <i className="tim-icons icon-coins" />
                 </Button>
               </Tooltip>
-              {/* use this button to remove the data row */}
-              <Button
-                onClick={() => {
-                  this.setState({ excluding: parcela.id });
-                  this.toggleModalMini();
-                }}
-                color="danger"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-simple-remove" />
-              </Button>{" "}
             </div>
           )
         };

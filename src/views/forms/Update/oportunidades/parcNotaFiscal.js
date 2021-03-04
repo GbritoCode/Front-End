@@ -30,11 +30,12 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
+import history from "~/services/history";
 
 /* eslint-disable eqeqeq */
 export default function ParcelaUpdate() {
@@ -77,6 +78,9 @@ export default function ParcelaUpdate() {
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
+
+  const query = new URLSearchParams(useLocation().search);
+  const fromDash = query.get("fromDash");
 
   useEffect(() => {
     async function loadData() {
@@ -215,6 +219,7 @@ export default function ParcelaUpdate() {
       var vlrParceladb = values.vlrParcela.value.replace(/[^\d]+/g, "");
       var vlrPagodb = optional.vlrPago.value.replace(/[^\d]+/g, "");
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
+      const status = !!fromDash;
 
       dispatch(
         parcelaUpdate(
@@ -229,7 +234,8 @@ export default function ParcelaUpdate() {
           2,
           optional.dtLiquidacao.value,
           vlrPagodb,
-          saldodb
+          saldodb,
+          status
         )
       );
     } else {
@@ -263,7 +269,7 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Nota Fiscal de Parcela</h3>
+                    <h3 style={{ marginBottom: 0 }}>Nota Fiscal</h3>
                     <p style={{ fontSize: 11 }}>
                       {data1.cod} | {data1.desc}
                     </p>
@@ -432,27 +438,6 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
 
-                      <Link to={`/tabelas/oportunidade/parcela/${data1.id}`}>
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -471,6 +456,29 @@ export default function ParcelaUpdate() {
                           }}
                           size="large"
                         />
+                      </Button>
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33,
+                          float: "left"
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => {
+                          history.goBack();
+                        }}
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
+                          style={{
+                            paddingBottom: 4,
+                            paddingRight: 1
+                          }}
+                          size="large"
+                        />{" "}
+                        Voltar
                       </Button>
                     </Form>
                   </CardBody>

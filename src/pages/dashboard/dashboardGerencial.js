@@ -130,10 +130,10 @@ class DashboardGerencial extends React.Component {
         gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); // purple colors
 
         return {
-          labels: this.state.parcsState.parcLabels,
+          labels: this.state.parcsState.parcLabelsPendente,
           datasets: [
             {
-              label: "Countries",
+              label: "Parcelas",
               fill: true,
               backgroundColor: gradientStroke,
               hoverBackgroundColor: gradientStroke,
@@ -159,10 +159,10 @@ class DashboardGerencial extends React.Component {
         gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); // purple colors
 
         return {
-          labels: this.state.parcsState.parcLabels,
+          labels: this.state.parcsState.parcLabelsAtrasada,
           datasets: [
             {
-              label: "Countries",
+              label: "Parcelas",
               fill: true,
               backgroundColor: gradientStroke,
               hoverBackgroundColor: gradientStroke,
@@ -188,10 +188,10 @@ class DashboardGerencial extends React.Component {
         gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); // purple colors
 
         return {
-          labels: this.state.parcsState.parcLabels,
+          labels: this.state.parcsState.parcLabelsAberta,
           datasets: [
             {
-              label: "Countries",
+              label: "Parcelas",
               fill: true,
               backgroundColor: gradientStroke,
               hoverBackgroundColor: gradientStroke,
@@ -223,7 +223,9 @@ class DashboardGerencial extends React.Component {
         parcPendente: parcs.data.parcPendente,
         parcAtrasada: parcs.data.parcAtrasada,
         parcAberta: parcs.data.parcAberta,
-        parcLabels: parcs.data.labels,
+        parcLabelsPendente: parcs.data.labelsPendente,
+        parcLabelsAtrasada: parcs.data.labelsAtrasada,
+        parcLabelsAberta: parcs.data.labelsAberta,
         totalPendente: parcs.data.totalPendente,
         totalAtrasada: parcs.data.totalAtrasada,
         totalAberta: parcs.data.totalAberta
@@ -450,11 +452,12 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <Link to="tabelas/parcela/pendentes">
+                      <Link to="tabelas/parcela/pendentes/?fromDash=true">
                         Parcelas Pendentes
                       </Link>
                       <CardTitle tag="h3">
-                        <ErrorOutline /> {this.state.parcsState.totalPendente}
+                        <i className="tim-icons icon-send text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalPendente)}
                       </CardTitle>
                     </CardHeader>
                     <CardBody>
@@ -470,12 +473,12 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <Link to="tabelas/parcela/atrasadas">
+                      <Link to="tabelas/parcela/atrasadas/?fromDash=true">
                         Parcelas Atrasadas
-                      </Link>{" "}
+                      </Link>
                       <CardTitle tag="h3">
-                        <EventBusy />
-                        {this.state.parcsState.totalAtrasada}
+                        <i className="tim-icons icon-alert-circle-exc text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalAtrasada)}
                       </CardTitle>
                     </CardHeader>
                     <CardBody>
@@ -491,10 +494,12 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <Link to="tabelas/parcela/abertas">Parcelas Abertas</Link>
+                      <Link to="tabelas/parcela/abertas/?fromDash=true">
+                        Parcelas Abertas
+                      </Link>
                       <CardTitle tag="h3">
-                        <AlarmOnOutlined />
-                        {this.state.parcsState.totalAberta}
+                        <i className="tim-icons icon-tag text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalAberta)}
                       </CardTitle>
                     </CardHeader>
                     <CardBody>

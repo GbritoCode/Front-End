@@ -31,12 +31,13 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { differenceInMinutes, subHours, subMinutes } from "date-fns";
 import { normalizeCurrency, normalizeHrToMin } from "~/normalize";
 import { store } from "~/store";
 import { horaUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
+import history from "~/services/history";
 
 export default function HorasUpdate() {
   // --------- colocando no modo claro do template
@@ -311,7 +312,9 @@ export default function HorasUpdate() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -330,74 +333,6 @@ export default function HorasUpdate() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Row>
-                        <Col md="4">
-                          <Label>Código Oportunidade</Label>
-                          <FormGroup
-                            className={`has-label ${values.oportunidadeCod.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="oportunidadeCod"
-                              onChange={event =>
-                                handleChange(event, "oportunidadeCod", "text")
-                              }
-                              value={values.oportunidadeCod.value}
-                              type="text"
-                            />
-
-                            {values.oportunidadeCod.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.oportunidadeCod.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Descrição Oportunidade</Label>
-                          <FormGroup
-                            className={`has-label ${values.oportunidadeDesc.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="oportunidadeDesc"
-                              onChange={event =>
-                                handleChange(event, "oportunidadeDesc", "text")
-                              }
-                              value={values.oportunidadeDesc.value}
-                              type="text"
-                            />
-
-                            {values.oportunidadeDesc.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.oportunidadeDesc.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Cliente</Label>
-                          <FormGroup
-                            className={`has-label ${values.Cliente.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="Cliente"
-                              type="text"
-                              onChange={event => {
-                                handleChange(event, "Cliente", "text");
-                              }}
-                              value={values.Cliente.value}
-                            />
-                            {values.Cliente.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.Cliente.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-
                       <Row>
                         <Col md="4">
                           <Label>Hora Inicial</Label>
@@ -630,27 +565,30 @@ export default function HorasUpdate() {
                         </Col>
                       </Row>
 
-                      <Link to={`/tabelas/apontamentos/horas/${data1.id}`}>
-                        <Button
+                      {/* <Link to={`/tabelas/apontamentos/horas/${data1.id}`}> */}
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => {
+                          history.goBack();
+                        }}
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
+                            paddingBottom: 4,
+                            paddingRight: 1
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
+                      {/* </Link> */}
                       <Button
                         style={{
                           paddingLeft: 29,

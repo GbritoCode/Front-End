@@ -309,34 +309,6 @@ function CotacaoUpdate() {
                     <Form onSubmit={handleSubmit}>
                       <Row>
                         <Col md="4">
-                          <Label>Oportunidade</Label>
-                          <FormGroup
-                            className={`has-label ${values.OportunidadeId.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="OportunidadeId"
-                              onChange={event =>
-                                handleChange(event, "OportunidadeId", "text")
-                              }
-                              value={values.OportunidadeId.value}
-                              type="select"
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Oportunidade{" "}
-                              </option>{" "}
-                              <option value={data2.id}> {data2.desc}</option>
-                            </Input>
-
-                            {values.OportunidadeId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.OportunidadeId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
                           {" "}
                           <Label>Probabilidade de Venda</Label>
                           <FormGroup
@@ -396,8 +368,6 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Horas Previstas</Label>
                           <FormGroup
@@ -431,6 +401,8 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           {" "}
                           <Label>Valor da Proposta</Label>
@@ -474,8 +446,6 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           {" "}
                           <Label>Valor Líquido</Label>
@@ -498,27 +468,8 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
-                          <Label>Receita Líquida</Label>
-                          <FormGroup
-                            className={`has-label ${values.recLiq.error}`}
-                          >
-                            <Input
-                              disabled
-                              name="recLiq"
-                              type="numeric"
-                              onChange={event =>
-                                handleChange(event, "recLiq", "currency")
-                              }
-                              value={values.recLiq.value}
-                            />
-                            {values.recLiq.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.recLiq.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Previsão de Lucro</Label>
                           <FormGroup
@@ -540,8 +491,6 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Número de Parcelas</Label>
                           <FormGroup
@@ -579,7 +528,6 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-
                         <Col md="4">
                           <Label>Motivo Orçamento/Revisão</Label>
                           <FormGroup check>
@@ -622,6 +570,7 @@ function CotacaoUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
+
                       <Row>
                         <Col>
                           <Label>Descrição</Label>

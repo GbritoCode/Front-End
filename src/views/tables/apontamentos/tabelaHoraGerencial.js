@@ -463,7 +463,7 @@ export default class GerencialHorasTable extends Component {
                       filterable: false
                     }
                   ]}
-                  defaultPageSize={10}
+                  defaultPageSize={30}
                   showPagination
                   showPageJump
                   showPaginationBottom

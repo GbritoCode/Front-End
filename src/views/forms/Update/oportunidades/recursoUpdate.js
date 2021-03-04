@@ -268,7 +268,9 @@ export default function RecursoCadastro() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -287,35 +289,6 @@ export default function RecursoCadastro() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Oportunidade</Label>
-                      <FormGroup
-                        className={`has-label ${values.OportunidadeId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="OportunidadeId"
-                          onChange={event =>
-                            handleChange(event, "OportunidadeId", "text")
-                          }
-                          value={values.OportunidadeId.value}
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione a Oportunidade{" "}
-                          </option>{" "}
-                          <option value={data4.id}>
-                            {" "}
-                            {data4.cod} - {data4.desc}
-                          </option>
-                        </Input>
-
-                        {values.OportunidadeId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.OportunidadeId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>Colaborador</Label>

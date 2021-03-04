@@ -393,7 +393,9 @@ export default function CotacaoCadastro() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -702,28 +704,6 @@ export default function CotacaoCadastro() {
                             {optional.desc.error === "has-danger" ? (
                               <Label className="error">
                                 {optional.desc.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label hidden>Receita Líquida</Label>
-                          <FormGroup
-                            className={`has-label ${values.recLiq.error}`}
-                          >
-                            <Input
-                              hidden
-                              disabled
-                              name="recLiq"
-                              type="numeric"
-                              onChange={event =>
-                                handleChange(event, "recLiq", "currency")
-                              }
-                              value={values.recLiq.value}
-                            />
-                            {values.recLiq.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.recLiq.message}
                               </Label>
                             ) : null}
                           </FormGroup>
