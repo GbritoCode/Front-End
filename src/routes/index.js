@@ -286,7 +286,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/apontamentos/horas/:id"
+        path="/tabelas/apontamentos/horas/:id/"
         component={HorasTable}
         isPrivate
       />

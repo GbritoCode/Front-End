@@ -42,6 +42,7 @@ import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
 import iconExcel from "~/assets/img/iconExcel.png";
+import history from "~/services/history";
 
 const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
@@ -122,9 +123,19 @@ export default class DespesasTable extends Component {
 
   loadData = async () => {
     const idColab = store.getState().auth.user.Colab.id;
-    const response = await api.get(
-      `/despesas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
-    );
+    const query = new URLSearchParams(this.props.location.search);
+    const initialDate = query.get("initialDate");
+    const finalDate = query.get("finalDate");
+    let response;
+    if (initialDate && finalDate) {
+      response = await api.get(
+        `/despesas/${idColab}/?initialDate=${initialDate}&finalDate=${finalDate}`
+      );
+    } else {
+      response = await api.get(
+        `/despesas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+      );
+    }
     this.setState({
       data: response.data.map((desps, key) => {
         return {
@@ -328,6 +339,9 @@ export default class DespesasTable extends Component {
                 onClick={() => {
                   this.loadData();
                   this.toggleModalFilter();
+                  history.push(
+                    `?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+                  );
                 }}
               >
                 Filtrar

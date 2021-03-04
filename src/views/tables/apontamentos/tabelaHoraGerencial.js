@@ -40,6 +40,7 @@ import ReactExport from "react-export-excel";
 import api from "~/services/api";
 import { normalizeHrToMin } from "~/normalize";
 import iconExcel from "~/assets/img/iconExcel.png";
+import history from "~/services/history";
 
 const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
@@ -123,9 +124,19 @@ export default class GerencialHorasTable extends Component {
   };
 
   loadData = async () => {
-    const response = await api.get(
-      `/horas/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
-    );
+    const query = new URLSearchParams(this.props.location.search);
+    const initialDate = query.get("initialDate");
+    const finalDate = query.get("finalDate");
+    let response;
+    if (initialDate && finalDate) {
+      response = await api.get(
+        `/horas/?initialDate=${initialDate}&finalDate=${finalDate}`
+      );
+    } else {
+      response = await api.get(
+        `/horas/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+      );
+    }
     this.setState({
       dataForCsv: response.data.map((horas, key) => {
         return {
@@ -368,6 +379,9 @@ export default class GerencialHorasTable extends Component {
                 onClick={() => {
                   this.loadData();
                   this.toggleModalFilter();
+                  history.push(
+                    `?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+                  );
                 }}
               >
                 Filtrar

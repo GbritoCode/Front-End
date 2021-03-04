@@ -500,7 +500,7 @@ const routes = [
         redirect: true
       },
       {
-        path: "/tabelas/apontamentos/horas/:id",
+        path: "/tabelas/apontamentos/horas/:id/",
         name: "Horas",
         mini: "HRS",
         component: HorasTable,

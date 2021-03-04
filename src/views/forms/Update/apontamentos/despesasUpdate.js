@@ -31,11 +31,12 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { despesaUpdate } from "~/store/modules/oportunidades/actions";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
 import api from "~/services/api";
+import history from "~/services/history";
 
 export default function DespesaUpdate() {
   // --------- colocando no modo claro do template
@@ -339,28 +340,27 @@ export default function DespesaUpdate() {
                           size="large"
                         />
                       </Button>
-                      <Link to={`/tabelas/apontamentos/despesas/${id}`}>
-                        <Button
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33,
+                          float: "left"
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => history.goBack()}
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33,
-                            float: "left"
+                            paddingBottom: 4,
+                            paddingRight: 1
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
                     </Form>
                   </CardBody>
                 </Card>

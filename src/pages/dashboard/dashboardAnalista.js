@@ -421,7 +421,7 @@ class AdminDashboard extends React.Component {
                     <CardFooter>
                       <hr />
                       <div className="stats">
-                        <Link to={`tabelas/apontamentos/horas/${id}`}>
+                        <Link to={`tabelas/apontamentos/horas/${id}/`}>
                           <i className="tim-icons icon-refresh-01" /> Ver horas
                         </Link>
                       </div>
@@ -458,7 +458,7 @@ class AdminDashboard extends React.Component {
                     <CardFooter>
                       <hr />
                       <div className="stats">
-                        <Link to={`tabelas/apontamentos/despesas/${id}`}>
+                        <Link to={`tabelas/apontamentos/despesas/${id}/`}>
                           <i className="tim-icons icon-sound-wave" /> Ver
                           despesas
                         </Link>
