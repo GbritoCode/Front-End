@@ -76,6 +76,7 @@ class ParcelaPendentesTable extends Component {
           id: key,
           idd: parcela.id,
           OportunidadeId: parcela.OportunidadeId,
+          OportunidadeCod: parcela.Oportunidade.cod,
           Oportunidade: parcela.Oportunidade.desc,
           Cliente: parcela.Oportunidade.Cliente.nomeAbv,
           parcela: parcela.parcela,
@@ -87,6 +88,7 @@ class ParcelaPendentesTable extends Component {
           situacao: this.checkSituacao(parcela.situacao),
           vlrPago: normalizeCurrency(parcela.vlrPago),
           saldo: normalizeCurrency(parcela.saldo),
+          createdAt: parcela.createdAt,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -226,6 +228,18 @@ class ParcelaPendentesTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
+                      Header: "Cliente",
+                      accessor: "Cliente"
+                    },
+                    {
+                      Header: "Código",
+                      accessor: "OportunidadeCod"
+                    },
+                    {
+                      Header: "Oportunidade",
+                      accessor: "Oportunidade"
+                    },
+                    {
                       Header: "parcela",
                       accessor: "parcela"
                     },
@@ -234,12 +248,8 @@ class ParcelaPendentesTable extends Component {
                       accessor: "vlrParcela"
                     },
                     {
-                      Header: "Oportunidade",
-                      accessor: "Oportunidade"
-                    },
-                    {
-                      Header: "Cliente",
-                      accessor: "Cliente"
+                      Header: "Data Criação",
+                      accessor: "createdAt"
                     },
                     {
                       Header: "Ações",

@@ -268,10 +268,12 @@ function OportTable() {
               onClick={() => {
                 if (altering.fase === 5) {
                   if (altering.motivo) {
-                    api.put(`oportunidade/${altering.altering}`, {
-                      fase: altering.fase,
-                      motivo: altering.motivo
-                    });
+                    api
+                      .put(`oportunidade/${altering.altering}`, {
+                        fase: altering.fase,
+                        motivo: altering.motivo
+                      })
+                      .then(() => toggleModalMini());
                     switch (altering.fase) {
                       case 4:
                         history.push(
@@ -286,9 +288,13 @@ function OportTable() {
                     }
                   }
                 } else {
-                  api.put(`oportunidade/${altering.altering}`, {
-                    fase: altering.fase
-                  });
+                  api
+                    .put(`oportunidade/${altering.altering}`, {
+                      fase: altering.fase
+                    })
+                    .then(() => {
+                      toggleModalMini();
+                    });
                   switch (altering.fase) {
                     case 4:
                       history.push(

@@ -198,7 +198,7 @@ const routes = [
       {
         path: "/dashboardPessoal",
         name: "Pessoal",
-        mini: "PER",
+        mini: "PES",
         component: arr === undefined ? Dashboard : checkProfile(arr[23]),
         layout: "/admin"
       },
@@ -243,7 +243,7 @@ const routes = [
   // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
   {
     collapse: true,
-    name: "Administrador",
+    name: "Administração",
     icon: "tim-icons icon-molecule-40",
     state: "AdministradorCollapse",
     profile: 10,
@@ -301,7 +301,7 @@ const routes = [
       {
         path: `/tabelas/fechamento/acesso`,
         name: "Liberar Períodos",
-        mini: "PER",
+        mini: "LPE",
         component: PeriodTokenTable,
         layout: "/admin",
         profile: 10
@@ -334,7 +334,7 @@ const routes = [
       {
         path: "/tabelas/general/contaContabil",
         name: "Conta Contábil",
-        mini: "CONT",
+        mini: "CTB",
         component: ContaContabilTable,
         layout: "/admin",
         profile: 10
@@ -342,7 +342,7 @@ const routes = [
       {
         path: "/tabelas/general/centroCusto",
         name: "Centro de Custo",
-        mini: "CENT",
+        mini: "CCS",
         component: CentroCustoTable,
         layout: "/admin",
         profile: 10

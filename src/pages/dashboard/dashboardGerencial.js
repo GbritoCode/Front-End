@@ -449,7 +449,10 @@ class DashboardGerencial extends React.Component {
                       <Link to="tabelas/parcela/pendentes/?fromDash=true">
                         Parcelas Pendentes
                       </Link>
-                      <CardTitle tag="h3">
+                      <CardTitle
+                        tag="h4"
+                        style={{ color: "orange", fontSize: 20 }}
+                      >
                         <i className="tim-icons icon-send text-info" />{" "}
                         {normalizeCurrency(this.state.parcsState.totalPendente)}
                       </CardTitle>
@@ -467,31 +470,13 @@ class DashboardGerencial extends React.Component {
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
-                      <Link to="tabelas/parcela/atrasadas/?fromDash=true">
-                        Parcelas Atrasadas
-                      </Link>
-                      <CardTitle tag="h3">
-                        <i className="tim-icons icon-alert-circle-exc text-info" />{" "}
-                        {normalizeCurrency(this.state.parcsState.totalAtrasada)}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <div className="chart-area">
-                        <Bar
-                          data={this.state.parcAtrasadaChart.data}
-                          options={this.state.parcAtrasadaChart.options}
-                        />
-                      </div>
-                    </CardBody>
-                  </Card>
-                </Col>
-                <Col lg="4">
-                  <Card className=" /*card-chart">
-                    <CardHeader>
                       <Link to="tabelas/parcela/abertas/?fromDash=true">
                         Parcelas Abertas
                       </Link>
-                      <CardTitle tag="h3">
+                      <CardTitle
+                        tag="h3"
+                        style={{ color: "green", fontSize: 20 }}
+                      >
                         <i className="tim-icons icon-tag text-info" />{" "}
                         {normalizeCurrency(this.state.parcsState.totalAberta)}
                       </CardTitle>
@@ -501,6 +486,30 @@ class DashboardGerencial extends React.Component {
                         <Bar
                           data={this.state.parcAbertaChart.data}
                           options={this.state.parcAbertaChart.options}
+                        />
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg="4">
+                  <Card className=" /*card-chart">
+                    <CardHeader>
+                      <Link to="tabelas/parcela/atrasadas/?fromDash=true">
+                        Parcelas Atrasadas
+                      </Link>
+                      <CardTitle
+                        tag="h3"
+                        style={{ color: "red", fontSize: 20 }}
+                      >
+                        <i className="tim-icons icon-alert-circle-exc text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalAtrasada)}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <div className="chart-area">
+                        <Bar
+                          data={this.state.parcAtrasadaChart.data}
+                          options={this.state.parcAtrasadaChart.options}
                         />
                       </div>
                     </CardBody>

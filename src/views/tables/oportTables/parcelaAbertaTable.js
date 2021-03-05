@@ -76,6 +76,7 @@ class ParcelaAbertaTable extends Component {
           id: key,
           idd: parcela.id,
           OportunidadeId: parcela.OportunidadeId,
+          "Código Oportunidade": parcela.Oportunidade.cod,
           Oportunidade: parcela.Oportunidade.desc,
           Cliente: parcela.Oportunidade.Cliente.nomeAbv,
           parcela: parcela.parcela,
@@ -226,16 +227,20 @@ class ParcelaAbertaTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "parcela",
-                      accessor: "parcela"
-                    },
-                    {
                       Header: "Cliente",
                       accessor: "Cliente"
                     },
                     {
+                      Header: "Código",
+                      accessor: "Código Oportunidade"
+                    },
+                    {
                       Header: "Oportunidade",
                       accessor: "Oportunidade"
+                    },
+                    {
+                      Header: "parcela",
+                      accessor: "parcela"
                     },
                     {
                       Header: "Saldo",
@@ -248,10 +253,6 @@ class ParcelaAbertaTable extends Component {
                     {
                       Header: "Vencimento",
                       accessor: "dtVencimento"
-                    },
-                    {
-                      Header: "Situação",
-                      accessor: "situacao"
                     },
                     {
                       Header: "Ações",
