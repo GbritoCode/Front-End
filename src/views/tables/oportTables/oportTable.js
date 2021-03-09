@@ -95,9 +95,6 @@ function OportTable() {
                       size="sm"
                       className={classNames("btn-icon btn-link like")}
                       onClick={async () => {
-                        await api.put(`oportunidade/${oport.id}`, {
-                          fase: 2
-                        });
                         history.push(
                           `/cadastro/oportunidade/cotacao/${oport.id}`
                         );
@@ -361,7 +358,15 @@ function OportTable() {
                   {
                     Header: "descrição",
                     accessor: "desc",
-                    width: 301
+                    width: 301,
+                    filterMethod: (filter, row) => {
+                      const id = filter.pivotId || filter.id;
+                      return row[id] !== undefined
+                        ? String(row[id])
+                            .toLowerCase()
+                            .includes(filter.value.toLowerCase())
+                        : true;
+                    }
                   },
                   {
                     Header: "fase",

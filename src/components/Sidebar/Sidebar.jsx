@@ -167,7 +167,17 @@ class Sidebar extends React.Component {
     let logoText = null;
     if (logo !== undefined) {
       if (logo.outterLink !== undefined) {
-
+        logoImg = (
+          <NavLink
+            to={logo.outterLink}
+            className="simple-text logo-mini"
+            onClick={this.props.closeSidebar}
+          >
+            <div className="logo-img">
+              <img src={logo.imgSrc} alt="react-logo" />
+            </div>
+          </NavLink>
+        );
         logoText = (
           <div>
           <a
@@ -176,7 +186,7 @@ class Sidebar extends React.Component {
             target="_blank"
             onClick={this.props.closeSidebar}
           >
-             <img width={180} height={70} style={{ display: "block", marginLeft:12, paddingLeft: 5, paddingRight:5 }}  src={logo.imgSrc} alt="react-logo" />
+          {logo.text}
           </a>
           </div>
         );

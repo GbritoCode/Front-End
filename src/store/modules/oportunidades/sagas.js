@@ -81,7 +81,8 @@ export function* updateOport({ payload }) {
     };
 
     const response = yield call(api.put, `oportunidade/${id}`, Oport);
-    toast.success("cliente atualizado");
+    history.push("/tabelas/oportunidade/oport");
+    toast.success("Oportunidade atualizada");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
     toast.error(err.response.data.error);
@@ -198,7 +199,7 @@ export function* recursoCadastro({ payload }) {
       hrsPrevst,
       colabVlrHr
     });
-    history.push(`/tabelas/oportunidade/recurso/${OportunidadeId}`);
+    history.go(0);
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());
@@ -270,7 +271,7 @@ export function* parcelaCadastro({ payload }) {
       vlrPago,
       saldo
     });
-    history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
+    history.go(0);
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());
@@ -308,8 +309,9 @@ export function* updateParcela({ payload }) {
     };
 
     const response = yield call(api.put, `parcela/${id}`, recurso);
-    history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
-    toast.success("cliente atualizado");
+    // history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
+    history.goBack();
+    toast.success("Parcela atualizada com Sucesso");
     yield put(UpdateSuccess(response.data));
   } catch (err) {
     toast.error(err.response.data.error);

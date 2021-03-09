@@ -501,7 +501,7 @@ class DashboardGerencial extends React.Component {
                         tag="h3"
                         style={{ color: "red", fontSize: 20 }}
                       >
-                        <i className="tim-icons icon-alert-circle-exc text-info" />{" "}
+                        <i className="tim-icons icon-shape-star text-info" />{" "}
                         {normalizeCurrency(this.state.parcsState.totalAtrasada)}
                       </CardTitle>
                     </CardHeader>

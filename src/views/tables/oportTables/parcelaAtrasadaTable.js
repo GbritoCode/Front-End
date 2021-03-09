@@ -81,18 +81,18 @@ class ParcelaAtrasadaTable extends Component {
           id: key,
           idd: parcela.id,
           OportunidadeId: parcela.OportunidadeId,
+          Cliente: parcela.Oportunidade.Cliente.nomeAbv,
           "Código Oportunidade": parcela.Oportunidade.cod,
           Oportunidade: parcela.Oportunidade.desc,
-          Cliente: parcela.Oportunidade.Cliente.nomeAbv,
+          dtEmissao: parcela.dtEmissao,
           parcela: parcela.parcela,
           vlrParcela: normalizeCurrency(parcela.vlrParcela),
-          dtEmissao: parcela.dtEmissao,
-          dtVencimento: parcela.dtVencimento,
           notaFiscal: parcela.notaFiscal,
-          pedidoCliente: parcela.pedidoCliente,
-          situacao: this.checkSituacao(parcela.situacao),
+          dtVencimento: parcela.dtVencimento,
           vlrPago: normalizeCurrency(parcela.vlrPago),
           saldo: normalizeCurrency(parcela.saldo),
+          pedidoCliente: parcela.pedidoCliente,
+          situacao: this.checkSituacao(parcela.situacao),
           actions: (
             // we've added some custom button actions
             <div className="actions-right">

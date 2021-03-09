@@ -248,7 +248,7 @@ class ParcelaPendentesTable extends Component {
                       accessor: "vlrParcela"
                     },
                     {
-                      Header: "Data Criação",
+                      Header: "Inclusão",
                       accessor: "createdAt"
                     },
                     {
