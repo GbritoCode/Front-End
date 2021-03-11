@@ -256,6 +256,16 @@ export default function HorasCadastro() {
         break;
       }
     }
+    if (values.desc.value.length > 500) {
+      setValues(prevState => ({
+        ...prevState,
+        desc: {
+          error: "has-danger",
+          message: "Você Excedeu o tamanho máximo de 500 caracteres"
+        }
+      }));
+      valid = false;
+    }
 
     if (valid && filled) {
       dispatch(

@@ -39,7 +39,6 @@ import { AttachMoney, Schedule } from "@material-ui/icons";
 import { store } from "~/store";
 
 // core components
-import { chartExample1 } from "~/variables/charts";
 import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import history from "~/services/history";
@@ -201,17 +200,212 @@ class DashboardGerencial extends React.Component {
       options: parcChartOptions
     };
 
-    this.setState({ parcPendenteChart, parcAtrasadaChart, parcAbertaChart });
+    const chart_1_2_3_options = {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+      tooltips: {
+        backgroundColor: "#f5f5f5",
+        titleFontColor: "#333",
+        bodyFontColor: "#666",
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest"
+      },
+      responsive: true,
+      scales: {
+        yAxes: [
+          {
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(29,140,248,0.0)",
+              zeroLineColor: "transparent"
+            },
+            ticks: {
+              suggestedMin: 60,
+              suggestedMax: 125,
+              padding: 20,
+              fontColor: "#9a9a9a"
+            }
+          }
+        ],
+        xAxes: [
+          {
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(29,140,248,0.1)",
+              zeroLineColor: "transparent"
+            },
+            ticks: {
+              padding: 20,
+              fontColor: "#9a9a9a"
+            }
+          }
+        ]
+      }
+    };
+
+    const bigChart = {
+      data1: canvas => {
+        const ctx = canvas.getContext("2d");
+
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+        gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+        gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+
+        return {
+          labels: [
+            "JAN",
+            "FEV",
+            "MAR",
+            "ABR",
+            "MAI",
+            "JUN",
+            "JUL",
+            "AGO",
+            "SET",
+            "OUT",
+            "NOV",
+            "DEZ"
+          ],
+          datasets: [
+            {
+              label: "Horas",
+              fill: true,
+              backgroundColor: gradientStroke,
+              borderColor: "#1f8ef1",
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              pointBackgroundColor: "#1f8ef1",
+              pointBorderColor: "rgba(255,255,255,0)",
+              pointHoverBackgroundColor: "#1f8ef1",
+              pointBorderWidth: 20,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 15,
+              pointRadius: 4,
+              data: this.state.chartHrsData
+            }
+          ]
+        };
+      },
+      data2: canvas => {
+        const ctx = canvas.getContext("2d");
+
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+        gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+        gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+
+        return {
+          labels: [
+            "JAN",
+            "FEV",
+            "MAR",
+            "ABR",
+            "MAI",
+            "JUN",
+            "JUL",
+            "AGO",
+            "SET",
+            "OUT",
+            "NOV",
+            "DEZ"
+          ],
+          datasets: [
+            {
+              label: "Despesas",
+              fill: true,
+              backgroundColor: gradientStroke,
+              borderColor: "#1f8ef1",
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              pointBackgroundColor: "#1f8ef1",
+              pointBorderColor: "rgba(255,255,255,0)",
+              pointHoverBackgroundColor: "#1f8ef1",
+              pointBorderWidth: 20,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 15,
+              pointRadius: 4,
+              data: this.state.chartDespData
+            }
+          ]
+        };
+      },
+      data3: canvas => {
+        const ctx = canvas.getContext("2d");
+
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+        gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+        gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+
+        return {
+          labels: [
+            "JAN",
+            "FEV",
+            "MAR",
+            "ABR",
+            "MAI",
+            "JUN",
+            "JUL",
+            "AGO",
+            "SET",
+            "OUT",
+            "NOV",
+            "DEZ"
+          ],
+          datasets: [
+            {
+              label: "Recebido",
+              fill: true,
+              backgroundColor: gradientStroke,
+              borderColor: "#1f8ef1",
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              pointBackgroundColor: "#1f8ef1",
+              pointBorderColor: "rgba(255,255,255,0)",
+              pointHoverBackgroundColor: "#1f8ef1",
+              pointBorderWidth: 20,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 15,
+              pointRadius: 4,
+              data: this.state.chartRecebData
+            }
+          ]
+        };
+      },
+      options: chart_1_2_3_options
+    };
+
+    this.setState({
+      parcPendenteChart,
+      parcAtrasadaChart,
+      parcAbertaChart,
+      bigChart
+    });
   };
 
   loadData = async () => {
     history.push(0);
     if (store.getState().auth.user.Colab) {
+      const date = new Date();
       const hrs = await api.get(`horas/?total=${true}&tipo=gerencial`);
       const desps = await api.get(`despesas/?total=${true}&tipo=gerencial`);
       const vlrHrs = await api.get(`colab/?vlrHrMes=true&tipo=gerencial`);
       const parcs = await api.get(`parcela/?chartData=true&tipo=gerencial`);
-      const date = new Date();
+      const resultPeriodoGerencial = await api.get(`resultPeriodoGerencial`);
       const month = date.toLocaleString("default", { month: "long" });
       const parcsState = {
         parcPendente: parcs.data.parcPendente,
@@ -230,6 +424,15 @@ class DashboardGerencial extends React.Component {
         vlrDesps: normalizeCurrency(desps.data),
         vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data),
         parcsState,
+        chartHrsData: resultPeriodoGerencial.data.map(d => {
+          return d.totalHrs / 60;
+        }),
+        chartDespData: resultPeriodoGerencial.data.map(d => {
+          return d.totalDesp / 100;
+        }),
+        chartRecebData: resultPeriodoGerencial.data.map(d => {
+          return d.totalReceb / 100;
+        }),
         isLoading: false
       });
     }
@@ -244,6 +447,7 @@ class DashboardGerencial extends React.Component {
   render() {
     return (
       <>
+        {console.log(this.state)}
         {this.state.isLoading ? (
           <>
             <div className="content" />
@@ -329,8 +533,8 @@ class DashboardGerencial extends React.Component {
                     <CardBody>
                       <div className="chart-area">
                         <Line
-                          data={chartExample1[this.state.bigChartData]}
-                          options={chartExample1.options}
+                          data={this.state.bigChart[this.state.bigChartData]}
+                          options={this.state.bigChart.options}
                         />
                       </div>
                     </CardBody>
