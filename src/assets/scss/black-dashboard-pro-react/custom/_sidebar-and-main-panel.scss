@@ -299,6 +299,7 @@
         }
 
         a.logo-mini{
+            position: absolute;
             opacity: 1;
             float: left;
             width: 80px;
@@ -308,8 +309,7 @@
         }
 
         a.logo-normal{
-            text-align: right;
-            display: block;
+            display: flexbox;
             opacity: 1;
             @include transform-translate-x(0px);
         }

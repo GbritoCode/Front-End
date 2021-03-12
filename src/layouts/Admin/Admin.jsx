@@ -28,6 +28,7 @@ import Sidebar from "~/components/Sidebar/Sidebar.jsx";
 import routes from "~/routes/routes";
 
 import logo from "~/assets/img/tovoLogo.png";
+import logoMini from "~/assets/img/fav icon azul.png";
 import FooterSigned from "~/components/Footer/FooterSigned";
 
 var ps;
@@ -180,14 +181,22 @@ class Admin extends React.Component {
             <i className="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted" />
           </button>
         </div>
+        {console.log(this.state)}
         <Sidebar
           {...this.props}
           routes={routes}
           activeColor={this.state.activeColor}
           logo={{
+            hidden: this.state.sidebarMini,
             outterLink: "https://www.aidera.com.br/",
             text: "Tovo",
             imgSrc: logo
+          }}
+          logoMini={{
+            hidden: !this.state.sidebarMini,
+            outterLink: "https://www.aidera.com.br/",
+            text: "Tovo",
+            imgSrc: logoMini
           }}
           closeSidebar={this.closeSidebar}
         />
