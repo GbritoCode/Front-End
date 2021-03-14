@@ -124,8 +124,17 @@ class ParcelaAbertaTable extends Component {
         )
       };
     });
+    function compare(a, b) {
+      if (a.Cliente < b.Cliente) {
+        return -1;
+      }
+      if (a.Cliente > b.Cliente) {
+        return 1;
+      }
+      return 0;
+    }
     this.setState({
-      data: data.sort((a, b) => a.Cliente - b.Cliente)
+      data: data.sort(compare)
     });
   };
 
