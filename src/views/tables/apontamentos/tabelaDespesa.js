@@ -32,7 +32,12 @@ import {
   Label,
   FormGroup
 } from "reactstrap";
-import { Close, Message, SearchOutlined } from "@material-ui/icons";
+import {
+  ArrowBackIos,
+  Close,
+  Message,
+  SearchOutlined
+} from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
@@ -42,6 +47,7 @@ import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
 import iconExcel from "~/assets/img/iconExcel.png";
+import history from "~/services/history";
 
 const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
@@ -111,7 +117,6 @@ export default class DespesasTable extends Component {
   filterColumns = data => {
     if (data.length !== 0) {
       const columns = Object.keys(data[0]);
-      console.log(columns);
       // Remove by key ()
       const filterColsByKey = columns.filter(
         c => c !== "actions" && c !== "idd"
@@ -123,9 +128,19 @@ export default class DespesasTable extends Component {
 
   loadData = async () => {
     const idColab = store.getState().auth.user.Colab.id;
-    const response = await api.get(
-      `/despesas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
-    );
+    const query = new URLSearchParams(this.props.location.search);
+    const initialDate = query.get("initialDate");
+    const finalDate = query.get("finalDate");
+    let response;
+    if (initialDate && finalDate) {
+      response = await api.get(
+        `/despesas/${idColab}/?initialDate=${initialDate}&finalDate=${finalDate}`
+      );
+    } else {
+      response = await api.get(
+        `/despesas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+      );
+    }
     this.setState({
       data: response.data.map((desps, key) => {
         return {
@@ -329,6 +344,9 @@ export default class DespesasTable extends Component {
                 onClick={() => {
                   this.loadData();
                   this.toggleModalFilter();
+                  history.push(
+                    `?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+                  );
                 }}
               >
                 Filtrar
@@ -354,6 +372,17 @@ export default class DespesasTable extends Component {
                       }}
                     >
                       <SearchOutlined />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Voltar">
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      onClick={() => history.goBack()}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <ArrowBackIos />
                     </Button>
                   </Tooltip>
                 </CardTitle>

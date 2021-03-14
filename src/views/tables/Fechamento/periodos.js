@@ -1,12 +1,18 @@
 /*!
+
 =========================================================
 * Black Dashboard PRO React - v1.0.0
 =========================================================
+
 * Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
 * Copyright 2019 Creative Tim (https://www.creative-tim.com)
+
 * Coded by Creative Tim
+
 =========================================================
+
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
 */
 import React, { Component } from "react";
 import classNames from "classnames";
@@ -23,17 +29,14 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Close, Message, ArrowBackIos } from "@material-ui/icons";
+import { Close, Message } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-
-import { Tooltip } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
-import history from "~/services/history";
-import { normalizeCurrency } from "~/normalize";
 
-class ParametrosTable extends Component {
+class PeriodosTable extends Component {
   state = {
     data: []
   };
@@ -48,6 +51,10 @@ class ParametrosTable extends Component {
     this.setState({ modalMini: !this.state.modalMini });
   };
 
+  toggleModalFinaliza = () => {
+    this.setState({ modalFinaliza: !this.state.modalFinaliza });
+  };
+
   delay = ms => new Promise(res => setTimeout(res, ms));
 
   reloadData = async () => {
@@ -55,67 +62,46 @@ class ParametrosTable extends Component {
     this.loadData();
   };
 
-  checkSituacao = parcela => {
-    switch (parcela) {
-      case "1":
-        return "Pendente";
-      case "2":
-        return "Aberta";
-      case "3":
-        return "Parcial";
-      case "4":
-        return "Liquidada";
-      default:
-    }
-  };
-
   loadData = async () => {
-    const { id } = this.props.match.params;
-    const response = await api.get(`/parcela/${id}`);
+    const response = await api.get("/fechamentoPeriodo");
     this.setState({
-      data: response.data.map((parcela, key) => {
+      data: response.data.map((periodo, key) => {
         return {
           id: key,
-          idd: parcela.id,
-          OportunidadeId: parcela.OportunidadeId,
-          parcela: parcela.parcela,
-          vlrParcela: normalizeCurrency(parcela.vlrParcela),
-          dtEmissao: parcela.dtEmissao,
-          dtVencimento: parcela.dtVencimento,
-          notaFiscal: parcela.notaFiscal,
-          pedidoCliente: parcela.pedidoCliente,
-          situacao: this.checkSituacao(parcela.situacao),
-          vlrPago: normalizeCurrency(parcela.vlrPago),
-          saldo: normalizeCurrency(parcela.saldo),
+          idd: periodo.id,
+          nome: periodo.nome,
+          dataInic: periodo.dataInic,
+          dataFim: periodo.dataFim,
+          situacao: periodo.situacao,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Tooltip title="Nota Fiscal">
+              <Tooltip title="Finalizar Período">
                 <Button
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parcNota/${parcela.id}`);
+                    this.setState({ finaliza: periodo.id });
+                    this.toggleModalFinaliza();
                   }}
                 >
-                  <i className="tim-icons icon-paper" />
+                  <i className="tim-icons icon-check-2" />
                 </Button>
               </Tooltip>
-              <Tooltip title="Liquidar">
-                <Button
-                  disabled={parcela.situacao < 2}
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => {
-                    history.push(`/update/oportunidade/parc/${parcela.id}`);
-                  }}
-                >
-                  <i className="tim-icons icon-coins" />
-                </Button>
-              </Tooltip>
+              {/* use this button to remove the data row */}
+              <Button
+                onClick={() => {
+                  this.setState({ excluding: periodo.id });
+                  this.toggleModalMini();
+                }}
+                color="danger"
+                size="sm"
+                className={classNames("btn-icon btn-link like")}
+              >
+                <i className="tim-icons icon-simple-remove" />
+              </Button>{" "}
             </div>
           )
         };
@@ -124,7 +110,6 @@ class ParametrosTable extends Component {
   };
 
   render() {
-    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -166,7 +151,7 @@ class ParametrosTable extends Component {
                 type="button"
                 onClick={async () => {
                   await api
-                    .delete(`parcela/${this.state.excluding}`)
+                    .delete(`fechamentoPeriodo/${this.state.excluding}`)
                     .then(result => {
                       toast.success(result.data);
                       this.reloadData();
@@ -182,12 +167,68 @@ class ParametrosTable extends Component {
               </Button>
             </div>
           </Modal>
+          <Modal
+            modalClassName="modal-mini "
+            isOpen={this.state.modalFinaliza}
+            toggle={this.toggleModalFinaliza}
+          >
+            <div className="modal-header justify-content-center">
+              <button
+                aria-hidden
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                color="primary"
+                onClick={this.toggleModalFinaliza}
+              >
+                <Close />
+              </button>
+              <div>
+                <Message fontSize="large" />
+              </div>
+            </div>
+            <ModalBody className="text-center">
+              <p>Deseja finalizar o período?</p>
+            </ModalBody>
+            <div className="modal-footer">
+              <Button
+                style={{ color: "#000" }}
+                className="btn-neutral"
+                type="button"
+                onClick={this.toggleModalFinaliza}
+              >
+                Não
+              </Button>
+              <Button
+                style={{ color: "#7E7E7E" }}
+                className="btn-neutral"
+                type="button"
+                onClick={async () => {
+                  await api
+                    .put(`fechamentoPeriodo/${this.state.finaliza}`, {
+                      situacao: "Fechado"
+                    })
+                    .then(result => {
+                      toast.success(result.data);
+                      this.reloadData();
+                      this.setState({ finaliza: undefined });
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                  this.toggleModalFinaliza();
+                }}
+              >
+                Sim
+              </Button>
+            </div>
+          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Parcelas
-                  <Link to={`/cadastro/oportunidade/parcela/${id}`}>
+                  Períodos
+                  <Link to="/cadastro/fechamento/periodo">
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
@@ -196,18 +237,6 @@ class ParametrosTable extends Component {
                         className={classNames("btn-icon btn-link like")}
                       >
                         <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <Link to={`/update/oportunidade/oport/${id}`}>
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
                       </Button>
                     </Tooltip>
                   </Link>
@@ -235,24 +264,16 @@ class ParametrosTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "parcela",
-                      accessor: "parcela"
+                      Header: "Nome",
+                      accessor: "nome"
                     },
                     {
-                      Header: "Valor Parcela",
-                      accessor: "vlrParcela"
+                      Header: "Data Inicial",
+                      accessor: "dataInic"
                     },
                     {
-                      Header: "Nota Fiscal",
-                      accessor: "notaFiscal"
-                    },
-                    {
-                      Header: "Vencimento",
-                      accessor: "dtVencimento"
-                    },
-                    {
-                      Header: "Saldo",
-                      accessor: "saldo"
+                      Header: "Data Final",
+                      accessor: "dataFim"
                     },
                     {
                       Header: "Situação",
@@ -280,4 +301,4 @@ class ParametrosTable extends Component {
   }
 }
 
-export default ParametrosTable;
+export default PeriodosTable;

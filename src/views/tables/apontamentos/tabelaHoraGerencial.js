@@ -43,7 +43,6 @@ import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import ReactExport from "react-export-excel";
 import api from "~/services/api";
-import { store } from "~/store";
 import { normalizeHrToMin } from "~/normalize";
 import iconExcel from "~/assets/img/iconExcel.png";
 import history from "~/services/history";
@@ -52,9 +51,11 @@ const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
 const { ExcelColumn } = ReactExport.ExcelFile;
 /* eslint-disable eqeqeq */
-export default class HorasTable extends Component {
+export default class GerencialHorasTable extends Component {
   state = {
     data: [{}],
+    dataForCsv: [{}],
+    filtered: [],
     initialDate: null,
     finalDate: null
   };
@@ -106,23 +107,60 @@ export default class HorasTable extends Component {
     }
   };
 
+  onFilteredChangeCustom = (value, accessor) => {
+    const { filtered } = this.state;
+    let insertNewFilter = 1;
+    if (filtered.length) {
+      filtered.forEach((filter, i) => {
+        if (filter.id === accessor) {
+          if (value === "" || !value.length) filtered.splice(i, 1);
+          else filter.value = value;
+
+          insertNewFilter = 0;
+        }
+      });
+    }
+
+    if (insertNewFilter) {
+      filtered.push({ id: accessor, value });
+    }
+
+    this.setState({ filtered });
+  };
+
   loadData = async () => {
-    const idColab = store.getState().auth.user.Colab.id;
     const query = new URLSearchParams(this.props.location.search);
     const initialDate = query.get("initialDate");
     const finalDate = query.get("finalDate");
     let response;
     if (initialDate && finalDate) {
       response = await api.get(
-        `/horas/${idColab}/?initialDate=${initialDate}&finalDate=${finalDate}`
+        `/horas/?initialDate=${initialDate}&finalDate=${finalDate}`
       );
     } else {
       response = await api.get(
-        `/horas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+        `/horas/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
       );
     }
-
     this.setState({
+      dataForCsv: response.data.map((horas, key) => {
+        return {
+          idd: key,
+          id: horas.id,
+          Cliente: horas.Oportunidade.Cliente.nomeAbv,
+          Oportunidade: horas.Oportunidade.cod,
+          "Descrição Oportunidade": horas.Oportunidade.desc,
+          "Data Atividade": horas.dataAtivd,
+          Analista: horas.Colab.nome,
+          "Hora Inicial": horas.horaInic,
+          Intervalo: horas.horaIntrv,
+          "Hora Final": horas.horaFim,
+          Total: normalizeHrToMin(horas.totalApont),
+          "Id Área": horas.AreaId,
+          Solicitante: horas.solicitante,
+          Descrição: horas.desc
+        };
+      }),
       data: response.data.map((horas, key) => {
         return {
           idd: key,
@@ -136,7 +174,7 @@ export default class HorasTable extends Component {
           Intervalo: horas.horaIntrv,
           "Hora Final": horas.horaFim,
           Total: normalizeHrToMin(horas.totalApont),
-          Área: horas.areaNome,
+          "Id Área": horas.AreaId,
           Solicitante: horas.solicitante,
           Descrição: horas.desc,
 
@@ -185,6 +223,7 @@ export default class HorasTable extends Component {
         </Tooltip>
       );
     }
+
     return (
       <ExcelFile
         element={
@@ -194,13 +233,29 @@ export default class HorasTable extends Component {
         }
         filename={`Horas_${year}-${month}-${date}`}
       >
-        <ExcelSheet data={this.state.data} name="Test">
-          {this.filterColumns(this.state.data).map(col => {
+        <ExcelSheet
+          data={this.state.dataForCsv || []}
+          name={`Horas_${year}-${month}-${date}`}
+        >
+          {this.filterColumns(this.state.dataForCsv || []).map(col => {
             return <ExcelColumn label={this.camelCase(col)} value={col} />;
           })}
         </ExcelSheet>
       </ExcelFile>
     );
+  };
+
+  getData = () => {
+    const filteredData = [];
+    Object.entries(this.selectTable.getResolvedState().sortedData).forEach(
+      entry => {
+        filteredData.push(entry[1]._original);
+      }
+    );
+    if (filteredData.length === 0) {
+      return this.setState({ dataForCsv: [{}] });
+    }
+    return this.setState({ dataForCsv: filteredData });
   };
 
   render() {
@@ -342,7 +397,7 @@ export default class HorasTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Horas
+                  Horas Gerencial
                   <div style={{ marginTop: 10, float: "right" }}>
                     {this.checkData()}
                   </div>
@@ -374,15 +429,29 @@ export default class HorasTable extends Component {
               </CardHeader>
               <CardBody>
                 <ReactTable
+                  ref={r => {
+                    this.selectTable = r;
+                  }}
                   data={this.state.data}
                   filterable
                   resizable
-                  defaultFilterMethod={(filter, row) => {
+                  filtered={this.state.filtered}
+                  onFilteredChange={(filtered, column, value) => {
+                    this.getData();
+                    this.onFilteredChangeCustom(
+                      value,
+                      column.id || column.accessor
+                    );
+                  }}
+                  defaultFilterMethod={(filter, row, column) => {
                     const id = filter.pivotId || filter.id;
+                    if (typeof filter.value === "object") {
+                      return row[id] !== undefined
+                        ? filter.value.indexOf(row[id]) > -1
+                        : true;
+                    }
                     return row[id] !== undefined
-                      ? String(row[id])
-                          .toLowerCase()
-                          .startsWith(filter.value.toLowerCase())
+                      ? String(row[id]).indexOf(filter.value) > -1
                       : true;
                   }}
                   previousText="Anterior"
@@ -404,6 +473,10 @@ export default class HorasTable extends Component {
                     {
                       Header: "Cliente",
                       accessor: "Cliente"
+                    },
+                    {
+                      Header: "Analista",
+                      accessor: "Analista"
                     },
                     {
                       Header: "Data",

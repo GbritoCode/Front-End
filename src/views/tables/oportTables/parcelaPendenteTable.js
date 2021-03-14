@@ -28,12 +28,11 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
 import { Tooltip } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
 import history from "~/services/history";
 import { normalizeCurrency } from "~/normalize";
 
-class ParametrosTable extends Component {
+class ParcelaPendentesTable extends Component {
   state = {
     data: []
   };
@@ -70,14 +69,16 @@ class ParametrosTable extends Component {
   };
 
   loadData = async () => {
-    const { id } = this.props.match.params;
-    const response = await api.get(`/parcela/${id}`);
+    const response = await api.get(`/parcela/?listAll=true&tipo=pendentes`);
     this.setState({
       data: response.data.map((parcela, key) => {
         return {
           id: key,
           idd: parcela.id,
           OportunidadeId: parcela.OportunidadeId,
+          OportunidadeCod: parcela.Oportunidade.cod,
+          Oportunidade: parcela.Oportunidade.desc,
+          Cliente: parcela.Oportunidade.Cliente.nomeAbv,
           parcela: parcela.parcela,
           vlrParcela: normalizeCurrency(parcela.vlrParcela),
           dtEmissao: parcela.dtEmissao,
@@ -87,6 +88,7 @@ class ParametrosTable extends Component {
           situacao: this.checkSituacao(parcela.situacao),
           vlrPago: normalizeCurrency(parcela.vlrPago),
           saldo: normalizeCurrency(parcela.saldo),
+          createdAt: parcela.createdAt,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -97,7 +99,9 @@ class ParametrosTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parcNota/${parcela.id}`);
+                    history.push(
+                      `/update/oportunidade/parcNota/${parcela.id}/?fromDash=true`
+                    );
                   }}
                 >
                   <i className="tim-icons icon-paper" />
@@ -110,7 +114,9 @@ class ParametrosTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parc/${parcela.id}`);
+                    history.push(
+                      `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
+                    );
                   }}
                 >
                   <i className="tim-icons icon-coins" />
@@ -124,7 +130,6 @@ class ParametrosTable extends Component {
   };
 
   render() {
-    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -186,20 +191,8 @@ class ParametrosTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Parcelas
-                  <Link to={`/cadastro/oportunidade/parcela/${id}`}>
-                    <Tooltip title="Novo" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <Link to={`/update/oportunidade/oport/${id}`}>
+                  Parcelas Pendentes
+                  <Link to="/dashboardGerencial">
                     <Tooltip title="Voltar">
                       <Button
                         style={{
@@ -235,6 +228,18 @@ class ParametrosTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
+                      Header: "Cliente",
+                      accessor: "Cliente"
+                    },
+                    {
+                      Header: "Código",
+                      accessor: "OportunidadeCod"
+                    },
+                    {
+                      Header: "Oportunidade",
+                      accessor: "Oportunidade"
+                    },
+                    {
                       Header: "parcela",
                       accessor: "parcela"
                     },
@@ -243,20 +248,8 @@ class ParametrosTable extends Component {
                       accessor: "vlrParcela"
                     },
                     {
-                      Header: "Nota Fiscal",
-                      accessor: "notaFiscal"
-                    },
-                    {
-                      Header: "Vencimento",
-                      accessor: "dtVencimento"
-                    },
-                    {
-                      Header: "Saldo",
-                      accessor: "saldo"
-                    },
-                    {
-                      Header: "Situação",
-                      accessor: "situacao"
+                      Header: "Inclusão",
+                      accessor: "createdAt"
                     },
                     {
                       Header: "Ações",
@@ -280,4 +273,4 @@ class ParametrosTable extends Component {
   }
 }
 
-export default ParametrosTable;
+export default ParcelaPendentesTable;

@@ -113,7 +113,24 @@ const chartExample1 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          data: [0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          label: "My First dataset",
+          fill: true,
+          backgroundColor: gradientStroke,
+          borderColor: "#1f8ef1",
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          pointBackgroundColor: "#1f8ef1",
+          pointBorderColor: "rgba(255,255,255,0)",
+          pointHoverBackgroundColor: "#1f8ef1",
+          pointBorderWidth: 20,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 15,
+          pointRadius: 4,
+          data: [10, 100, 20, 25, 26, 52, 56, 0, 0, 0, 0, 0]
         }
       ]
     };

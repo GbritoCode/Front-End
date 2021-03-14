@@ -7,6 +7,8 @@ import singUp from "~/pages/signUp";
 // import ClienteCadastro from "~/pages/Cliente";
 
 import Dashboard from "~/pages/dashboard";
+import DashboardComercial from "~/pages/dashboard/dashboardComercial";
+import DashboardGerencial from "~/pages/dashboard/dashboardGerencial";
 
 // -----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
 // -----------cadastros linha xxx/linhaxxx------------------------------------------------------------------------------------------------------------------------------------
@@ -120,13 +122,31 @@ import UpdateContaContabil from "~/views/forms/Update/auxUpdate/contaContabilupd
 import CadastroCentroCusto from "~/views/forms/auxForm/centroCustoCadastro";
 import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate";
 import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
+import PeriodosTable from "~/views/tables/Fechamento/periodos";
+import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
+import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
+import GerencialDespesasTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
+import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
+import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTable";
+import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
+import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 
 export default function Routes() {
   return (
     <Switch>
       <Route path="/login" exact component={signIn} />
       <Route path="/register" component={singUp} />
-      <Route path="/dashboard" component={Dashboard} isPrivate />
+      <Route path="/dashboardPessoal" component={Dashboard} isPrivate />
+      <Route
+        path="/dashboardGerencial"
+        component={DashboardGerencial}
+        isPrivate
+      />
+      <Route
+        path="/dashboardComercial"
+        component={DashboardComercial}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -231,6 +251,26 @@ export default function Routes() {
         isPrivate
       />
       <Route
+        path="/tabelas/oportunidade/parcela/:id"
+        component={ParcelaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/pendentes"
+        component={ParcelaPendentesTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/atrasadas"
+        component={ParcelaAtrasadaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/abertas"
+        component={ParcelaAbertaTable}
+        isPrivate
+      />
+      <Route
         path="/view/oportunidade/dados/:id"
         component={DataOport}
         isPrivate
@@ -246,8 +286,28 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/apontamentos/horas/:id"
+        path="/tabelas/apontamentos/horas/:id/"
         component={HorasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/fechamento/periodo"
+        component={PeriodosTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/apontamentos/gerencial/horas"
+        component={GerencialHorasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/apontamentos/gerencial/despesas"
+        component={GerencialDespesasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/fechamento/acesso"
+        component={PeriodTokenTable}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -347,7 +407,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/update/general/parametros/:id"
+        path="/update/general/parametros/1"
         component={ParametrosUpdate}
         isPrivate
       />
@@ -455,11 +515,6 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/oportunidade/parcela/:id"
-        component={ParcelaTable}
-        isPrivate
-      />
-      <Route
         path="/cadastro/oportunidade/parcela/:id"
         component={ParcelaCadastro}
         isPrivate
@@ -520,6 +575,11 @@ export default function Routes() {
         component={UpdateCentroCusto}
         isPrivate
       />
+      <Route
+        path="/cadastro/fechamento/periodo"
+        component={CadastroPeriodo}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -528,7 +588,6 @@ export default function Routes() {
     </Switch>
   );
 }
-
 /* {
   path: "/dashboard",
   name: "Dashboard",

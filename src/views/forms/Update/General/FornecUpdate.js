@@ -45,7 +45,6 @@ function FornecUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   const stateSchema = {
@@ -75,9 +74,7 @@ function FornecUpdatee() {
     async function loadData() {
       const response = await api.get(`/fornec/${id}`);
       const response1 = await api.get(`/condPgmto`);
-      const response2 = await api.get(`/empresa/${response.data.EmpresaId}`);
       setData1(response1.data);
-      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         cnpj: { value: response.data.CNPJ },
@@ -296,7 +293,9 @@ function FornecUpdatee() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -307,36 +306,10 @@ function FornecUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Forncedor</CardTitle>
+                    <CardTitle tag="h4">Forncedor</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data2.nome} - {normalizeCnpj(data2.idFederal)}
-                          </option>
-                        </Input>
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
                       <Label>CNPJ</Label>
                       <FormGroup className={`has-label ${values.cnpj.error}`}>
                         <Input

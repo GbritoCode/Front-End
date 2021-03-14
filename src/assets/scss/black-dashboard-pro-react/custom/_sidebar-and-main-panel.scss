@@ -299,16 +299,18 @@
         }
 
         a.logo-mini{
+            position: absolute;
             opacity: 1;
             float: left;
-            width: 34px;
+            width: 80px;
             text-align: center;
             margin-left: 10px;
             margin-right: 12px;
         }
 
         a.logo-normal{
-            display: block;
+            text-align: right;
+            display: flexbox;
             opacity: 1;
             @include transform-translate-x(0px);
         }

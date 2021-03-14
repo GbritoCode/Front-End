@@ -95,9 +95,6 @@ function OportTable() {
                       size="sm"
                       className={classNames("btn-icon btn-link like")}
                       onClick={async () => {
-                        await api.put(`oportunidade/${oport.id}`, {
-                          fase: 2
-                        });
                         history.push(
                           `/cadastro/oportunidade/cotacao/${oport.id}`
                         );
@@ -268,10 +265,12 @@ function OportTable() {
               onClick={() => {
                 if (altering.fase === 5) {
                   if (altering.motivo) {
-                    api.put(`oportunidade/${altering.altering}`, {
-                      fase: altering.fase,
-                      motivo: altering.motivo
-                    });
+                    api
+                      .put(`oportunidade/${altering.altering}`, {
+                        fase: altering.fase,
+                        motivo: altering.motivo
+                      })
+                      .then(() => toggleModalMini());
                     switch (altering.fase) {
                       case 4:
                         history.push(
@@ -286,9 +285,13 @@ function OportTable() {
                     }
                   }
                 } else {
-                  api.put(`oportunidade/${altering.altering}`, {
-                    fase: altering.fase
-                  });
+                  api
+                    .put(`oportunidade/${altering.altering}`, {
+                      fase: altering.fase
+                    })
+                    .then(() => {
+                      toggleModalMini();
+                    });
                   switch (altering.fase) {
                     case 4:
                       history.push(
@@ -355,7 +358,15 @@ function OportTable() {
                   {
                     Header: "descrição",
                     accessor: "desc",
-                    width: 301
+                    width: 301,
+                    filterMethod: (filter, row) => {
+                      const id = filter.pivotId || filter.id;
+                      return row[id] !== undefined
+                        ? String(row[id])
+                            .toLowerCase()
+                            .includes(filter.value.toLowerCase())
+                        : true;
+                    }
                   },
                   {
                     Header: "fase",

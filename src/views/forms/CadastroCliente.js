@@ -46,7 +46,6 @@ export default function CadastroCliente() {
   const jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const stateSchema = {
@@ -71,7 +70,6 @@ export default function CadastroCliente() {
       const response2 = await api.get(`representante/`);
       setData1(response1.data);
       setData2(response2.data);
-      setData(response.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -397,29 +395,6 @@ export default function CadastroCliente() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Empresa</Label>
-                  <FormGroup className={`has-label ${values.empresaId.error}`}>
-                    <Input
-                      disabled
-                      name="EmpresaId"
-                      type="select"
-                      onChange={event =>
-                        handleChange(event, "empresaId", "text")
-                      }
-                      value={values.empresaId.value}
-                    >
-                      {" "}
-                      <option value={1}>
-                        {" "}
-                        {data.nome} - {normalizeCnpj(data.idFederal)}
-                      </option>
-                    </Input>
-                    {values.empresaId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.empresaId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
                   <Row>
                     <Col md="4">
                       <Label>CNPJ</Label>

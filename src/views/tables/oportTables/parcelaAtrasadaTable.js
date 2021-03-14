@@ -28,12 +28,16 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
 import { Tooltip } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import ReactExport from "react-export-excel";
 import api from "~/services/api";
 import history from "~/services/history";
 import { normalizeCurrency } from "~/normalize";
+import iconExcel from "~/assets/img/iconExcel.png";
 
-class ParametrosTable extends Component {
+const { ExcelFile } = ReactExport;
+const { ExcelSheet } = ReactExport.ExcelFile;
+const { ExcelColumn } = ReactExport.ExcelFile;
+class ParcelaAtrasadaTable extends Component {
   state = {
     data: []
   };
@@ -70,23 +74,25 @@ class ParametrosTable extends Component {
   };
 
   loadData = async () => {
-    const { id } = this.props.match.params;
-    const response = await api.get(`/parcela/${id}`);
+    const response = await api.get(`/parcela/?listAll=true&tipo=atrasadas`);
     this.setState({
       data: response.data.map((parcela, key) => {
         return {
           id: key,
           idd: parcela.id,
           OportunidadeId: parcela.OportunidadeId,
+          Cliente: parcela.Oportunidade.Cliente.nomeAbv,
+          "Código Oportunidade": parcela.Oportunidade.cod,
+          Oportunidade: parcela.Oportunidade.desc,
+          dtEmissao: parcela.dtEmissao,
           parcela: parcela.parcela,
           vlrParcela: normalizeCurrency(parcela.vlrParcela),
-          dtEmissao: parcela.dtEmissao,
-          dtVencimento: parcela.dtVencimento,
           notaFiscal: parcela.notaFiscal,
-          pedidoCliente: parcela.pedidoCliente,
-          situacao: this.checkSituacao(parcela.situacao),
+          dtVencimento: parcela.dtVencimento,
           vlrPago: normalizeCurrency(parcela.vlrPago),
           saldo: normalizeCurrency(parcela.saldo),
+          pedidoCliente: parcela.pedidoCliente,
+          situacao: this.checkSituacao(parcela.situacao),
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -97,7 +103,9 @@ class ParametrosTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parcNota/${parcela.id}`);
+                    history.push(
+                      `/update/oportunidade/parcNota/${parcela.id}/?fromDash=true`
+                    );
                   }}
                 >
                   <i className="tim-icons icon-paper" />
@@ -110,7 +118,9 @@ class ParametrosTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                   onClick={() => {
-                    history.push(`/update/oportunidade/parc/${parcela.id}`);
+                    history.push(
+                      `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
+                    );
                   }}
                 >
                   <i className="tim-icons icon-coins" />
@@ -123,8 +133,53 @@ class ParametrosTable extends Component {
     });
   };
 
+  camelCase = str => {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
+  };
+
+  filterColumns = data => {
+    if (data.length !== 0) {
+      const columns = Object.keys(data[0]);
+      // Remove by key ()
+      const filterColsByKey = columns.filter(
+        c =>
+          c !== "actions" && c !== "idd" && c !== "id" && c !== "OportunidadeId"
+      );
+
+      return filterColsByKey;
+    }
+  };
+
+  checkData = () => {
+    const [date, month, year] = new Date()
+      .toLocaleDateString("pt-BR")
+      .split("/");
+    if (this.state.data.length === 0) {
+      return (
+        <Tooltip title="Exportar para excel" placement="top" interactive>
+          <img alt="Exportar para excel" src={iconExcel} />
+        </Tooltip>
+      );
+    }
+    return (
+      <ExcelFile
+        element={
+          <Tooltip title="Exportar para excel" placement="top" interactive>
+            <img alt="Exportar para excel" src={iconExcel} />
+          </Tooltip>
+        }
+        filename={`parcelasAtrasadas_${year}-${month}-${date}`}
+      >
+        <ExcelSheet data={this.state.data} name="Test">
+          {this.filterColumns(this.state.data).map(col => {
+            return <ExcelColumn label={this.camelCase(col)} value={col} />;
+          })}
+        </ExcelSheet>
+      </ExcelFile>
+    );
+  };
+
   render() {
-    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -186,20 +241,8 @@ class ParametrosTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Parcelas
-                  <Link to={`/cadastro/oportunidade/parcela/${id}`}>
-                    <Tooltip title="Novo" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <Link to={`/update/oportunidade/oport/${id}`}>
+                  Parcelas Atrasadas
+                  <Link to="/dashboardGerencial">
                     <Tooltip title="Voltar">
                       <Button
                         style={{
@@ -211,6 +254,9 @@ class ParametrosTable extends Component {
                       </Button>
                     </Tooltip>
                   </Link>
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    {this.checkData()}
+                  </div>{" "}
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -235,12 +281,24 @@ class ParametrosTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
+                      Header: "Cliente",
+                      accessor: "Cliente"
+                    },
+                    {
+                      Header: "Código",
+                      accessor: "Código Oportunidade"
+                    },
+                    {
+                      Header: "Oportunidade",
+                      accessor: "Oportunidade"
+                    },
+                    {
                       Header: "parcela",
                       accessor: "parcela"
                     },
                     {
-                      Header: "Valor Parcela",
-                      accessor: "vlrParcela"
+                      Header: "Saldo",
+                      accessor: "saldo"
                     },
                     {
                       Header: "Nota Fiscal",
@@ -249,14 +307,6 @@ class ParametrosTable extends Component {
                     {
                       Header: "Vencimento",
                       accessor: "dtVencimento"
-                    },
-                    {
-                      Header: "Saldo",
-                      accessor: "saldo"
-                    },
-                    {
-                      Header: "Situação",
-                      accessor: "situacao"
                     },
                     {
                       Header: "Ações",
@@ -280,4 +330,4 @@ class ParametrosTable extends Component {
   }
 }
 
-export default ParametrosTable;
+export default ParcelaAtrasadaTable;

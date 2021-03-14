@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Label,
   Form,
   Input,
@@ -43,6 +42,7 @@ export default function ParcelaCadastro() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
@@ -78,6 +78,7 @@ export default function ParcelaCadastro() {
           vlrProjeto: { value: normalizeCurrency(0) }
         }));
       }
+      setIsLoading(false);
     }
     loadData();
   }, [id]);
@@ -187,156 +188,140 @@ export default function ParcelaCadastro() {
   };
   return (
     <>
-      <div className="rna-container">
-        <NotificationAlert ref={notifyElment} />
-      </div>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Parcela</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form onSubmit={handleSubmit}>
-                  <Label>Oportunidade</Label>
-                  <FormGroup
-                    className={`has-label ${values.OportunidadeId.error}`}
-                  >
-                    <Input
-                      disabled
-                      name="OportunidadeId"
-                      onChange={event =>
-                        handleChange(event, "OportunidadeId", "text")
-                      }
-                      value={values.OportunidadeId.value}
-                      type="select"
-                    >
-                      <option disabled value="">
-                        {" "}
-                        Selecione a Oportunidade{" "}
-                      </option>{" "}
-                      <option value={data1.id}> {data1.desc}</option>
-                    </Input>
+      {isLoading ? (
+        <><div className='content' /></>
+      ) : (
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <h3 style={{ marginBottom: 0 }}>Parcela</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data1.cod} | {data1.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>Parcela</Label>
+                          <FormGroup
+                            className={`has-label ${values.parcela.error}`}
+                          >
+                            <Input
+                              name="parcela"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "parcela", "number")
+                              }
+                              value={values.parcela.value}
+                            />
+                            {values.parcela.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.parcela.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Valor da Parcela</Label>
+                          <FormGroup
+                            className={`has-label ${values.vlrParcela.error}`}
+                          >
+                            <Input
+                              name="vlrParcela"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "vlrParcela", "currency")
+                              }
+                              value={values.vlrParcela.value}
+                            />
 
-                    {values.OportunidadeId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.OportunidadeId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
-                  <Row>
-                    <Col md="4">
-                      {" "}
-                      <Label>Parcela</Label>
-                      <FormGroup
-                        className={`has-label ${values.parcela.error}`}
-                      >
-                        <Input
-                          name="parcela"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "parcela", "number")
-                          }
-                          value={values.parcela.value}
-                        />
-                        {values.parcela.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.parcela.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      {" "}
-                      <Label>Valor da Parcela</Label>
-                      <FormGroup
-                        className={`has-label ${values.vlrParcela.error}`}
-                      >
-                        <Input
-                          name="vlrParcela"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "vlrParcela", "currency")
-                          }
-                          value={values.vlrParcela.value}
-                        />
+                            {values.vlrParcela.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.vlrParcela.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Valor do Projeto</Label>
+                          <FormGroup
+                            className={`has-label ${optional.vlrProjeto.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="vlrProjeto"
+                              type="text"
+                              value={optional.vlrProjeto.value}
+                            />
 
-                        {values.vlrParcela.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.vlrParcela.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      {" "}
-                      <Label>Valor do Projeto</Label>
-                      <FormGroup
-                        className={`has-label ${optional.vlrProjeto.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="vlrProjeto"
-                          type="text"
-                          value={optional.vlrProjeto.value}
-                        />
+                            {optional.vlrProjeto.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.vlrProjeto.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
 
-                        {optional.vlrProjeto.error === "has-danger" ? (
-                          <Label className="error">
-                            {optional.vlrProjeto.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-
-                  <Link to={`/tabelas/oportunidade/parcela/${id}`}>
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
+                      <Link to={`/tabelas/oportunidade/parcela/${id}`}>
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
+                          paddingLeft: 29,
+                          paddingRight: 30
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
-                  <Button
-                    style={{
-                      paddingLeft: 29,
-                      paddingRight: 30
-                    }}
-                    className="form"
-                    color="info"
-                    type="submit"
-                  >
-                    Enviar{" "}
-                    <i
-                      className="tim-icons icon-send"
-                      style={{
-                        paddingBottom: 4,
-                        paddingLeft: 3
-                      }}
-                      size="large"
-                    />
-                  </Button>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </>
   );
 }

@@ -35,7 +35,6 @@ import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { perfilUpdate } from "~/store/modules/general/actions";
 import { store } from "~/store";
-import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 
 function AreaUpdatee() {
@@ -45,7 +44,6 @@ function AreaUpdatee() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -58,7 +56,6 @@ function AreaUpdatee() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/perfil/${id}`);
-      setData(response.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -136,7 +133,9 @@ function AreaUpdatee() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -169,36 +168,10 @@ function AreaUpdatee() {
                         Novo
                       </Button>
                     </Link>
-                    <CardTitle tag="h4">Edição de Perfil</CardTitle>
+                    <CardTitle tag="h4">Perfil</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Empresa</Label>
-                      <FormGroup
-                        className={`has-label ${values.empresaId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="EmpresaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "empresaId", "text")
-                          }
-                          value={values.empresaId.value}
-                        >
-                          {" "}
-                          <option value={1}>
-                            {" "}
-                            {data.nome} -{normalizeCnpj(data.idFederal)}
-                          </option>
-                        </Input>{" "}
-                        {values.empresaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.empresaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
                       <Label>Descrição Área</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input

@@ -18,7 +18,7 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 // react plugin for creating vector maps
 
 // reactstrap components
@@ -33,18 +33,17 @@ import {
   Row,
   Col
 } from "reactstrap";
+
 import { Link } from "react-router-dom";
 import { AttachMoney, Schedule } from "@material-ui/icons";
-
 import { store } from "~/store";
 
 // core components
-// import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import history from "~/services/history";
 
-class AdminDashboard extends React.Component {
+class DashboardGerencial extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,6 +64,142 @@ class AdminDashboard extends React.Component {
   }
 
   createCharts = () => {
+    const parcChartOptions = {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+      tooltips: {
+        backgroundColor: "#f5f5f5",
+        titleFontColor: "#333",
+        bodyFontColor: "#666",
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest"
+      },
+      responsive: true,
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(225,78,202,0.1)",
+              zeroLineColor: "transparent"
+            },
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 6,
+              padding: 1,
+              fontColor: "#9e9e9e"
+            }
+          }
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(225,78,202,0.1)",
+              zeroLineColor: "transparent"
+            },
+            ticks: {
+              padding: 20,
+              fontColor: "#9e9e9e"
+            }
+          }
+        ]
+      }
+    };
+
+    const parcPendenteChart = {
+      data: canvas => {
+        const ctx = canvas.getContext("2d");
+
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(72,72,176,0.1)");
+        gradientStroke.addColorStop(0.4, "rgba(72,72,176,0.0)");
+        gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); // purple colors
+
+        return {
+          labels: this.state.parcsState.parcLabelsPendente,
+          datasets: [
+            {
+              label: "Parcelas",
+              fill: true,
+              backgroundColor: gradientStroke,
+              hoverBackgroundColor: gradientStroke,
+              borderColor: "#ff6600",
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              data: this.state.parcsState.parcPendente
+            }
+          ]
+        };
+      },
+      options: parcChartOptions
+    };
+    const parcAtrasadaChart = {
+      data: canvas => {
+        const ctx = canvas.getContext("2d");
+
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(72,72,176,0.1)");
+        gradientStroke.addColorStop(0.4, "rgba(72,72,176,0.0)");
+        gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); // purple colors
+
+        return {
+          labels: this.state.parcsState.parcLabelsAtrasada,
+          datasets: [
+            {
+              label: "Parcelas",
+              fill: true,
+              backgroundColor: gradientStroke,
+              hoverBackgroundColor: gradientStroke,
+              borderColor: "#ff0000",
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              data: this.state.parcsState.parcAtrasada
+            }
+          ]
+        };
+      },
+      options: parcChartOptions
+    };
+    const parcAbertaChart = {
+      data: canvas => {
+        const ctx = canvas.getContext("2d");
+
+        const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, "rgba(72,72,176,0.1)");
+        gradientStroke.addColorStop(0.4, "rgba(72,72,176,0.0)");
+        gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); // purple colors
+
+        return {
+          labels: this.state.parcsState.parcLabelsAberta,
+          datasets: [
+            {
+              label: "Parcelas",
+              fill: true,
+              backgroundColor: gradientStroke,
+              hoverBackgroundColor: gradientStroke,
+              borderColor: "#009933",
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              data: this.state.parcsState.parcAberta
+            }
+          ]
+        };
+      },
+      options: parcChartOptions
+    };
+
     const chart_1_2_3_options = {
       maintainAspectRatio: false,
       legend: {
@@ -115,7 +250,7 @@ class AdminDashboard extends React.Component {
       }
     };
 
-    const chartExample1 = {
+    const bigChart = {
       data1: canvas => {
         const ctx = canvas.getContext("2d");
 
@@ -253,38 +388,52 @@ class AdminDashboard extends React.Component {
       },
       options: chart_1_2_3_options
     };
-    this.setState({ chartExample1 });
+
+    this.setState({
+      parcPendenteChart,
+      parcAtrasadaChart,
+      parcAbertaChart,
+      bigChart
+    });
   };
 
   loadData = async () => {
-    const date = new Date();
     history.push(0);
     if (store.getState().auth.user.Colab) {
-      const idColab = store.getState().auth.user.Colab.id;
-      const hrs = await api.get(`horas/${idColab}/?total=${true}&tipo=month`);
-      const desps = await api.get(
-        `despesas/${idColab}/?total=${true}&tipo=month`
-      );
-      const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
-
-      const resultPeriodo = await api.get(`resultPeriodo/${idColab}`);
-
+      const date = new Date();
+      const hrs = await api.get(`horas/?total=${true}&tipo=gerencial`);
+      const desps = await api.get(`despesas/?total=${true}&tipo=gerencial`);
+      const vlrHrs = await api.get(`colab/?vlrHrMes=true&tipo=gerencial`);
+      const parcs = await api.get(`parcela/?chartData=true&tipo=gerencial`);
+      const resultPeriodoGerencial = await api.get(`resultPeriodoGerencial`);
       const month = date.toLocaleString("default", { month: "long" });
+      const parcsState = {
+        parcPendente: parcs.data.parcPendente,
+        parcAtrasada: parcs.data.parcAtrasada,
+        parcAberta: parcs.data.parcAberta,
+        parcLabelsPendente: parcs.data.labelsPendente,
+        parcLabelsAtrasada: parcs.data.labelsAtrasada,
+        parcLabelsAberta: parcs.data.labelsAberta,
+        totalPendente: parcs.data.totalPendente,
+        totalAtrasada: parcs.data.totalAtrasada,
+        totalAberta: parcs.data.totalAberta
+      };
       this.setState({
         mes: month,
         horas: hrs.data,
         vlrDesps: normalizeCurrency(desps.data),
         vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data),
-        isLoading: false,
-        chartHrsData: resultPeriodo.data.map(d => {
+        parcsState,
+        chartHrsData: resultPeriodoGerencial.data.map(d => {
           return d.totalHrs / 60;
         }),
-        chartDespData: resultPeriodo.data.map(d => {
+        chartDespData: resultPeriodoGerencial.data.map(d => {
           return d.totalDesp / 100;
         }),
-        chartRecebData: resultPeriodo.data.map(d => {
+        chartRecebData: resultPeriodoGerencial.data.map(d => {
           return d.totalReceb / 100;
-        })
+        }),
+        isLoading: false
       });
     }
   };
@@ -296,9 +445,9 @@ class AdminDashboard extends React.Component {
   };
 
   render() {
-    const { id } = store.getState().auth.user;
     return (
       <>
+        {console.log(this.state)}
         {this.state.isLoading ? (
           <>
             <div className="content" />
@@ -384,10 +533,8 @@ class AdminDashboard extends React.Component {
                     <CardBody>
                       <div className="chart-area">
                         <Line
-                          data={
-                            this.state.chartExample1[this.state.bigChartData]
-                          }
-                          options={this.state.chartExample1.options}
+                          data={this.state.bigChart[this.state.bigChartData]}
+                          options={this.state.bigChart.options}
                         />
                       </div>
                     </CardBody>
@@ -421,7 +568,7 @@ class AdminDashboard extends React.Component {
                     <CardFooter>
                       <hr />
                       <div className="stats">
-                        <Link to={`tabelas/apontamentos/horas/${id}/`}>
+                        <Link to="tabelas/apontamentos/gerencial/horas/">
                           <i className="tim-icons icon-refresh-01" /> Ver horas
                         </Link>
                       </div>
@@ -458,7 +605,7 @@ class AdminDashboard extends React.Component {
                     <CardFooter>
                       <hr />
                       <div className="stats">
-                        <Link to={`tabelas/apontamentos/despesas/${id}/`}>
+                        <Link to="tabelas/apontamentos/gerencial/despesas/">
                           <i className="tim-icons icon-sound-wave" /> Ver
                           despesas
                         </Link>
@@ -482,7 +629,7 @@ class AdminDashboard extends React.Component {
                               className="card-category"
                             >
                               {" "}
-                              a Receber {this.state.mes}
+                              a Pagar {this.state.mes}
                             </p>
                             <CardTitle tag="h3">{this.state.vlrHrs}</CardTitle>
                           </div>
@@ -499,6 +646,80 @@ class AdminDashboard extends React.Component {
                   </Card>
                 </Col>
               </Row>
+              <Row>
+                <Col lg="4">
+                  <Card className=" /*card-chart">
+                    <CardHeader>
+                      <Link to="tabelas/parcela/pendentes/?fromDash=true">
+                        Parcelas Pendentes
+                      </Link>
+                      <CardTitle
+                        tag="h4"
+                        style={{ color: "orange", fontSize: 20 }}
+                      >
+                        <i className="tim-icons icon-send text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalPendente)}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <div className="chart-area">
+                        <Bar
+                          data={this.state.parcPendenteChart.data}
+                          options={this.state.parcPendenteChart.options}
+                        />
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg="4">
+                  <Card className=" /*card-chart">
+                    <CardHeader>
+                      <Link to="tabelas/parcela/abertas/?fromDash=true">
+                        Parcelas Abertas
+                      </Link>
+                      <CardTitle
+                        tag="h3"
+                        style={{ color: "green", fontSize: 20 }}
+                      >
+                        <i className="tim-icons icon-tag text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalAberta)}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <div className="chart-area">
+                        <Bar
+                          data={this.state.parcAbertaChart.data}
+                          options={this.state.parcAbertaChart.options}
+                        />
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col lg="4">
+                  <Card className=" /*card-chart">
+                    <CardHeader>
+                      <Link to="tabelas/parcela/atrasadas/?fromDash=true">
+                        Parcelas Atrasadas
+                      </Link>
+                      <CardTitle
+                        tag="h3"
+                        style={{ color: "red", fontSize: 20 }}
+                      >
+                        <i className="tim-icons icon-shape-star text-info" />{" "}
+                        {normalizeCurrency(this.state.parcsState.totalAtrasada)}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardBody>
+                      <div className="chart-area">
+                        <Bar
+                          data={this.state.parcAtrasadaChart.data}
+                          options={this.state.parcAtrasadaChart.options}
+                        />
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
             </div>
           </>
         )}
@@ -506,4 +727,4 @@ class AdminDashboard extends React.Component {
     );
   }
 }
-export default AdminDashboard;
+export default DashboardGerencial;

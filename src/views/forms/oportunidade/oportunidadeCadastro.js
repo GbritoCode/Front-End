@@ -42,7 +42,6 @@ export default function CadastroOport() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -90,7 +89,6 @@ export default function CadastroOport() {
       setData4(response4.data);
       setData5(response5.data);
       setData7(response7.data);
-      setData(response.data);
       if (response8.data.length !== 0) {
         var zerofilled = `0000${response8.data[0].id + 1}`.slice(-4);
       } else {
@@ -265,29 +263,6 @@ export default function CadastroOport() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Empresa</Label>
-                  <FormGroup className={`has-label ${values.empresaId.error}`}>
-                    <Input
-                      disabled
-                      name="EmpresaId"
-                      type="select"
-                      onChange={event =>
-                        handleChange(event, "empresaId", "text")
-                      }
-                      value={values.empresaId.value}
-                    >
-                      {" "}
-                      <option value={1}>
-                        {" "}
-                        {data.nome} - {normalizeCnpj(data.idFederal)}
-                      </option>
-                    </Input>
-                    {values.empresaId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.empresaId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
                   <Row>
                     <Col md="4">
                       <Label>Colaborador</Label>

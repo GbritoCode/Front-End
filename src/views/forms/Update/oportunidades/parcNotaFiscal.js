@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Label,
   Form,
@@ -31,32 +30,47 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
+import history from "~/services/history";
 
 /* eslint-disable eqeqeq */
 export default function ParcelaUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
+  // eslint-disable-next-line no-extend-native
+  Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data1, setData1] = useState();
+  const [data3, setData3] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
+  const today = new Date();
+  const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
+  // const dtVenc = today
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" },
     dtEmissao: { value: `${year}-${month}-${date}`, error: "", message: "" },
-    dtVencimento: { value: "", error: "", message: "" },
+    dtVencimento: {
+      value: "",
+      error: "",
+      message: ""
+    },
     notaFiscal: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
-    pedidoCliente: { value: "", error: "", message: "" },
+    pedidoCliente: { value: "Não informado", error: "", message: "" },
     situacao: { value: "", error: "", message: "" },
     dtLiquidacao: { value: "", error: "", message: "" },
     vlrPago: { value: "", error: "", message: "" },
@@ -64,13 +78,28 @@ export default function ParcelaUpdate() {
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
+
+  const query = new URLSearchParams(useLocation().search);
+  const fromDash = query.get("fromDash");
+
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parcela/aux/${id}`);
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
+      const response2 = await api.get(
+        `/cliente/complem/${response1.data.ClienteId}`
+      );
+      const response3 = await api.get(
+        `/condPgmto/${response2.data.CondPgmtoId}`
+      );
       setData1(response1.data);
+      setData3(response3.data);
+      const [dateVenc, monthVenc, yearVenc] = new Date()
+        .addDays(data3.diasPrazo)
+        .toLocaleDateString("pt-BR")
+        .split("/");
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response.data.OportunidadeId },
@@ -78,7 +107,10 @@ export default function ParcelaUpdate() {
         vlrParcela: {
           value: normalizeCalcCurrency(response.data.vlrParcela)
         },
-        dtVencimento: { value: response.data.dtVencimento },
+        dtVencimento: {
+          value:
+            response.data.dtVencimento || `${yearVenc}-${monthVenc}-${dateVenc}`
+        },
         notaFiscal: { value: response.data.notaFiscal }
       }));
 
@@ -101,7 +133,7 @@ export default function ParcelaUpdate() {
       setIsLoading(false);
     }
     loadData();
-  }, [id]);
+  }, [data3.diasPrazo, id]);
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -187,6 +219,7 @@ export default function ParcelaUpdate() {
       var vlrParceladb = values.vlrParcela.value.replace(/[^\d]+/g, "");
       var vlrPagodb = optional.vlrPago.value.replace(/[^\d]+/g, "");
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
+      const status = !!fromDash;
 
       dispatch(
         parcelaUpdate(
@@ -201,7 +234,8 @@ export default function ParcelaUpdate() {
           2,
           optional.dtLiquidacao.value,
           vlrPagodb,
-          saldodb
+          saldodb,
+          status
         )
       );
     } else {
@@ -222,7 +256,9 @@ export default function ParcelaUpdate() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -233,36 +269,14 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Nota Fiscal da Parcela</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Nota Fiscal</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data1.cod} | {data1.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Oportunidade</Label>
-                      <FormGroup
-                        className={`has-label ${values.OportunidadeId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="OportunidadeId"
-                          onChange={event =>
-                            handleChange(event, "OportunidadeId", "text")
-                          }
-                          value={values.OportunidadeId.value}
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione a Oportunidade{" "}
-                          </option>{" "}
-                          <option value={data1.id}> {data1.desc}</option>
-                        </Input>
-
-                        {values.OportunidadeId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.OportunidadeId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           {" "}
@@ -424,27 +438,6 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
 
-                      <Link to={`/tabelas/oportunidade/parcela/${data1.id}`}>
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -463,6 +456,29 @@ export default function ParcelaUpdate() {
                           }}
                           size="large"
                         />
+                      </Button>
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33,
+                          float: "left"
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => {
+                          history.goBack();
+                        }}
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
+                          style={{
+                            paddingBottom: 4,
+                            paddingRight: 1
+                          }}
+                          size="large"
+                        />{" "}
+                        Voltar
                       </Button>
                     </Form>
                   </CardBody>

@@ -42,7 +42,6 @@ export default function SegmentoCadastro() {
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -62,7 +61,6 @@ export default function SegmentoCadastro() {
       const response1 = await api.get(`/und_neg/`);
       const response2 = await api.get(`/prodt/`);
       const response3 = await api.get(`/area/`);
-      setData(response.data);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -80,33 +78,6 @@ export default function SegmentoCadastro() {
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
-
-  const normalizeInput = (value, previousValue) => {
-    if (!value) return value;
-    const currentValue = value.replace(/[^\d]/g, "");
-    const cvLength = currentValue.length;
-
-    if (cvLength < 3) return currentValue;
-    if (cvLength < 6)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
-    if (cvLength < 9)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5)}`;
-    if (cvLength < 13)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
-    return `${currentValue.slice(0, 2)}.${currentValue.slice(
-      2,
-      5
-    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
-      8,
-      12
-    )}-${currentValue.slice(12, 14)}`;
-  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -187,29 +158,6 @@ export default function SegmentoCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Empresa</Label>
-                  <FormGroup className={`has-label ${values.empresaId.error}`}>
-                    <Input
-                      disabled
-                      name="EmpresaId"
-                      type="select"
-                      onChange={event =>
-                        handleChange(event, "empresaId", "text")
-                      }
-                      value={values.empresaId.value}
-                    >
-                      {" "}
-                      <option value={1}>
-                        {" "}
-                        {data.nome} - {normalizeInput(data.idFederal)}
-                      </option>
-                    </Input>
-                    {values.empresaId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.empresaId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
                   <Row>
                     <Col md="4">
                       {" "}

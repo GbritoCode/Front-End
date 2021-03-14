@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Form,
   Label,
   Input,
@@ -44,6 +43,7 @@ export default function RecursoCadastro() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
@@ -98,6 +98,7 @@ export default function RecursoCadastro() {
           HorasTotais: { value: 0 }
         }));
       }
+      setIsLoading(false);
     }
     loadData();
   }, [id]);
@@ -251,333 +252,326 @@ export default function RecursoCadastro() {
   };
   return (
     <>
-      <div className="rna-container">
-        <NotificationAlert ref={notifyElment} />
-      </div>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Recurso</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form onSubmit={handleSubmit}>
-                  <Label>Oportunidade</Label>
-                  <FormGroup
-                    className={`has-label ${values.OportunidadeId.error}`}
-                  >
-                    <Input
-                      disabled
-                      name="OportunidadeId"
-                      onChange={event =>
-                        handleChange(event, "OportunidadeId", "text")
-                      }
-                      value={values.OportunidadeId.value}
-                      type="select"
-                    >
-                      <option disabled value="">
-                        {" "}
-                        Selecione a Oportunidade{" "}
-                      </option>{" "}
-                      <option key={data1.id} value={data1.id}>
-                        {" "}
-                        {data1.cod} - {data1.desc}
-                      </option>
-                    </Input>
-                    {values.OportunidadeId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.OportunidadeId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
-                  <Row>
-                    <Col md="4">
-                      <Label>Colaborador</Label>
-                      <FormGroup
-                        className={`has-label ${values.ColabId.error}`}
-                      >
-                        <Input
-                          name="ColabId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ColabId", "text")
-                          }
-                          value={values.ColabId.value}
-                          onChangeCapture={() =>
-                            getColabHr(
-                              document.getElementsByName("ColabId")[0].value,
-                              document.getElementsByName("tipoValor")[0].value,
-                              document.getElementsByName("tipoAtend")[0].value
-                            )
-                          }
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o colaborador{" "}
-                          </option>
-                          {data2.map(colab => (
-                            <option key={colab.id} value={colab.id}>
+      {isLoading ? (
+        <><div className='content' /></>
+      ) : (
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <h3 style={{ marginBottom: 0 }}>Recurso</h3>
+                    <p style={{ fontSize: 11 }}>
+                      {data1.cod} | {data1.desc}
+                    </p>
+                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
+                      <Row>
+                        <Col md="4">
+                          <Label>Colaborador</Label>
+                          <FormGroup
+                            className={`has-label ${values.ColabId.error}`}
+                          >
+                            <Input
+                              name="ColabId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "ColabId", "text")
+                              }
+                              value={values.ColabId.value}
+                              onChangeCapture={() =>
+                                getColabHr(
+                                  document.getElementsByName("ColabId")[0]
+                                    .value,
+                                  document.getElementsByName("tipoValor")[0]
+                                    .value,
+                                  document.getElementsByName("tipoAtend")[0]
+                                    .value
+                                )
+                              }
+                            >
                               {" "}
-                              {colab.nome}{" "}
-                            </option>
-                          ))}
-                        </Input>
+                              <option disabled value="">
+                                {" "}
+                                Selecione o colaborador{" "}
+                              </option>
+                              {data2.map(colab => (
+                                <option key={colab.id} value={colab.id}>
+                                  {" "}
+                                  {colab.nome}{" "}
+                                </option>
+                              ))}
+                            </Input>
 
-                        {values.ColabId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ColabId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Tipo de Valor</Label>
-                      <FormGroup
-                        className={`has-label ${values.tipoValor.error}`}
-                      >
-                        <Input
-                          name="tipoValor"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "tipoValor", "text")
-                          }
-                          value={values.tipoValor.value}
-                          onChangeCapture={() =>
-                            getColabHr(
-                              document.getElementsByName("ColabId")[0].value,
-                              document.getElementsByName("tipoValor")[0].value,
-                              document.getElementsByName("tipoAtend")[0].value
-                            )
-                          }
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o tipo de valor{" "}
-                          </option>
-                          <option key={1} value={1}>
-                            Por Hora
-                          </option>
-                          <option key={2} value={2}>
-                            Fixo
-                          </option>
-                        </Input>
+                            {values.ColabId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ColabId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo de Valor</Label>
+                          <FormGroup
+                            className={`has-label ${values.tipoValor.error}`}
+                          >
+                            <Input
+                              name="tipoValor"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "tipoValor", "text")
+                              }
+                              value={values.tipoValor.value}
+                              onChangeCapture={() =>
+                                getColabHr(
+                                  document.getElementsByName("ColabId")[0]
+                                    .value,
+                                  document.getElementsByName("tipoValor")[0]
+                                    .value,
+                                  document.getElementsByName("tipoAtend")[0]
+                                    .value
+                                )
+                              }
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione o tipo de valor{" "}
+                              </option>
+                              <option key={1} value={1}>
+                                Por Hora
+                              </option>
+                              <option key={2} value={2}>
+                                Fixo
+                              </option>
+                            </Input>
 
-                        {values.tipoValor.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.tipoValor.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Tipo de Atendimento</Label>
-                      <FormGroup
-                        className={`has-label ${values.tipoAtend.error}`}
-                      >
-                        <Input
-                          name="tipoAtend"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "tipoAtend", "text")
-                          }
-                          value={values.tipoAtend.value}
-                          onChangeCapture={() =>
-                            getColabHr(
-                              document.getElementsByName("ColabId")[0].value,
-                              document.getElementsByName("tipoValor")[0].value,
-                              document.getElementsByName("tipoAtend")[0].value
-                            )
-                          }
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o tipo de atendimento{" "}
-                          </option>
-                          <option key={1} value={1}>
-                            Consultoria
-                          </option>
-                          <option key={2} value={2}>
-                            Tecnologia
-                          </option>
-                          <option key={3} value={3}>
-                            Desenvolvimento
-                          </option>
-                          <option key={4} value={4}>
-                            Complementar
-                          </option>
-                        </Input>
+                            {values.tipoValor.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.tipoValor.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo de Atendimento</Label>
+                          <FormGroup
+                            className={`has-label ${values.tipoAtend.error}`}
+                          >
+                            <Input
+                              name="tipoAtend"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "tipoAtend", "text")
+                              }
+                              value={values.tipoAtend.value}
+                              onChangeCapture={() =>
+                                getColabHr(
+                                  document.getElementsByName("ColabId")[0]
+                                    .value,
+                                  document.getElementsByName("tipoValor")[0]
+                                    .value,
+                                  document.getElementsByName("tipoAtend")[0]
+                                    .value
+                                )
+                              }
+                            >
+                              <option disabled value="">
+                                {" "}
+                                Selecione o tipo de atendimento{" "}
+                              </option>
+                              <option key={1} value={1}>
+                                Consultoria
+                              </option>
+                              <option key={2} value={2}>
+                                Tecnologia
+                              </option>
+                              <option key={3} value={3}>
+                                Desenvolvimento
+                              </option>
+                              <option key={4} value={4}>
+                                Complementar
+                              </option>
+                            </Input>
 
-                        {values.tipoAtend.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.tipoAtend.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="4">
-                      <Label>Data de Inclusão</Label>
-                      <FormGroup
-                        className={`has-label ${values.dataInclusao.error}`}
-                      >
-                        <Input
-                          name="dataInclusao"
-                          type="date"
-                          onChange={event =>
-                            handleChange(event, "dataInclusao", "text")
-                          }
-                          value={values.dataInclusao.value}
-                        />
-                        {values.dataInclusao.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.dataInclusao.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Horas Previstas</Label>
-                      <FormGroup
-                        className={`has-label ${values.hrsPrevst.error}`}
-                      >
-                        <Input
-                          name="hrsPrevst"
-                          type="numeric"
-                          onChange={event => {
-                            handleChange(event, "hrsPrevst", "number");
-                            custoPrevst(
-                              event.target.value,
-                              document.getElementsByName("colabVlrHr")[0].value
-                            );
-                          }}
-                          value={values.hrsPrevst.value}
-                        />
-                        {values.hrsPrevst.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.hrsPrevst.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Horas Previstas Projeto</Label>
-                      <FormGroup
-                        className={`has-label ${optional.HorasTotais.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="HorasTotais"
-                          type="numeric"
-                          onChange={event => {
-                            handleChange(event, "HorasTotais", "number");
-                          }}
-                          value={optional.HorasTotais.value}
-                        />
-                        {optional.HorasTotais.error === "has-danger" ? (
-                          <Label className="error">
-                            {optional.HorasTotais.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="4">
-                      <Label>Valor Hora </Label>
-                      <FormGroup
-                        className={`has-label ${values.colabVlrHr.error}`}
-                      >
-                        <Input
-                          name="colabVlrHr"
-                          type="numeric"
-                          onChange={event => {
-                            handleChange(event, "colabVlrHr", "currency");
-                            custoPrevst(
-                              document.getElementsByName("hrsPrevst")[0].value,
-                              event.target.value
-                            );
-                          }}
-                          value={values.colabVlrHr.value}
-                        />
-                        {values.colabVlrHr.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.colabVlrHr.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Custo Previsto</Label>
-                      <FormGroup
-                        className={`has-label ${values.custoPrev.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="custoPrev"
-                          type="numeric"
-                          onChange={event =>
-                            handleChange(event, "custoPrev", "currency")
-                          }
-                          value={values.custoPrev.value}
-                        />
-                        {values.custoPrev.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.custoPrev.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Button
-                    style={{
-                      paddingLeft: 29,
-                      paddingRight: 30
-                    }}
-                    className="form"
-                    color="info"
-                    type="submit"
-                  >
-                    Enviar{" "}
-                    <i
-                      className="tim-icons icon-send"
-                      style={{
-                        paddingBottom: 4,
-                        paddingLeft: 3
-                      }}
-                      size="large"
-                    />
-                  </Button>
-                  <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33,
-                        float: "left"
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
+                            {values.tipoAtend.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.tipoAtend.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Data de Inclusão</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataInclusao.error}`}
+                          >
+                            <Input
+                              name="dataInclusao"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataInclusao", "text")
+                              }
+                              value={values.dataInclusao.value}
+                            />
+                            {values.dataInclusao.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataInclusao.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Horas Previstas</Label>
+                          <FormGroup
+                            className={`has-label ${values.hrsPrevst.error}`}
+                          >
+                            <Input
+                              name="hrsPrevst"
+                              type="numeric"
+                              onChange={event => {
+                                handleChange(event, "hrsPrevst", "number");
+                                custoPrevst(
+                                  event.target.value,
+                                  document.getElementsByName("colabVlrHr")[0]
+                                    .value
+                                );
+                              }}
+                              value={values.hrsPrevst.value}
+                            />
+                            {values.hrsPrevst.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.hrsPrevst.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Horas Previstas Projeto</Label>
+                          <FormGroup
+                            className={`has-label ${optional.HorasTotais.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="HorasTotais"
+                              type="numeric"
+                              onChange={event => {
+                                handleChange(event, "HorasTotais", "number");
+                              }}
+                              value={optional.HorasTotais.value}
+                            />
+                            {optional.HorasTotais.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.HorasTotais.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Valor Hora </Label>
+                          <FormGroup
+                            className={`has-label ${values.colabVlrHr.error}`}
+                          >
+                            <Input
+                              name="colabVlrHr"
+                              type="numeric"
+                              onChange={event => {
+                                handleChange(event, "colabVlrHr", "currency");
+                                custoPrevst(
+                                  document.getElementsByName("hrsPrevst")[0]
+                                    .value,
+                                  event.target.value
+                                );
+                              }}
+                              value={values.colabVlrHr.value}
+                            />
+                            {values.colabVlrHr.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.colabVlrHr.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Custo Previsto</Label>
+                          <FormGroup
+                            className={`has-label ${values.custoPrev.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="custoPrev"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "custoPrev", "currency")
+                              }
+                              value={values.custoPrev.value}
+                            />
+                            {values.custoPrev.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.custoPrev.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
+                          paddingLeft: 29,
+                          paddingRight: 30
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                      <Link to={`/tabelas/oportunidade/recurso/${data1.id}`}>
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </>
   );
 }

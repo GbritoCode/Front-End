@@ -265,7 +265,9 @@ function EmpresaUpdatee() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -276,7 +278,7 @@ function EmpresaUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Edição de Empresa</CardTitle>
+                    <CardTitle tag="h4">Empresa</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>

@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Label,
   Form,
@@ -66,7 +65,6 @@ export default function CliCompUpdatee() {
   const { id } = useParams();
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
       const response = await api.get(`/cliente/complem/1/${id}`);
       const response1 = await api.get(`/condPgmto`);
       const response2 = await api.get(`/cliente/${response.data.ClienteId}`);
@@ -205,7 +203,9 @@ export default function CliCompUpdatee() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -216,40 +216,12 @@ export default function CliCompUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">
-                      Edição de Complemento do Cliente
-                    </CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Complemento de Cliente</h3>
+                    <p style={{ fontSize: 11 }}>{data2.rzSoc}</p>
+                    <p style={{ fontSize: 11 }}>{normalizeCnpj(data2.CNPJ)}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Cliente</Label>
-                      <FormGroup
-                        className={`has-label ${values.ClienteId.error}`}
-                      >
-                        <Input
-                          disabled
-                          onChange={event =>
-                            handleChange(event, "ClienteId", "text")
-                          }
-                          value={values.ClienteId.value}
-                          name="ClienteId"
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o Cliente{" "}
-                          </option>{" "}
-                          <option value={data2.id}>
-                            {" "}
-                            {data2.nomeAbv} - {normalizeCnpj(data2.CNPJ)}
-                          </option>
-                        </Input>
-                        {values.ClienteId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ClienteId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           <Label>CEP</Label>

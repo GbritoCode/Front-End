@@ -71,27 +71,6 @@ class ParametrosTable extends Component {
                   <i className="tim-icons icon-pencil" />
                 </Button>
               </Link>{" "}
-              {/* use this button to remove the data row */}
-              <Button
-                onClick={() => {
-                  var { data } = this.state;
-                  data.find((o, i) => {
-                    if (o.id === key) {
-                      // here you should add some custom code so you can delete the data
-                      // from this component and from your server as well
-                      data.splice(i, 1);
-                      return true;
-                    }
-                    return false;
-                  });
-                  this.setState({ data });
-                }}
-                color="danger"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-simple-remove" />
-              </Button>{" "}
             </div>
           )
         };

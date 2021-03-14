@@ -34,14 +34,11 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
-import { useDispatch } from "react-redux";
 import { normalizeCnpj } from "~/normalize";
-import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
 
 export default function ProspectTable() {
   document.body.classList.add("white-content");
-  const dispatch = useDispatch();
   const [data, setData] = useState();
   const [modalMini, setModalMini] = useState(false);
   const [excluding, setExcluding] = useState(false);
@@ -86,17 +83,8 @@ export default function ProspectTable() {
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                     onClick={() => {
-                      dispatch(
-                        ClienteUpdate(
-                          client.id,
-                          client.nomeAbv,
-                          client.rzSoc,
-                          client.fantasia,
-                          client.RepresentanteId,
-                          client.TipoComisseId,
-                          0
-                        )
-                      );
+                      setExcluding({ id: client.id, action: "update" });
+                      setModalMini(!modalMini);
                     }}
                   >
                     <i className="tim-icons icon-check-2" />
@@ -115,7 +103,7 @@ export default function ProspectTable() {
                 {/* use this button to remove the data row */}
                 <Button
                   onClick={() => {
-                    setExcluding(client.id);
+                    setExcluding({ id: client.id, action: "delete" });
                     setModalMini(!modalMini);
                   }}
                   color="danger"
@@ -131,7 +119,7 @@ export default function ProspectTable() {
       );
     }
     loadData();
-  }, [dispatch, modalMini]);
+  }, [modalMini]);
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };
@@ -160,7 +148,17 @@ export default function ProspectTable() {
             </div>
           </div>
           <ModalBody className="text-center">
-            <p>Deseja deletar o registro?</p>
+            {excluding.action === "delete" ? (
+              <>
+                {" "}
+                <p>Deseja deletar o registro?</p>
+              </>
+            ) : (
+              <>
+                {" "}
+                <p>Deseja transformar o prospect em Cliente?</p>
+              </>
+            )}
           </ModalBody>
           <div className="modal-footer">
             <Button
@@ -176,16 +174,25 @@ export default function ProspectTable() {
               className="btn-neutral"
               type="button"
               onClick={async () => {
-                await api
-                  .delete(`recurso/${excluding}`)
-                  .then(result => {
-                    toast.success(result.data);
-                    setExcluding(undefined);
-                  })
-                  .catch(err => {
-                    toast.error(err.response.data.error);
-                  });
-                toggleModalMini();
+                if (excluding.action === "delete") {
+                  await api
+                    .delete(`cliente/${excluding.id}`)
+                    .then(result => {
+                      toast.success(result.data);
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                  toggleModalMini();
+                } else {
+                  await api
+                    .put(`cliente/${excluding.id}`, { prospect: false })
+                    .then(result => {
+                      toast.success(result.data);
+                    })
+                    .catch(err => {});
+                  toggleModalMini();
+                }
               }}
             >
               Sim

@@ -16,6 +16,7 @@
 */
 import React, { useRef, useEffect, useState } from "react";
 
+import classNames from "classnames";
 // reactstrap components
 import {
   Button,
@@ -23,32 +24,41 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  Form,
-  Input,
-  Label,
   FormGroup,
+  Form,
+  Label,
+  Modal,
+  ModalBody,
+  Input,
   Row,
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
+import { Close, DateRange, Message } from "@material-ui/icons";
+import Tooltip from "@material-ui/core/Tooltip";
+import { toast } from "react-toastify";
 import { store } from "~/store";
-import { condPgmtoRequest } from "~/store/modules/general/actions";
+import { areaRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
+import history from "~/services/history";
 
-export default function CondPgmtoCadastro() {
+export default function CadastroPeriodo() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
+
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" },
-    diasPrazo: { value: "", error: "", message: "" }
+    nome: { value: "", error: "", message: "" },
+    dataInic: { value: "", error: "", message: "" },
+    dataFim: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
+  const [modalMini, setModalMini] = useState(false);
+  const [modalVar, setModalVar] = useState({ ano: 2021 });
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
@@ -61,6 +71,10 @@ export default function CondPgmtoCadastro() {
     }
     loadData();
   }, []);
+
+  const toggleModalMini = () => {
+    setModalMini(!modalMini);
+  };
 
   var options = {};
 
@@ -110,16 +124,7 @@ export default function CondPgmtoCadastro() {
     }
 
     if (valid && filled) {
-      const first = false;
-      dispatch(
-        condPgmtoRequest(
-          values.empresaId.value,
-          values.cod.value,
-          values.desc.value,
-          values.diasPrazo.value,
-          first
-        )
-      );
+      dispatch(areaRequest(values.empresaId.value, values.descArea.value));
     } else {
       options = {
         place: "tr",
@@ -141,67 +146,161 @@ export default function CondPgmtoCadastro() {
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
+        <Modal
+          modalClassName="modal-mini "
+          isOpen={modalMini}
+          toggle={toggleModalMini}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalMini}
+            >
+              <Close />
+            </button>
+            <div>
+              <Message fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <p> Geração automática do período mensal </p>
+            <Label style={{ float: "left" }}>Ano</Label>
+            <Input
+              name="ano"
+              type="select"
+              onChange={e => {
+                var { value } = e.target;
+                setModalVar(prevState => ({
+                  ...prevState,
+                  ano: value
+                }));
+              }}
+            >
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+            </Input>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalMini}
+            >
+              Cancelar
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={async () => {
+                await api
+                  .post("fechamentoPeriodo/?auto=true&tipo=mensal", modalVar)
+                  .then(() => {
+                    setModalMini(!modalMini);
+                    history.push("/tabelas/fechamento/periodo");
+                  })
+                  .catch(err => {
+                    toast.error(err.response.data.error);
+                  });
+              }}
+            >
+              Gerar
+            </Button>
+          </div>
+        </Modal>
         <Row>
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Condição de Pagamento</CardTitle>
+                <CardTitle tag="h4">Período</CardTitle>
+                <Tooltip title="Geração" placement="top" interactive>
+                  <Button
+                    style={{ float: "right" }}
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => setModalMini(!modalMini)}
+                  >
+                    <DateRange />
+                  </Button>
+                </Tooltip>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
-                      <Label>Código</Label>
-                      <FormGroup className={`has-label ${values.cod.error}`}>
+                      {" "}
+                      <Label>Nome Período</Label>
+                      <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input
-                          name="license"
-                          type="text"
-                          onChange={event => handleChange(event, "cod", "text")}
-                          value={values.cod.value}
-                        />
-                        {values.cod.error === "has-danger" ? (
-                          <Label className="error">{values.cod.message}</Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Descrição</Label>
-                      <FormGroup className={`has-label ${values.desc.error}`}>
-                        <Input
-                          name="license"
+                          name="nome"
                           type="text"
                           onChange={event =>
-                            handleChange(event, "desc", "text")
+                            handleChange(event, "nome", "text")
                           }
-                          value={values.desc.value}
-                        />
-                        {values.desc.error === "has-danger" ? (
-                          <Label className="error">{values.desc.message}</Label>
+                          value={values.nome.value}
+                        />{" "}
+                        {values.nome.error === "has-danger" ? (
+                          <Label className="error">{values.nome.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <Label>Dias de Prazo</Label>
+                      <Label>Data Inicial</Label>
                       <FormGroup
-                        className={`has-label ${values.diasPrazo.error}`}
+                        className={`has-label ${values.dataInic.error}`}
                       >
                         <Input
-                          name="diasPrazo"
-                          type="text"
+                          name="dataInic"
+                          type="date"
                           onChange={event =>
-                            handleChange(event, "diasPrazo", "text")
+                            handleChange(event, "dataInic", "text")
                           }
-                          value={values.diasPrazo.value}
+                          value={values.dataInic.value}
                         />{" "}
-                        {values.diasPrazo.error === "has-danger" ? (
+                        {values.dataInic.error === "has-danger" ? (
                           <Label className="error">
-                            {values.diasPrazo.message}
+                            {values.dataInic.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      {" "}
+                      <Label>Data Final</Label>
+                      <FormGroup
+                        className={`has-label ${values.dataFim.error}`}
+                      >
+                        <Input
+                          name="dataFim"
+                          type="date"
+                          onChange={event =>
+                            handleChange(event, "dataFim", "text")
+                          }
+                          value={values.dataFim.value}
+                        />{" "}
+                        {values.dataFim.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.dataFim.message}
                           </Label>
                         ) : null}
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to="/tabelas/aux/condPgmto">
+
+                  <Link to="/tabelas/fechamento/periodo">
                     <Button
                       style={{
                         paddingLeft: 32,
@@ -209,7 +308,7 @@ export default function CondPgmtoCadastro() {
                       }}
                       color="secundary"
                       size="small"
-                      className="text-left"
+                      className="form"
                     >
                       <i
                         className="tim-icons icon-double-left"

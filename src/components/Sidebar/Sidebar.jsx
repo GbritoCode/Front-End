@@ -162,12 +162,36 @@ class Sidebar extends React.Component {
     }
   }
   render() {
-    const { activeColor, logo } = this.props;
+    const { activeColor, logo, logoMini } = this.props;
     let logoImg = null;
     let logoText = null;
+    let logoMiniImg = null;
     if (logo !== undefined) {
       if (logo.outterLink !== undefined) {
-
+        logoImg = (
+          <NavLink
+            to={logo.outterLink}
+            className="simple-text logo-mini"
+            onClick={this.props.closeSidebar}
+            style={{width:120}}
+          >
+            <div className="logo-img">
+              <img style={{width:120}} hidden={logo.hidden} src={logo.imgSrc} alt="react-logo" />
+            </div>
+          </NavLink>
+        );
+        logoMiniImg = (
+          <NavLink
+            to={logoMini.outterLink}
+            className="simple-text logo-mini"
+            onClick={this.props.closeSidebar}
+            style={{paddingLeft: 0, marginLeft: 0, position:"absolute"}}
+          >
+            <div className="logo-img">
+              <img style={{width:50}} hidden={logoMini.hidden} src={logoMini.imgSrc} alt="react-logo" />
+            </div>
+          </NavLink>
+        );
         logoText = (
           <div>
           <a
@@ -175,8 +199,9 @@ class Sidebar extends React.Component {
             className="simple-text logo-normal"
             target="_blank"
             onClick={this.props.closeSidebar}
+            style={{width:"calc(100%-30px)",paddingTop:20, position:"relative"}}
           >
-             <img width={180} height={70} style={{ display: "block", marginLeft:12, paddingLeft: 5, paddingRight:5 }}  src={logo.imgSrc} alt="react-logo" />
+          {logo.text}
           </a>
           </div>
         );
@@ -205,9 +230,11 @@ class Sidebar extends React.Component {
     }
     return (
       <div className="sidebar" data={activeColor}>
+      {console.log(this.props)}
         <div className="sidebar-wrapper" ref="sidebar">
           {logoImg !== null || logoText !== null ? (
-            <div className="logo">
+            <div className="logo" style={{paddingLeft: 0}}>
+              {logoMiniImg}
               {logoImg}
               {logoText}
             </div>
@@ -222,6 +249,19 @@ class Sidebar extends React.Component {
 Sidebar.propTypes = {
   activeColor: PropTypes.oneOf(["primary", "blue", "green", "orange", "red"]),
   routes: PropTypes.array.isRequired,
+  logoMini: PropTypes.oneOfType([
+    PropTypes.shape({
+      innerLink: PropTypes.string.isRequired,
+      imgSrc: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    }),
+    PropTypes.shape({
+      hidden: PropTypes.bool.isRequired,
+      outterLink: PropTypes.string.isRequired,
+      imgSrc: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    }),
+  ]),
   logo: PropTypes.oneOfType([
     PropTypes.shape({
       innerLink: PropTypes.string.isRequired,
@@ -229,6 +269,7 @@ Sidebar.propTypes = {
       text: PropTypes.string.isRequired,
     }),
     PropTypes.shape({
+      hidden: PropTypes.bool.isRequired,
       outterLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,

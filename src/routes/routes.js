@@ -18,9 +18,10 @@
 import signIn from "~/pages/signIn";
 
 import Dashboard from "~/pages/dashboard/index";
+import DashboardGerencial from "~/pages/dashboard/dashboardGerencial";
+import DashboardComercial from "~/pages/dashboard/dashboardComercial";
 import AdminDashboard from "~/pages/dashboard/dashboardAdmin";
 import AnalistaDashboard from "~/pages/dashboard/dashboardAnalista";
-import ComercialDashboard from "~/pages/dashboard/dashboardComercial";
 import GestorDashboard from "~/pages/dashboard/dashboardGestor";
 import SignUp from "~/pages/signUp";
 
@@ -110,7 +111,6 @@ import ColabCompTable from "~/views/tables/Colab/ColabCompTable";
 import AreaTable from "~/views/tables/General/AreaTable";
 import EmpresaTable from "~/views/tables/General/EmpresaTable";
 import FornecTable from "~/views/tables/General/FornecTable";
-import ParametrosTable from "~/views/tables/General/ParametrosTable";
 import ProdtTable from "~/views/tables/General/ProdtTable";
 import RepresentanteTable from "~/views/tables/General/RepresentanteTable";
 import SegmentoTable from "~/views/tables/General/SegmentoTable";
@@ -155,6 +155,14 @@ import UpdateContaContabil from "~/views/forms/Update/auxUpdate/contaContabilupd
 import CadastroCentroCusto from "~/views/forms/auxForm/centroCustoCadastro";
 import UpdateCentroCusto from "~/views/forms/Update/auxUpdate/centroCustoUpdate";
 import CentroCustoTable from "~/views/tables/auxTables/centroCustoTable";
+import PeriodosTable from "~/views/tables/Fechamento/periodos";
+import CadastroPeriodo from "~/views/forms/fechamento/periodoCadastro";
+import GerencialHorasTable from "~/views/tables/apontamentos/tabelaHoraGerencial";
+import GerencialDespesaTable from "~/views/tables/apontamentos/tabelaDespesaGerencial";
+import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
+import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTable";
+import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
+import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -165,7 +173,7 @@ const checkProfile = profile => {
     case ":1,\\":
       return AnalistaDashboard;
     case ":2,\\":
-      return ComercialDashboard;
+      return DashboardComercial;
     case ":3,\\":
       return GestorDashboard;
 
@@ -173,8 +181,7 @@ const checkProfile = profile => {
       break;
   }
 };
-let profile;
-profile = localStorage.getItem("persist:gobarber");
+const profile = localStorage.getItem("persist:gobarber");
 let arr;
 if (typeof profile === "string") {
   arr = profile.split('"');
@@ -182,11 +189,36 @@ if (typeof profile === "string") {
 
 const routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    collapse: true,
+    name: "Dashboards",
     icon: "tim-icons icon-chart-pie-36",
-    component: arr === undefined ? Dashboard : checkProfile(arr[23]),
-    layout: "/admin"
+    state: "dashboardCollapse",
+    profile: 1,
+    views: [
+      {
+        path: "/dashboardPessoal",
+        name: "Pessoal",
+        mini: "PES",
+        component: arr === undefined ? Dashboard : checkProfile(arr[23]),
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardGerencial",
+        name: "Gerencial",
+        mini: "GER",
+        component: DashboardGerencial,
+        profile: 10,
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardComercial",
+        name: "Comercial",
+        mini: "COM",
+        component: DashboardComercial,
+        profile: 10,
+        layout: "/admin"
+      }
+    ]
   },
   {
     path: "/login",
@@ -204,11 +236,370 @@ const routes = [
     layout: "/auth",
     redirect: true
   },
+
+  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
+  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
+  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
+  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
+  {
+    collapse: true,
+    name: "Administração",
+    icon: "tim-icons icon-molecule-40",
+    state: "AdministradorCollapse",
+    profile: 10,
+    views: [
+      {
+        path: "/cadastro/wizard/empresa",
+        name: "wizard",
+        mini: "RT",
+        component: WizardCadastro,
+        layout: "/admin",
+        profile: 100,
+        redirect: true
+      },
+      {
+        path: "/cadastro/wizard/fornec",
+        name: "wizardFornec",
+        mini: "RT",
+        component: WizardFornec,
+        layout: "/admin",
+        profile: 100,
+        redirect: true
+      },
+      {
+        path: "/cadastro/wizard/colab",
+        name: "wizardColab",
+        mini: "RT",
+        component: WizardColab,
+        layout: "/admin",
+        profile: 100,
+        redirect: true
+      },
+      {
+        path: `/update/general/parametros/1`,
+        name: "Parametros",
+        mini: "PRM",
+        component: ParametrosUpdate,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/aux/perfil",
+        name: "Perfis",
+        mini: "PRF",
+        component: perfilTable,
+        layout: "/admin"
+      },
+      {
+        path: `/tabelas/fechamento/periodo`,
+        name: "Períodos",
+        mini: "PER",
+        component: PeriodosTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: `/tabelas/fechamento/acesso`,
+        name: "Liberar Períodos",
+        mini: "LPE",
+        component: PeriodTokenTable,
+        layout: "/admin",
+        profile: 10
+      }
+    ]
+  },
+  {
+    collapse: true,
+    name: "Cadastros",
+    icon: "tim-icons icon-puzzle-10",
+    state: "tablesCollapse",
+    profile: 2,
+    views: [
+      {
+        path: "/tabelas/aux/condPgmto",
+        name: "Condição de Pagamento",
+        mini: "CPG",
+        component: condPgmtoTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/aux/tipoComiss",
+        name: "Tipos de Comissão",
+        mini: "CMS",
+        component: tipoComissTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/contaContabil",
+        name: "Conta Contábil",
+        mini: "CTB",
+        component: ContaContabilTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/centroCusto",
+        name: "Centro de Custo",
+        mini: "CCS",
+        component: CentroCustoTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/aux/rec_desp",
+        name: "Receita e Despesa",
+        mini: "RDP",
+        component: RecDespTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/representante",
+        name: "Representante",
+        mini: "RPR",
+        component: RepresentanteTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/cliente/cliente",
+        name: "Clientes",
+        mini: "CLI",
+        component: Tabela_Cliente,
+        layout: "/admin",
+        profile: 3
+      },
+      {
+        path: "/tabelas/cliente/prospect",
+        name: "Prospects",
+        mini: "CPR",
+        component: prospectTable,
+        layout: "/admin",
+        profile: 2
+      },
+      {
+        path: "/tabelas/cliente/comp/:id",
+        name: "Complemento de Clientes",
+        mini: "RT",
+        redirect: true,
+        component: CliCompTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/cliente/cont/:id",
+        name: "Continuação Cliente",
+        mini: "RT",
+        redirect: true,
+        component: CliContTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/cliente/rec_desp/:id",
+        name: "Receita e Despesa de Cliente",
+        mini: "RT",
+        redirect: true,
+        component: CliRecDespTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/general/fornec",
+        name: "Fornecedor",
+        mini: "FRN",
+        component: FornecTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/colab",
+        name: "Colaborador",
+        mini: "COL",
+        component: ColabTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tables/colab/comp/:id",
+        name: "Complemento de Colaborador",
+        mini: "RT",
+        redirect: true,
+        component: ColabCompTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/general/area",
+        name: "Area",
+        mini: "AR",
+        component: AreaTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/empresa",
+        name: "Empresa",
+        mini: "EMP",
+        component: EmpresaTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/prodt",
+        name: "Produto",
+        mini: "PDT",
+        component: ProdtTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/und_neg",
+        name: "Unidade de Negócio",
+        mini: "UNG",
+        component: UndNegTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/segmento",
+        name: "Segmento",
+        mini: "SEG",
+        component: SegmentoTable,
+        layout: "/admin",
+        profile: 10
+      }
+    ]
+  },
+  {
+    collapse: true,
+    name: "Apontamentos",
+    icon: "tim-icons icon-notes",
+    state: "ApontamentosCollapse",
+    profile: 1,
+    views: [
+      {
+        path: "/tabelas/apontamentos/oportunidades/",
+        name: "Projetos",
+        mini: "PJT",
+        component: ApontTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/apontamentos/despesas/:id",
+        name: "Despesas",
+        mini: "DSP",
+        component: DespesaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/apontamentos/gerencial/despesas",
+        name: "Despesas",
+        mini: "DSP",
+        component: GerencialDespesaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/apontamentos/horas/:id/",
+        name: "Horas",
+        mini: "HRS",
+        component: HorasTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/apontamentos/gerencial/horas",
+        name: "Horas Gerencial",
+        mini: "HRS",
+        component: GerencialHorasTable,
+        layout: "/admin",
+        redirect: true
+      }
+    ]
+  },
+  {
+    collapse: true,
+    name: "Oportunidades",
+    icon: "tim-icons icon-pin",
+    state: "OportunidadeCollapse",
+    profile: 2,
+    views: [
+      {
+        path: "/tabelas/oportunidade/oport",
+        name: "Oportunidades",
+        mini: "OPT",
+        component: OportTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/oportunidade/cotacao/:id",
+        name: "Cotacao",
+        mini: "COT",
+        component: cotacaoTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/oportunidade/recurso/:id",
+        name: "Recursos",
+        mini: "rec",
+        component: RecursoTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/oportunidade/parcela/:id",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/pendentes",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaPendentesTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/abertas",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaAbertaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/atrasadas",
+        name: "Recursos",
+        mini: "rec",
+        component: ParcelaAtrasadaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/view/oportunidade/dados/:id",
+        name: "Dados OPT",
+        mini: "DOP",
+        component: DataOport,
+        layout: "/admin",
+        redirect: true
+      }
+    ]
+  },
+
+  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
+  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
+  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
+  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
   // ------------Cadastros-----------------------------------------------------------------------------------------------------------------------
+
   {
     collapse: true,
     name: "Páginas de cadastro invisíveis",
@@ -347,13 +738,6 @@ const routes = [
         name: "Parametros",
         mini: "RF",
         component: ParametrosCadastro,
-        layout: "/admin"
-      },
-      {
-        path: "/update/general/parametros/:id",
-        name: "Editar Parâmetros",
-        mini: "RF",
-        component: ParametrosUpdate,
         layout: "/admin"
       },
       {
@@ -593,317 +977,21 @@ const routes = [
         mini: "RF",
         component: UpdateCentroCusto,
         layout: "/admin"
+      },
+      {
+        path: "/cadastro/fechamento/periodo",
+        name: "Cadastro de Periodo",
+        mini: "RF",
+        component: CadastroPeriodo,
+        layout: "/admin"
       }
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
       // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
-    ]
-  },
-  // cadastros Fim ---------------------------------------
-
-  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
-  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
-  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
-  // -------------TABELAS LINHA482/ LINHA 652 ------------------------------------------------------------------------------------------------
-  {
-    collapse: true,
-    name: "Administrador",
-    icon: "tim-icons icon-molecule-40",
-    state: "AdministradorCollapse",
-    profile: 10,
-    views: [
-      {
-        path: "/cadastro/wizard/empresa",
-        name: "wizard",
-        mini: "RT",
-        component: WizardCadastro,
-        layout: "/admin",
-        profile: 100,
-        redirect: true
-      },
-      {
-        path: "/cadastro/wizard/fornec",
-        name: "wizardFornec",
-        mini: "RT",
-        component: WizardFornec,
-        layout: "/admin",
-        profile: 100,
-        redirect: true
-      },
-      {
-        path: "/cadastro/wizard/colab",
-        name: "wizardColab",
-        mini: "RT",
-        component: WizardColab,
-        layout: "/admin",
-        profile: 100,
-        redirect: true
-      },
-      {
-        path: `/update/general/parametros/1`,
-        name: "Parametros",
-        mini: "PRM",
-        component: ParametrosTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/aux/perfil",
-        name: "Perfis",
-        mini: "PRF",
-        component: perfilTable,
-        layout: "/admin"
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Cadastros",
-    icon: "tim-icons icon-puzzle-10",
-    state: "tablesCollapse",
-    profile: 2,
-    views: [
-      {
-        path: "/tabelas/aux/condPgmto",
-        name: "Condição de Pagamento",
-        mini: "CPG",
-        component: condPgmtoTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/aux/tipoComiss",
-        name: "Tipos de Comissão",
-        mini: "CMS",
-        component: tipoComissTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/contaContabil",
-        name: "Conta Contábil",
-        mini: "CONT",
-        component: ContaContabilTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/centroCusto",
-        name: "Centro de Custo",
-        mini: "CENT",
-        component: CentroCustoTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/aux/rec_desp",
-        name: "Receita e Despesa",
-        mini: "RDP",
-        component: RecDespTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/representante",
-        name: "Representante",
-        mini: "RPR",
-        component: RepresentanteTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/cliente/cliente",
-        name: "Clientes",
-        mini: "CLI",
-        component: Tabela_Cliente,
-        layout: "/admin",
-        profile: 3
-      },
-      {
-        path: "/tabelas/cliente/prospect",
-        name: "Prospects",
-        mini: "CPR",
-        component: prospectTable,
-        layout: "/admin",
-        profile: 2
-      },
-      {
-        path: "/tabelas/cliente/comp/:id",
-        name: "Complemento de Clientes",
-        mini: "RT",
-        redirect: true,
-        component: CliCompTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/cliente/cont/:id",
-        name: "Continuação Cliente",
-        mini: "RT",
-        redirect: true,
-        component: CliContTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/cliente/rec_desp/:id",
-        name: "Receita e Despesa de Cliente",
-        mini: "RT",
-        redirect: true,
-        component: CliRecDespTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/general/fornec",
-        name: "Fornecedor",
-        mini: "FRN",
-        component: FornecTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/colab",
-        name: "Colaborador",
-        mini: "COL",
-        component: ColabTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tables/colab/comp/:id",
-        name: "Complemento de Colaborador",
-        mini: "RT",
-        redirect: true,
-        component: ColabCompTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/general/area",
-        name: "Area",
-        mini: "AR",
-        component: AreaTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/empresa",
-        name: "Empresa",
-        mini: "EMP",
-        component: EmpresaTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/prodt",
-        name: "Produto",
-        mini: "PDT",
-        component: ProdtTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/und_neg",
-        name: "Unidade de Negócio",
-        mini: "UNG",
-        component: UndNegTable,
-        layout: "/admin",
-        profile: 10
-      },
-      {
-        path: "/tabelas/general/segmento",
-        name: "Segmento",
-        mini: "SEG",
-        component: SegmentoTable,
-        layout: "/admin",
-        profile: 10
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Apontamentos",
-    icon: "tim-icons icon-notes",
-    state: "ApontamentosCollapse",
-    profile: 1,
-    views: [
-      {
-        path: "/tabelas/apontamentos/oportunidades/",
-        name: "Projetos",
-        mini: "PJT",
-        component: ApontTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/apontamentos/despesas/:id",
-        name: "Despesas",
-        mini: "DSP",
-        component: DespesaTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/tabelas/apontamentos/horas/:id",
-        name: "Horas",
-        mini: "HRS",
-        component: HorasTable,
-        layout: "/admin",
-        redirect: true
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Oportunidades",
-    icon: "tim-icons icon-pin",
-    state: "OportunidadeCollapse",
-    profile: 2,
-    views: [
-      {
-        path: "/tabelas/oportunidade/oport",
-        name: "Oportunidades",
-        mini: "OPT",
-        component: OportTable,
-        layout: "/admin"
-      },
-      {
-        path: "/tabelas/oportunidade/cotacao/:id",
-        name: "Cotacao",
-        mini: "COT",
-        component: cotacaoTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/tabelas/oportunidade/recurso/:id",
-        name: "Recursos",
-        mini: "rec",
-        component: RecursoTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/tabelas/oportunidade/parcela/:id",
-        name: "Recursos",
-        mini: "rec",
-        component: ParcelaTable,
-        layout: "/admin",
-        redirect: true
-      },
-      {
-        path: "/view/oportunidade/dados/:id",
-        name: "Dados OPT",
-        mini: "DOP",
-        component: DataOport,
-        layout: "/admin",
-        redirect: true
-      }
     ]
   }
-
-  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
-  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
-  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
-  // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
 ];
 
 export default routes;

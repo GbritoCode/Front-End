@@ -43,7 +43,6 @@ export default function UpdateCentroCusto() {
 
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [data, setData] = useState({});
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -57,10 +56,9 @@ export default function UpdateCentroCusto() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/centroCusto/${id}`);
-      setData(response.data);
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response1.data.id },
+        empresaId: { value: response.data.id },
         cod: { value: response1.data.cod },
         desc: { value: response1.data.desc }
       }));
@@ -74,33 +72,6 @@ export default function UpdateCentroCusto() {
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
-
-  const normalizeInput = value => {
-    if (!value) return value;
-    const currentValue = value.replace(/[^\d]/g, "");
-    const cvLength = currentValue.length;
-
-    if (cvLength < 3) return currentValue;
-    if (cvLength < 6)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(2)}`;
-    if (cvLength < 9)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5)}`;
-    if (cvLength < 13)
-      return `${currentValue.slice(0, 2)}.${currentValue.slice(
-        2,
-        5
-      )}.${currentValue.slice(5, 8)}/${currentValue.slice(8)}`;
-    return `${currentValue.slice(0, 2)}.${currentValue.slice(
-      2,
-      5
-    )}.${currentValue.slice(5, 8)}/${currentValue.slice(
-      8,
-      12
-    )}-${currentValue.slice(12, 14)}`;
-  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -169,33 +140,10 @@ export default function UpdateCentroCusto() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Edição de Centro de Custo</CardTitle>
+                <CardTitle tag="h4">Centro de Custo</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Empresa</Label>
-                  <FormGroup className={`has-label ${values.empresaId.error}`}>
-                    <Input
-                      disabled
-                      name="EmpresaId"
-                      type="select"
-                      onChange={event =>
-                        handleChange(event, "empresaId", "text")
-                      }
-                      value={values.empresaId.value}
-                    >
-                      {" "}
-                      <option value={1}>
-                        {" "}
-                        {data.nome} -{normalizeInput(data.idFederal)}
-                      </option>
-                    </Input>{" "}
-                    {values.empresaId.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.empresaId.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
                   <Row>
                     <Col md="4">
                       <Label>Código</Label>

@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Form,
   Label,
@@ -33,7 +32,7 @@ import {
 import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCurrency } from "~/normalize";
+import { normalizeCpf, normalizeCurrency } from "~/normalize";
 import { ColabCompUpdate } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
 
@@ -188,7 +187,9 @@ function ColabCompUpdatee() {
   return (
     <>
       {isLoading ? (
-        <div />
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -199,41 +200,14 @@ function ColabCompUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">
-                      Edição de Complemento do Colaborador
-                    </CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>
+                      Complemento de Colaborador
+                    </h3>
+                    <p style={{ fontSize: 11 }}>{data1.nome}</p>
+                    <p style={{ fontSize: 11 }}>{normalizeCpf(data1.CPF)}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Colaborador</Label>
-                      <FormGroup
-                        className={`has-label ${values.ColabId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="ColabId"
-                          onChange={event =>
-                            handleChange(event, "ColabId", "text")
-                          }
-                          value={values.ColabId.value}
-                          type="select"
-                        >
-                          <option disabled value="">
-                            {" "}
-                            Selecione o Colaborador{" "}
-                          </option>{" "}
-                          <option value={data1.id}>
-                            {" "}
-                            {data1.nome} - {data1.CPF}
-                          </option>
-                        </Input>
-
-                        {values.ColabId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ColabId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
                         <Col md="4">
                           {" "}
@@ -388,7 +362,7 @@ function ColabCompUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tables/colab/comp/1">
+                      <Link to={`/tables/colab/comp/${id}`}>
                         <Button
                           style={{
                             paddingLeft: 32,

@@ -25,6 +25,7 @@ export default function RouteWrapper({
     return <Redirect to="/cadastro/wizard/empresa" />;
   }
   if (
+    Colab &&
     isFirstLogin &&
     isPrivate &&
     signed &&
@@ -37,7 +38,7 @@ export default function RouteWrapper({
   }
 
   if (signed && !isPrivate) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/dashboardPessoal" />;
   }
 
   const Layout = signed ? AdminLayout : AuthLayout;

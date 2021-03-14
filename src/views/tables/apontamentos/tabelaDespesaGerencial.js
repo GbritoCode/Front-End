@@ -18,7 +18,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
-import { getDaysInMonth } from "date-fns";
+
 import {
   Card,
   CardBody,
@@ -42,9 +42,9 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import ReactExport from "react-export-excel";
+import { getDaysInMonth } from "date-fns";
 import api from "~/services/api";
-import { store } from "~/store";
-import { normalizeHrToMin } from "~/normalize";
+import { normalizeCurrency } from "~/normalize";
 import iconExcel from "~/assets/img/iconExcel.png";
 import history from "~/services/history";
 
@@ -52,11 +52,11 @@ const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
 const { ExcelColumn } = ReactExport.ExcelFile;
 /* eslint-disable eqeqeq */
-export default class HorasTable extends Component {
+export default class GerencialDespesasTable extends Component {
   state = {
-    data: [{}],
-    initialDate: null,
-    finalDate: null
+    data: [],
+    dataForCsv: [{}],
+    filtered: []
   };
 
   componentDidMount() {
@@ -64,6 +64,27 @@ export default class HorasTable extends Component {
     document.body.classList.add("white-content");
     this.createInitialDateState();
   }
+
+  checkTipo = value => {
+    if (value == 1) {
+      return "Alimentação";
+    }
+    if (value == 2) {
+      return "Deslocamento";
+    }
+    if (value == 3) {
+      return "Hospedagem";
+    }
+    if (value == 4) {
+      return "Passagem";
+    }
+    if (value == 5) {
+      return "Pedágio";
+    }
+    if (value == 6) {
+      return "Estacionamento";
+    }
+  };
 
   createInitialDateState = () => {
     const [date, month, year] = new Date()
@@ -86,7 +107,7 @@ export default class HorasTable extends Component {
   delay = ms => new Promise(res => setTimeout(res, ms));
 
   reloadData = async () => {
-    await this.delay(100);
+    await this.delay(500);
     this.loadData();
   };
 
@@ -106,45 +127,76 @@ export default class HorasTable extends Component {
     }
   };
 
+  onFilteredChangeCustom = (value, accessor) => {
+    const { filtered } = this.state;
+    let insertNewFilter = 1;
+    if (filtered.length) {
+      filtered.forEach((filter, i) => {
+        if (filter.id === accessor) {
+          if (value === "" || !value.length) filtered.splice(i, 1);
+          else filter.value = value;
+
+          insertNewFilter = 0;
+        }
+      });
+    }
+
+    if (insertNewFilter) {
+      filtered.push({ id: accessor, value });
+    }
+
+    this.setState({ filtered });
+  };
+
   loadData = async () => {
-    const idColab = store.getState().auth.user.Colab.id;
     const query = new URLSearchParams(this.props.location.search);
     const initialDate = query.get("initialDate");
     const finalDate = query.get("finalDate");
     let response;
     if (initialDate && finalDate) {
       response = await api.get(
-        `/horas/${idColab}/?initialDate=${initialDate}&finalDate=${finalDate}`
+        `/despesas/?initialDate=${initialDate}&finalDate=${finalDate}`
       );
     } else {
       response = await api.get(
-        `/horas/${idColab}/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
+        `/despesas/?initialDate=${this.state.initialDate}&finalDate=${this.state.finalDate}`
       );
     }
-
     this.setState({
-      data: response.data.map((horas, key) => {
+      dataForCsv: response.data.map((desps, key) => {
         return {
           idd: key,
-          id: horas.id,
-          Cliente: horas.Oportunidade.Cliente.nomeAbv,
-          Oportunidade: horas.Oportunidade.cod,
-          "Descrição Oportunidade": horas.Oportunidade.desc,
-          "Data Atividade": horas.dataAtivd,
-          Analista: horas.Colab.nome,
-          "Hora Inicial": horas.horaInic,
-          Intervalo: horas.horaIntrv,
-          "Hora Final": horas.horaFim,
-          Total: normalizeHrToMin(horas.totalApont),
-          Área: horas.areaNome,
-          Solicitante: horas.solicitante,
-          Descrição: horas.desc,
+          id: desps.id,
+          Oportunidade: desps.Oportunidade.cod,
+          Analista: desps.Colab.nome,
+          "Descrição Oportunidade": desps.Oportunidade.desc,
+          "Data Despesa": desps.dataDespesa,
+          "Tipo Despesa": this.checkTipo(desps.tipoDespesa),
+          "Valor Despesa": normalizeCurrency(
+            JSON.stringify(desps.valorDespesa)
+          ),
+          Descrição: desps.desc
+        };
+      }),
+      data: response.data.map((desps, key) => {
+        return {
+          idd: key,
+          id: desps.id,
+          Analista: desps.Colab.nome,
+          Oportunidade: desps.Oportunidade.cod,
+          "Descrição Oportunidade": desps.Oportunidade.desc,
+          "Data Despesa": desps.dataDespesa,
+          "Tipo Despesa": this.checkTipo(desps.tipoDespesa),
+          "Valor Despesa": normalizeCurrency(
+            JSON.stringify(desps.valorDespesa)
+          ),
+          Descrição: desps.desc,
 
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a edit kind of action */}
-              <Link to={`/update/apontamentos/horas/${horas.id}`}>
+              <Link to={`/update/apontamentos/despesas/${desps.id}`}>
                 <Tooltip title="Editar" placement="top" interactive>
                   <Button
                     color="default"
@@ -158,7 +210,7 @@ export default class HorasTable extends Component {
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  this.setState({ excluding: horas.id });
+                  this.setState({ excluding: desps.id });
                   this.toggleModalMini();
                 }}
                 color="danger"
@@ -192,15 +244,28 @@ export default class HorasTable extends Component {
             <img alt="Exportar para excel" src={iconExcel} />
           </Tooltip>
         }
-        filename={`Horas_${year}-${month}-${date}`}
+        filename={`Despesa_${year}-${month}-${date}`}
       >
-        <ExcelSheet data={this.state.data} name="Test">
-          {this.filterColumns(this.state.data).map(col => {
+        <ExcelSheet
+          data={this.state.dataForCsv}
+          name={`Horas_${year}-${month}-${date}`}
+        >
+          {this.filterColumns(this.state.dataForCsv).map(col => {
             return <ExcelColumn label={this.camelCase(col)} value={col} />;
           })}
         </ExcelSheet>
       </ExcelFile>
     );
+  };
+
+  getData = () => {
+    const filteredData = [];
+    Object.entries(this.selectTable.getResolvedState().sortedData).forEach(
+      entry => {
+        filteredData.push(entry[1]._original);
+      }
+    );
+    return this.setState({ dataForCsv: filteredData });
   };
 
   render() {
@@ -249,7 +314,7 @@ export default class HorasTable extends Component {
                 type="button"
                 onClick={async () => {
                   await api
-                    .delete(`horas/${this.state.excluding}`)
+                    .delete(`despesas/${this.state.excluding}`)
                     .then(result => {
                       toast.success(result.data);
                       this.reloadData();
@@ -342,7 +407,7 @@ export default class HorasTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Horas
+                  Despesas
                   <div style={{ marginTop: 10, float: "right" }}>
                     {this.checkData()}
                   </div>
@@ -374,15 +439,29 @@ export default class HorasTable extends Component {
               </CardHeader>
               <CardBody>
                 <ReactTable
+                  ref={r => {
+                    this.selectTable = r;
+                  }}
                   data={this.state.data}
                   filterable
                   resizable
-                  defaultFilterMethod={(filter, row) => {
+                  filtered={this.state.filtered}
+                  onFilteredChange={(filtered, column, value) => {
+                    this.getData();
+                    this.onFilteredChangeCustom(
+                      value,
+                      column.id || column.accessor
+                    );
+                  }}
+                  defaultFilterMethod={(filter, row, column) => {
                     const id = filter.pivotId || filter.id;
+                    if (typeof filter.value === "object") {
+                      return row[id] !== undefined
+                        ? filter.value.indexOf(row[id]) > -1
+                        : true;
+                    }
                     return row[id] !== undefined
-                      ? String(row[id])
-                          .toLowerCase()
-                          .startsWith(filter.value.toLowerCase())
+                      ? String(row[id]).indexOf(filter.value) > -1
                       : true;
                   }}
                   previousText="Anterior"
@@ -402,16 +481,20 @@ export default class HorasTable extends Component {
                       accessor: "Descrição Oportunidade"
                     },
                     {
-                      Header: "Cliente",
-                      accessor: "Cliente"
+                      Header: "Analista",
+                      accessor: "Analista"
+                    },
+                    {
+                      Header: "Tipo da Despesa",
+                      accessor: "Tipo Despesa"
+                    },
+                    {
+                      Header: "Valor da Despesa",
+                      accessor: "Valor Despesa"
                     },
                     {
                       Header: "Data",
-                      accessor: "Data Atividade"
-                    },
-                    {
-                      Header: "Total",
-                      accessor: "Total"
+                      accessor: "Data Despesa"
                     },
                     {
                       Header: "Ações",
@@ -420,7 +503,7 @@ export default class HorasTable extends Component {
                       filterable: false
                     }
                   ]}
-                  defaultPageSize={30}
+                  defaultPageSize={10}
                   showPagination
                   showPageJump
                   showPaginationBottom
