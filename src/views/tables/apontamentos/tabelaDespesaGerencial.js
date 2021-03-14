@@ -32,7 +32,12 @@ import {
   Label,
   FormGroup
 } from "reactstrap";
-import { Close, Message, SearchOutlined } from "@material-ui/icons";
+import {
+  ArrowBackIos,
+  Close,
+  Message,
+  SearchOutlined
+} from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
@@ -417,6 +422,17 @@ export default class GerencialDespesasTable extends Component {
                       }}
                     >
                       <SearchOutlined />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Voltar">
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      onClick={() => history.goBack()}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <ArrowBackIos />
                     </Button>
                   </Tooltip>
                 </CardTitle>

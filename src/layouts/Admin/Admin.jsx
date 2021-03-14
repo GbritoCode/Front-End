@@ -110,7 +110,7 @@ class Admin extends React.Component {
   };
 
   getActiveRoute = routes => {
-    const activeRoute = "Default";
+    const activeRoute = "";
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         const collapseActiveRoute = this.getActiveRoute(routes[i].views);

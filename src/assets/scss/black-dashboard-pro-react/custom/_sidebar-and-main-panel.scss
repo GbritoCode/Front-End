@@ -309,6 +309,7 @@
         }
 
         a.logo-normal{
+            text-align: right;
             display: flexbox;
             opacity: 1;
             @include transform-translate-x(0px);
