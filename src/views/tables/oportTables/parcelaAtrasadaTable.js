@@ -75,61 +75,73 @@ class ParcelaAtrasadaTable extends Component {
 
   loadData = async () => {
     const response = await api.get(`/parcela/?listAll=true&tipo=atrasadas`);
+
+    const data = response.data.map((parcela, key) => {
+      return {
+        id: key,
+        idd: parcela.id,
+        OportunidadeId: parcela.OportunidadeId,
+        Cliente: parcela.Oportunidade.Cliente.nomeAbv,
+        "Código Oportunidade": parcela.Oportunidade.cod,
+        Oportunidade: parcela.Oportunidade.desc,
+        dtEmissao: parcela.dtEmissao,
+        parcela: parcela.parcela,
+        vlrParcela: normalizeCurrency(parcela.vlrParcela),
+        notaFiscal: parcela.notaFiscal,
+        dtVencimento: parcela.dtVencimento,
+        vlrPago: normalizeCurrency(parcela.vlrPago),
+        saldo: normalizeCurrency(parcela.saldo),
+        pedidoCliente: parcela.pedidoCliente,
+        situacao: this.checkSituacao(parcela.situacao),
+        actions: (
+          // we've added some custom button actions
+          <div className="actions-right">
+            {/* use this button to add a edit kind of action */}
+            <Tooltip title="Nota Fiscal">
+              <Button
+                color="default"
+                size="sm"
+                className={classNames("btn-icon btn-link like")}
+                onClick={() => {
+                  history.push(
+                    `/update/oportunidade/parcNota/${parcela.id}/?fromDash=true`
+                  );
+                }}
+              >
+                <i className="tim-icons icon-paper" />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Liquidar">
+              <Button
+                disabled={parcela.situacao < 2}
+                color="default"
+                size="sm"
+                className={classNames("btn-icon btn-link like")}
+                onClick={() => {
+                  history.push(
+                    `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
+                  );
+                }}
+              >
+                <i className="tim-icons icon-coins" />
+              </Button>
+            </Tooltip>
+          </div>
+        )
+      };
+    });
+
+    function compare(a, b) {
+      if (a.Cliente < b.Cliente) {
+        return -1;
+      }
+      if (a.Cliente > b.Cliente) {
+        return 1;
+      }
+      return 0;
+    }
     this.setState({
-      data: response.data.map((parcela, key) => {
-        return {
-          id: key,
-          idd: parcela.id,
-          OportunidadeId: parcela.OportunidadeId,
-          Cliente: parcela.Oportunidade.Cliente.nomeAbv,
-          "Código Oportunidade": parcela.Oportunidade.cod,
-          Oportunidade: parcela.Oportunidade.desc,
-          dtEmissao: parcela.dtEmissao,
-          parcela: parcela.parcela,
-          vlrParcela: normalizeCurrency(parcela.vlrParcela),
-          notaFiscal: parcela.notaFiscal,
-          dtVencimento: parcela.dtVencimento,
-          vlrPago: normalizeCurrency(parcela.vlrPago),
-          saldo: normalizeCurrency(parcela.saldo),
-          pedidoCliente: parcela.pedidoCliente,
-          situacao: this.checkSituacao(parcela.situacao),
-          actions: (
-            // we've added some custom button actions
-            <div className="actions-right">
-              {/* use this button to add a edit kind of action */}
-              <Tooltip title="Nota Fiscal">
-                <Button
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => {
-                    history.push(
-                      `/update/oportunidade/parcNota/${parcela.id}/?fromDash=true`
-                    );
-                  }}
-                >
-                  <i className="tim-icons icon-paper" />
-                </Button>
-              </Tooltip>
-              <Tooltip title="Liquidar">
-                <Button
-                  disabled={parcela.situacao < 2}
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => {
-                    history.push(
-                      `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
-                    );
-                  }}
-                >
-                  <i className="tim-icons icon-coins" />
-                </Button>
-              </Tooltip>
-            </div>
-          )
-        };
-      })
+      data: data.sort(compare)
     });
   };
 

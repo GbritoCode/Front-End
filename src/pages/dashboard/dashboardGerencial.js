@@ -425,7 +425,7 @@ class DashboardGerencial extends React.Component {
         vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data),
         parcsState,
         chartHrsData: resultPeriodoGerencial.data.map(d => {
-          return d.totalHrs / 60;
+          return Math.trunc(d.totalHrs / 60);
         }),
         chartDespData: resultPeriodoGerencial.data.map(d => {
           return d.totalDesp / 100;
