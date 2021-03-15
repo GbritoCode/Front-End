@@ -132,11 +132,7 @@ class ParcelaAtrasadaTable extends Component {
     });
 
     this.setState({
-      data: data.sort(function sortParcelas(a, b) {
-        return a.Oportunidade.cod - b.Oportunidade.cod !== 0
-          ? a.Oportunidade.cod - b.Oportunidade.cod
-          : a.Cliente - b.Cliente;
-      })
+      data
     });
   };
 
