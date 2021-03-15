@@ -132,6 +132,12 @@ class ParcelaPendentesTable extends Component {
       if (a.Cliente > b.Cliente) {
         return 1;
       }
+      if (a.Oportunidade.cod < b.Oportunidade.cod) {
+        return -1;
+      }
+      if (a.Oportunidade.cod > b.Oportunidade.cod) {
+        return 1;
+      }
       return 0;
     }
     this.setState({
