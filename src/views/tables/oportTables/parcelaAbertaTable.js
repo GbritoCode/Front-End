@@ -126,9 +126,9 @@ class ParcelaAbertaTable extends Component {
     });
     this.setState({
       data: data.sort(function sortParcelas(a, b) {
-        return a.Cliente - b.Cliente !== 0
-          ? a.Cliente - b.Cliente
-          : a.Oportunidade.cod - b.Oportunidade.cod;
+        return a.Oportunidade.cod - b.Oportunidade.cod !== 0
+          ? a.Oportunidade.cod - b.Oportunidade.cod
+          : a.Cliente - b.Cliente;
       })
     });
   };
