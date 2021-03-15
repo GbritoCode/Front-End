@@ -131,6 +131,9 @@ class ParcelaAbertaTable extends Component {
       if (a.Cliente > b.Cliente) {
         return 1;
       }
+      return 0;
+    }
+    function compare1(a, b) {
       if (a.Oportunidade.cod < b.Oportunidade.cod) {
         return -1;
       }
@@ -140,7 +143,7 @@ class ParcelaAbertaTable extends Component {
       return 0;
     }
     this.setState({
-      data: data.sort(compare)
+      data: data.sort(compare, compare1)
     });
   };
 
