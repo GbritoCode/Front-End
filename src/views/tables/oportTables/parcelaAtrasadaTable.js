@@ -76,7 +76,7 @@ class ParcelaAtrasadaTable extends Component {
   loadData = async () => {
     const response = await api.get(`/parcela/?listAll=true&tipo=atrasadas`);
 
-    const data = response.data.map((parcela, key) => {
+    let data = response.data.map((parcela, key) => {
       return {
         id: key,
         idd: parcela.id,
@@ -131,7 +131,7 @@ class ParcelaAtrasadaTable extends Component {
       };
     });
 
-    function compare(a, b) {
+    function compareCli(a, b) {
       if (a.Cliente < b.Cliente) {
         return -1;
       }
@@ -140,7 +140,7 @@ class ParcelaAtrasadaTable extends Component {
       }
       return 0;
     }
-    function compare1(a, b) {
+    function compareCod(a, b) {
       if (a.Oportunidade.cod < b.Oportunidade.cod) {
         return -1;
       }
@@ -149,8 +149,9 @@ class ParcelaAtrasadaTable extends Component {
       }
       return 0;
     }
+    data = data.sort(compareCli);
     this.setState({
-      data: data.sort(compare, compare1)
+      data: data.sort(compareCod)
     });
   };
 
