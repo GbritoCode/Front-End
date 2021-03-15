@@ -70,7 +70,7 @@ class ParcelaPendentesTable extends Component {
 
   loadData = async () => {
     const response = await api.get(`/parcela/?listAll=true&tipo=pendentes`);
-    let data = response.data.map((parcela, key) => {
+    const data = response.data.map((parcela, key) => {
       return {
         id: key,
         idd: parcela.id,
@@ -125,27 +125,11 @@ class ParcelaPendentesTable extends Component {
         )
       };
     });
-    function compareCli(a, b) {
-      if (a.Cliente < b.Cliente) {
-        return -1;
-      }
-      if (a.Cliente > b.Cliente) {
-        return 1;
-      }
-      return 0;
-    }
-    function compareCod(a, b) {
-      if (a.Oportunidade.cod < b.Oportunidade.cod) {
-        return -1;
-      }
-      if (a.Oportunidade.cod > b.Oportunidade.cod) {
-        return 1;
-      }
-      return 0;
-    }
-    data = data.sort(compareCli);
+
     this.setState({
-      data: data.sort(compareCod)
+      data: data.sort(function(a, b) {
+        return a.Cliente - b.Cliente || a.Oportunidade.cod - b.Oportunidade.cod;
+      })
     });
   };
 
