@@ -130,6 +130,7 @@ import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
 import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTable";
 import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
 import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
+import OportFinTable from "~/views/tables/oportTables/oportFinalizadaTable";
 
 export default function Routes() {
   return (
@@ -243,6 +244,11 @@ export default function Routes() {
       <Route
         path="/tabelas/oportunidade/oport"
         component={OportTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/oportunidade/finOport"
+        component={OportFinTable}
         isPrivate
       />
       <Route

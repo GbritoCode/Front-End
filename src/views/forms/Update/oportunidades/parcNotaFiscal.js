@@ -27,7 +27,8 @@ import {
   Form,
   Input,
   Row,
-  Col
+  Col,
+  FormText
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
@@ -51,6 +52,7 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [data3, setData3] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -76,6 +78,7 @@ export default function ParcelaUpdate() {
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" }
   };
+  const [file, setFile] = useState();
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
@@ -94,6 +97,7 @@ export default function ParcelaUpdate() {
       const response3 = await api.get(
         `/condPgmto/${response2.data.CondPgmtoId}`
       );
+      setData(response.data);
       setData1(response1.data);
       setData3(response3.data);
       const [dateVenc, monthVenc, yearVenc] = new Date()
@@ -184,12 +188,14 @@ export default function ParcelaUpdate() {
       default:
     }
   };
+
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
-  const handleSubmit = evt => {
+
+  const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -221,6 +227,13 @@ export default function ParcelaUpdate() {
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
       const status = !!fromDash;
 
+      const formData = new FormData();
+
+      formData.append("file", file);
+      await api.post(
+        `/files/oport/cotacao/?parcelaId=${data.id}&tipo=parcela&situacao=fatura&table=parcela`,
+        formData
+      );
       dispatch(
         parcelaUpdate(
           id,
@@ -437,7 +450,25 @@ export default function ParcelaUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
-
+                      <Row>
+                        <Col md="12">
+                          <Label>Anexo</Label>
+                          <Input
+                            placeholder="Arraste ou selecione um arquivo"
+                            type="file"
+                            name="file"
+                            onChange={e => {
+                              setFile(e.target.files[0]);
+                            }}
+                          />
+                          <FormText
+                            style={{ marginBottom: 10, marginTop: 10 }}
+                            color="muted"
+                          >
+                            Selecione ou arraste e solte um anexo
+                          </FormText>
+                        </Col>
+                      </Row>
                       <Button
                         style={{
                           paddingLeft: 29,

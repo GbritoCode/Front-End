@@ -27,7 +27,8 @@ import {
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  FormText
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
@@ -70,6 +71,7 @@ export default function CotacaoCadastro() {
   const optionalSchema = {
     desc: { value: "", error: "", message: "" }
   };
+  const [file, setFile] = useState();
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
@@ -306,8 +308,8 @@ export default function CotacaoCadastro() {
       }));
     }
   };
-
-  const handleSubmit = evt => {
+  console.log(values.motivo.value);
+  const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -340,6 +342,25 @@ export default function CotacaoCadastro() {
       var recLiqdb = values.recLiq.value.replace(/[.,]+/g, "");
       var prevLucrodb = values.prevLucro.value.replace(/[.,]+/g, "");
 
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      if (values.motivo.value === "1") {
+        console.log(formData);
+        console.log(file);
+        await api.post(
+          `/files/oport/cotacao/?cotacaoId=${data4[0].id}&tipo=cotacao&situacao=orcamento&table=cotacao`,
+          formData
+        );
+      } else {
+        console.log(formData);
+        console.log(file);
+        await api.post(
+          `/files/oport/cotacao/?cotacaoId=${data4[0].id}&tipo=cotacao&situacao=revisao&table=cotacao`,
+          formData
+        );
+      }
       dispatch(
         cotacaoRequest(
           values.empresaId.value,
@@ -707,6 +728,25 @@ export default function CotacaoCadastro() {
                               </Label>
                             ) : null}
                           </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Anexo</Label>
+                          <Input
+                            placeholder="Arraste ou selecione um arquivo"
+                            type="file"
+                            name="file"
+                            onChange={e => {
+                              setFile(e.target.files[0]);
+                            }}
+                          />
+                          <FormText
+                            style={{ marginBottom: 10, marginTop: 10 }}
+                            color="muted"
+                          >
+                            Selecione ou arraste e solte um anexo
+                          </FormText>
                         </Col>
                       </Row>
                       <Link to="/tabelas/oportunidade/oport">

@@ -37,6 +37,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { store } from "~/store";
+import Notifications from "../Notifications/Notifications";
 
 class AdminNavbar extends React.Component {
   constructor(props) {
@@ -158,6 +159,7 @@ class AdminNavbar extends React.Component {
             </button>
             <Collapse navbar isOpen={this.state.collapseOpen}>
               <Nav className="ml-auto" navbar>
+                <Notifications />
                 <UncontrolledDropdown nav>
                   <DropdownToggle
                     caret

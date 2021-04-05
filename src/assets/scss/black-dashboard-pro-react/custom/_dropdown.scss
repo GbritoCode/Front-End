@@ -356,6 +356,15 @@
 
 @include media-breakpoint-up(lg){
   .dropdown-menu .dropdown-item{
-    color: $dark-gray;
+    color: black;
+  }
+  .dropdown-menu .dropdown-item .notificationTime{
+    margin-top: 5px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+  .dropdown-menu .dropdown-item .notificationMarkAsRead{
+    background: none;
+    border: 0;
+    color:rgba(99, 99, 111, 0.7)
   }
 }
