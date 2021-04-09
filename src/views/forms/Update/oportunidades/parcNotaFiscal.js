@@ -52,7 +52,6 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [data3, setData3] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -97,7 +96,6 @@ export default function ParcelaUpdate() {
       const response3 = await api.get(
         `/condPgmto/${response2.data.CondPgmtoId}`
       );
-      setData(response.data);
       setData1(response1.data);
       setData3(response3.data);
       const [dateVenc, monthVenc, yearVenc] = new Date()
@@ -231,7 +229,7 @@ export default function ParcelaUpdate() {
 
       formData.append("file", file);
       await api.post(
-        `/files/oport/cotacao/?parcelaId=${data.id}&tipo=parcela&situacao=fatura&table=parcela`,
+        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela`,
         formData
       );
       dispatch(

@@ -82,6 +82,8 @@ export default function CotacaoCadastro() {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
+        const response4 = await api.get(`/cotacao/?last=true`);
+        setData4([{ id: response4.data.id + 1 }]);
         setData3(response3.data);
         setData1(response1.data);
         setValues(prevState => ({
@@ -228,11 +230,9 @@ export default function CotacaoCadastro() {
       default:
     }
   };
+  console.log(data2);
   const descontoChange = descont => {
-    if (
-      document.getElementsByName("tipoCobranca")[0].value === "2" &&
-      data2.valorRec
-    ) {
+    if (document.getElementsByName("tipoCobranca")[0].value === "2") {
       const imposto =
         (data3.IRPJ +
           data3.CSLL +
@@ -270,8 +270,10 @@ export default function CotacaoCadastro() {
       return;
     }
     if (
-      !(document.getElementsByName("tipoCobranca")[0].value === "2") &&
-      data2.valorRec
+      !(
+        document.getElementsByName("tipoCobranca")[0].value === "2" &&
+        data2.valorRec
+      )
     ) {
       const imposto =
         (data3.IRPJ +
@@ -308,7 +310,7 @@ export default function CotacaoCadastro() {
       }));
     }
   };
-  console.log(values.motivo.value);
+  console.log(data1);
   const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -346,21 +348,6 @@ export default function CotacaoCadastro() {
 
       formData.append("file", file);
 
-      if (values.motivo.value === "1") {
-        console.log(formData);
-        console.log(file);
-        await api.post(
-          `/files/oport/cotacao/?cotacaoId=${data4[0].id}&tipo=cotacao&situacao=orcamento&table=cotacao`,
-          formData
-        );
-      } else {
-        console.log(formData);
-        console.log(file);
-        await api.post(
-          `/files/oport/cotacao/?cotacaoId=${data4[0].id}&tipo=cotacao&situacao=revisao&table=cotacao`,
-          formData
-        );
-      }
       dispatch(
         cotacaoRequest(
           values.empresaId.value,
@@ -378,6 +365,21 @@ export default function CotacaoCadastro() {
           optional.desc.value
         )
       );
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+
+      if (values.motivo.value === "1") {
+        await api.post(
+          `/files/oport/cotacao/?oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao`,
+          formData
+        );
+      } else {
+        await api.post(
+          `/files/oport/cotacao/?oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao`,
+          formData
+        );
+      }
+
       dispatch(
         oportUpdate(
           data1.id,
