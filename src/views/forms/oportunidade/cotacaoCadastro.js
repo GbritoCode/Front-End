@@ -809,26 +809,8 @@ export default function CotacaoCadastro() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <hr />
-                      <Row>
-                        <Col md="4">
-                          <Label>Email Principal</Label>
-                          <Input disabled value={values.email.value} />
-                        </Col>
-                        <Col md="8">
-                          <Label style={{ display: "block" }}>Bcc Email</Label>
-                          <TagsInput
-                            onChange={handleTagsinput}
-                            tagProps={{
-                              className: "react-tagsinput-tag "
-                            }}
-                            value={tagsinput}
-                          />
-                        </Col>
-                      </Row>
                       <Row>
                         <Col md="12">
-                          <Label>Anexo</Label>
                           <FileUploadContainer>
                             <DragDropText>
                               Arraste e solte o arquivo ou
@@ -880,6 +862,22 @@ export default function CotacaoCadastro() {
                               })}
                             </PreviewList>
                           </FilePreviewContainer>
+                        </Col>
+                      </Row>{" "}
+                      <Row>
+                        <Col md="4">
+                          <Label>Email Principal</Label>
+                          <Input disabled value={values.email.value} />
+                        </Col>
+                        <Col md="8">
+                          <Label style={{ display: "block" }}>Bcc Email</Label>
+                          <TagsInput
+                            onChange={handleTagsinput}
+                            tagProps={{
+                              className: "react-tagsinput-tag "
+                            }}
+                            value={tagsinput}
+                          />
                         </Col>
                       </Row>
                       <Link to="/tabelas/oportunidade/oport">
