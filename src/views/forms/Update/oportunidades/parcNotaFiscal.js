@@ -300,10 +300,7 @@ export default function ParcelaUpdate() {
       const formData = new FormData();
 
       formData.append("file", files.file);
-      await api.post(
-        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Bcc=${string}`,
-        formData
-      );
+
       dispatch(
         parcelaUpdate(
           id,
@@ -320,6 +317,14 @@ export default function ParcelaUpdate() {
           saldodb,
           status
         )
+      );
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+
+      await api.post(
+        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Bcc=${string}`,
+        formData
       );
     } else {
       options = {
