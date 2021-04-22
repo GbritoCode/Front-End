@@ -27,8 +27,7 @@ import {
   Form,
   Input,
   Row,
-  Col,
-  FormText
+  Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
@@ -37,11 +36,24 @@ import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
 import history from "~/services/history";
-
+import TagsInput from "~/components/Tags/TagsInput";
+import {
+  FileUploadContainer,
+  FormField,
+  DragDropText,
+  UploadFileBtn,
+  FilePreviewContainer,
+  ImagePreview,
+  PreviewContainer,
+  PreviewList,
+  FileMetaData,
+  RemoveFileIcon
+} from "../../../../components/Styles/uploadAreaStyles";
 /* eslint-disable eqeqeq */
 export default function ParcelaUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+  const fileInputField = useRef(null);
 
   // eslint-disable-next-line no-extend-native
   Date.prototype.addDays = function(days) {
@@ -54,6 +66,10 @@ export default function ParcelaUpdate() {
   const { id } = useParams();
   const [data1, setData1] = useState();
   const [data3, setData3] = useState({});
+  const [tagsinput, settagsinput] = useState([]);
+
+  const [string, setString] = useState("");
+
   const [isLoading, setIsLoading] = useState(true);
   const today = new Date();
   const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
@@ -68,7 +84,8 @@ export default function ParcelaUpdate() {
       error: "",
       message: ""
     },
-    notaFiscal: { value: "", error: "", message: "" }
+    notaFiscal: { value: "", error: "", message: "" },
+    email: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     pedidoCliente: { value: "Não informado", error: "", message: "" },
@@ -77,7 +94,7 @@ export default function ParcelaUpdate() {
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" }
   };
-  const [file, setFile] = useState();
+  const [files, setFile] = useState({});
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
@@ -96,6 +113,9 @@ export default function ParcelaUpdate() {
       const response3 = await api.get(
         `/condPgmto/${response2.data.CondPgmtoId}`
       );
+      const response4 = await api.get(
+        `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
+      );
       setData1(response1.data);
       setData3(response3.data);
       const [dateVenc, monthVenc, yearVenc] = new Date()
@@ -113,7 +133,8 @@ export default function ParcelaUpdate() {
           value:
             response.data.dtVencimento || `${yearVenc}-${monthVenc}-${dateVenc}`
         },
-        notaFiscal: { value: response.data.notaFiscal }
+        notaFiscal: { value: response.data.notaFiscal },
+        email: { value: response4.data.email }
       }));
 
       setOptional(prevState => ({
@@ -136,12 +157,69 @@ export default function ParcelaUpdate() {
     }
     loadData();
   }, [data3.diasPrazo, id]);
+
+  const handleUploadBtnClick = () => {
+    fileInputField.current.click();
+  };
+
+  const addNewFiles = newFiles => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const file of newFiles) {
+      return { file };
+    }
+  };
+
+  const handleNewFileUpload = e => {
+    const { files: newFiles } = e.target;
+    if (newFiles.length) {
+      const updatedFiles = addNewFiles(newFiles);
+      setFile(updatedFiles);
+    }
+  };
+
+  const removeFile = fileName => {
+    delete files[fileName];
+    setFile({ ...files });
+  };
+
+  var options = {};
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
     }
     return false;
+  };
+
+  const handleTagsinput = value => {
+    const verifyEmail = email => {
+      var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (emailRex.test(email)) {
+        return true;
+      }
+      return false;
+    };
+    if (verifyEmail(value[value.length - 1])) {
+      setString(`${value}`);
+      settagsinput(value);
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Digite um email válido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
+    }
   };
 
   const handleChange = (event, name, type) => {
@@ -187,12 +265,6 @@ export default function ParcelaUpdate() {
     }
   };
 
-  var options = {};
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
-
   const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -227,9 +299,9 @@ export default function ParcelaUpdate() {
 
       const formData = new FormData();
 
-      formData.append("file", file);
+      formData.append("file", files.file);
       await api.post(
-        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela`,
+        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Bcc=${string}`,
         formData
       );
       dispatch(
@@ -448,23 +520,78 @@ export default function ParcelaUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <hr />
+                      <Row>
+                        <Col md="4">
+                          <Label>Email Principal</Label>
+                          <Input disabled value={values.email.value} />
+                        </Col>
+                        <Col md="8">
+                          <Label style={{ display: "block" }}>Bcc Email</Label>
+                          <TagsInput
+                            onChange={handleTagsinput}
+                            tagProps={{
+                              className: "react-tagsinput-tag "
+                            }}
+                            value={tagsinput}
+                          />
+                        </Col>
+                      </Row>
+                      <Row />
                       <Row>
                         <Col md="12">
                           <Label>Anexo</Label>
-                          <Input
-                            placeholder="Arraste ou selecione um arquivo"
-                            type="file"
-                            name="file"
-                            onChange={e => {
-                              setFile(e.target.files[0]);
-                            }}
-                          />
-                          <FormText
-                            style={{ marginBottom: 10, marginTop: 10 }}
-                            color="muted"
-                          >
-                            Selecione ou arraste e solte um anexo
-                          </FormText>
+                          <FileUploadContainer>
+                            <DragDropText>
+                              Arraste e solte o arquivo ou
+                            </DragDropText>
+                            <UploadFileBtn
+                              type="button"
+                              onClick={handleUploadBtnClick}
+                            >
+                              <i className="fas fa-file-upload" />
+                              <span> Upload </span>
+                            </UploadFileBtn>
+                            <FormField
+                              type="file"
+                              ref={fileInputField}
+                              onChange={handleNewFileUpload}
+                              title=""
+                              value=""
+                            />
+                          </FileUploadContainer>
+                          <FilePreviewContainer>
+                            <span>À enviar</span>
+                            <PreviewList>
+                              {Object.keys(files).map((fileName, index) => {
+                                const file = files[fileName];
+                                const isImageFile =
+                                  file.type.split("/")[0] === "image";
+                                return (
+                                  <PreviewContainer key={fileName}>
+                                    <div>
+                                      {isImageFile && (
+                                        <ImagePreview
+                                          src={URL.createObjectURL(file)}
+                                          alt={`file preview ${index}`}
+                                        />
+                                      )}
+                                      <FileMetaData isImageFile={isImageFile}>
+                                        <span>{file.name}</span>
+                                        <aside>
+                                          <span>587 kb</span>
+                                          <RemoveFileIcon
+                                            className="fas fa-trash-alt"
+                                            onClick={() => removeFile(fileName)}
+                                          />
+                                        </aside>
+                                      </FileMetaData>
+                                    </div>
+                                  </PreviewContainer>
+                                );
+                              })}
+                            </PreviewList>
+                          </FilePreviewContainer>
                         </Col>
                       </Row>
                       <Button

@@ -32,6 +32,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { GetApp } from "@material-ui/icons";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { cotacaoUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -43,6 +44,7 @@ function CotacaoUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState();
   const [data1, setData1] = useState({ nome: undefined });
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState();
@@ -70,6 +72,7 @@ function CotacaoUpdate() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/cotacao/aux/${id}`);
+      setData(response.data);
 
       if (response.data === null) {
         setIsLoading(false);
@@ -116,6 +119,14 @@ function CotacaoUpdate() {
     }
     loadData();
   }, [id]);
+  const downloadFile = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/download/oport/${data.CotacaoFileId}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+  };
 
   function getCliData(cobranca) {
     api
@@ -592,6 +603,12 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
+                        <Button onClick={() => downloadFile()}>
+                          <GetApp />
+                          Baixar o anexo desta cotação
+                        </Button>
                       </Row>
                       <Link to={`/tabelas/oportunidade/cotacao/${data2.id}`}>
                         <Button

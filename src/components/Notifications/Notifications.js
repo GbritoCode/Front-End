@@ -12,6 +12,7 @@ import {
 
 import { formatDistance, parseISO } from "date-fns";
 import pt from "date-fns/locale/pt";
+import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
 import { store } from "~/store";
 
@@ -50,8 +51,6 @@ export default function Notifications() {
       )
     );
   };
-
-  console.log(notify);
   return (
     <UncontrolledDropdown nav>
       <DropdownToggle caret color="default" data-toggle="dropdown" nav>
@@ -66,12 +65,34 @@ export default function Notifications() {
       </DropdownToggle>
       <DropdownMenu className="dropdown-navbar" right tag="ul">
         {notify.map(notification => (
-          <NavLink onClick={e => e.preventDefault} tag="li">
+          <NavLink
+            key={notification._id}
+            onClick={e => e.preventDefault}
+            tag="li"
+          >
             <DropdownItem toggle={false} className="nav-item">
-              {notification.content}A-0060 <br />
-              PREMIER0001 <br />
-              IMPLANTAÇÃO MÓDULO MANUTENÇÃO INDUSTRIAL
-              <p className="notificationTime"> {notification.timeDistance} </p>
+              <div className="testando">
+                {notification.content.split(",")[0]}
+                <br />
+                {notification.content.split(",")[1]}
+                <br />
+                {notification.content.split(",")[2]}
+              </div>
+              {notification.read ? (
+                <>
+                  <p className="notificationTimeRead">
+                    {" "}
+                    {notification.timeDistance}{" "}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="notificationTimeUnread">
+                    {" "}
+                    {notification.timeDistance}{" "}
+                  </p>
+                </>
+              )}
               {notification.read ? (
                 <></>
               ) : (
@@ -80,7 +101,9 @@ export default function Notifications() {
                   onClick={() => handleMarkasRead(notification._id)}
                   className="notificationMarkAsRead"
                 >
-                  Marcar como lida
+                  <Tooltip title="Marcar como lida">
+                    <i className="tim-icons icon-check-2" />
+                  </Tooltip>
                 </button>
               )}
             </DropdownItem>
