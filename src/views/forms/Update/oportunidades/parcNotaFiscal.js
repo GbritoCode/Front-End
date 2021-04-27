@@ -320,10 +320,10 @@ export default function ParcelaUpdate() {
       );
 
       const delay = ms => new Promise(res => setTimeout(res, ms));
-      await delay(500);
+      await delay(1500);
 
       await api.post(
-        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Bcc=${string}`,
+        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
         formData
       );
     } else {

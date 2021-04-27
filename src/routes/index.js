@@ -131,6 +131,7 @@ import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTab
 import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
 import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 import OportFinTable from "~/views/tables/oportTables/oportFinalizadaTable";
+import Example from "~/views/forms/Update/General/ParametrosEmail";
 
 export default function Routes() {
   return (
@@ -415,6 +416,11 @@ export default function Routes() {
       <Route
         path="/update/general/parametros/1"
         component={ParametrosUpdate}
+        isPrivate
+      />
+      <Route
+        path="/update/general/parametros/email/1"
+        component={Example}
         isPrivate
       />
       <Route path="/cadastro/geral/prodt" component={ProdtCadastro} isPrivate />

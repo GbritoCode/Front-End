@@ -632,6 +632,41 @@ export function* updateCentroCusto({ payload }) {
 }
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
+export function* updateEmailParams({ payload }) {
+  try {
+    const {
+      id,
+      EmpresaId,
+      bccEmailOrc,
+      bccEmailRev,
+      bccEmailFat,
+      fromEmailOrc,
+      fromEmailRev,
+      fromEmailFat
+    } = payload;
+
+    const Colab = {
+      EmpresaId,
+      bccEmailOrc,
+      bccEmailRev,
+      bccEmailFat,
+      fromEmailOrc,
+      fromEmailRev,
+      fromEmailFat
+    };
+
+    const response = yield call(api.put, `emailParams/${id}`, Colab);
+
+    history.push("/dashboardGerencial");
+    toast.success("Atualizado com Sucesso");
+    yield put(ClienteUpdateSuccess(response.data));
+  } catch (err) {
+    toast.error("Ops! Algo deu errado");
+    yield put(requestFailure());
+  }
+}
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 
 export default all([
   takeLatest("@cadastro/AREA_REQUEST", areaCadastro),
@@ -661,5 +696,6 @@ export default all([
   takeLatest("@cadastro/CONTA_CONTABIL_REQUEST", contaContabilCadastro),
   takeLatest("@update/CONTA_CONTABIL_REQUEST", updateContaContabil),
   takeLatest("@cadastro/CENTRO_CUSTO_REQUEST", centroCustoCadastro),
-  takeLatest("@update/CENTRO_CUSTO_REQUEST", updateCentroCusto)
+  takeLatest("@update/CENTRO_CUSTO_REQUEST", updateCentroCusto),
+  takeLatest("@update/EMAIL_PARAMS_REQUEST", updateEmailParams)
 ]);

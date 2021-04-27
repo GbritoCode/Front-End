@@ -42,11 +42,11 @@
     &.nav-tabs-neutral{
         > .nav-item{
             > .nav-link{
-                color: $white;
+                color: $black;
 
                 &.active{
                     border-color: $opacity-5;
-                    color: $white;
+                    color: $black;
                 }
             }
         }

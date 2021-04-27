@@ -164,6 +164,7 @@ import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTab
 import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
 import OportFinTable from "~/views/tables/oportTables/oportFinalizadaTable";
+import Example from "~/views/forms/Update/General/ParametrosEmail";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -281,6 +282,14 @@ const routes = [
         name: "Parametros",
         mini: "PRM",
         component: ParametrosUpdate,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: `/update/general/parametros/email/1`,
+        name: "Emails",
+        mini: "EML",
+        component: Example,
         layout: "/admin",
         profile: 10
       },

@@ -475,3 +475,29 @@ export function CentroCustoUpdate(id, cod, desc) {
 }
 //----------------------------------------------------
 //----------------------------------------------------
+export function EmailParamsUpdate(
+  id,
+  EmpresaId,
+  bccEmailOrc,
+  bccEmailRev,
+  bccEmailFat,
+  fromEmailOrc,
+  fromEmailRev,
+  fromEmailFat
+) {
+  return {
+    type: "@update/EMAIL_PARAMS_REQUEST",
+    payload: {
+      id,
+      EmpresaId,
+      bccEmailOrc,
+      bccEmailRev,
+      bccEmailFat,
+      fromEmailOrc,
+      fromEmailRev,
+      fromEmailFat
+    }
+  };
+}
+//----------------------------------------------------
+//----------------------------------------------------
