@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import classNames from "classnames";
 import {
   Button,
   Card,
@@ -32,6 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { Tooltip } from "@material-ui/core";
+import { GetApp } from "@material-ui/icons";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
@@ -64,6 +67,7 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [data3, setData3] = useState({});
   const [tagsinput, settagsinput] = useState([]);
@@ -101,6 +105,15 @@ export default function ParcelaUpdate() {
   const query = new URLSearchParams(useLocation().search);
   const fromDash = query.get("fromDash");
 
+  const downloadFile = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/download/oport/${data.CotacaoFileId}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+  };
+
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parcela/aux/${id}`);
@@ -116,6 +129,7 @@ export default function ParcelaUpdate() {
       const response4 = await api.get(
         `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
       );
+      setData(response.data);
       setData1(response1.data);
       setData3(response3.data);
       const [dateVenc, monthVenc, yearVenc] = new Date()
@@ -157,6 +171,8 @@ export default function ParcelaUpdate() {
     }
     loadData();
   }, [data3.diasPrazo, id]);
+
+  const convertBytesToKB = bytes => Math.round(bytes / 1000);
 
   const handleUploadBtnClick = () => {
     fileInputField.current.click();
@@ -357,6 +373,27 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    {data.situacao > 1 ? (
+                      <>
+                        <Tooltip
+                          title="Download do Arquivo Anexado"
+                          placement="top"
+                          interactive
+                        >
+                          <Button
+                            style={{ float: "right" }}
+                            color="default"
+                            size="sm"
+                            onClick={() => downloadFile()}
+                            className={classNames("btn-icon btn-link like")}
+                          >
+                            <GetApp />
+                          </Button>
+                        </Tooltip>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                     <h3 style={{ marginBottom: 0 }}>Nota Fiscal</h3>
                     <p style={{ fontSize: 11 }}>
                       {data1.cod} | {data1.desc}
@@ -525,27 +562,8 @@ export default function ParcelaUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <hr />
-                      <Row>
-                        <Col md="4">
-                          <Label>Email Principal</Label>
-                          <Input disabled value={values.email.value} />
-                        </Col>
-                        <Col md="8">
-                          <Label style={{ display: "block" }}>Bcc Email</Label>
-                          <TagsInput
-                            onChange={handleTagsinput}
-                            tagProps={{
-                              className: "react-tagsinput-tag "
-                            }}
-                            value={tagsinput}
-                          />
-                        </Col>
-                      </Row>
-                      <Row />
                       <Row>
                         <Col md="12">
-                          <Label>Anexo</Label>
                           <FileUploadContainer>
                             <DragDropText>
                               Arraste e solte o arquivo ou
@@ -566,7 +584,6 @@ export default function ParcelaUpdate() {
                             />
                           </FileUploadContainer>
                           <FilePreviewContainer>
-                            <span>À enviar</span>
                             <PreviewList>
                               {Object.keys(files).map((fileName, index) => {
                                 const file = files[fileName];
@@ -584,7 +601,9 @@ export default function ParcelaUpdate() {
                                       <FileMetaData isImageFile={isImageFile}>
                                         <span>{file.name}</span>
                                         <aside>
-                                          <span>587 kb</span>
+                                          <span>
+                                            {convertBytesToKB(file.size)} kb
+                                          </span>{" "}
                                           <RemoveFileIcon
                                             className="fas fa-trash-alt"
                                             onClick={() => removeFile(fileName)}
@@ -599,6 +618,24 @@ export default function ParcelaUpdate() {
                           </FilePreviewContainer>
                         </Col>
                       </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Email Principal</Label>
+                          <Input disabled value={values.email.value} />
+                        </Col>
+                        <Col md="8">
+                          <Label style={{ display: "block" }}>Bcc Email</Label>
+                          <TagsInput
+                            onChange={handleTagsinput}
+                            tagProps={{
+                              className: "react-tagsinput-tag "
+                            }}
+                            value={tagsinput}
+                          />
+                        </Col>
+                      </Row>
+                      <Row />
+
                       <Button
                         style={{
                           paddingLeft: 29,

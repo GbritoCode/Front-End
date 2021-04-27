@@ -157,6 +157,7 @@ export default function CotacaoCadastro() {
     loadData();
   }, [id]);
 
+  const convertBytesToKB = bytes => Math.round(bytes / 1000);
   const handleUploadBtnClick = () => {
     fileInputField.current.click();
   };
@@ -812,15 +813,13 @@ export default function CotacaoCadastro() {
                       <Row>
                         <Col md="12">
                           <FileUploadContainer>
-                            <DragDropText>
-                              Arraste e solte o arquivo ou
-                            </DragDropText>
+                            <DragDropText>Arraste e solte ou</DragDropText>
                             <UploadFileBtn
                               type="button"
                               onClick={handleUploadBtnClick}
                             >
                               <i className="fas fa-file-upload" />
-                              <span> Upload </span>
+                              <span> Clique para selecionar um arquivo </span>
                             </UploadFileBtn>
                             <FormField
                               type="file"
@@ -831,7 +830,6 @@ export default function CotacaoCadastro() {
                             />
                           </FileUploadContainer>
                           <FilePreviewContainer>
-                            <span>À enviar</span>
                             <PreviewList>
                               {Object.keys(files).map((fileName, index) => {
                                 const file = files[fileName];
@@ -849,7 +847,7 @@ export default function CotacaoCadastro() {
                                       <FileMetaData isImageFile={isImageFile}>
                                         <span>{file.name}</span>
                                         <aside>
-                                          <span>587 kb</span>
+                                          {convertBytesToKB(file.size)} kb
                                           <RemoveFileIcon
                                             className="fas fa-trash-alt"
                                             onClick={() => removeFile(fileName)}

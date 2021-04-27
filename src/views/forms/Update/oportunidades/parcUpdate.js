@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import classNames from "classnames";
 import {
   Button,
   Card,
@@ -32,6 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { Tooltip } from "@material-ui/core";
+import { GetApp } from "@material-ui/icons";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -44,6 +47,7 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
@@ -72,12 +76,22 @@ export default function ParcelaUpdate() {
   const query = new URLSearchParams(useLocation().search);
   const fromDash = query.get("fromDash");
 
+  const downloadFile = async () => {
+    const url = `${process.env.REACT_APP_API_URL}/download/oport/${data.CotacaoFileId}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+  };
+
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parcela/aux/${id}`);
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
+      setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -267,6 +281,21 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Tooltip
+                      title="Download do Arquivo Anexado"
+                      placement="top"
+                      interactive
+                    >
+                      <Button
+                        style={{ float: "right" }}
+                        color="default"
+                        size="sm"
+                        onClick={() => downloadFile()}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <GetApp />
+                      </Button>
+                    </Tooltip>
                     <h3 style={{ marginBottom: 0 }}>Liquidação de Parcela</h3>
                     <p style={{ fontSize: 11 }}>
                       {data1.cod} | {data1.desc}

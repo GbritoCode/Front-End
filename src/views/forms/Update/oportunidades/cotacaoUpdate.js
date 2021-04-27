@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import classNames from "classnames";
 import {
   Button,
   Card,
@@ -33,6 +34,7 @@ import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { GetApp } from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { cotacaoUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -310,6 +312,22 @@ function CotacaoUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Tooltip
+                      title="Download do Arquivo Anexado"
+                      placement="top"
+                      interactive
+                    >
+                      <Button
+                        style={{ float: "right" }}
+                        color="default"
+                        size="sm"
+                        onClick={() => downloadFile()}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <GetApp />
+                      </Button>
+                    </Tooltip>
+
                     <h3 style={{ marginBottom: 0 }}>Cotação</h3>
                     <p style={{ fontSize: 11 }}>
                       {data2.cod} | {data2.desc}
@@ -603,12 +621,6 @@ function CotacaoUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
-                        <Button onClick={() => downloadFile()}>
-                          <GetApp />
-                          Baixar o anexo desta cotação
-                        </Button>
                       </Row>
                       <Link to={`/tabelas/oportunidade/cotacao/${data2.id}`}>
                         <Button
