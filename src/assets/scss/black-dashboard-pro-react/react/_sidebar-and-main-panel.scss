@@ -2,13 +2,17 @@
   width: 80px;
 }
  .logo-img-big img {
-  width: 142px;
-  position: fixed;
-  top: 79px ;
-  right: 1336.790px;
-  bottom: 151.302px;
-  left: 39px;
+  width: 215px;
+  position: relative;
+  // top: 79px ;
+  // right: 1336.790px;
+   bottom: 19px;
+   left: 9px;
 }
+.logo-img-big {
+  width: 142px;
+}
+
 .perfect-scrollbar-on {
   .sidebar {
     height: 80%;

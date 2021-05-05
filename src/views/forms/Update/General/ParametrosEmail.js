@@ -15,7 +15,6 @@
 
 */
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -40,6 +39,7 @@ import NotificationAlert from "react-notification-alert";
 import TagsInput from "~/components/Tags/TagsInput";
 import api from "~/services/api";
 import { EmailParamsUpdate } from "~/store/modules/general/actions";
+import history from "~/services/history";
 
 const Panels = () => {
   document.body.classList.add("white-content");
@@ -211,7 +211,9 @@ const Panels = () => {
                           data-toggle="tab"
                           href="#"
                           className={
-                            horizontalTabs === "Orçamento" ? "active" : ""
+                            horizontalTabs === "Orçamento"
+                              ? "active emailParam"
+                              : "emailParam"
                           }
                           onClick={e =>
                             changeActiveTab(e, "horizontalTabs", "Orçamento")
@@ -225,7 +227,9 @@ const Panels = () => {
                           data-toggle="tab"
                           href="#"
                           className={
-                            horizontalTabs === "revisao" ? "active" : ""
+                            horizontalTabs === "revisao"
+                              ? "active emailParam"
+                              : "emailParam"
                           }
                           onClick={e =>
                             changeActiveTab(e, "horizontalTabs", "revisao")
@@ -239,7 +243,9 @@ const Panels = () => {
                           data-toggle="tab"
                           href="#"
                           className={
-                            horizontalTabs === "Faturamento" ? "active" : ""
+                            horizontalTabs === "Faturamento"
+                              ? "active emailParam"
+                              : "emailParam"
                           }
                           onClick={e =>
                             changeActiveTab(e, "horizontalTabs", "Faturamento")
@@ -258,18 +264,6 @@ const Panels = () => {
                       <TabPane tabId="Orçamento">
                         <Form onSubmit={handleSubmit}>
                           <Row>
-                            <Col md="8">
-                              <Label style={{ display: "block" }}>
-                                Cópia Email
-                              </Label>
-                              <TagsInput
-                                onChange={handleTagsinputOrc}
-                                tagProps={{
-                                  className: "react-tagsinput-tag "
-                                }}
-                                value={tagsinputOrc}
-                              />
-                            </Col>
                             <Col md="4">
                               <Label>Email de Envio</Label>
                               <FormGroup
@@ -290,24 +284,24 @@ const Panels = () => {
                                 ) : null}
                               </FormGroup>
                             </Col>
+                            <Col md="8">
+                              <Label style={{ display: "block" }}>
+                                Cópia Email
+                              </Label>
+                              <TagsInput
+                                onChange={handleTagsinputOrc}
+                                tagProps={{
+                                  className: "react-tagsinput-tag "
+                                }}
+                                value={tagsinputOrc}
+                              />
+                            </Col>
                           </Row>
                         </Form>
                       </TabPane>
                       <TabPane tabId="revisao">
                         <Form onSubmit={handleSubmit}>
                           <Row>
-                            <Col md="8">
-                              <Label style={{ display: "block" }}>
-                                Cópia Email
-                              </Label>
-                              <TagsInput
-                                onChange={handleTagsinputRev}
-                                tagProps={{
-                                  className: "react-tagsinput-tag "
-                                }}
-                                value={tagsinputRev}
-                              />
-                            </Col>
                             <Col md="4">
                               <Label>Email de Envio</Label>
                               <FormGroup
@@ -328,24 +322,24 @@ const Panels = () => {
                                 ) : null}
                               </FormGroup>
                             </Col>
+                            <Col md="8">
+                              <Label style={{ display: "block" }}>
+                                Cópia Email
+                              </Label>
+                              <TagsInput
+                                onChange={handleTagsinputRev}
+                                tagProps={{
+                                  className: "react-tagsinput-tag "
+                                }}
+                                value={tagsinputRev}
+                              />
+                            </Col>
                           </Row>
                         </Form>
                       </TabPane>
                       <TabPane tabId="Faturamento">
                         <Form onSubmit={handleSubmit}>
                           <Row>
-                            <Col md="8">
-                              <Label style={{ display: "block" }}>
-                                Cópia Email
-                              </Label>
-                              <TagsInput
-                                onChange={handleTagsinputFat}
-                                tagProps={{
-                                  className: "react-tagsinput-tag "
-                                }}
-                                value={tagsinputFat}
-                              />
-                            </Col>
                             <Col md="4">
                               <Label>Email de Envio</Label>
                               <FormGroup
@@ -366,32 +360,43 @@ const Panels = () => {
                                 ) : null}
                               </FormGroup>
                             </Col>
+                            <Col md="8">
+                              <Label style={{ display: "block" }}>
+                                Cópia Email
+                              </Label>
+                              <TagsInput
+                                onChange={handleTagsinputFat}
+                                tagProps={{
+                                  className: "react-tagsinput-tag "
+                                }}
+                                value={tagsinputFat}
+                              />
+                            </Col>
                           </Row>
                         </Form>
                       </TabPane>
                     </TabContent>
                     <Form onSubmit={handleSubmit}>
-                      <Link to="/tabelas/general/area">
-                        <Button
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => history.goBack()}
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
+                            paddingBottom: 4,
+                            paddingRight: 1
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
                       <Button
                         style={{
                           paddingLeft: 29,

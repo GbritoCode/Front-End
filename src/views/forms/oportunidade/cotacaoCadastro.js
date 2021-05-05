@@ -87,7 +87,8 @@ export default function CotacaoCadastro() {
   const optionalSchema = {
     desc: { value: "", error: "", message: "" }
   };
-  const [files, setFile] = useState({});
+  const [files, setFile] = useState([]);
+  const [filesAux, setFileAux] = useState({});
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
@@ -157,6 +158,12 @@ export default function CotacaoCadastro() {
     loadData();
   }, [id]);
 
+  var options = {};
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
   const convertBytesToKB = bytes => Math.round(bytes / 1000);
   const handleUploadBtnClick = () => {
     fileInputField.current.click();
@@ -165,28 +172,40 @@ export default function CotacaoCadastro() {
   const addNewFiles = newFiles => {
     // eslint-disable-next-line no-restricted-syntax
     for (const file of newFiles) {
-      return { file };
+      files.push(file);
+      filesAux[file.name] = file;
     }
+    return { ...filesAux };
   };
-
   const handleNewFileUpload = e => {
     const { files: newFiles } = e.target;
     if (newFiles.length) {
-      const updatedFiles = addNewFiles(newFiles);
-      setFile(updatedFiles);
+      if (files.length < 2) {
+        const updatedFiles = addNewFiles(newFiles);
+        console.log(updatedFiles);
+        setFileAux(updatedFiles);
+      } else {
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>Ops! Você só pode anexar 2 arquivos em cada email</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      }
     }
   };
-
   const removeFile = fileName => {
-    delete files[fileName];
-    setFile({ ...files });
+    setFile(files.filter(obj => obj.name !== fileName));
+    delete filesAux[fileName];
+    setFileAux({ ...filesAux });
   };
 
-  var options = {};
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
   function getCliData(cobranca) {
     if (!(cobranca === "2" || cobranca === 2)) {
       setDisabledVlrProp(true);
@@ -423,8 +442,10 @@ export default function CotacaoCadastro() {
 
       const formData = new FormData();
 
-      formData.append("file", files.file);
-
+      // eslint-disable-next-line no-restricted-syntax
+      for (const file of files) {
+        formData.append("file", file);
+      }
       dispatch(
         cotacaoRequest(
           values.empresaId.value,
@@ -467,12 +488,12 @@ export default function CotacaoCadastro() {
 
       if (values.motivo.value === "1") {
         await api.post(
-          `/files/oport/cotacao/?oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data4[0].id}&oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
           formData
         );
       } else {
         await api.post(
-          `/files/oport/cotacao/?oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data4[0].id}&oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
           formData
         );
       }
@@ -819,7 +840,7 @@ export default function CotacaoCadastro() {
                               onClick={handleUploadBtnClick}
                             >
                               <i className="fas fa-file-upload" />
-                              <span> Clique para selecionar um arquivo </span>
+                              <span>selecione um arquivo </span>
                             </UploadFileBtn>
                             <FormField
                               type="file"
@@ -831,8 +852,8 @@ export default function CotacaoCadastro() {
                           </FileUploadContainer>
                           <FilePreviewContainer>
                             <PreviewList>
-                              {Object.keys(files).map((fileName, index) => {
-                                const file = files[fileName];
+                              {Object.keys(filesAux).map((fileName, index) => {
+                                const file = filesAux[fileName];
                                 const isImageFile =
                                   file.type.split("/")[0] === "image";
                                 return (

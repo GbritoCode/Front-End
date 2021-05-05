@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 export const FileUploadContainer = styled.section`
   position: relative;
-  width: 66%;
+  width: 66.67%;
   margin: 25px 0 15px;
   border: 2px dotted lightgray;
-  padding: 35px 20px;
+  padding: 34px 20px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -41,7 +41,7 @@ export const InputLabel = styled.label`
 `;
 
 export const DragDropText = styled.p`
-  letter-spacing: 2.2px;
+  letter-spacing: 2px;
   margin-top: 0;
   text-align: center;
 `;
@@ -52,7 +52,7 @@ export const UploadFileBtn = styled.button`
   background-color: transparent;
   border: 2px solid #3498db;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.75rem;
   line-height: 1;
   padding: 1.1em 2.8em;
   text-align: center;
@@ -65,7 +65,7 @@ export const UploadFileBtn = styled.button`
   z-index: 1;
   transition: color 250ms ease-in-out;
   font-family: "Open Sans", sans-serif;
-  width: 65%;
+  width: 35%;
   display: flex;
   align-items: center;
   padding-right: 0;
@@ -180,7 +180,7 @@ export const RemoveFileIcon = styled.i`
 export const PreviewContainer = styled.section`
   padding: 0.25rem;
   margin: 7px 0 0 0;
-  width: 100%;
+  width: 50%;
   height: 155px;
   border-radius: 6px;
   box-sizing: border-box;

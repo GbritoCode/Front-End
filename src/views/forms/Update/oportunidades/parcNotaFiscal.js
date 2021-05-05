@@ -98,7 +98,8 @@ export default function ParcelaUpdate() {
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" }
   };
-  const [files, setFile] = useState({});
+  const [filesAux, setFileAux] = useState({});
+  const [files, setFile] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
@@ -172,8 +173,13 @@ export default function ParcelaUpdate() {
     loadData();
   }, [data3.diasPrazo, id]);
 
-  const convertBytesToKB = bytes => Math.round(bytes / 1000);
+  var options = {};
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
 
+  const convertBytesToKB = bytes => Math.round(bytes / 1000);
   const handleUploadBtnClick = () => {
     fileInputField.current.click();
   };
@@ -181,28 +187,40 @@ export default function ParcelaUpdate() {
   const addNewFiles = newFiles => {
     // eslint-disable-next-line no-restricted-syntax
     for (const file of newFiles) {
-      return { file };
+      files.push(file);
+      filesAux[file.name] = file;
     }
+    return { ...filesAux };
   };
-
   const handleNewFileUpload = e => {
     const { files: newFiles } = e.target;
     if (newFiles.length) {
-      const updatedFiles = addNewFiles(newFiles);
-      setFile(updatedFiles);
+      if (files.length < 2) {
+        const updatedFiles = addNewFiles(newFiles);
+        console.log(updatedFiles);
+        setFileAux(updatedFiles);
+      } else {
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>Ops! Você só pode anexar 2 arquivos em cada email</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      }
     }
   };
-
   const removeFile = fileName => {
-    delete files[fileName];
-    setFile({ ...files });
+    setFile(files.filter(obj => obj.name !== fileName));
+    delete filesAux[fileName];
+    setFileAux({ ...filesAux });
   };
 
-  var options = {};
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -314,9 +332,9 @@ export default function ParcelaUpdate() {
       const status = !!fromDash;
 
       const formData = new FormData();
-
-      formData.append("file", files.file);
-
+      for (const file of files) {
+        formData.append("file", file);
+      }
       dispatch(
         parcelaUpdate(
           id,
@@ -339,7 +357,7 @@ export default function ParcelaUpdate() {
       await delay(1500);
 
       await api.post(
-        `/files/oport/cotacao/?oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
+        `/files/oport/cotacao/?id=${data.id}&oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
         formData
       );
     } else {
@@ -585,8 +603,8 @@ export default function ParcelaUpdate() {
                           </FileUploadContainer>
                           <FilePreviewContainer>
                             <PreviewList>
-                              {Object.keys(files).map((fileName, index) => {
-                                const file = files[fileName];
+                              {Object.keys(filesAux).map((fileName, index) => {
+                                const file = filesAux[fileName];
                                 const isImageFile =
                                   file.type.split("/")[0] === "image";
                                 return (
