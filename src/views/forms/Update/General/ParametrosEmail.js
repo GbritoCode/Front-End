@@ -74,16 +74,17 @@ const Panels = () => {
       }));
       const auxOrc = response.data.bccEmailOrc.split(",");
       if (!auxOrc.some(value => tagsinputOrc.includes(value))) {
-        console.log(auxOrc);
         settagsinputOrc(tagsinputOrc.concat(auxOrc));
         setStringOrc(response.data.bccEmailOrc);
       }
-      if (!tagsinputRev.includes(response.data.bccEmailRev)) {
-        tagsinputRev.push(response.data.bccEmailRev);
+      const auxRev = response.data.bccEmailRev.split(",");
+      if (!auxRev.some(value => tagsinputRev.includes(value))) {
+        settagsinputRev(tagsinputRev.concat(auxRev));
         setStringRev(response.data.bccEmailRev);
       }
-      if (!tagsinputFat.includes(response.data.bccEmailFat)) {
-        tagsinputFat.push(response.data.bccEmailFat);
+      const auxFat = response.data.bccEmailFat.split(",");
+      if (!auxFat.some(value => tagsinputFat.includes(value))) {
+        settagsinputFat(tagsinputFat.concat(auxFat));
         setStringFat(response.data.bccEmailFat);
       }
       setIsLoading(false);

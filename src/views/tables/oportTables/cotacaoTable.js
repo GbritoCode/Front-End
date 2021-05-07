@@ -30,7 +30,8 @@ import api from "~/services/api";
 
 class ParametrosTable extends Component {
   state = {
-    data: []
+    data: [],
+    hiddenButton: false
   };
 
   componentDidMount() {
@@ -42,6 +43,7 @@ class ParametrosTable extends Component {
   loadClients = async () => {
     const { id } = this.props.match.params;
     const response = await api.get(`/cotacao/${id}`);
+    this.setState({ hiddenButton: response.data[0].Oportunidade.fase >= 5 });
     this.setState({
       data: response.data.map((cotacao, key) => {
         return {
@@ -68,7 +70,11 @@ class ParametrosTable extends Component {
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
                 >
-                  <i className="tim-icons icon-pencil" />
+                  {cotacao.Oportunidade.fase >= 5 ? (
+                    <i className="tim-icons icon-zoom-split" />
+                  ) : (
+                    <i className="tim-icons icon-pencil" />
+                  )}
                 </Button>
               </Link>{" "}
             </div>
@@ -98,18 +104,22 @@ class ParametrosTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Cotações
-                  <Link to={`/cadastro/oportunidade/cotacao/${id}`}>
-                    <Tooltip title="Novo" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  {this.state.hiddenButton ? (
+                    <></>
+                  ) : (
+                    <Link to={`/cadastro/oportunidade/cotacao/${id}`}>
+                      <Tooltip title="Novo" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <AddIcon fontSize="large" />
+                        </Button>
+                      </Tooltip>
+                    </Link>
+                  )}
                   <Link to={`/update/oportunidade/oport/${id}`}>
                     <Tooltip title="Voltar">
                       <Button

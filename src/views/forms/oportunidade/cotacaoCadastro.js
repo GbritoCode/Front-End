@@ -488,12 +488,16 @@ export default function CotacaoCadastro() {
 
       if (values.motivo.value === "1") {
         await api.post(
-          `/files/oport/cotacao/?id=${data4[0].id}&oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data4[0].id + 1}&oportId=${
+            data1.id
+          }&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
           formData
         );
       } else {
         await api.post(
-          `/files/oport/cotacao/?id=${data4[0].id}&oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data4[0].id + 1}&oportId=${
+            data1.id
+          }&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
           formData
         );
       }

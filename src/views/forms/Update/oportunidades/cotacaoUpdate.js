@@ -50,6 +50,7 @@ function CotacaoUpdate() {
   const [data1, setData1] = useState({ nome: undefined });
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState();
+  const [disabledField, setDisabledField] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -85,6 +86,7 @@ function CotacaoUpdate() {
         );
         setData1(response1.data);
         setData2(response2.data);
+        setDisabledField(response2.data.fase >= 5);
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.EmpresaId },
@@ -122,12 +124,17 @@ function CotacaoUpdate() {
     loadData();
   }, [id]);
   const downloadFile = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/download/oport/${data.CotacaoFileId}`;
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "file", "");
-    document.body.appendChild(link);
-    link.click();
+    for (const file of data.CotacaoFiles) {
+      const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${file.id}/?table=cotacao`;
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file", "");
+      document.body.appendChild(link);
+      link.click();
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(50);
+    }
   };
 
   function getCliData(cobranca) {
@@ -344,6 +351,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.probVend.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="probVend"
                               type="select"
                               onChange={event =>
@@ -373,6 +381,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.tipoCobranca.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="tipoCobranca"
                               type="select"
                               onChange={event =>
@@ -403,6 +412,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.hrsPrevst.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="hrsPrevst"
                               type="numeric"
                               onChange={event => {
@@ -460,6 +470,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.vlrDesc.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="vlrDesc"
                               type="text"
                               onChange={event => {
@@ -526,6 +537,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.numParcelas.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="numParcelas"
                               type="select"
                               onChange={event =>
@@ -562,6 +574,7 @@ function CotacaoUpdate() {
                           <FormGroup check>
                             <Label check>
                               <Input
+                                disabled={disabledField}
                                 checked={checkOrcamento(values)}
                                 name="motivo"
                                 type="radio"
@@ -574,6 +587,7 @@ function CotacaoUpdate() {
                             </Label>
                             <Label check>
                               <Input
+                                disabled={disabledField}
                                 checked={checkDesc(values)}
                                 name="motivo"
                                 type="radio"
@@ -586,6 +600,7 @@ function CotacaoUpdate() {
                             </Label>
                             <Label check>
                               <Input
+                                disabled={disabledField}
                                 checked={checkEscopo(values)}
                                 name="motivo"
                                 type="radio"
@@ -607,6 +622,7 @@ function CotacaoUpdate() {
                             className={`has-label ${optional.desc.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="desc"
                               type="textarea"
                               onChange={event =>

@@ -40,7 +40,8 @@ import api from "~/services/api";
 /* eslint-disable eqeqeq */
 class RecursoTable extends Component {
   state = {
-    data: []
+    data: [],
+    hiddenButton: false
   };
 
   componentDidMount() {
@@ -78,6 +79,7 @@ class RecursoTable extends Component {
   loadData = async () => {
     const { id } = this.props.match.params;
     const response = await api.get(`/recurso/${id}`);
+    this.setState({ hiddenButton: response.data[0].Oportunidade.fase >= 5 });
     this.setState({
       data: response.data.map((recurso, key) => {
         return {
@@ -92,28 +94,44 @@ class RecursoTable extends Component {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a edit kind of action */}
-              <Link to={`/update/oportunidade/recurso/${recurso.id}`}>
-                <Button
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                >
-                  <i className="tim-icons icon-pencil" />
-                </Button>
-              </Link>
-              {/* use this button to remove the data row */}
-              <Button
-                onClick={() => {
-                  this.setState({ excluding: recurso.id });
-                  this.toggleModalMini();
-                }}
-                color="danger"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-simple-remove" />
-              </Button>{" "}
+              {recurso.Oportunidade.fase >= 5 ? (
+                <>
+                  <Link to={`/update/oportunidade/recurso/${recurso.id}`}>
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-zoom-split" />
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {/* use this button to add a edit kind of action */}
+                  <Link to={`/update/oportunidade/recurso/${recurso.id}`}>
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-pencil" />
+                    </Button>
+                  </Link>
+                  {/* use this button to remove the data row */}
+                  <Button
+                    onClick={() => {
+                      this.setState({ excluding: recurso.id });
+                      this.toggleModalMini();
+                    }}
+                    color="danger"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>{" "}
+                </>
+              )}
             </div>
           )
         };
@@ -185,18 +203,22 @@ class RecursoTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Recursos
-                  <Link to={`/cadastro/oportunidade/recurso/${id}`}>
-                    <Tooltip title="Novo" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  {this.state.hiddenButton ? (
+                    <></>
+                  ) : (
+                    <Link to={`/cadastro/oportunidade/recurso/${id}`}>
+                      <Tooltip title="Novo" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <AddIcon fontSize="large" />
+                        </Button>
+                      </Tooltip>
+                    </Link>
+                  )}
                   <Link to={`/update/oportunidade/oport/${id}`}>
                     <Tooltip title="Voltar">
                       <Button

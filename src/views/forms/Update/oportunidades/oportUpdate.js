@@ -59,6 +59,7 @@ export default function UpdateOport() {
   const [data5, setData5] = useState([]);
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
+  const [data8, setData8] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -99,6 +100,7 @@ export default function UpdateOport() {
       setData5(response5.data);
       setData6(response6.data);
       setData7(response7.data);
+      setData8(response8.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -138,6 +140,12 @@ export default function UpdateOport() {
     }
     if (value == 4) {
       return "Aprovada";
+    }
+    if (value == 5) {
+      return "Reprovada";
+    }
+    if (value == 6) {
+      return "Finalizada";
     }
   };
   function getContato(cliente) {
@@ -203,7 +211,7 @@ export default function UpdateOport() {
   };
 
   function checkAprovada(fase) {
-    if (fase == 4 && firstRender.current) {
+    if ((fase == 4 || fase >= 5) && firstRender.current) {
       return (
         <>
           <Link to={`/tabelas/oportunidade/recurso/${id}`}>
@@ -311,7 +319,9 @@ export default function UpdateOport() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /> </>
+        <>
+          <div className="content" />{" "}
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -661,7 +671,13 @@ export default function UpdateOport() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tabelas/oportunidade/oport">
+                      <Link
+                        to={
+                          data8.fase < 5
+                            ? "/tabelas/oportunidade/oport"
+                            : "/tabelas/oportunidade/finOport"
+                        }
+                      >
                         <Button
                           style={{
                             paddingLeft: 32,

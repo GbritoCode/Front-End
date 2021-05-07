@@ -47,6 +47,7 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [disabledField, setDisabledField] = useState();
   const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -77,12 +78,17 @@ export default function ParcelaUpdate() {
   const fromDash = query.get("fromDash");
 
   const downloadFile = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/download/oport/${data.CotacaoFileId}`;
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "file", "");
-    document.body.appendChild(link);
-    link.click();
+    for (const file of data.ParcelaFiles) {
+      const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${file.id}/?table=parcelas`;
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file", "");
+      document.body.appendChild(link);
+      link.click();
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(50);
+    }
   };
 
   useEffect(() => {
@@ -91,6 +97,7 @@ export default function ParcelaUpdate() {
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
+      setDisabledField(response1.data.fase >= 5);
       setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
@@ -450,6 +457,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.situacao.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="situacao"
                               type="select"
                               onChange={event =>
@@ -479,6 +487,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.dtLiquidacao.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="dtLiquidacao"
                               type="date"
                               onChange={event => {
@@ -499,6 +508,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.vlrPago.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="vlrPago"
                               type="text"
                               onChange={event => {

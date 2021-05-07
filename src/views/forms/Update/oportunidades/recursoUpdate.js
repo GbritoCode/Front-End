@@ -44,6 +44,7 @@ export default function RecursoCadastro() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [disabledField, setDisabledField] = useState();
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data4, setData4] = useState([]);
@@ -75,6 +76,7 @@ export default function RecursoCadastro() {
       const response4 = await api.get(
         `/oportunidade/${response1.data.OportunidadeId}`
       );
+      setDisabledField(response4.data.fase >= 5);
       setData1(response1.data);
       setData2(response2.data);
       setData4(response4.data);
@@ -296,6 +298,7 @@ export default function RecursoCadastro() {
                             className={`has-label ${values.ColabId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="ColabId"
                               type="select"
                               onChange={event =>
@@ -336,6 +339,7 @@ export default function RecursoCadastro() {
                             className={`has-label ${values.tipoValor.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="tipoValor"
                               type="select"
                               onChange={event =>
@@ -374,6 +378,7 @@ export default function RecursoCadastro() {
                             className={`has-label ${values.tipoAtend.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="tipoAtend"
                               type="select"
                               onChange={event =>
@@ -416,6 +421,7 @@ export default function RecursoCadastro() {
                             className={`has-label ${values.dataInclusao.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="dataInclusao"
                               type="date"
                               onChange={event =>
@@ -436,6 +442,7 @@ export default function RecursoCadastro() {
                             className={`has-label ${values.hrsPrevst.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="hrsPrevst"
                               type="numeric"
                               onChange={event => {
@@ -484,6 +491,7 @@ export default function RecursoCadastro() {
                             className={`has-label ${values.colabVlrHr.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="colabVlrHr"
                               type="numeric"
                               onChange={event => {

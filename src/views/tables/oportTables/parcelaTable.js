@@ -35,7 +35,8 @@ import { normalizeCurrency } from "~/normalize";
 
 class ParametrosTable extends Component {
   state = {
-    data: []
+    data: [],
+    hiddenButton: false
   };
 
   componentDidMount() {
@@ -72,6 +73,7 @@ class ParametrosTable extends Component {
   loadData = async () => {
     const { id } = this.props.match.params;
     const response = await api.get(`/parcela/${id}`);
+    this.setState({ hiddenButton: response.data[0].Oportunidade.fase >= 5 });
     this.setState({
       data: response.data.map((parcela, key) => {
         return {
@@ -90,43 +92,62 @@ class ParametrosTable extends Component {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
+              {parcela.Oportunidade.fase >= 5 ? (
+                <>
+                  <Button
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => {
+                      history.push(`/update/oportunidade/parc/${parcela.id}`);
+                    }}
+                  >
+                    <i className="tim-icons icon-zoom-split" />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Tooltip title="Nota Fiscal">
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        history.push(
+                          `/update/oportunidade/parcNota/${parcela.id}`
+                        );
+                      }}
+                    >
+                      <i className="tim-icons icon-paper" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Liquidar">
+                    <Button
+                      disabled={parcela.situacao < 2}
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        history.push(`/update/oportunidade/parc/${parcela.id}`);
+                      }}
+                    >
+                      <i className="tim-icons icon-coins" />
+                    </Button>
+                  </Tooltip>
+                  <Button
+                    onClick={() => {
+                      this.setState({ excluding: parcela.id });
+                      this.toggleModalMini();
+                    }}
+                    color="danger"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>
+                </>
+              )}
               {/* use this button to add a edit kind of action */}
-              <Tooltip title="Nota Fiscal">
-                <Button
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => {
-                    history.push(`/update/oportunidade/parcNota/${parcela.id}`);
-                  }}
-                >
-                  <i className="tim-icons icon-paper" />
-                </Button>
-              </Tooltip>
-              <Tooltip title="Liquidar">
-                <Button
-                  disabled={parcela.situacao < 2}
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => {
-                    history.push(`/update/oportunidade/parc/${parcela.id}`);
-                  }}
-                >
-                  <i className="tim-icons icon-coins" />
-                </Button>
-              </Tooltip>
-              <Button
-                onClick={() => {
-                  this.setState({ excluding: parcela.id });
-                  this.toggleModalMini();
-                }}
-                color="danger"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-simple-remove" />
-              </Button>
             </div>
           )
         };
@@ -198,18 +219,22 @@ class ParametrosTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Parcelas
-                  <Link to={`/cadastro/oportunidade/parcela/${id}`}>
-                    <Tooltip title="Novo" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  {this.state.hiddenButton ? (
+                    <></>
+                  ) : (
+                    <Link to={`/cadastro/oportunidade/parcela/${id}`}>
+                      <Tooltip title="Novo" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <AddIcon fontSize="large" />
+                        </Button>
+                      </Tooltip>
+                    </Link>
+                  )}
                   <Link to={`/update/oportunidade/oport/${id}`}>
                     <Tooltip title="Voltar">
                       <Button

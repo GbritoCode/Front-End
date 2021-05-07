@@ -88,58 +88,7 @@ function OportFinTable() {
               // we've added some custom button actions
               <>
                 <div className="actions-right">
-                  <Tooltip title="Cotar">
-                    <Button
-                      hidden={oport.fase >= 2}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={async () => {
-                        history.push(
-                          `/cadastro/oportunidade/cotacao/${oport.id}`
-                        );
-                      }}
-                    >
-                      <i className="tim-icons icon-money-coins" />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Revisar">
-                    <Button
-                      hidden={oport.fase > 3 || oport.fase < 2}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        history.push(
-                          `/cadastro/oportunidade/cotacao/${oport.id}`
-                        );
-                      }}
-                    >
-                      <i className="tim-icons icon-bulb-63" />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Aprovar">
-                    <Button
-                      hidden={oport.fase >= 4}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        setAltering({
-                          altering: oport.id,
-                          status: "aprovar",
-                          fase: 4,
-                          textHidden: true
-                        });
-                        setModalMini(!modalMini);
-                      }}
-                    >
-                      <i className="tim-icons icon-spaceship" />
-                    </Button>
-                  </Tooltip>
-
-                  {/* use this button to add a edit kind of action */}
-                  <Tooltip title="Editar">
+                  <Tooltip title="Visualizar">
                     <Link to={`/update/oportunidade/oport/${oport.id}`}>
                       <Button
                         color="default"
@@ -150,7 +99,7 @@ function OportFinTable() {
                           setModalMini(!modalMini);
                         }}
                       >
-                        <i className="tim-icons icon-pencil" />
+                        <i className="tim-icons icon-zoom-split" />
                       </Button>
                     </Link>
                   </Tooltip>
@@ -277,7 +226,7 @@ function OportFinTable() {
           <Card>
             <CardHeader>
               <CardTitle tag="h4">
-                Oportunidades
+                Oportunidades Finalizadas/Reprovadas
                 <Link to="/cadastro/oportunidade/oport">
                   <Tooltip title="Novo" placement="top" interactive>
                     <Button
