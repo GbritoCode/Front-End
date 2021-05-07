@@ -5,7 +5,7 @@ export const FileUploadContainer = styled.section`
   width: 66.67%;
   margin: 0px 0 15px;
   border: 2px dotted lightgray;
-  padding: 17px 20px;
+  padding: 9px 20px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -26,10 +26,6 @@ export const FormField = styled.input`
   right: 0;
   bottom: 0;
   opacity: 0;
-
-  &:focus {
-    outline: none;
-  }
 `;
 
 export const InputLabel = styled.label`
@@ -56,7 +52,6 @@ export const UploadFileBtn = styled.button`
   line-height: 1;
   padding: 1.1em 2.8em;
   text-align: center;
-  text-transform: uppercase;
   font-weight: 700;
   border-radius: 6px;
   color: #3498db;

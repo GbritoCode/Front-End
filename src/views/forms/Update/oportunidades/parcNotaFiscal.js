@@ -580,15 +580,13 @@ export default function ParcelaUpdate() {
                       <Row>
                         <Col md="12">
                           <FileUploadContainer>
-                            <DragDropText>
-                              Arraste e solte o arquivo ou
-                            </DragDropText>
+                            <DragDropText>Arraste e solte ou</DragDropText>
                             <UploadFileBtn
                               type="button"
                               onClick={handleUploadBtnClick}
                             >
                               <i className="fas fa-file-upload" />
-                              <span> Upload </span>
+                              <span> Selecione o arquivo </span>
                             </UploadFileBtn>
                             <FormField
                               type="file"

@@ -36,7 +36,6 @@ import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Close, Message } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 
@@ -227,18 +226,6 @@ function OportFinTable() {
             <CardHeader>
               <CardTitle tag="h4">
                 Oportunidades Finalizadas/Reprovadas
-                <Link to="/cadastro/oportunidade/oport">
-                  <Tooltip title="Novo" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AddIcon fontSize="large" />
-                    </Button>
-                  </Tooltip>
-                </Link>
               </CardTitle>
             </CardHeader>
             <CardBody>
