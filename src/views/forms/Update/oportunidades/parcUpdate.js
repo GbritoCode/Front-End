@@ -87,7 +87,7 @@ export default function ParcelaUpdate() {
       link.click();
 
       const delay = ms => new Promise(res => setTimeout(res, ms));
-      await delay(50);
+      await delay(500);
     }
   };
 
@@ -549,25 +549,29 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
 
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                      {data1.fase >= 5 ? (
+                        <></>
+                      ) : (
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      )}
                       <Button
                         style={{
                           paddingLeft: 32,

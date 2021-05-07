@@ -533,25 +533,29 @@ export default function RecursoCadastro() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                      {data4.fase >= 5 ? (
+                        <></>
+                      ) : (
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      )}
                       <Link
                         to={`/tabelas/oportunidade/recurso/${data1.OportunidadeId}`}
                       >

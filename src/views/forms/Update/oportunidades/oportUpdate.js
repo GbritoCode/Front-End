@@ -52,6 +52,7 @@ export default function UpdateOport() {
   const firstRender = useRef(true);
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [disabledField, setDisabledField] = useState();
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -93,6 +94,7 @@ export default function UpdateOport() {
       const response3 = await api.get(
         `/cliente/cont/${response8.data.ClienteId}`
       );
+      setDisabledField(response8.data.fase >= 5);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -379,6 +381,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.data.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="name_abv"
                               type="date"
                               onChange={event =>
@@ -415,6 +418,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.ClienteId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="ClienteId"
                               type="select"
                               onChange={event =>
@@ -449,6 +453,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.contato.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="contato"
                               type="select"
                               onChange={event =>
@@ -481,6 +486,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.RepresentanteId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="RepresentanteId"
                               type="select"
                               onChange={event =>
@@ -515,6 +521,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.UndNegId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="UndNegId"
                               type="select"
                               onChange={event =>
@@ -547,6 +554,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.RecDespId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="RecDespId"
                               type="select"
                               onChange={event =>
@@ -579,6 +587,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.segmetId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="segmetId"
                               type="select"
                               onChange={event =>
@@ -634,6 +643,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.desc.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="desc"
                               type="text"
                               onChange={event =>
@@ -656,6 +666,7 @@ export default function UpdateOport() {
                             className={`has-label ${optional.narrativa.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="narrativa"
                               type="textarea"
                               onChange={event =>
@@ -698,25 +709,29 @@ export default function UpdateOport() {
                           Voltar
                         </Button>
                       </Link>
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                      {data8.fase >= 5 ? (
+                        <></>
+                      ) : (
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      )}
                     </Form>
                   </CardBody>
                 </Card>

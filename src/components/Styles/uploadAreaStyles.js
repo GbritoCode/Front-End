@@ -3,9 +3,9 @@ import styled from "styled-components";
 export const FileUploadContainer = styled.section`
   position: relative;
   width: 66.67%;
-  margin: 25px 0 15px;
+  margin: 0px 0 15px;
   border: 2px dotted lightgray;
-  padding: 34px 20px;
+  padding: 17px 20px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
