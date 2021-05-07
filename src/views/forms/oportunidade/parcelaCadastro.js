@@ -189,7 +189,9 @@ export default function ParcelaCadastro() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -273,28 +275,6 @@ export default function ParcelaCadastro() {
                           </FormGroup>
                         </Col>
                       </Row>
-
-                      <Link to={`/tabelas/oportunidade/parcela/${id}`}>
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -314,6 +294,28 @@ export default function ParcelaCadastro() {
                           size="large"
                         />
                       </Button>
+                      <Link to={`/tabelas/oportunidade/parcela/${id}`}>
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
                     </Form>
                   </CardBody>
                 </Card>

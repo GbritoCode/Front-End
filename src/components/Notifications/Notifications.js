@@ -75,7 +75,8 @@ export default function Notifications() {
                 {notification.content.split(",")[0]}
                 <br />
                 {notification.content.split(",")[1]}
-                <br />
+                <p />
+
                 {notification.content.split(",")[2]}
               </div>
               {notification.read ? (

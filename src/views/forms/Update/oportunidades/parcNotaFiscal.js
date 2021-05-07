@@ -17,7 +17,6 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
-import classNames from "classnames";
 import {
   Button,
   Card,
@@ -33,7 +32,6 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { Tooltip } from "@material-ui/core";
 import { GetApp } from "@material-ui/icons";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
@@ -67,6 +65,7 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [disabledField, setDisabledField] = useState();
   const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [data3, setData3] = useState({});
@@ -99,6 +98,7 @@ export default function ParcelaUpdate() {
     saldo: { value: "", error: "", message: "" }
   };
   const [filesAux, setFileAux] = useState({});
+  const [filePreview, setFilePreview] = useState([]);
   const [files, setFile] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
@@ -106,8 +106,8 @@ export default function ParcelaUpdate() {
   const query = new URLSearchParams(useLocation().search);
   const fromDash = query.get("fromDash");
 
-  const downloadFile = async () => {
-    const url = `${process.env.REACT_APP_API_URL}/download/oport/${data.CotacaoFileId}`;
+  const downloadFile = async fileId => {
+    const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${fileId}/?table=parcelas`;
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", "file", "");
@@ -130,6 +130,15 @@ export default function ParcelaUpdate() {
       const response4 = await api.get(
         `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
       );
+
+      if (response.data.situacao > 1) {
+        const response5 = await api.get(
+          `/download/oport/getPreview/${response.data.id}/?table=parcelas`
+        );
+        setFilePreview(response5.data);
+        setFile(response5.data);
+      }
+      setDisabledField(response.data.situacao > 1);
       setData(response.data);
       setData1(response1.data);
       setData3(response3.data);
@@ -355,11 +364,16 @@ export default function ParcelaUpdate() {
 
       const delay = ms => new Promise(res => setTimeout(res, ms));
       await delay(1500);
-
-      await api.post(
-        `/files/oport/cotacao/?id=${data.id}&oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
-        formData
-      );
+      if (data.situacao > 1) {
+        await api.post(
+          `/emailResend/oport/cotacao/?id=${data.id}&tipo=parcela&situacao=fatura`
+        );
+      } else {
+        await api.post(
+          `/files/oport/cotacao/?id=${data.id}&oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
+          formData
+        );
+      }
     } else {
       options = {
         place: "tr",
@@ -391,27 +405,6 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {data.situacao > 1 ? (
-                      <>
-                        <Tooltip
-                          title="Download do Arquivo Anexado"
-                          placement="top"
-                          interactive
-                        >
-                          <Button
-                            style={{ float: "right" }}
-                            color="default"
-                            size="sm"
-                            onClick={() => downloadFile()}
-                            className={classNames("btn-icon btn-link like")}
-                          >
-                            <GetApp />
-                          </Button>
-                        </Tooltip>
-                      </>
-                    ) : (
-                      <></>
-                    )}
                     <h3 style={{ marginBottom: 0 }}>Nota Fiscal</h3>
                     <p style={{ fontSize: 11 }}>
                       {data1.cod} | {data1.desc}
@@ -473,7 +466,8 @@ export default function ParcelaUpdate() {
                             className={`has-label ${values.dtEmissao.error}`}
                           >
                             <Input
-                              autoFocus
+                              disabled={disabledField}
+                              autoFocus={!disabledField}
                               name="dtEmissao"
                               type="date"
                               onChange={event =>
@@ -517,6 +511,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${values.notaFiscal.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="notaFiscal"
                               type="text"
                               onChange={event =>
@@ -537,6 +532,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.pedidoCliente.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="pedidoCliente"
                               type="text"
                               onChange={event => {
@@ -561,6 +557,7 @@ export default function ParcelaUpdate() {
                           <Label>Situação</Label>
                           <FormGroup style={{ marginBottom: 25 }} check>
                             <Input
+                              disabled
                               name="situacao"
                               type="select"
                               onChange={event =>
@@ -603,35 +600,66 @@ export default function ParcelaUpdate() {
                           </FileUploadContainer>
                           <FilePreviewContainer>
                             <PreviewList>
-                              {Object.keys(filesAux).map((fileName, index) => {
-                                const file = filesAux[fileName];
-                                const isImageFile =
-                                  file.type.split("/")[0] === "image";
-                                return (
-                                  <PreviewContainer key={fileName}>
-                                    <div>
-                                      {isImageFile && (
-                                        <ImagePreview
-                                          src={URL.createObjectURL(file)}
-                                          alt={`file preview ${index}`}
-                                        />
-                                      )}
-                                      <FileMetaData isImageFile={isImageFile}>
-                                        <span>{file.name}</span>
-                                        <aside>
-                                          <span>
-                                            {convertBytesToKB(file.size)} kb
-                                          </span>{" "}
-                                          <RemoveFileIcon
-                                            className="fas fa-trash-alt"
-                                            onClick={() => removeFile(fileName)}
-                                          />
-                                        </aside>
-                                      </FileMetaData>
-                                    </div>
-                                  </PreviewContainer>
-                                );
-                              })}
+                              {data.situacao <= 1
+                                ? Object.keys(filesAux).map(
+                                    (fileName, index) => {
+                                      const file = filesAux[fileName];
+                                      const isImageFile =
+                                        file.type.split("/")[0] === "image";
+                                      return (
+                                        <PreviewContainer key={fileName}>
+                                          <div>
+                                            {isImageFile && (
+                                              <ImagePreview
+                                                src={URL.createObjectURL(file)}
+                                                alt={`file preview ${index}`}
+                                              />
+                                            )}
+                                            <FileMetaData
+                                              isImageFile={isImageFile}
+                                            >
+                                              <span>{file.name}</span>
+                                              <aside>
+                                                <span>
+                                                  {convertBytesToKB(file.size)}{" "}
+                                                  kb
+                                                </span>{" "}
+                                                <RemoveFileIcon
+                                                  className="fas fa-trash-alt"
+                                                  onClick={() =>
+                                                    removeFile(fileName)
+                                                  }
+                                                />
+                                              </aside>
+                                            </FileMetaData>
+                                          </div>
+                                        </PreviewContainer>
+                                      );
+                                    }
+                                  )
+                                : filePreview.map(file => {
+                                    console.log(file);
+                                    return (
+                                      <PreviewContainer key={file.nome}>
+                                        <div>
+                                          <FileMetaData isImageFile={false}>
+                                            <span>{file.nome}</span>
+                                            <aside>
+                                              <span>
+                                                {convertBytesToKB(file.size)} kb
+                                              </span>{" "}
+                                              <GetApp
+                                                className="downloadIconPrev"
+                                                onClick={() =>
+                                                  downloadFile(file.id)
+                                                }
+                                              />
+                                            </aside>
+                                          </FileMetaData>
+                                        </div>
+                                      </PreviewContainer>
+                                    );
+                                  })}
                             </PreviewList>
                           </FilePreviewContainer>
                         </Col>
@@ -642,7 +670,9 @@ export default function ParcelaUpdate() {
                           <Input disabled value={values.email.value} />
                         </Col>
                         <Col md="8">
-                          <Label style={{ display: "block" }}>Bcc Email</Label>
+                          <Label style={{ display: "block" }}>
+                            Cópia Email
+                          </Label>
                           <TagsInput
                             onChange={handleTagsinput}
                             tagProps={{
@@ -653,7 +683,6 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
                       <Row />
-
                       <Button
                         style={{
                           paddingLeft: 29,
