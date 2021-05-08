@@ -176,7 +176,7 @@ export const RemoveFileIcon = styled.i`
 export const PreviewContainer = styled.section`
   margin: 0 0 0 0;
   width: 50%;
-  height: 90px;
+  height: 85px;
   border-radius: 6px;
   box-sizing: border-box;
 

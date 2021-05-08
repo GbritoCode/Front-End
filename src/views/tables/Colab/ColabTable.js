@@ -195,7 +195,7 @@ class colabTable extends Component {
                     return row[id] !== undefined
                       ? String(row[id])
                           .toLowerCase()
-                          .startsWith(filter.value.toLowerCase())
+                          .includes(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"
