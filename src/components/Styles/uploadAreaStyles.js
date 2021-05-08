@@ -131,7 +131,7 @@ export const FilePreviewContainer = styled.article`
   margin-bottom: 35px;
 
   span {
-    font-size: 10px;
+    font-size: 8px;
   }
 `;
 
@@ -155,9 +155,10 @@ export const FileMetaData = styled.div`
   padding: 10px;
   border-radius: 6px;
   color: white;
-  font-weight: bold;
   background-color: rgba(5, 5, 5, 0.55);
-
+  span {
+    font-size: 8px;
+  }
   aside {
     margin-top: auto;
     display: flex;
@@ -175,8 +176,8 @@ export const RemoveFileIcon = styled.i`
 
 export const PreviewContainer = styled.section`
   margin: 0 0 0 0;
-  width: 47.5%;
-  height: 69px;
+  width: 40%;
+  height: 64px;
   border-radius: 6px;
   box-sizing: border-box;
 
