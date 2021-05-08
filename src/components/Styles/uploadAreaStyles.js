@@ -138,7 +138,6 @@ export const FilePreviewContainer = styled.article`
 export const PreviewList = styled.section`
   display: flex;
   flex-wrap: wrap;
-
   @media only screen and (max-width: 400px) {
     flex-direction: column;
   }
@@ -146,6 +145,7 @@ export const PreviewList = styled.section`
 
 export const FileMetaData = styled.div`
   display: ${props => (props.isImageFile ? "none" : "flex")};
+  width: 95%;
   flex-direction: column;
   position: absolute;
   top: 0;
@@ -156,9 +156,7 @@ export const FileMetaData = styled.div`
   border-radius: 6px;
   color: white;
   background-color: rgba(5, 5, 5, 0.55);
-  span {
-    font-size: 8px;
-  }
+  font-size: 8px;
   aside {
     margin-top: auto;
     display: flex;
@@ -176,7 +174,7 @@ export const RemoveFileIcon = styled.i`
 
 export const PreviewContainer = styled.section`
   margin: 0 0 0 0;
-  width: 40%;
+  width: 50%;
   height: 64px;
   border-radius: 6px;
   box-sizing: border-box;
@@ -210,6 +208,6 @@ export const PreviewContainer = styled.section`
 
 export const ImagePreview = styled.img`
   border-radius: 6px;
-  width: 100%;
+  width: 95%;
   height: 100%;
 `;
