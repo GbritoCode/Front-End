@@ -836,7 +836,6 @@ export default function CotacaoCadastro() {
                       <Row>
                         <Col md="12">
                           <FileUploadContainer>
-                            <DragDropText style={{ color: "grey" }} />
                             <UploadFileBtn
                               type="button"
                               onClick={handleUploadBtnClick}

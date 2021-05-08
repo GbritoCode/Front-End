@@ -131,7 +131,7 @@ export const FilePreviewContainer = styled.article`
   margin-bottom: 35px;
 
   span {
-    font-size: 14px;
+    font-size: 10px;
   }
 `;
 
@@ -176,7 +176,7 @@ export const RemoveFileIcon = styled.i`
 export const PreviewContainer = styled.section`
   margin: 0 0 0 0;
   width: 47.5%;
-  height: 85px;
+  height: 69px;
   border-radius: 6px;
   box-sizing: border-box;
 
