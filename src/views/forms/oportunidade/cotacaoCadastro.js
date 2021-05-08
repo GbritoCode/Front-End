@@ -836,15 +836,15 @@ export default function CotacaoCadastro() {
                       <Row>
                         <Col md="12">
                           <FileUploadContainer>
-                            <DragDropText style={{ color: "grey" }}>
-                              Arraste e solte ou
-                            </DragDropText>
+                            <DragDropText style={{ color: "grey" }} />
                             <UploadFileBtn
                               type="button"
                               onClick={handleUploadBtnClick}
                             >
                               <i className="fas fa-file-upload" />
-                              <span>Selecione um arquivo </span>
+                              <span>
+                                Arraste e solte ou selecione um arquivo{" "}
+                              </span>
                             </UploadFileBtn>
                             <FormField
                               type="file"
