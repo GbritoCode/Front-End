@@ -32,13 +32,7 @@ import {
   Label,
   FormGroup
 } from "reactstrap";
-import {
-  ArrowBackIos,
-  Close,
-  FilterList,
-  Message,
-  SearchOutlined
-} from "@material-ui/icons";
+import { ArrowBackIos, Close, FilterList, Message } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
