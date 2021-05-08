@@ -35,6 +35,7 @@ import {
 import {
   ArrowBackIos,
   Close,
+  FilterList,
   Message,
   SearchOutlined
 } from "@material-ui/icons";
@@ -356,7 +357,7 @@ export default class HorasTable extends Component {
                         this.toggleModalFilter();
                       }}
                     >
-                      <SearchOutlined />
+                      <FilterList />
                     </Button>
                   </Tooltip>
                   <Tooltip title="Voltar">

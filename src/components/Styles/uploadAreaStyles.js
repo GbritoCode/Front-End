@@ -40,6 +40,8 @@ export const DragDropText = styled.p`
   letter-spacing: 2px;
   margin-top: 0;
   text-align: center;
+  font-weight: 10;
+  color: blue;
 `;
 
 export const UploadFileBtn = styled.button`
@@ -136,7 +138,6 @@ export const FilePreviewContainer = styled.article`
 export const PreviewList = styled.section`
   display: flex;
   flex-wrap: wrap;
-  margin-top: 10px;
 
   @media only screen and (max-width: 400px) {
     flex-direction: column;
@@ -173,10 +174,9 @@ export const RemoveFileIcon = styled.i`
 `;
 
 export const PreviewContainer = styled.section`
-  padding: 0.25rem;
-  margin: 7px 0 0 0;
+  margin: 0 0 0 0;
   width: 50%;
-  height: 155px;
+  height: 90px;
   border-radius: 6px;
   box-sizing: border-box;
 
@@ -203,7 +203,7 @@ export const PreviewContainer = styled.section`
 
   @media only screen and (max-width: 400px) {
     width: 100%;
-    padding: 0 0 0.4em;
+    padding: 0 0 0 0;
   }
 `;
 

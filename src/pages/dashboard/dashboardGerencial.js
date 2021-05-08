@@ -520,7 +520,7 @@ class DashboardGerencial extends React.Component {
                             >
                               <input name="options" type="radio" />
                               <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                                À receber
+                                À pagar
                               </span>
                               <span className="d-block d-sm-none">
                                 <i className="tim-icons icon-tap-02" />

@@ -105,7 +105,7 @@ export default function CotacaoCadastro() {
         );
         setData1(response1.data);
         setData3(response3.data);
-        setData4([{ id: response4.data.id + 1 }]);
+        setData4({ id: response4.data.id + 1 });
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.id },
@@ -122,6 +122,7 @@ export default function CotacaoCadastro() {
         setData1(response1.data);
         setData3(response3.data);
         setData4(response2.data);
+        setData4(prevState => ({ ...prevState, id: response2.data[0].id + 1 }));
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response2.data[0].EmpresaId },
@@ -158,6 +159,7 @@ export default function CotacaoCadastro() {
     loadData();
   }, [id]);
 
+  console.log(data4);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -488,12 +490,12 @@ export default function CotacaoCadastro() {
 
       if (values.motivo.value === "1") {
         await api.post(
-          `/files/oport/cotacao/?id=${data4[0].id}&oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data4.id}&oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
           formData
         );
       } else {
         await api.post(
-          `/files/oport/cotacao/?id=${data4[0].id}&oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data4.id}&oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
           formData
         );
       }
@@ -834,7 +836,9 @@ export default function CotacaoCadastro() {
                       <Row>
                         <Col md="12">
                           <FileUploadContainer>
-                            <DragDropText>Arraste e solte ou</DragDropText>
+                            <DragDropText style={{ color: "grey" }}>
+                              Arraste e solte ou
+                            </DragDropText>
                             <UploadFileBtn
                               type="button"
                               onClick={handleUploadBtnClick}

@@ -580,7 +580,9 @@ export default function ParcelaUpdate() {
                       <Row>
                         <Col md="12">
                           <FileUploadContainer>
-                            <DragDropText>Arraste e solte ou</DragDropText>
+                            <DragDropText style={{ color: "grey" }}>
+                              Arraste e solte ou
+                            </DragDropText>
                             <UploadFileBtn
                               type="button"
                               onClick={handleUploadBtnClick}
