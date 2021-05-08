@@ -73,9 +73,9 @@ export default function Notifications() {
             <DropdownItem toggle={false} className="nav-item">
               <div className="testando">
                 {notification.content.split(",")[0]}
-                <br />
-                {notification.content.split(",")[1]}
                 <p />
+                {notification.content.split(",")[1]}
+                <br />
 
                 {notification.content.split(",")[2]}
               </div>
