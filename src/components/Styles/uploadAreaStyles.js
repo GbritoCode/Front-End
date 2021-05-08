@@ -3,7 +3,8 @@ import styled from "styled-components";
 export const FileUploadContainer = styled.section`
   position: relative;
   width: 66.67%;
-  margin: 0px 0 15px;
+  margin: 0 0 15px;
+  margin-right: 5px;
   border: 2px dotted lightgray;
   padding: 9px 20px;
   border-radius: 6px;
@@ -128,7 +129,7 @@ export const UploadFileBtn = styled.button`
 `;
 
 export const FilePreviewContainer = styled.article`
-  margin-bottom: 35px;
+  margin-bottom: 15px;
 
   span {
     font-size: 8px;
