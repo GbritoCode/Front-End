@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import classNames from "classnames";
 import {
   Button,
   Card,
@@ -32,6 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { GetApp } from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { cotacaoUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -43,9 +46,11 @@ function CotacaoUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [data, setData] = useState();
   const [data1, setData1] = useState({ nome: undefined });
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState();
+  const [disabledField, setDisabledField] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -70,6 +75,7 @@ function CotacaoUpdate() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/cotacao/aux/${id}`);
+      setData(response.data);
 
       if (response.data === null) {
         setIsLoading(false);
@@ -80,6 +86,7 @@ function CotacaoUpdate() {
         );
         setData1(response1.data);
         setData2(response2.data);
+        setDisabledField(response2.data.fase >= 5);
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.EmpresaId },
@@ -116,6 +123,19 @@ function CotacaoUpdate() {
     }
     loadData();
   }, [id]);
+  const downloadFile = async () => {
+    for (const file of data.CotacaoFiles) {
+      const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${file.id}/?table=cotacao`;
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file", "");
+      document.body.appendChild(link);
+      link.click();
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+    }
+  };
 
   function getCliData(cobranca) {
     api
@@ -299,6 +319,22 @@ function CotacaoUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Tooltip
+                      title="Download do Arquivo Anexado"
+                      placement="top"
+                      interactive
+                    >
+                      <Button
+                        style={{ float: "right" }}
+                        color="default"
+                        size="sm"
+                        onClick={() => downloadFile()}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <GetApp />
+                      </Button>
+                    </Tooltip>
+
                     <h3 style={{ marginBottom: 0 }}>Cotação</h3>
                     <p style={{ fontSize: 11 }}>
                       {data2.cod} | {data2.desc}
@@ -315,6 +351,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.probVend.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="probVend"
                               type="select"
                               onChange={event =>
@@ -344,6 +381,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.tipoCobranca.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="tipoCobranca"
                               type="select"
                               onChange={event =>
@@ -374,6 +412,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.hrsPrevst.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="hrsPrevst"
                               type="numeric"
                               onChange={event => {
@@ -431,6 +470,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.vlrDesc.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="vlrDesc"
                               type="text"
                               onChange={event => {
@@ -497,6 +537,7 @@ function CotacaoUpdate() {
                             className={`has-label ${values.numParcelas.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="numParcelas"
                               type="select"
                               onChange={event =>
@@ -533,6 +574,7 @@ function CotacaoUpdate() {
                           <FormGroup check>
                             <Label check>
                               <Input
+                                disabled={disabledField}
                                 checked={checkOrcamento(values)}
                                 name="motivo"
                                 type="radio"
@@ -545,6 +587,7 @@ function CotacaoUpdate() {
                             </Label>
                             <Label check>
                               <Input
+                                disabled={disabledField}
                                 checked={checkDesc(values)}
                                 name="motivo"
                                 type="radio"
@@ -557,6 +600,7 @@ function CotacaoUpdate() {
                             </Label>
                             <Label check>
                               <Input
+                                disabled={disabledField}
                                 checked={checkEscopo(values)}
                                 name="motivo"
                                 type="radio"
@@ -578,6 +622,7 @@ function CotacaoUpdate() {
                             className={`has-label ${optional.desc.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="desc"
                               type="textarea"
                               onChange={event =>
@@ -614,25 +659,29 @@ function CotacaoUpdate() {
                           Voltar
                         </Button>
                       </Link>
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                      {data2.fase >= 5 ? (
+                        <></>
+                      ) : (
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      )}
                     </Form>
                   </CardBody>
                 </Card>

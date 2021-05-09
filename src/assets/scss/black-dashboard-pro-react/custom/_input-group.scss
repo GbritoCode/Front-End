@@ -341,3 +341,11 @@ textarea.form-control {
     font-size: $font-paragraph;
   }
 }
+
+Input.form-control-file{
+  border: 2px solid black;
+  background: aliceblue;
+  height: 75px;
+  border-radius: 0.4285rem;
+}
+

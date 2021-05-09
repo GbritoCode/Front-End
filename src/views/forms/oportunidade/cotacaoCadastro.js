@@ -32,6 +32,17 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { useParams, Link } from "react-router-dom";
+import {
+  FileUploadContainer,
+  FormField,
+  UploadFileBtn,
+  FilePreviewContainer,
+  ImagePreview,
+  PreviewContainer,
+  PreviewList,
+  FileMetaData,
+  RemoveFileIcon
+} from "../../../components/Styles/uploadAreaStyles";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { store } from "~/store";
 import {
@@ -39,13 +50,17 @@ import {
   oportUpdate
 } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
+import TagsInput from "~/components/Tags/TagsInput";
 
 export default function CotacaoCadastro() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+  const fileInputField = useRef(null);
 
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [tagsinput, settagsinput] = useState([]);
+  const [string, setString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [auxState, setAuxState] = useState(false);
   const [disabledVlrProp, setDisabledVlrProp] = useState();
@@ -65,11 +80,14 @@ export default function CotacaoCadastro() {
     recLiq: { value: "", error: "", message: "" },
     prevLucro: { value: "", error: "", message: "" },
     numParcelas: { value: "", error: "", message: "" },
-    motivo: { value: 1, error: "", message: "" }
+    motivo: { value: "1", error: "", message: "" },
+    email: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     desc: { value: "", error: "", message: "" }
   };
+  const [files, setFile] = useState([]);
+  const [filesAux, setFileAux] = useState({});
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
@@ -80,20 +98,30 @@ export default function CotacaoCadastro() {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
-        setData3(response3.data);
+        const response4 = await api.get(`/cotacao/?last=true`);
+        const response5 = await api.get(
+          `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
+        );
         setData1(response1.data);
+        setData3(response3.data);
+        setData4({ id: response4.data.id + 1 });
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.id },
-          OportunidadeId: { value: response1.data.id }
+          OportunidadeId: { value: response1.data.id },
+          email: { value: response5.data.email }
         }));
         setAuxState(true);
       } else {
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
+        const response5 = await api.get(
+          `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
+        );
+        setData1(response1.data);
         setData3(response3.data);
         setData4(response2.data);
-        setData1(response1.data);
+        setData4(prevState => ({ ...prevState, id: response2.data[0].id + 1 }));
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response2.data[0].EmpresaId },
@@ -117,7 +145,8 @@ export default function CotacaoCadastro() {
             value: normalizeCalcCurrency(response2.data[0].prevLucro)
           },
           numParcelas: { value: response2.data[0].numParcelas },
-          motivo: { value: response2.data[0].motivo }
+          motivo: { value: response2.data[0].motivo },
+          email: { value: response5.data.email }
         }));
         setOptional(prevState => ({
           ...prevState,
@@ -128,11 +157,56 @@ export default function CotacaoCadastro() {
     }
     loadData();
   }, [id]);
+
+  console.log(data4);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
+
+  const convertBytesToKB = bytes => Math.round(bytes / 1000);
+  const handleUploadBtnClick = () => {
+    fileInputField.current.click();
+  };
+
+  const addNewFiles = newFiles => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const file of newFiles) {
+      files.push(file);
+      filesAux[file.name] = file;
+    }
+    return { ...filesAux };
+  };
+  const handleNewFileUpload = e => {
+    const { files: newFiles } = e.target;
+    if (newFiles.length) {
+      if (files.length < 2) {
+        const updatedFiles = addNewFiles(newFiles);
+        console.log(updatedFiles);
+        setFileAux(updatedFiles);
+      } else {
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>Ops! Você só pode anexar 2 arquivos em cada email</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      }
+    }
+  };
+  const removeFile = fileName => {
+    setFile(files.filter(obj => obj.name !== fileName));
+    delete filesAux[fileName];
+    setFileAux({ ...filesAux });
+  };
+
   function getCliData(cobranca) {
     if (!(cobranca === "2" || cobranca === 2)) {
       setDisabledVlrProp(true);
@@ -226,11 +300,9 @@ export default function CotacaoCadastro() {
       default:
     }
   };
+
   const descontoChange = descont => {
-    if (
-      document.getElementsByName("tipoCobranca")[0].value === "2" &&
-      data2.valorRec
-    ) {
+    if (document.getElementsByName("tipoCobranca")[0].value === "2") {
       const imposto =
         (data3.IRPJ +
           data3.CSLL +
@@ -268,8 +340,10 @@ export default function CotacaoCadastro() {
       return;
     }
     if (
-      !(document.getElementsByName("tipoCobranca")[0].value === "2") &&
-      data2.valorRec
+      !(
+        document.getElementsByName("tipoCobranca")[0].value === "2" &&
+        data2.valorRec
+      )
     ) {
       const imposto =
         (data3.IRPJ +
@@ -307,7 +381,34 @@ export default function CotacaoCadastro() {
     }
   };
 
-  const handleSubmit = evt => {
+  const handleTagsinput = value => {
+    const verifyEmail = email => {
+      var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (emailRex.test(email)) {
+        return true;
+      }
+      return false;
+    };
+    if (verifyEmail(value[value.length - 1])) {
+      setString(`${value}`);
+      settagsinput(value);
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Digite um email válido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
+    }
+  };
+
+  const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -340,6 +441,12 @@ export default function CotacaoCadastro() {
       var recLiqdb = values.recLiq.value.replace(/[.,]+/g, "");
       var prevLucrodb = values.prevLucro.value.replace(/[.,]+/g, "");
 
+      const formData = new FormData();
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const file of files) {
+        formData.append("file", file);
+      }
       dispatch(
         cotacaoRequest(
           values.empresaId.value,
@@ -357,6 +464,7 @@ export default function CotacaoCadastro() {
           optional.desc.value
         )
       );
+
       dispatch(
         oportUpdate(
           data1.id,
@@ -375,6 +483,21 @@ export default function CotacaoCadastro() {
           data1.narrativa
         )
       );
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+
+      if (values.motivo.value === "1") {
+        await api.post(
+          `/files/oport/cotacao/?id=${data4.id}&oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
+          formData
+        );
+      } else {
+        await api.post(
+          `/files/oport/cotacao/?id=${data4.id}&oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+          formData
+        );
+      }
     } else {
       options = {
         place: "tr",
@@ -707,6 +830,75 @@ export default function CotacaoCadastro() {
                               </Label>
                             ) : null}
                           </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <FileUploadContainer>
+                            <UploadFileBtn
+                              type="button"
+                              onClick={handleUploadBtnClick}
+                            >
+                              <i className="fas fa-file-upload" />
+                              <span>
+                                Arraste e solte ou selecione um arquivo{" "}
+                              </span>
+                            </UploadFileBtn>
+                            <FormField
+                              type="file"
+                              ref={fileInputField}
+                              onChange={handleNewFileUpload}
+                              title=""
+                              value=""
+                            />
+                          </FileUploadContainer>
+                          <FilePreviewContainer>
+                            <PreviewList>
+                              {Object.keys(filesAux).map((fileName, index) => {
+                                const file = filesAux[fileName];
+                                const isImageFile =
+                                  file.type.split("/")[0] === "image";
+                                return (
+                                  <PreviewContainer key={fileName}>
+                                    <div>
+                                      {isImageFile && (
+                                        <ImagePreview
+                                          src={URL.createObjectURL(file)}
+                                          alt={`file preview ${index}`}
+                                        />
+                                      )}
+                                      <FileMetaData isImageFile={isImageFile}>
+                                        <span>{file.name}</span>
+                                        <aside>
+                                          {convertBytesToKB(file.size)} kb
+                                          <RemoveFileIcon
+                                            className="fas fa-trash-alt"
+                                            onClick={() => removeFile(fileName)}
+                                          />
+                                        </aside>
+                                      </FileMetaData>
+                                    </div>
+                                  </PreviewContainer>
+                                );
+                              })}
+                            </PreviewList>
+                          </FilePreviewContainer>
+                        </Col>
+                      </Row>{" "}
+                      <Row>
+                        <Col md="4">
+                          <Label>Email Principal</Label>
+                          <Input disabled value={values.email.value} />
+                        </Col>
+                        <Col md="8">
+                          <Label style={{ display: "block" }}>Bcc Email</Label>
+                          <TagsInput
+                            onChange={handleTagsinput}
+                            tagProps={{
+                              className: "react-tagsinput-tag "
+                            }}
+                            value={tagsinput}
+                          />
                         </Col>
                       </Row>
                       <Link to="/tabelas/oportunidade/oport">

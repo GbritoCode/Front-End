@@ -32,12 +32,7 @@ import {
   Label,
   FormGroup
 } from "reactstrap";
-import {
-  ArrowBackIos,
-  Close,
-  Message,
-  SearchOutlined
-} from "@material-ui/icons";
+import { ArrowBackIos, Close, Message, FilterList } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
@@ -411,7 +406,7 @@ export default class GerencialHorasTable extends Component {
                         this.toggleModalFilter();
                       }}
                     >
-                      <SearchOutlined />
+                      <FilterList />
                     </Button>
                   </Tooltip>
                   <Tooltip title="Voltar">

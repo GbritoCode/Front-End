@@ -175,8 +175,8 @@ class Sidebar extends React.Component {
             onClick={this.props.closeSidebar}
             style={{width:120}}
           >
-            <div className="logo-img">
-              <img style={{width:120}} hidden={logo.hidden} src={logo.imgSrc} alt="react-logo" />
+            <div className="logo-img-big">
+              <img hidden={logo.hidden} src={logo.imgSrc} alt="react-logo" />
             </div>
           </NavLink>
         );
@@ -188,7 +188,7 @@ class Sidebar extends React.Component {
             style={{paddingLeft: 0, marginLeft: 0, position:"absolute"}}
           >
             <div className="logo-img">
-              <img style={{width:50}} hidden={logoMini.hidden} src={logoMini.imgSrc} alt="react-logo" />
+              <img style={{width:40}} hidden={logoMini.hidden} src={logoMini.imgSrc} alt="react-logo" />
             </div>
           </NavLink>
         );
@@ -199,9 +199,7 @@ class Sidebar extends React.Component {
             className="simple-text logo-normal"
             target="_blank"
             onClick={this.props.closeSidebar}
-            style={{width:"calc(100%-30px)",paddingTop:20, position:"relative"}}
           >
-          {logo.text}
           </a>
           </div>
         );
@@ -223,7 +221,7 @@ class Sidebar extends React.Component {
             className="simple-text logo-normal"
             onClick={this.props.closeSidebar}
           >
-            {logo.text}
+            {' '}
           </NavLink>
         );
       }

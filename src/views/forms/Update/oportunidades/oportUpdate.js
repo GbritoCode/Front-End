@@ -52,6 +52,7 @@ export default function UpdateOport() {
   const firstRender = useRef(true);
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [disabledField, setDisabledField] = useState();
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -59,6 +60,7 @@ export default function UpdateOport() {
   const [data5, setData5] = useState([]);
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
+  const [data8, setData8] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -92,6 +94,7 @@ export default function UpdateOport() {
       const response3 = await api.get(
         `/cliente/cont/${response8.data.ClienteId}`
       );
+      setDisabledField(response8.data.fase >= 5);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -99,6 +102,7 @@ export default function UpdateOport() {
       setData5(response5.data);
       setData6(response6.data);
       setData7(response7.data);
+      setData8(response8.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -138,6 +142,12 @@ export default function UpdateOport() {
     }
     if (value == 4) {
       return "Aprovada";
+    }
+    if (value == 5) {
+      return "Reprovada";
+    }
+    if (value == 6) {
+      return "Finalizada";
     }
   };
   function getContato(cliente) {
@@ -203,7 +213,7 @@ export default function UpdateOport() {
   };
 
   function checkAprovada(fase) {
-    if (fase == 4 && firstRender.current) {
+    if ((fase == 4 || fase >= 5) && firstRender.current) {
       return (
         <>
           <Link to={`/tabelas/oportunidade/recurso/${id}`}>
@@ -311,7 +321,9 @@ export default function UpdateOport() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /> </>
+        <>
+          <div className="content" />{" "}
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -369,6 +381,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.data.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="name_abv"
                               type="date"
                               onChange={event =>
@@ -405,6 +418,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.ClienteId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="ClienteId"
                               type="select"
                               onChange={event =>
@@ -439,6 +453,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.contato.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="contato"
                               type="select"
                               onChange={event =>
@@ -471,6 +486,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.RepresentanteId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="RepresentanteId"
                               type="select"
                               onChange={event =>
@@ -505,6 +521,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.UndNegId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="UndNegId"
                               type="select"
                               onChange={event =>
@@ -537,6 +554,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.RecDespId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="RecDespId"
                               type="select"
                               onChange={event =>
@@ -569,6 +587,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.segmetId.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="segmetId"
                               type="select"
                               onChange={event =>
@@ -624,6 +643,7 @@ export default function UpdateOport() {
                             className={`has-label ${values.desc.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="desc"
                               type="text"
                               onChange={event =>
@@ -646,6 +666,7 @@ export default function UpdateOport() {
                             className={`has-label ${optional.narrativa.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="narrativa"
                               type="textarea"
                               onChange={event =>
@@ -661,7 +682,13 @@ export default function UpdateOport() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tabelas/oportunidade/oport">
+                      <Link
+                        to={
+                          data8.fase < 5
+                            ? "/tabelas/oportunidade/oport"
+                            : "/tabelas/oportunidade/finOport"
+                        }
+                      >
                         <Button
                           style={{
                             paddingLeft: 32,
@@ -682,25 +709,29 @@ export default function UpdateOport() {
                           Voltar
                         </Button>
                       </Link>
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                      {data8.fase >= 5 ? (
+                        <></>
+                      ) : (
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      )}
                     </Form>
                   </CardBody>
                 </Card>

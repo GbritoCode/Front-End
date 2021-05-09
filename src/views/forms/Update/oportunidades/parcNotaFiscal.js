@@ -32,15 +32,28 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { GetApp } from "@material-ui/icons";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
 import history from "~/services/history";
-
+import TagsInput from "~/components/Tags/TagsInput";
+import {
+  FileUploadContainer,
+  FormField,
+  UploadFileBtn,
+  FilePreviewContainer,
+  ImagePreview,
+  PreviewContainer,
+  PreviewList,
+  FileMetaData,
+  RemoveFileIcon
+} from "../../../../components/Styles/uploadAreaStyles";
 /* eslint-disable eqeqeq */
 export default function ParcelaUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+  const fileInputField = useRef(null);
 
   // eslint-disable-next-line no-extend-native
   Date.prototype.addDays = function(days) {
@@ -51,8 +64,14 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [disabledField, setDisabledField] = useState();
+  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [data3, setData3] = useState({});
+  const [tagsinput, settagsinput] = useState([]);
+
+  const [string, setString] = useState("");
+
   const [isLoading, setIsLoading] = useState(true);
   const today = new Date();
   const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
@@ -67,7 +86,8 @@ export default function ParcelaUpdate() {
       error: "",
       message: ""
     },
-    notaFiscal: { value: "", error: "", message: "" }
+    notaFiscal: { value: "", error: "", message: "" },
+    email: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     pedidoCliente: { value: "Não informado", error: "", message: "" },
@@ -76,11 +96,23 @@ export default function ParcelaUpdate() {
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" }
   };
+  const [filesAux, setFileAux] = useState({});
+  const [filePreview, setFilePreview] = useState([]);
+  const [files, setFile] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
   const query = new URLSearchParams(useLocation().search);
   const fromDash = query.get("fromDash");
+
+  const downloadFile = async fileId => {
+    const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${fileId}/?table=parcelas`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -94,6 +126,19 @@ export default function ParcelaUpdate() {
       const response3 = await api.get(
         `/condPgmto/${response2.data.CondPgmtoId}`
       );
+      const response4 = await api.get(
+        `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
+      );
+
+      if (response.data.situacao > 1) {
+        const response5 = await api.get(
+          `/download/oport/getPreview/${response.data.id}/?table=parcelas`
+        );
+        setFilePreview(response5.data);
+        setFile(response5.data);
+      }
+      setDisabledField(response.data.situacao > 1);
+      setData(response.data);
       setData1(response1.data);
       setData3(response3.data);
       const [dateVenc, monthVenc, yearVenc] = new Date()
@@ -111,7 +156,8 @@ export default function ParcelaUpdate() {
           value:
             response.data.dtVencimento || `${yearVenc}-${monthVenc}-${dateVenc}`
         },
-        notaFiscal: { value: response.data.notaFiscal }
+        notaFiscal: { value: response.data.notaFiscal },
+        email: { value: response4.data.email }
       }));
 
       setOptional(prevState => ({
@@ -134,12 +180,88 @@ export default function ParcelaUpdate() {
     }
     loadData();
   }, [data3.diasPrazo, id]);
+
+  var options = {};
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
+  const convertBytesToKB = bytes => Math.round(bytes / 1000);
+  const handleUploadBtnClick = () => {
+    fileInputField.current.click();
+  };
+
+  const addNewFiles = newFiles => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const file of newFiles) {
+      files.push(file);
+      filesAux[file.name] = file;
+    }
+    return { ...filesAux };
+  };
+  const handleNewFileUpload = e => {
+    const { files: newFiles } = e.target;
+    if (newFiles.length) {
+      if (files.length < 2) {
+        const updatedFiles = addNewFiles(newFiles);
+        console.log(updatedFiles);
+        setFileAux(updatedFiles);
+      } else {
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>Ops! Você só pode anexar 2 arquivos em cada email</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      }
+    }
+  };
+  const removeFile = fileName => {
+    setFile(files.filter(obj => obj.name !== fileName));
+    delete filesAux[fileName];
+    setFileAux({ ...filesAux });
+  };
+
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
     }
     return false;
+  };
+
+  const handleTagsinput = value => {
+    const verifyEmail = email => {
+      var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (emailRex.test(email)) {
+        return true;
+      }
+      return false;
+    };
+    if (verifyEmail(value[value.length - 1])) {
+      setString(`${value}`);
+      settagsinput(value);
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Digite um email válido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
+    }
   };
 
   const handleChange = (event, name, type) => {
@@ -184,12 +306,8 @@ export default function ParcelaUpdate() {
       default:
     }
   };
-  var options = {};
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
-  const handleSubmit = evt => {
+
+  const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -221,6 +339,10 @@ export default function ParcelaUpdate() {
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
       const status = !!fromDash;
 
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append("file", file);
+      }
       dispatch(
         parcelaUpdate(
           id,
@@ -238,6 +360,19 @@ export default function ParcelaUpdate() {
           status
         )
       );
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(1500);
+      if (data.situacao > 1) {
+        await api.post(
+          `/emailResend/oport/cotacao/?id=${data.id}&tipo=parcela&situacao=fatura`
+        );
+      } else {
+        await api.post(
+          `/files/oport/cotacao/?id=${data.id}&oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
+          formData
+        );
+      }
     } else {
       options = {
         place: "tr",
@@ -330,7 +465,8 @@ export default function ParcelaUpdate() {
                             className={`has-label ${values.dtEmissao.error}`}
                           >
                             <Input
-                              autoFocus
+                              disabled={disabledField}
+                              autoFocus={!disabledField}
                               name="dtEmissao"
                               type="date"
                               onChange={event =>
@@ -374,6 +510,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${values.notaFiscal.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="notaFiscal"
                               type="text"
                               onChange={event =>
@@ -394,6 +531,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.pedidoCliente.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="pedidoCliente"
                               type="text"
                               onChange={event => {
@@ -418,6 +556,7 @@ export default function ParcelaUpdate() {
                           <Label>Situação</Label>
                           <FormGroup style={{ marginBottom: 25 }} check>
                             <Input
+                              disabled
                               name="situacao"
                               type="select"
                               onChange={event =>
@@ -437,7 +576,111 @@ export default function ParcelaUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
-
+                      <Row>
+                        <Col md="12">
+                          <FileUploadContainer>
+                            <UploadFileBtn
+                              type="button"
+                              onClick={handleUploadBtnClick}
+                            >
+                              <i className="fas fa-file-upload" />
+                              <span>
+                                Arraste e solte ou selecione um arquivo{" "}
+                              </span>{" "}
+                            </UploadFileBtn>
+                            <FormField
+                              type="file"
+                              ref={fileInputField}
+                              onChange={handleNewFileUpload}
+                              title=""
+                              value=""
+                            />
+                          </FileUploadContainer>
+                          <FilePreviewContainer>
+                            <PreviewList>
+                              {data.situacao <= 1
+                                ? Object.keys(filesAux).map(
+                                    (fileName, index) => {
+                                      const file = filesAux[fileName];
+                                      const isImageFile =
+                                        file.type.split("/")[0] === "image";
+                                      return (
+                                        <PreviewContainer key={fileName}>
+                                          <div>
+                                            {isImageFile && (
+                                              <ImagePreview
+                                                src={URL.createObjectURL(file)}
+                                                alt={`file preview ${index}`}
+                                              />
+                                            )}
+                                            <FileMetaData
+                                              isImageFile={isImageFile}
+                                            >
+                                              <span>{file.name}</span>
+                                              <aside>
+                                                <span>
+                                                  {convertBytesToKB(file.size)}{" "}
+                                                  kb
+                                                </span>{" "}
+                                                <RemoveFileIcon
+                                                  className="fas fa-trash-alt"
+                                                  onClick={() =>
+                                                    removeFile(fileName)
+                                                  }
+                                                />
+                                              </aside>
+                                            </FileMetaData>
+                                          </div>
+                                        </PreviewContainer>
+                                      );
+                                    }
+                                  )
+                                : filePreview.map(file => {
+                                    console.log(file);
+                                    return (
+                                      <PreviewContainer key={file.nome}>
+                                        <div>
+                                          <FileMetaData isImageFile={false}>
+                                            <span>{file.nome}</span>
+                                            <aside>
+                                              <span>
+                                                {convertBytesToKB(file.size)} kb
+                                              </span>{" "}
+                                              <GetApp
+                                                className="downloadIconPrev"
+                                                onClick={() =>
+                                                  downloadFile(file.id)
+                                                }
+                                              />
+                                            </aside>
+                                          </FileMetaData>
+                                        </div>
+                                      </PreviewContainer>
+                                    );
+                                  })}
+                            </PreviewList>
+                          </FilePreviewContainer>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Email Principal</Label>
+                          <Input disabled value={values.email.value} />
+                        </Col>
+                        <Col md="8">
+                          <Label style={{ display: "block" }}>
+                            Cópia Email
+                          </Label>
+                          <TagsInput
+                            onChange={handleTagsinput}
+                            tagProps={{
+                              className: "react-tagsinput-tag "
+                            }}
+                            value={tagsinput}
+                          />
+                        </Col>
+                      </Row>
+                      <Row />
                       <Button
                         style={{
                           paddingLeft: 29,

@@ -1,6 +1,18 @@
 .sidebar .logo .logo-mini .logo-img img {
   width: 80px;
 }
+ .logo-img-big img {
+  width: 215px;
+  position: relative;
+  // top: 79px ;
+  // right: 1336.790px;
+   bottom: 19px;
+   left: 9px;
+}
+.logo-img-big {
+  width: 142px;
+}
+
 .perfect-scrollbar-on {
   .sidebar {
     height: 80%;

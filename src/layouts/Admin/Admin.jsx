@@ -28,7 +28,7 @@ import Sidebar from "~/components/Sidebar/Sidebar.jsx";
 import routes from "~/routes/routes";
 
 import logo from "~/assets/img/tovoLogo.png";
-import logoMini from "~/assets/img/fav icon azul.png";
+import logoMini from "~/assets/img/raposa2.png";
 import FooterSigned from "~/components/Footer/FooterSigned";
 
 var ps;

@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import classNames from "classnames";
 import {
   Button,
   Card,
@@ -32,6 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { Tooltip } from "@material-ui/core";
+import { GetApp } from "@material-ui/icons";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -44,6 +47,8 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [disabledField, setDisabledField] = useState();
+  const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
@@ -72,12 +77,28 @@ export default function ParcelaUpdate() {
   const query = new URLSearchParams(useLocation().search);
   const fromDash = query.get("fromDash");
 
+  const downloadFile = async () => {
+    for (const file of data.ParcelaFiles) {
+      const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${file.id}/?table=parcelas`;
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file", "");
+      document.body.appendChild(link);
+      link.click();
+
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parcela/aux/${id}`);
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
+      setDisabledField(response1.data.fase >= 5);
+      setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
@@ -267,6 +288,21 @@ export default function ParcelaUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Tooltip
+                      title="Download do Arquivo Anexado"
+                      placement="top"
+                      interactive
+                    >
+                      <Button
+                        style={{ float: "right" }}
+                        color="default"
+                        size="sm"
+                        onClick={() => downloadFile()}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <GetApp />
+                      </Button>
+                    </Tooltip>
                     <h3 style={{ marginBottom: 0 }}>Liquidação de Parcela</h3>
                     <p style={{ fontSize: 11 }}>
                       {data1.cod} | {data1.desc}
@@ -421,6 +457,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.situacao.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="situacao"
                               type="select"
                               onChange={event =>
@@ -450,6 +487,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.dtLiquidacao.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="dtLiquidacao"
                               type="date"
                               onChange={event => {
@@ -470,6 +508,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.vlrPago.error}`}
                           >
                             <Input
+                              disabled={disabledField}
                               name="vlrPago"
                               type="text"
                               onChange={event => {
@@ -510,25 +549,29 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
 
-                      <Button
-                        style={{
-                          paddingLeft: 29,
-                          paddingRight: 30
-                        }}
-                        className="form"
-                        color="info"
-                        type="submit"
-                      >
-                        Enviar{" "}
-                        <i
-                          className="tim-icons icon-send"
+                      {data1.fase >= 5 ? (
+                        <></>
+                      ) : (
+                        <Button
                           style={{
-                            paddingBottom: 4,
-                            paddingLeft: 3
+                            paddingLeft: 29,
+                            paddingRight: 30
                           }}
-                          size="large"
-                        />
-                      </Button>
+                          className="form"
+                          color="info"
+                          type="submit"
+                        >
+                          Enviar{" "}
+                          <i
+                            className="tim-icons icon-send"
+                            style={{
+                              paddingBottom: 4,
+                              paddingLeft: 3
+                            }}
+                            size="large"
+                          />
+                        </Button>
+                      )}
                       <Button
                         style={{
                           paddingLeft: 32,

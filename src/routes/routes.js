@@ -163,6 +163,8 @@ import PeriodTokenTable from "~/views/tables/Fechamento/periodTokenTable";
 import ParcelaPendentesTable from "~/views/tables/oportTables/parcelaPendenteTable";
 import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
+import OportFinTable from "~/views/tables/oportTables/oportFinalizadaTable";
+import Example from "~/views/forms/Update/General/ParametrosEmail";
 
 const checkProfile = profile => {
   switch (profile) {
@@ -280,6 +282,14 @@ const routes = [
         name: "Parametros",
         mini: "PRM",
         component: ParametrosUpdate,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: `/update/general/parametros/email/1`,
+        name: "Emails",
+        mini: "EML",
+        component: Example,
         layout: "/admin",
         profile: 10
       },
@@ -529,6 +539,13 @@ const routes = [
         name: "Oportunidades",
         mini: "OPT",
         component: OportTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/oportunidade/finOport",
+        name: "Finalizadas",
+        mini: "OPF",
+        component: OportFinTable,
         layout: "/admin"
       },
       {

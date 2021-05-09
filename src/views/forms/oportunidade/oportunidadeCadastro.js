@@ -79,7 +79,7 @@ export default function CadastroOport() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
-      const response2 = await api.get(`/cliente/`);
+      const response2 = await api.get(`/cliente/?prospect=false`);
       const response4 = await api.get(`/und_neg/`);
       const response5 = await api.get(`/rec_desp/?rec=true`);
       const response7 = await api.get(`/representante/`);

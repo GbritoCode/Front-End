@@ -245,6 +245,9 @@ class ParcelaAtrasadaTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Parcelas Atrasadas
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    {this.checkData()}
+                  </div>{" "}
                   <Link to="/dashboardGerencial">
                     <Tooltip title="Voltar">
                       <Button
@@ -257,9 +260,6 @@ class ParcelaAtrasadaTable extends Component {
                       </Button>
                     </Tooltip>
                   </Link>
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    {this.checkData()}
-                  </div>{" "}
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -272,7 +272,7 @@ class ParcelaAtrasadaTable extends Component {
                     return row[id] !== undefined
                       ? String(row[id])
                           .toLowerCase()
-                          .startsWith(filter.value.toLowerCase())
+                          .includes(filter.value.toLowerCase())
                       : true;
                   }}
                   previousText="Anterior"

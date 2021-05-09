@@ -36,12 +36,11 @@ import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Close, Message } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
-function OportTable() {
+function OportFinTable() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
@@ -66,7 +65,7 @@ function OportTable() {
   };
   useEffect(() => {
     async function loadData() {
-      const response = await api.get("/oportunidade");
+      const response = await api.get("/oportunidade/?finalizadas=true");
       setData(
         response.data.map((oport, key) => {
           return {
@@ -88,96 +87,7 @@ function OportTable() {
               // we've added some custom button actions
               <>
                 <div className="actions-right">
-                  <Tooltip title="Cotar">
-                    <Button
-                      hidden={oport.fase >= 2}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={async () => {
-                        history.push(
-                          `/cadastro/oportunidade/cotacao/${oport.id}`
-                        );
-                      }}
-                    >
-                      <i className="tim-icons icon-money-coins" />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Revisar">
-                    <Button
-                      hidden={oport.fase > 3 || oport.fase < 2}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        history.push(
-                          `/cadastro/oportunidade/cotacao/${oport.id}`
-                        );
-                      }}
-                    >
-                      <i className="tim-icons icon-bulb-63" />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Aprovar">
-                    <Button
-                      hidden={oport.fase >= 4}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        setAltering({
-                          altering: oport.id,
-                          status: "aprovar",
-                          fase: 4,
-                          textHidden: true
-                        });
-                        setModalMini(!modalMini);
-                      }}
-                    >
-                      <i className="tim-icons icon-spaceship" />
-                    </Button>
-                  </Tooltip>
-                  {oport.fase != 4 ? (
-                    <Tooltip title="Reprovar">
-                      <Button
-                        color="default"
-                        size="sm"
-                        className={classNames("btn-icon btn-link like")}
-                        onClick={() => {
-                          setAltering({
-                            altering: oport.id,
-                            status: "reprovar",
-                            fase: 5,
-                            textHidden: false
-                          });
-                          setModalMini(!modalMini);
-                        }}
-                      >
-                        <i className="tim-icons icon-lock-circle" />
-                      </Button>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Finalizar">
-                      <Button
-                        color="default"
-                        size="sm"
-                        className={classNames("btn-icon btn-link like")}
-                        onClick={() => {
-                          setAltering({
-                            altering: oport.id,
-                            status: "finalizar",
-                            fase: 6,
-                            textHidden: true
-                          });
-                          setModalMini(!modalMini);
-                        }}
-                      >
-                        <i className="tim-icons icon-trophy" />
-                      </Button>
-                    </Tooltip>
-                  )}
-                  {/* use this button to add a edit kind of action */}
-                  <Tooltip title="Editar">
+                  <Tooltip title="Visualizar">
                     <Link to={`/update/oportunidade/oport/${oport.id}`}>
                       <Button
                         color="default"
@@ -188,7 +98,7 @@ function OportTable() {
                           setModalMini(!modalMini);
                         }}
                       >
-                        <i className="tim-icons icon-pencil" />
+                        <i className="tim-icons icon-zoom-split" />
                       </Button>
                     </Link>
                   </Tooltip>
@@ -315,19 +225,7 @@ function OportTable() {
           <Card>
             <CardHeader>
               <CardTitle tag="h4">
-                Oportunidades
-                <Link to="/cadastro/oportunidade/oport">
-                  <Tooltip title="Novo" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AddIcon fontSize="large" />
-                    </Button>
-                  </Tooltip>
-                </Link>
+                Oportunidades Finalizadas/Reprovadas
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -402,4 +300,4 @@ function OportTable() {
   );
 }
 
-export default OportTable;
+export default OportFinTable;

@@ -309,8 +309,9 @@
         }
 
         a.logo-normal{
+            padding-top: 43px;
             text-align: right;
-            display: flexbox;
+            display: block;
             opacity: 1;
             @include transform-translate-x(0px);
         }
@@ -345,7 +346,6 @@
             text-decoration: none;
             font-weight: $font-weight-normal;
             line-height: 30px;
-            overflow: hidden;
         }
     }
 

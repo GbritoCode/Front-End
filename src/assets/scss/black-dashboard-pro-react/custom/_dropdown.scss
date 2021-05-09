@@ -356,6 +356,26 @@
 
 @include media-breakpoint-up(lg){
   .dropdown-menu .dropdown-item{
-    color: $dark-gray;
+    color: black;
+  }
+  .dropdown-menu .dropdown-item .notificationTimeRead{
+    margin-top: 5px;
+    color: rgba(0, 0, 0, 0.5);
+    float: left;
+  }
+  .dropdown-menu .dropdown-item .notificationTimeUnread{
+    margin-top: 5px;
+    color: lightblue;
+    float: left;
+  }
+  .dropdown-menu .dropdown-item .notificationMarkAsRead{
+    margin-top: 5px;
+    background: none;
+    border: 0;
+    color:rgb(28, 13, 99);
+    float: right
+  }
+  .dropdown-menu .dropdown-item .testando{
+    display: block;
   }
 }
