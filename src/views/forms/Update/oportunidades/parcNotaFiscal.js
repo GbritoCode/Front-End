@@ -73,14 +73,13 @@ export default function ParcelaUpdate() {
   const [string, setString] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
-  const today = new Date();
-  const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
+
   // const dtVenc = today
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     parcela: { value: "", error: "", message: "" },
     vlrParcela: { value: "", error: "", message: "" },
-    dtEmissao: { value: `${year}-${month}-${date}`, error: "", message: "" },
+    dtEmissao: { value: ``, error: "", message: "" },
     dtVencimento: {
       value: "",
       error: "",
@@ -141,6 +140,8 @@ export default function ParcelaUpdate() {
       setData(response.data);
       setData1(response1.data);
       setData3(response3.data);
+      const today = new Date();
+      const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
       const [dateVenc, monthVenc, yearVenc] = new Date()
         .addDays(data3.diasPrazo)
         .toLocaleDateString("pt-BR")
@@ -155,6 +156,9 @@ export default function ParcelaUpdate() {
         dtVencimento: {
           value:
             response.data.dtVencimento || `${yearVenc}-${monthVenc}-${dateVenc}`
+        },
+        dtEmissao: {
+          value: response.data.dtEmissao || `${year}-${month}-${date}`
         },
         notaFiscal: { value: response.data.notaFiscal },
         email: { value: response4.data.email }

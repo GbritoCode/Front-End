@@ -58,13 +58,13 @@ class ParametrosTable extends Component {
 
   checkSituacao = parcela => {
     switch (parcela) {
-      case "1":
+      case 1:
         return "Pendente";
-      case "2":
+      case 2:
         return "Aberta";
-      case "3":
+      case 3:
         return "Parcial";
-      case "4":
+      case 4:
         return "Liquidada";
       default:
     }
