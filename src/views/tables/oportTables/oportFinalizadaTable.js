@@ -50,17 +50,20 @@ function OportFinTable() {
   const history = useHistory();
 
   const checkFase = value => {
-    if (value == 1) {
-      return "Aberta";
-    }
-    if (value == 2) {
-      return "Em Cotação";
-    }
-    if (value == 3) {
-      return "Cotada";
-    }
-    if (value == 4) {
-      return "Aprovada";
+    switch (value) {
+      case 1:
+        return "Aberta";
+      case 2:
+        return "Em Cotação";
+      case 3:
+        return "Cotada";
+      case 4:
+        return "Aprovada";
+      case 5:
+        return "Finalizada";
+      case 6:
+        return "Reprovada";
+      default:
     }
   };
   useEffect(() => {

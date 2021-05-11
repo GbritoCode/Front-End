@@ -97,7 +97,7 @@ export default function ParcelaUpdate() {
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
-      setDisabledField(response1.data.fase >= 5);
+      setDisabledField(response1.data.fase >= 5 && response.data.situacao >= 4);
       setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
@@ -549,7 +549,7 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
 
-                      {data1.fase >= 5 ? (
+                      {disabledField ? (
                         <></>
                       ) : (
                         <Button
