@@ -176,6 +176,7 @@ import UpdateCamposDinamicos from "~/views/forms/Update/Cliente/camposDinamicosU
 import CadastroFollowUps from "~/views/forms/Cliente/followUpCadastro";
 import UpdateFollowUps from "~/views/forms/Update/Cliente/followUpUpdate";
 import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
+import ProspectWizard from "~/views/forms/Update/Cliente/prospectWizardMain";
 
 const routes = [
   {
@@ -756,6 +757,14 @@ const routes = [
         namePerfil: "Cliente Cad",
         mini: "RF",
         component: CadastroCliente,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/cliente/prospectWiz",
+        name: "Prospect Wiz",
+        namePerfil: "Prospect Wiz Cad",
+        mini: "RF",
+        component: ProspectWizard,
         layout: "/admin"
       },
       {

@@ -38,3 +38,107 @@
 // </download icon on preview >
 //-------------------------------------------
 
+.nav-tabs {
+
+  .nav-item {
+    margin-bottom: -1px
+  }
+
+  .nav-link {
+    border: 1px solid transparent;
+    // @include border-top-radius($nav-tabs-border-radius);
+
+
+    &.disabled {
+      color: gray;
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  .nav-link.active,
+  .nav-item.show .nav-link {
+    color: #237ef7;
+    background-color: gray;
+    border-color: purple;
+  }
+
+  .dropdown-menu {
+    // Make dropdown border overlap tab border
+    // margin-top: -$nav-tabs-border-width;
+    // Remove the top rounded corners here since there is a hard edge above the menu
+    // @include border-top-radius(0);
+  }
+}
+
+.nav-tabs {
+    display: inline-block;
+    width: 100%;
+    padding-left: 100px;
+    padding-right: 100px;
+    text-align: center;
+
+    .nav-item > .nav-link {
+        margin-bottom: 5px;
+    }
+  }
+
+  .nav-tabs {
+        border-bottom: solid 1px #8e929d;
+        // padding: $padding-base-vertical $padding-base-horizontal;
+
+        > .nav-item{
+            > .nav-link{
+                // color: $white;
+                margin: 0;
+                margin-right: 5px;
+                background-color: transparent;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                // border-radius: 30px;
+                // padding: $padding-btn-vertical $padding-round-horizontal;
+                // line-height: $line-height-sm;
+
+                // &:hover {
+                //     background-color: transparent;
+                //     border: 1px solid darken(black,5%);
+                //     border-bottom: 1px solid white;
+                //     // color: rgba($white, 0.8);
+                // }
+
+                &.active{
+                    border: 1px solid #8e929d;
+                    border-bottom: 1px solid white;
+                    background-color: transparent;
+                }
+
+                i.tim-icons{
+                    font-size: 14px;
+                    position: relative;
+                    top: 1px;
+                    margin-right: 3px;
+                }
+            }
+
+            &.disabled > .nav-link,
+            &.disabled > .nav-link:hover {
+                color: rgba(255,255,255,0.5);
+            }
+        }
+
+        &.nav-tabs-neutral{
+            > .nav-item{
+                > .nav-link{
+                    // color: $black;
+
+                    &.active{
+                        // border-color: $opacity-5;
+                        // color: $black;
+                    }
+                }
+            }
+        }
+
+
+
+    }

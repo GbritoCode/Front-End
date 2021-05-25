@@ -217,7 +217,7 @@ export default function ProspectTable() {
             <CardHeader>
               <CardTitle tag="h4">
                 Prospects
-                <Link to="/cliente_cadastro/true">
+                <Link to="/cadastro/cliente/prospectWiz">
                   <Tooltip title="Novo" placement="top" interactive>
                     <Button
                       style={{

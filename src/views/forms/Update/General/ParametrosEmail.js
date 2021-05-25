@@ -204,7 +204,7 @@ const Panels = () => {
               <Col>
                 <Card>
                   <CardHeader>
-                    <Nav className="nav-pills-info" pills>
+                    <Nav tabs>
                       <NavItem>
                         <NavLink
                           data-toggle="tab"

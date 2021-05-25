@@ -339,7 +339,7 @@ export default function PerfilCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Nav className="nav-pills-info" pills>
+                  <Nav tabs>
                     <NavItem>
                       <NavLink
                         data-toggle="tab"

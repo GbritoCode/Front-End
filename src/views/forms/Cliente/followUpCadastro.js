@@ -32,7 +32,7 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
@@ -41,7 +41,10 @@ import { followUpCadastro } from "~/store/modules/Cliente/actions";
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+
+  const { id } = useParams();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -67,32 +70,22 @@ export default function CadastroFollowUps() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
-      const response2 = await api.get(`/cliente/?prospect=true`);
+      const response2 = await api.get(`/cliente/${id}`);
+      const response3 = await api.get(`/cliente/cont/${response2.data.id}`);
       setData1(response1.data);
       setData2(response2.data);
+      setData3(response3.data);
 
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        ColabId: { value: response1.data.id }
+        ColabId: { value: response1.data.id },
+        ClienteId: { value: response2.data.id }
       }));
+      setIsLoading(false);
     }
     loadData();
-  }, []);
-
-  function getDynamicData(cliente) {
-    if (cliente) {
-      api.get(`/cliente/cont/${cliente}`).then(result => {
-        setData3(result.data);
-      });
-      api.get(`/cliente/${cliente}`).then(result => {
-        setValues(prevState => ({
-          ...prevState,
-          RepresentanteId: { value: result.data.RepresentanteId }
-        }));
-      });
-    }
-  }
+  }, [id]);
 
   var options = {};
   const notifyElment = useRef(null);
@@ -194,256 +187,253 @@ export default function CadastroFollowUps() {
   };
   return (
     <>
-      <div className="rna-container">
-        <NotificationAlert ref={notifyElment} />
-      </div>
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Follow Up</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col md="4">
-                      <Label>Colaborador</Label>
-                      <FormGroup
-                        className={`has-label ${values.ColabId.error}`}
-                      >
-                        <Input
-                          disabled
-                          name="ColabId"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "ColabId", "text")
-                          }
-                          defaultValue={data1.nome}
-                        />
-                        {values.ColabId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ColabId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Data</Label>
-                      <FormGroup className={`has-label ${values.data.error}`}>
-                        <Input
-                          name="name_abv"
-                          type="date"
-                          onChange={event =>
-                            handleChange(event, "data", "text")
-                          }
-                          value={values.data.value}
-                        />
-                        {values.data.error === "has-danger" ? (
-                          <Label className="error">{values.data.message}</Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Data Próximo Contato</Label>
-                      <FormGroup
-                        className={`has-label ${values.dataProxContato.error}`}
-                      >
-                        <Input
-                          name="dataProxContato"
-                          type="date"
-                          onChange={event =>
-                            handleChange(event, "dataProxContato", "text")
-                          }
-                          value={values.dataProxContato.value}
-                        />
-                        {values.dataProxContato.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.dataProxContato.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="4">
-                      <Label>Cliente</Label>
-                      <FormGroup
-                        className={`has-label ${values.ClienteId.error}`}
-                      >
-                        <Input
-                          name="ClienteId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ClienteId", "text")
-                          }
-                          value={values.ClienteId.value}
-                          onChangeCapture={e => {
-                            getDynamicData(e.target.value, null);
-                          }}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o cliente{" "}
-                          </option>
-                          {data2.map(ClienteId => (
-                            <option value={ClienteId.id}>
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
+          </div>
+          <div className="content">
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4">Follow Up</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Form onSubmit={handleSubmit}>
+                      <Row>
+                        <Col md="4">
+                          <Label>Colaborador</Label>
+                          <FormGroup
+                            className={`has-label ${values.ColabId.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="ColabId"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "ColabId", "text")
+                              }
+                              defaultValue={data1.nome}
+                            />
+                            {values.ColabId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ColabId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Data</Label>
+                          <FormGroup
+                            className={`has-label ${values.data.error}`}
+                          >
+                            <Input
+                              name="name_abv"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "data", "text")
+                              }
+                              value={values.data.value}
+                            />
+                            {values.data.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.data.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Data Próximo Contato</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataProxContato.error}`}
+                          >
+                            <Input
+                              name="dataProxContato"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataProxContato", "text")
+                              }
+                              value={values.dataProxContato.value}
+                            />
+                            {values.dataProxContato.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataProxContato.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Cliente</Label>
+                          <FormGroup
+                            className={`has-label ${values.ClienteId.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="ClienteId"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "ClienteId", "text")
+                              }
+                              defaultValue={`${data2.nomeAbv} - ${normalizeCnpj(
+                                data2.CNPJ
+                              )}`}
+                            />
+                            {values.ClienteId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ClienteId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Contato</Label>
+                          <FormGroup
+                            className={`has-label ${values.CliContId.error}`}
+                          >
+                            <Input
+                              name="CliContId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "CliContId", "text")
+                              }
+                              value={values.CliContId.value}
+                            >
                               {" "}
-                              {ClienteId.nomeAbv} -{" "}
-                              {normalizeCnpj(ClienteId.CNPJ)}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.ClienteId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ClienteId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Contato</Label>
-                      <FormGroup
-                        className={`has-label ${values.CliContId.error}`}
-                      >
-                        <Input
-                          name="CliContId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "CliContId", "text")
-                          }
-                          value={values.CliContId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o contato{" "}
-                          </option>
-                          {data3.map(CliContId => (
-                            <option value={CliContId.id}>
-                              {" "}
-                              {CliContId.nome} - {CliContId.email}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.CliContId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.CliContId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Reação</Label>
-                      <FormGroup check>
-                        <Label check>
-                          <Input
-                            defaultChecked
-                            name="reacao"
-                            type="radio"
-                            onChange={event =>
-                              handleChange(event, "reacao", "text")
-                            }
-                            value="ruim"
-                          />{" "}
-                          Ruim
-                        </Label>
-                        <Label check>
-                          <Input
-                            name="reacao"
-                            type="radio"
-                            onChange={event =>
-                              handleChange(event, "reacao", "text")
-                            }
-                            value="boa"
-                          />
-                          Boa
-                        </Label>
-                        <Label check>
-                          <Input
-                            name="reacao"
-                            type="radio"
-                            onChange={event =>
-                              handleChange(event, "reacao", "text")
-                            }
-                            value="otima"
-                          />
-                          Ótima
-                        </Label>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Label>Detalhes</Label>
-                      <FormGroup
-                        className={`has-label ${values.detalhes.error}`}
-                      >
-                        <Input
-                          name="detalhes"
-                          type="textarea"
-                          onChange={event =>
-                            handleChange(event, "detalhes", "text")
-                          }
-                          value={values.detalhes.value}
-                        />{" "}
-                        {values.detalhes.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.detalhes.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Button
-                    style={{
-                      paddingLeft: 29,
-                      paddingRight: 30
-                    }}
-                    className="form"
-                    color="info"
-                    type="submit"
-                  >
-                    Enviar{" "}
-                    <i
-                      className="tim-icons icon-send"
-                      style={{
-                        paddingBottom: 4,
-                        paddingLeft: 3
-                      }}
-                      size="large"
-                    />
-                  </Button>
-                  <Link to="/tabelas/oportunidade/oport">
-                    <Button
-                      style={{
-                        paddingLeft: 32,
-                        paddingRight: 33,
-                        float: "left"
-                      }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
+                              <option disabled value="">
+                                {" "}
+                                Selecione o contato{" "}
+                              </option>
+                              {data3.map(CliContId => (
+                                <option value={CliContId.id}>
+                                  {" "}
+                                  {CliContId.nome} - {CliContId.email}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.CliContId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.CliContId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Reação</Label>
+                          <FormGroup check>
+                            <Label check>
+                              <Input
+                                defaultChecked
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="ruim"
+                              />{" "}
+                              Ruim
+                            </Label>
+                            <Label check>
+                              <Input
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="boa"
+                              />
+                              Boa
+                            </Label>
+                            <Label check>
+                              <Input
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="otima"
+                              />
+                              Ótima
+                            </Label>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Detalhes</Label>
+                          <FormGroup
+                            className={`has-label ${values.detalhes.error}`}
+                          >
+                            <Input
+                              name="detalhes"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "detalhes", "text")
+                              }
+                              value={values.detalhes.value}
+                            />{" "}
+                            {values.detalhes.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.detalhes.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Button
                         style={{
-                          paddingBottom: 4,
-                          paddingRight: 1,
-                          float: "left"
+                          paddingLeft: 29,
+                          paddingRight: 30
                         }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                      <Link to="/tabelas/cliente/followUps/">
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1,
+                              float: "left"
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </>
   );
 }

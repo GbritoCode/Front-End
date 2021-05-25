@@ -142,6 +142,7 @@ import UpdateCamposDinamicos from "~/views/forms/Update/Cliente/camposDinamicosU
 import CadastroFollowUps from "~/views/forms/Cliente/followUpCadastro";
 import UpdateFollowUps from "~/views/forms/Update/Cliente/followUpUpdate";
 import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
+import ProspectWizard from "~/views/forms/Update/Cliente/prospectWizardMain";
 
 export default function Routes() {
   return (
@@ -395,6 +396,11 @@ export default function Routes() {
       <Route
         path="/cliente_update/:id/:pospect"
         component={ClienteUpdate}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/cliente/prospectWiz"
+        component={ProspectWizard}
         isPrivate
       />
       <Route

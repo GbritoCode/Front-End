@@ -415,7 +415,7 @@ export default function UpdateFollowUps() {
                           size="large"
                         />
                       </Button>
-                      <Link to="/tabelas/oportunidade/oport">
+                      <Link to={`/tabelas/cliente/followUps/${data2.id}`}>
                         <Button
                           style={{
                             paddingLeft: 32,
