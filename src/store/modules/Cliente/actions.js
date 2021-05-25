@@ -213,3 +213,106 @@ export function cliRecDespUpdate(
     }
   };
 }
+
+//--------------------------------------------------------
+//--------------------------------------------------------
+
+export function campanhaCadastro(EmpresaId, cod, desc) {
+  return {
+    type: "@cadastro/CAMPANHA_REQUEST",
+    payload: {
+      EmpresaId,
+      cod,
+      desc
+    }
+  };
+}
+
+export function campanhaUpdate(id, cod, desc) {
+  return {
+    type: "@update/CAMPANHA_REQUEST",
+    payload: {
+      id,
+      cod,
+      desc
+    }
+  };
+}
+
+//--------------------------------------
+//--------------------------------------
+
+export function camposDinamicosCadastro(EmpresaId, nome, valor) {
+  return {
+    type: "@cadastro/CAMPOS_DINAMICOS_REQUEST",
+    payload: {
+      EmpresaId,
+      nome,
+      valor
+    }
+  };
+}
+
+export function camposDinamicosUpdate(id, nome, valor) {
+  return {
+    type: "@update/CAMPOS_DINAMICOS_REQUEST",
+    payload: {
+      id,
+      nome,
+      valor
+    }
+  };
+}
+
+//-----------------------------------
+//-----------------------------------
+
+export function followUpCadastro(
+  EmpresaId,
+  ColabId,
+  ClienteId,
+  CliContId,
+  dataContato,
+  dataProxContato,
+  detalhes,
+  reacao
+) {
+  return {
+    type: "@cadastro/FOLLOW_UP_REQUEST",
+    payload: {
+      EmpresaId,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao
+    }
+  };
+}
+
+export function followUpUpdate(
+  id,
+  ColabId,
+  ClienteId,
+  CliContId,
+  dataContato,
+  dataProxContato,
+  detalhes,
+  reacao
+) {
+  return {
+    type: "@update/FOLLOW_UP_REQUEST",
+    payload: {
+      id,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao
+    }
+  };
+}

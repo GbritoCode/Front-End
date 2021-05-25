@@ -17,12 +17,12 @@
 
 import signIn from "~/pages/signIn";
 
-import Dashboard from "~/pages/dashboard/index";
+// import Dashboard from "~/pages/dashboard/index";
+// import AnalistaDashboard from "~/pages/dashboard/dashboardAnalista";
+// import GestorDashboard from "~/pages/dashboard/dashboardGestor";
 import DashboardGerencial from "~/pages/dashboard/dashboardGerencial";
 import DashboardComercial from "~/pages/dashboard/dashboardComercial";
 import AdminDashboard from "~/pages/dashboard/dashboardAdmin";
-import AnalistaDashboard from "~/pages/dashboard/dashboardAnalista";
-import GestorDashboard from "~/pages/dashboard/dashboardGestor";
 import SignUp from "~/pages/signUp";
 
 //----
@@ -100,6 +100,10 @@ import cotacaoUpdate from "~/views/forms/Update/oportunidades/cotacaoUpdate";
 // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
 // -------------TABELAS LINHA482/LINHA 652 ------------------------------------------------------------------------------------------------
 
+import CamposDinamicosTable from "~/views/tables/Clientes/camposDinamicosProspect";
+import followUpTable from "~/views/tables/Clientes/followUpsTable";
+import CampanhaTable from "~/views/tables/Clientes/campanhasTable";
+
 import Tabela_Cliente from "~/views/tables/Clientes/Tabela_Cliente.jsx";
 import CliCompTable from "~/views/tables/Clientes/CliCompTable";
 import CliContTable from "~/views/tables/Clientes/CliContTable";
@@ -165,34 +169,19 @@ import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTable";
 import OportFinTable from "~/views/tables/oportTables/oportFinalizadaTable";
 import Example from "~/views/forms/Update/General/ParametrosEmail";
-
-const checkProfile = profile => {
-  switch (profile) {
-    case ":100,\\":
-      return AdminDashboard;
-    case ":10,\\":
-      return AdminDashboard;
-    case ":1,\\":
-      return AnalistaDashboard;
-    case ":2,\\":
-      return DashboardComercial;
-    case ":3,\\":
-      return GestorDashboard;
-
-    default:
-      break;
-  }
-};
-const profile = localStorage.getItem("persist:gobarber");
-let arr;
-if (typeof profile === "string") {
-  arr = profile.split('"');
-}
+import CadastroCampanha from "~/views/forms/Cliente/campanhaCadastro";
+import CadastroCamposDinamicos from "~/views/forms/Cliente/camposDinamicosCadastro";
+import UpdateCampanha from "~/views/forms/Update/Cliente/campanhaUpdate";
+import UpdateCamposDinamicos from "~/views/forms/Update/Cliente/camposDinamicosUpdate";
+import CadastroFollowUps from "~/views/forms/Cliente/followUpCadastro";
+import UpdateFollowUps from "~/views/forms/Update/Cliente/followUpUpdate";
+import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
 
 const routes = [
   {
     collapse: true,
     name: "Dashboards",
+    namePerfil: "Dashboards",
     icon: "tim-icons icon-chart-pie-36",
     state: "dashboardCollapse",
     profile: 1,
@@ -200,13 +189,15 @@ const routes = [
       {
         path: "/dashboardPessoal",
         name: "Pessoal",
+        namePerfil: "Pessoal Dash",
         mini: "PES",
-        component: arr === undefined ? Dashboard : checkProfile(arr[23]),
+        component: AdminDashboard,
         layout: "/admin"
       },
       {
         path: "/dashboardGerencial",
         name: "Gerencial",
+        namePerfil: "Gerencial Dash",
         mini: "GER",
         component: DashboardGerencial,
         profile: 10,
@@ -215,6 +206,7 @@ const routes = [
       {
         path: "/dashboardComercial",
         name: "Comercial",
+        namePerfil: "Comercial Dash",
         mini: "COM",
         component: DashboardComercial,
         profile: 10,
@@ -225,6 +217,7 @@ const routes = [
   {
     path: "/login",
     name: "Login",
+    namePerfil: "Login",
     mini: "L",
     component: signIn,
     layout: "/auth",
@@ -233,6 +226,7 @@ const routes = [
   {
     path: "/register",
     name: "Register",
+    namePerfil: "Register",
     mini: "R",
     component: SignUp,
     layout: "/auth",
@@ -246,6 +240,7 @@ const routes = [
   {
     collapse: true,
     name: "Administração",
+    namePerfil: "Administração",
     icon: "tim-icons icon-molecule-40",
     state: "AdministradorCollapse",
     profile: 10,
@@ -253,6 +248,7 @@ const routes = [
       {
         path: "/cadastro/wizard/empresa",
         name: "wizard",
+        namePerfil: "wizard",
         mini: "RT",
         component: WizardCadastro,
         layout: "/admin",
@@ -262,6 +258,7 @@ const routes = [
       {
         path: "/cadastro/wizard/fornec",
         name: "wizardFornec",
+        namePerfil: "wizardFornec",
         mini: "RT",
         component: WizardFornec,
         layout: "/admin",
@@ -271,6 +268,7 @@ const routes = [
       {
         path: "/cadastro/wizard/colab",
         name: "wizardColab",
+        namePerfil: "wizardColab",
         mini: "RT",
         component: WizardColab,
         layout: "/admin",
@@ -280,6 +278,7 @@ const routes = [
       {
         path: `/update/general/parametros/1`,
         name: "Parametros",
+        namePerfil: "Parametros Up",
         mini: "PRM",
         component: ParametrosUpdate,
         layout: "/admin",
@@ -288,6 +287,7 @@ const routes = [
       {
         path: `/update/general/parametros/email/1`,
         name: "Emails",
+        namePerfil: "Emails Up",
         mini: "EML",
         component: Example,
         layout: "/admin",
@@ -296,6 +296,7 @@ const routes = [
       {
         path: "/tabelas/aux/perfil",
         name: "Perfis",
+        namePerfil: "Perfis Tab",
         mini: "PRF",
         component: perfilTable,
         layout: "/admin"
@@ -303,6 +304,7 @@ const routes = [
       {
         path: `/tabelas/fechamento/periodo`,
         name: "Períodos",
+        namePerfil: "Períodos Tab",
         mini: "PER",
         component: PeriodosTable,
         layout: "/admin",
@@ -311,6 +313,7 @@ const routes = [
       {
         path: `/tabelas/fechamento/acesso`,
         name: "Liberar Períodos",
+        namePerfil: "Liberar Períodos Tab",
         mini: "LPE",
         component: PeriodTokenTable,
         layout: "/admin",
@@ -321,6 +324,7 @@ const routes = [
   {
     collapse: true,
     name: "Cadastros",
+    namePerfil: "Cadastros",
     icon: "tim-icons icon-puzzle-10",
     state: "tablesCollapse",
     profile: 2,
@@ -328,6 +332,7 @@ const routes = [
       {
         path: "/tabelas/aux/condPgmto",
         name: "Condição de Pagamento",
+        namePerfil: "Condição de Pagamento Tab",
         mini: "CPG",
         component: condPgmtoTable,
         layout: "/admin",
@@ -336,6 +341,7 @@ const routes = [
       {
         path: "/tabelas/aux/tipoComiss",
         name: "Tipos de Comissão",
+        namePerfil: "Tipos de Comissão Tab",
         mini: "CMS",
         component: tipoComissTable,
         layout: "/admin",
@@ -344,6 +350,7 @@ const routes = [
       {
         path: "/tabelas/general/contaContabil",
         name: "Conta Contábil",
+        namePerfil: "Conta Contábil Tab",
         mini: "CTB",
         component: ContaContabilTable,
         layout: "/admin",
@@ -352,6 +359,7 @@ const routes = [
       {
         path: "/tabelas/general/centroCusto",
         name: "Centro de Custo",
+        namePerfil: "Centro de Custo Tab",
         mini: "CCS",
         component: CentroCustoTable,
         layout: "/admin",
@@ -360,6 +368,7 @@ const routes = [
       {
         path: "/tabelas/aux/rec_desp",
         name: "Receita e Despesa",
+        namePerfil: "Receita e Despesa Tab",
         mini: "RDP",
         component: RecDespTable,
         layout: "/admin",
@@ -368,6 +377,7 @@ const routes = [
       {
         path: "/tabelas/general/representante",
         name: "Representante",
+        namePerfil: "Representante Tab",
         mini: "RPR",
         component: RepresentanteTable,
         layout: "/admin",
@@ -376,6 +386,7 @@ const routes = [
       {
         path: "/tabelas/cliente/cliente",
         name: "Clientes",
+        namePerfil: "Clientes Tab",
         mini: "CLI",
         component: Tabela_Cliente,
         layout: "/admin",
@@ -384,14 +395,54 @@ const routes = [
       {
         path: "/tabelas/cliente/prospect",
         name: "Prospects",
+        namePerfil: "Prospects Tab",
         mini: "CPR",
         component: prospectTable,
         layout: "/admin",
         profile: 2
       },
       {
+        path: "/tabelas/cliente/campanha",
+        name: "Campanhas",
+        namePerfil: "Campanhas Tab",
+        mini: "CMP",
+        component: CampanhaTable,
+        layout: "/admin",
+        profile: 2
+      },
+      {
+        path: "/tabelas/cliente/camposDinamicos",
+        name: "Campos Dinâmicos",
+        namePerfil: "Campos Dinâmicos Tab",
+        mini: "CPD",
+        component: CamposDinamicosTable,
+        layout: "/admin",
+        profile: 2
+      },
+      {
+        path: "/tabelas/cliente/FollowUps/:id",
+        name: "Follow Ups",
+        namePerfil: "Follow Ups Tab",
+        mini: "FUP",
+        redirect: true,
+        component: followUpTable,
+        layout: "/admin",
+        profile: 2
+      },
+      {
+        path: "/timeline/cliente/FollowUps/:id",
+        name: "Follow Ups",
+        namePerfil: "Follow Ups Tab",
+        mini: "FUP",
+        redirect: true,
+        component: FollowUpTimeline,
+        layout: "/admin",
+        profile: 2
+      },
+      {
         path: "/tabelas/cliente/comp/:id",
         name: "Complemento de Clientes",
+        namePerfil: "Complemento de Clientes Tab",
         mini: "RT",
         redirect: true,
         component: CliCompTable,
@@ -400,6 +451,7 @@ const routes = [
       {
         path: "/tabelas/cliente/cont/:id",
         name: "Continuação Cliente",
+        namePerfil: "Continuação Cliente Tab",
         mini: "RT",
         redirect: true,
         component: CliContTable,
@@ -408,6 +460,7 @@ const routes = [
       {
         path: "/tabelas/cliente/rec_desp/:id",
         name: "Receita e Despesa de Cliente",
+        namePerfil: "Receita e Despesa de Cliente Tab",
         mini: "RT",
         redirect: true,
         component: CliRecDespTable,
@@ -416,6 +469,7 @@ const routes = [
       {
         path: "/tabelas/general/fornec",
         name: "Fornecedor",
+        namePerfil: "Fornecedor Tab",
         mini: "FRN",
         component: FornecTable,
         layout: "/admin",
@@ -424,6 +478,7 @@ const routes = [
       {
         path: "/tabelas/colab",
         name: "Colaborador",
+        namePerfil: "Colaborador Tab",
         mini: "COL",
         component: ColabTable,
         layout: "/admin",
@@ -432,6 +487,7 @@ const routes = [
       {
         path: "/tables/colab/comp/:id",
         name: "Complemento de Colaborador",
+        namePerfil: "Complemento de Colaborador Tab",
         mini: "RT",
         redirect: true,
         component: ColabCompTable,
@@ -440,6 +496,7 @@ const routes = [
       {
         path: "/tabelas/general/area",
         name: "Area",
+        namePerfil: "Area Tab",
         mini: "AR",
         component: AreaTable,
         layout: "/admin",
@@ -448,6 +505,7 @@ const routes = [
       {
         path: "/tabelas/general/empresa",
         name: "Empresa",
+        namePerfil: "Empresa Tab",
         mini: "EMP",
         component: EmpresaTable,
         layout: "/admin",
@@ -456,6 +514,7 @@ const routes = [
       {
         path: "/tabelas/general/prodt",
         name: "Produto",
+        namePerfil: "Produto Tab",
         mini: "PDT",
         component: ProdtTable,
         layout: "/admin",
@@ -464,6 +523,7 @@ const routes = [
       {
         path: "/tabelas/general/und_neg",
         name: "Unidade de Negócio",
+        namePerfil: "Unidade de Negócio Tab",
         mini: "UNG",
         component: UndNegTable,
         layout: "/admin",
@@ -472,6 +532,7 @@ const routes = [
       {
         path: "/tabelas/general/segmento",
         name: "Segmento",
+        namePerfil: "Segmento Tab",
         mini: "SEG",
         component: SegmentoTable,
         layout: "/admin",
@@ -482,6 +543,7 @@ const routes = [
   {
     collapse: true,
     name: "Apontamentos",
+    namePerfil: "Apontamentos",
     icon: "tim-icons icon-notes",
     state: "ApontamentosCollapse",
     profile: 1,
@@ -489,6 +551,7 @@ const routes = [
       {
         path: "/tabelas/apontamentos/oportunidades/",
         name: "Projetos",
+        namePerfil: "Projetos Tab",
         mini: "PJT",
         component: ApontTable,
         layout: "/admin"
@@ -496,6 +559,7 @@ const routes = [
       {
         path: "/tabelas/apontamentos/despesas/:id",
         name: "Despesas",
+        namePerfil: "Despesas Tab",
         mini: "DSP",
         component: DespesaTable,
         layout: "/admin",
@@ -504,6 +568,7 @@ const routes = [
       {
         path: "/tabelas/apontamentos/gerencial/despesas",
         name: "Despesas",
+        namePerfil: "Despesas Tab",
         mini: "DSP",
         component: GerencialDespesaTable,
         layout: "/admin",
@@ -512,6 +577,7 @@ const routes = [
       {
         path: "/tabelas/apontamentos/horas/:id/",
         name: "Horas",
+        namePerfil: "Horas Tab",
         mini: "HRS",
         component: HorasTable,
         layout: "/admin",
@@ -520,6 +586,7 @@ const routes = [
       {
         path: "/tabelas/apontamentos/gerencial/horas",
         name: "Horas Gerencial",
+        namePerfil: "Horas Gerencial Tab",
         mini: "HRS",
         component: GerencialHorasTable,
         layout: "/admin",
@@ -530,6 +597,7 @@ const routes = [
   {
     collapse: true,
     name: "Oportunidades",
+    namePerfil: "Oportunidades",
     icon: "tim-icons icon-pin",
     state: "OportunidadeCollapse",
     profile: 2,
@@ -537,6 +605,7 @@ const routes = [
       {
         path: "/tabelas/oportunidade/oport",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Tab",
         mini: "OPT",
         component: OportTable,
         layout: "/admin"
@@ -544,6 +613,7 @@ const routes = [
       {
         path: "/tabelas/oportunidade/finOport",
         name: "Finalizadas",
+        namePerfil: "Finalizadas Tab",
         mini: "OPF",
         component: OportFinTable,
         layout: "/admin"
@@ -551,6 +621,7 @@ const routes = [
       {
         path: "/tabelas/oportunidade/cotacao/:id",
         name: "Cotacao",
+        namePerfil: "Cotacao Tab",
         mini: "COT",
         component: cotacaoTable,
         layout: "/admin",
@@ -559,6 +630,7 @@ const routes = [
       {
         path: "/tabelas/oportunidade/recurso/:id",
         name: "Recursos",
+        namePerfil: "Recursos Tab",
         mini: "rec",
         component: RecursoTable,
         layout: "/admin",
@@ -566,7 +638,8 @@ const routes = [
       },
       {
         path: "/tabelas/oportunidade/parcela/:id",
-        name: "Recursos",
+        name: "Parcelas",
+        namePerfil: "Parcelas Tab",
         mini: "rec",
         component: ParcelaTable,
         layout: "/admin",
@@ -574,7 +647,8 @@ const routes = [
       },
       {
         path: "/tabelas/parcela/pendentes",
-        name: "Recursos",
+        name: "Parcelas Pendente",
+        namePerfil: "Parcelas Pendente Tab",
         mini: "rec",
         component: ParcelaPendentesTable,
         layout: "/admin",
@@ -582,7 +656,8 @@ const routes = [
       },
       {
         path: "/tabelas/parcela/abertas",
-        name: "Recursos",
+        name: "Parcelas Abertas",
+        namePerfil: "Parcelas Abertas Tab",
         mini: "rec",
         component: ParcelaAbertaTable,
         layout: "/admin",
@@ -590,7 +665,8 @@ const routes = [
       },
       {
         path: "/tabelas/parcela/atrasadas",
-        name: "Recursos",
+        name: "Parcelas Atrasadas",
+        namePerfil: "Parcelas Atrasadas Tab",
         mini: "rec",
         component: ParcelaAtrasadaTable,
         layout: "/admin",
@@ -599,6 +675,7 @@ const routes = [
       {
         path: "/view/oportunidade/dados/:id",
         name: "Dados OPT",
+        namePerfil: "Dados OPT",
         mini: "DOP",
         component: DataOport,
         layout: "/admin",
@@ -619,14 +696,64 @@ const routes = [
 
   {
     collapse: true,
-    name: "Páginas de cadastro invisíveis",
+    name: "Páginas deastro invisíveis",
+    namePerfil: "Páginas deastro invisíveis",
     icon: "tim-icons icon-notes",
     state: "formsCollapse",
     redirect: true,
     views: [
       {
+        path: "/cadastro/cliente/campanha",
+        name: "Campanha",
+        namePerfil: "Campanha Cad",
+        mini: "RF",
+        component: CadastroCampanha,
+        layout: "/admin"
+      },
+      {
+        path: "/update/cliente/campanha/:id",
+        name: "Atualizar Campanha",
+        namePerfil: "Atualizar Campanha Cad",
+        mini: "RF",
+        component: UpdateCampanha,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/cliente/camposDinamicos",
+        name: "Campos Dinamicos",
+        namePerfil: "Campos Dinamicos Cad",
+        mini: "RF",
+        component: CadastroCamposDinamicos,
+        layout: "/admin"
+      },
+      {
+        path: "/update/cliente/camposDinamicos/:id",
+        name: "Atualizar Campos Dinamicos",
+        namePerfil: "Atualizar Campos Dinamicos Cad",
+        mini: "RF",
+        component: UpdateCamposDinamicos,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/cliente/followUps/:id",
+        name: "Follow Ups",
+        namePerfil: "Follow Ups Cad",
+        mini: "RF",
+        component: CadastroFollowUps,
+        layout: "/admin"
+      },
+      {
+        path: "/update/cliente/followUps/:id",
+        name: "Follow Ups",
+        namePerfil: "Follow Ups Up",
+        mini: "RF",
+        component: UpdateFollowUps,
+        layout: "/admin"
+      },
+      {
         path: "/cliente_cadastro/:prospect",
         name: "Cliente",
+        namePerfil: "Cliente Cad",
         mini: "RF",
         component: CadastroCliente,
         layout: "/admin"
@@ -634,6 +761,7 @@ const routes = [
       {
         path: "/cliente_update/:id/:prospect",
         name: "Atualizar Cliente",
+        namePerfil: "Atualizar Cliente Cad",
         mini: "RF",
         component: ClienteUpdate,
         layout: "/admin"
@@ -641,6 +769,7 @@ const routes = [
       {
         path: "/cliente/cont_update/:id",
         name: "Atualizar Continuação do Cliente",
+        namePerfil: "Atualizar Continuação do Cliente Cad",
         mini: "RF",
         component: CliContUpdate,
         layout: "/admin"
@@ -648,6 +777,7 @@ const routes = [
       {
         path: "/cliente/comp_update/:id",
         name: "Atualizar Complemento do Cliente",
+        namePerfil: "Atualizar Complemento do Cliente Cad",
         mini: "RF",
         component: CliCompUpdate,
         layout: "/admin"
@@ -655,6 +785,7 @@ const routes = [
       {
         path: "/cadastro/cliente/comp/:id",
         name: "Complemento de Cliente",
+        namePerfil: "Complemento de Cliente Cad",
         mini: "RF",
         component: CliCompCadastro,
         layout: "/admin"
@@ -662,6 +793,7 @@ const routes = [
       {
         path: "/cadastro/cliente/cont/:id",
         name: "Continuação do Cliente",
+        namePerfil: "Continuação do Cliente Cad",
         mini: "RF",
         component: CliContCadastro,
         layout: "/admin"
@@ -669,6 +801,7 @@ const routes = [
       {
         path: "/cadastro/cliente/rec_desp/:id",
         name: "Receitas/Despesas do Cliente",
+        namePerfil: "Receitas/Despesas do Cliente Cad",
         mini: "RF",
         component: CliRecDespCadastro,
         layout: "/admin"
@@ -676,6 +809,7 @@ const routes = [
       {
         path: "/update/cliente/rec_desp/:id",
         name: "Receitas/Despesas do Cliente",
+        namePerfil: "Receitas/Despesas do Cliente Cad",
         mini: "RF",
         component: CliRecDespUpdate,
         layout: "/admin"
@@ -683,6 +817,7 @@ const routes = [
       {
         path: "/cadastro/colab/colab",
         name: "Colaborador",
+        namePerfil: "Colaborador Cad",
         mini: "RF",
         component: ColabCadastro,
         layout: "/admin"
@@ -690,6 +825,7 @@ const routes = [
       {
         path: "/colab/update/:id",
         name: "Editar Colaborador",
+        namePerfil: "Editar Colaborador Cad",
         mini: "RF",
         component: ColabUpdate,
         layout: "/admin"
@@ -697,6 +833,7 @@ const routes = [
       {
         path: "/cadastro/colab/comp/:id",
         name: "Complemento de Colaborador",
+        namePerfil: "Complemento de Colaborador Cad",
         mini: "RF",
         component: ColabCompCadastro,
         layout: "/admin"
@@ -704,6 +841,7 @@ const routes = [
       {
         path: "/colab/comp/update/:id",
         name: "Editar Complemento do Colaborador",
+        namePerfil: "Editar Complemento do Colaborador Cad",
         mini: "RF",
         component: ColabCompUpdate,
         layout: "/admin"
@@ -711,6 +849,7 @@ const routes = [
       {
         path: "/cadastro/geral/area",
         name: "Área",
+        namePerfil: "Área Cad",
         mini: "RF",
         component: AreaCadastro,
         layout: "/admin"
@@ -718,6 +857,7 @@ const routes = [
       {
         path: "/update/general/area/:id",
         name: "Editar Area",
+        namePerfil: "Editar Area Cad",
         mini: "RF",
         component: AreaUpdate,
         layout: "/admin"
@@ -725,6 +865,7 @@ const routes = [
       {
         path: "/cadastro/geral/empresa",
         name: "Empresa",
+        namePerfil: "Empresa Cad",
         mini: "RF",
         component: EmpresaCadastro,
         layout: "/admin"
@@ -732,13 +873,15 @@ const routes = [
       {
         path: "/update/general/empresa/:id",
         name: "Editar Empresa",
+        namePerfil: "Editar Empresa Cad",
         mini: "RF",
         component: EmpresaUpdate,
         layout: "/admin"
       },
       {
         path: "/cadastro/geral/Fornec",
-        name: "Fornecedor",
+        name: "Fornecedorstro",
+        namePerfil: "Fornecedorstro Cad",
         mini: "RF",
         component: FornecCadastro,
         layout: "/admin"
@@ -746,6 +889,7 @@ const routes = [
       {
         path: "/update/general/fornec/:id",
         name: "Editar Fornecedor",
+        namePerfil: "Editar Fornecedor Cad",
         mini: "RF",
         component: FornecUpdate,
         layout: "/admin"
@@ -753,6 +897,7 @@ const routes = [
       {
         path: "/cadastro/geral/parametros",
         name: "Parametros",
+        namePerfil: "Parametros Cad",
         mini: "RF",
         component: ParametrosCadastro,
         layout: "/admin"
@@ -760,6 +905,7 @@ const routes = [
       {
         path: "/cadastro/geral/prodt",
         name: "Produto",
+        namePerfil: "Produto Cad",
         mini: "RF",
         component: ProdtCadastro,
         layout: "/admin"
@@ -767,6 +913,7 @@ const routes = [
       {
         path: "/update/general/prodt/:id",
         name: "Editar Produto",
+        namePerfil: "Editar Produto Cad",
         mini: "RF",
         component: ProdtUpdate,
         layout: "/admin"
@@ -774,6 +921,7 @@ const routes = [
       {
         path: "/cadastro/geral/rec_desp",
         name: "Receitas/Despesas",
+        namePerfil: "Receitas/Despesas Cad",
         mini: "RF",
         component: RecDespCadastro,
         layout: "/admin"
@@ -781,6 +929,7 @@ const routes = [
       {
         path: "/update/general/rec_desp/:id",
         name: "Editar Receita/Despesa",
+        namePerfil: "Editar Receita/Despesa Cad",
         mini: "RF",
         component: RecDespUpdate,
         layout: "/admin"
@@ -788,6 +937,7 @@ const routes = [
       {
         path: "/cadastro/aux/condPgmto",
         name: "Condições de pagamento",
+        namePerfil: "Condições de pagamento Cad",
         mini: "CPG",
         component: condPgmtoCadastro,
         layout: "/admin"
@@ -795,6 +945,7 @@ const routes = [
       {
         path: "/update/aux/condPgmto/:id",
         name: "Condições de pagamento",
+        namePerfil: "Condições de pagamento Cad",
         mini: "CPG",
         component: condPgmtoUpdate,
         layout: "/admin"
@@ -802,6 +953,7 @@ const routes = [
       {
         path: "/cadastro/aux/tipoComiss",
         name: "Tipos de Comissão",
+        namePerfil: "Tipos de Comissão Cad",
         mini: "CMS",
         component: tipoComissCadastro,
         layout: "/admin"
@@ -809,6 +961,7 @@ const routes = [
       {
         path: "/update/aux/tipoComiss/:id",
         name: "Tipos de Comissão",
+        namePerfil: "Tipos de Comissão Cad",
         mini: "CMS",
         component: tipoComissUpdate,
         layout: "/admin"
@@ -816,6 +969,7 @@ const routes = [
       {
         path: "/cadastro/aux/perfil",
         name: "Perfis",
+        namePerfil: "Perfis Cad",
         mini: "PRF",
         component: perfilCadastro,
         layout: "/admin"
@@ -823,6 +977,7 @@ const routes = [
       {
         path: "/update/aux/perfil/:id",
         name: "Perfis",
+        namePerfil: "Perfis Cad",
         mini: "PRF",
         component: perfilUpdate,
         layout: "/admin"
@@ -830,6 +985,7 @@ const routes = [
       {
         path: "/cadastro/oportunidade/oport",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: CadastroOport,
         layout: "/admin"
@@ -837,6 +993,7 @@ const routes = [
       {
         path: "/update/oportunidade/oport/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: UpdateOport,
         layout: "/admin"
@@ -844,6 +1001,7 @@ const routes = [
       {
         path: "/cadastro/oportunidade/cotacao/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: CotacaoCadastro,
         layout: "/admin"
@@ -851,6 +1009,7 @@ const routes = [
       {
         path: "/update/oportunidade/cotacao/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: cotacaoUpdate,
         layout: "/admin"
@@ -858,6 +1017,7 @@ const routes = [
       {
         path: "/cadastro/oportunidade/recurso/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: RecursoCadastro,
         layout: "/admin"
@@ -865,6 +1025,7 @@ const routes = [
       {
         path: "/update/oportunidade/recurso/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: RecursoUpdate,
         layout: "/admin"
@@ -872,6 +1033,7 @@ const routes = [
       {
         path: "/cadastro/oportunidade/parcela/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: ParcelaCadastro,
         layout: "/admin"
@@ -879,6 +1041,7 @@ const routes = [
       {
         path: "/update/oportunidade/parc/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: parcUpdate,
         layout: "/admin"
@@ -886,6 +1049,7 @@ const routes = [
       {
         path: "/update/oportunidade/parcNota/:id",
         name: "Oportunidades",
+        namePerfil: "Oportunidades Cad",
         mini: "OPT",
         component: parcNotaFiscal,
         layout: "/admin"
@@ -893,6 +1057,7 @@ const routes = [
       {
         path: "/cadastro/geral/represent",
         name: "Representante",
+        namePerfil: "Representante Cad",
         mini: "RF",
         component: RepresentanteCadastro,
         layout: "/admin"
@@ -900,6 +1065,7 @@ const routes = [
       {
         path: "/update/general/represent/:id",
         name: "Editar Representante",
+        namePerfil: "Editar Representante Cad",
         mini: "RF",
         component: RepresentanteUpdate,
         layout: "/admin"
@@ -907,6 +1073,7 @@ const routes = [
       {
         path: "/cadastro/geral/sgmet",
         name: "Segmento",
+        namePerfil: "Segmento Cad",
         mini: "RF",
         component: SegmentoCadastro,
         layout: "/admin"
@@ -914,6 +1081,7 @@ const routes = [
       {
         path: "/update/general/segmento/:id",
         name: "Editar Segmento",
+        namePerfil: "Editar Segmento Cad",
         mini: "RF",
         component: SegmentoUpdate,
         layout: "/admin"
@@ -921,6 +1089,7 @@ const routes = [
       {
         path: "/cadastro/geral/und_neg",
         name: "Cadastro de Unidade de Negócio",
+        namePerfil: "Cadastro de Unidade de Negócio Cad",
         mini: "RF",
         component: UndNegCadastro,
         layout: "/admin"
@@ -928,6 +1097,7 @@ const routes = [
       {
         path: "/update/general/und_neg/:id",
         name: "Editar Unidade de Negócio",
+        namePerfil: "Editar Unidade de Negócio Cad",
         mini: "RF",
         component: UndNegUpdate,
         layout: "/admin"
@@ -935,13 +1105,16 @@ const routes = [
       {
         path: "/cadastro/apontamentos/horas/:id",
         name: "Horas",
+        namePerfil: "Horas Cad",
         mini: "OPT",
         component: HorasCadastro,
-        layout: "/admin"
+        layout: "/admin",
+        perfis: "admin, comercial, analista"
       },
       {
         path: "/update/apontamentos/horas/:id",
         name: "Horas",
+        namePerfil: "Horas Cad",
         mini: "OPT",
         component: HorasUpdate,
         layout: "/admin"
@@ -949,6 +1122,7 @@ const routes = [
       {
         path: "/cadastro/apontamentos/despesas/:id",
         name: "Despesas",
+        namePerfil: "Despesas Cad",
         mini: "DSP",
         component: DespesaCadastro,
         layout: "/admin"
@@ -956,6 +1130,7 @@ const routes = [
       {
         path: "/update/apontamentos/despesas/:id",
         name: "Despesas",
+        namePerfil: "Despesas Cad",
         mini: "DSP",
         component: DespesaUpdate,
         layout: "/admin"
@@ -963,6 +1138,7 @@ const routes = [
       {
         path: "/update/user/perfil/",
         name: "Perfil",
+        namePerfil: "Perfil Cad",
         mini: "UPRF",
         component: ProfileUpdate,
         layout: "/admin"
@@ -970,6 +1146,7 @@ const routes = [
       {
         path: "/cadastro/geral/contaContabil",
         name: "Cadastro de Conta Contábil",
+        namePerfil: "Cadastro de Conta Contábil Cad",
         mini: "RF",
         component: CadastroContaContabil,
         layout: "/admin"
@@ -977,6 +1154,7 @@ const routes = [
       {
         path: "/update/general/contaContabil/:id",
         name: "Editar Conta Contábil",
+        namePerfil: "Editar Conta Contábil Cad",
         mini: "RF",
         component: UpdateContaContabil,
         layout: "/admin"
@@ -984,6 +1162,7 @@ const routes = [
       {
         path: "/cadastro/geral/centroCusto",
         name: "Cadastro de Centro Custo",
+        namePerfil: "Cadastro de Centro Custo Cad",
         mini: "RF",
         component: CadastroCentroCusto,
         layout: "/admin"
@@ -991,6 +1170,7 @@ const routes = [
       {
         path: "/update/general/centroCusto/:id",
         name: "Editar conta Contábil",
+        namePerfil: "Editar conta Contábil Cad",
         mini: "RF",
         component: UpdateCentroCusto,
         layout: "/admin"
@@ -998,15 +1178,16 @@ const routes = [
       {
         path: "/cadastro/fechamento/periodo",
         name: "Cadastro de Periodo",
+        namePerfil: "Cadastro de Periodo Cad",
         mini: "RF",
         component: CadastroPeriodo,
         layout: "/admin"
       }
-      // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
-      // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
-      // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
-      // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
-      // Cadastros Fim---------------------------------------------------------------------------------------------------------------------
+      // astros Fim---------------------------------------------------------------------------------------------------------------------
+      // astros Fim---------------------------------------------------------------------------------------------------------------------
+      // astros Fim---------------------------------------------------------------------------------------------------------------------
+      // astros Fim---------------------------------------------------------------------------------------------------------------------
+      // astros Fim---------------------------------------------------------------------------------------------------------------------
     ]
   }
 ];

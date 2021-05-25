@@ -447,7 +447,6 @@ class DashboardGerencial extends React.Component {
   render() {
     return (
       <>
-        {console.log(this.state)}
         {this.state.isLoading ? (
           <>
             <div className="content" />

@@ -25,53 +25,54 @@ import {
   CardTitle,
   FormGroup,
   Form,
-  Input,
   Label,
+  Input,
   Row,
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { condPgmtoUpdate } from "~/store/modules/general/actions";
+import { Link, useParams } from "react-router-dom";
 import { store } from "~/store";
 import api from "~/services/api";
+import { camposDinamicosUpdate } from "~/store/modules/Cliente/actions";
 
-function CondPgmtoUpdate() {
+export default function UpdateCamposDinamicos() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" },
-    diasPrazo: { value: "", error: "", message: "" }
+    nome: { value: "", error: "", message: "" },
+    valor: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      setIsLoading(true);
       const response = await api.get(`/empresa/${empresa}`);
-      const response1 = await api.get(`/condPgmto/${id}`);
-
+      const response2 = await api.get(`/camposDinamicos/${id}/true`);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        desc: { value: response1.data.desc },
-        cod: { value: response1.data.cod },
-        diasPrazo: { value: response1.data.diasPrazo }
+        nome: { value: response2.data.nome },
+        valor: { value: response2.data.valor }
       }));
-
-      setIsLoading(false);
     }
+    setIsLoading(false);
     loadData();
   }, [id]);
+
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -86,12 +87,6 @@ function CondPgmtoUpdate() {
       default:
     }
   };
-  var options = {};
-
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -121,12 +116,10 @@ function CondPgmtoUpdate() {
 
     if (valid && filled) {
       dispatch(
-        condPgmtoUpdate(
-          id,
+        camposDinamicosUpdate(
           values.empresaId.value,
-          values.cod.value,
-          values.desc.value,
-          values.diasPrazo.value
+          values.nome.value,
+          values.valor.value
         )
       );
     } else {
@@ -147,9 +140,7 @@ function CondPgmtoUpdate() {
   return (
     <>
       {isLoading ? (
-        <>
-          <div className="content" />
-        </>
+        <></>
       ) : (
         <>
           <div className="rna-container">
@@ -160,115 +151,53 @@ function CondPgmtoUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <Link to="/cadastro/aux/condPgmto">
-                      <Button
-                        style={{
-                          float: "right",
-                          paddingLeft: 15,
-                          paddingRight: 15
-                        }}
-                        color="info"
-                        size="small"
-                        className="text-center"
-                      >
-                        <i
-                          className="tim-icons icon-simple-add"
-                          style={{
-                            paddingBottom: 4,
-                            paddingRight: 10
-                          }}
-                          size="large"
-                        />{" "}
-                        Novo
-                      </Button>
-                    </Link>
-                    <CardTitle tag="h4">Condição de Pagamento</CardTitle>
+                    <CardTitle tag="h4">Campos Dinâmicos</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <Row>
                         <Col md="4">
-                          <Label>Código</Label>
+                          <Label>Nome</Label>
                           <FormGroup
-                            className={`has-label ${values.cod.error}`}
+                            className={`has-label ${values.nome.error}`}
                           >
                             <Input
-                              name="license"
+                              name="nome"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "cod", "text")
+                                handleChange(event, "nome", "text")
                               }
-                              value={values.cod.value}
-                            />
-                            {values.cod.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.cod.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Descrição</Label>
-                          <FormGroup
-                            className={`has-label ${values.desc.error}`}
-                          >
-                            <Input
-                              name="license"
-                              type="text"
-                              onChange={event =>
-                                handleChange(event, "desc", "text")
-                              }
-                              value={values.desc.value}
-                            />
-                            {values.desc.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.desc.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Dias de Prazo</Label>
-                          <FormGroup
-                            className={`has-label ${values.diasPrazo.error}`}
-                          >
-                            <Input
-                              name="diasPrazo"
-                              type="text"
-                              onChange={event =>
-                                handleChange(event, "diasPrazo", "text")
-                              }
-                              value={values.diasPrazo.value}
+                              value={values.nome.value}
                             />{" "}
-                            {values.diasPrazo.error === "has-danger" ? (
+                            {values.nome.error === "has-danger" ? (
                               <Label className="error">
-                                {values.diasPrazo.message}
+                                {values.nome.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Valor</Label>
+                          <FormGroup
+                            className={`has-label ${values.valor.error}`}
+                          >
+                            <Input
+                              name="valor"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "valor", "text")
+                              }
+                              value={values.valor.value}
+                            />{" "}
+                            {values.valor.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.valor.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tabelas/aux/condPgmto">
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="text-left"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -288,6 +217,28 @@ function CondPgmtoUpdate() {
                           size="large"
                         />
                       </Button>
+                      <Link to="/tabelas/cliente/camposDinamicos">
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
                     </Form>
                   </CardBody>
                 </Card>
@@ -299,4 +250,3 @@ function CondPgmtoUpdate() {
     </>
   );
 }
-export default CondPgmtoUpdate;

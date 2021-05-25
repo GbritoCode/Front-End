@@ -112,7 +112,7 @@ export function* updateColab({ payload }) {
       nome,
       email,
       CPF,
-      colabId: id
+      ColabId: id
     });
 
     const response = yield call(api.put, `colab/${id}`, Colab);

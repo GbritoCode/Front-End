@@ -158,7 +158,6 @@ export default function CotacaoCadastro() {
     loadData();
   }, [id]);
 
-  console.log(data4);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -183,7 +182,6 @@ export default function CotacaoCadastro() {
     if (newFiles.length) {
       if (files.length < 2) {
         const updatedFiles = addNewFiles(newFiles);
-        console.log(updatedFiles);
         setFileAux(updatedFiles);
       } else {
         options = {

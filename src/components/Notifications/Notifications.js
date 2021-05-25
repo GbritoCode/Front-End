@@ -64,52 +64,64 @@ export default function Notifications() {
         <p className="d-lg-none">Notifications</p>
       </DropdownToggle>
       <DropdownMenu className="dropdown-navbar" right tag="ul">
-        {notify.map(notification => (
-          <NavLink
-            key={notification._id}
-            onClick={e => e.preventDefault}
-            tag="li"
-          >
-            <DropdownItem toggle={false} className="nav-item">
-              <div className="testando">
-                {notification.content.split(",")[0]}
-                <p />
-                {notification.content.split(",")[1]}
-                <br />
+        {notify.length === 0 ? (
+          <>
+            <NavLink onClick={e => e.preventDefault} tag="li">
+              <DropdownItem toggle={false} className="nav-item">
+                <div className="testando">
+                  <p>Não há notificações</p>
+                </div>
+              </DropdownItem>
+            </NavLink>
+          </>
+        ) : (
+          notify.map(notification => (
+            <NavLink
+              key={notification._id}
+              onClick={e => e.preventDefault}
+              tag="li"
+            >
+              <DropdownItem toggle={false} className="nav-item">
+                <div className="testando">
+                  {notification.content.split(",")[0]}
+                  <p />
+                  {notification.content.split(",")[1]}
+                  <br />
 
-                {notification.content.split(",")[2]}
-              </div>
-              {notification.read ? (
-                <>
-                  <p className="notificationTimeRead">
-                    {" "}
-                    {notification.timeDistance}{" "}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="notificationTimeUnread">
-                    {" "}
-                    {notification.timeDistance}{" "}
-                  </p>
-                </>
-              )}
-              {notification.read ? (
-                <></>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => handleMarkasRead(notification._id)}
-                  className="notificationMarkAsRead"
-                >
-                  <Tooltip title="Marcar como lida">
-                    <i className="tim-icons icon-check-2" />
-                  </Tooltip>
-                </button>
-              )}
-            </DropdownItem>
-          </NavLink>
-        ))}
+                  {notification.content.split(",")[2]}
+                </div>
+                {notification.read ? (
+                  <>
+                    <p className="notificationTimeRead">
+                      {" "}
+                      {notification.timeDistance}{" "}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="notificationTimeUnread">
+                      {" "}
+                      {notification.timeDistance}{" "}
+                    </p>
+                  </>
+                )}
+                {notification.read ? (
+                  <></>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleMarkasRead(notification._id)}
+                    className="notificationMarkAsRead"
+                  >
+                    <Tooltip title="Marcar como lida">
+                      <i className="tim-icons icon-check-2" />
+                    </Tooltip>
+                  </button>
+                )}
+              </DropdownItem>
+            </NavLink>
+          ))
+        )}
       </DropdownMenu>
     </UncontrolledDropdown>
   );

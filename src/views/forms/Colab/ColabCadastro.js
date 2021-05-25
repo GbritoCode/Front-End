@@ -37,6 +37,7 @@ import { normalizeFone, normalizeCpf } from "~/normalize";
 import { store } from "~/store";
 import { colabRequest } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
+import TagsInput from "~/components/Tags/TagsInput";
 
 /* eslint-disable eqeqeq */
 export default function ColabCadastro() {
@@ -45,7 +46,11 @@ export default function ColabCadastro() {
 
   const dispatch = useDispatch();
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
 
+  const [tagsinput, settagsinput] = useState([]);
+
+  const [string, setString] = useState("");
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cpf: { value: "", error: "", message: "" },
@@ -55,8 +60,7 @@ export default function ColabCadastro() {
     cel: { value: "", error: "", message: "" },
     PerfilUser: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" },
-    espec: { value: "", error: "", message: "" }
+    email: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -65,7 +69,9 @@ export default function ColabCadastro() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/fornec`);
+      const response2 = await api.get(`/perfil`);
       setData1(response1.data);
+      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -73,6 +79,11 @@ export default function ColabCadastro() {
     }
     loadData();
   }, []);
+
+  const handleTagsinput = value => {
+    setString(`${value}`);
+    settagsinput(value);
+  };
 
   var options = {};
 
@@ -231,10 +242,10 @@ export default function ColabCadastro() {
           values.nome.value,
           values.dtAdmiss.value,
           celdb,
-          1,
+          values.PerfilUser.value,
           values.skype.value,
           values.email.value,
-          values.espec.value,
+          string,
           first,
           values.PerfilUser.value
         )
@@ -401,10 +412,11 @@ export default function ColabCadastro() {
                             {" "}
                             Selecione o perfil{" "}
                           </option>
-                          <option value={1}>Analista</option>
-                          <option value={2}>Comercial</option>
-                          <option value={3}>Gestor</option>
-                          <option value={10}>Admin</option>
+                          {data2.map(perfil => (
+                            <option value={perfil.id}>
+                              {perfil.cod} - {perfil.desc}{" "}
+                            </option>
+                          ))}
                         </Input>
                         {values.PerfilUser.error === "has-danger" ? (
                           <Label className="error">
@@ -457,22 +469,14 @@ export default function ColabCadastro() {
                     <Col md="6">
                       {" "}
                       <Label>Especialidade</Label>
-                      <FormGroup
-                        claclassName={`has-label ${values.espec.error}`}
-                      >
-                        <Input
-                          name="espec"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "espec", "text")
-                          }
-                          value={values.espec.value}
+                      <FormGroup claclassName="has-label">
+                        <TagsInput
+                          onChange={handleTagsinput}
+                          tagProps={{
+                            className: "react-tagsinput-tag "
+                          }}
+                          value={tagsinput}
                         />
-                        {values.espec.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.espec.message}
-                          </Label>
-                        ) : null}
                       </FormGroup>
                     </Col>
                   </Row>

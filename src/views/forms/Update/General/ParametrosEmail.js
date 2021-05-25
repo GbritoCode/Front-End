@@ -61,7 +61,6 @@ const Panels = () => {
     fromEmailFat: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-  console.log(tagsinputOrc);
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/emailParams/?one=true`);
@@ -109,7 +108,6 @@ const Panels = () => {
         break;
     }
   };
-  console.log(stringOrc);
   const handleTagsinputOrc = value => {
     setStringOrc(`${value}`);
     settagsinputOrc(value);

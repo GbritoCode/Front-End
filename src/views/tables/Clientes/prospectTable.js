@@ -36,6 +36,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
+import history from "~/services/history";
 
 export default function ProspectTable() {
   document.body.classList.add("white-content");
@@ -77,6 +78,18 @@ export default function ProspectTable() {
               // we've added some custom button actions
               <div className="actions-right">
                 {/* use this button to add a like kind of action */}
+                <Tooltip title="Follow Up">
+                  <Button
+                    color="default"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => {
+                      history.push(`/tabelas/cliente/followUps/${client.id}`);
+                    }}
+                  >
+                    <i className="tim-icons icon-attach-87" />
+                  </Button>
+                </Tooltip>
                 <Tooltip title="Aprovar">
                   <Button
                     color="default"

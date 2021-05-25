@@ -39,6 +39,7 @@ import EventNoteIcon from "@material-ui/icons/EventNote";
 import { normalizeCpf, normalizeFone } from "~/normalize";
 import { ColabUpdate } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
+import TagsInput from "~/components/Tags/TagsInput";
 
 /* eslint-disable eqeqeq */
 function ColabUpdatee() {
@@ -47,7 +48,12 @@ function ColabUpdatee() {
 
   const dispatch = useDispatch();
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [tagsinput, settagsinput] = useState([]);
+
+  const [string, setString] = useState("");
+
   const { id } = useParams();
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -59,8 +65,7 @@ function ColabUpdatee() {
     dtAdmiss: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" },
-    espec: { value: "", error: "", message: "" }
+    email: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     aniver: { value: "", error: "", message: "" }
@@ -73,7 +78,15 @@ function ColabUpdatee() {
     async function loadData() {
       const response = await api.get(`/colab/${id}`);
       const response1 = await api.get(`/fornec`);
+      const response2 = await api.get(`/perfil`);
       setData1(response1.data);
+      setData2(response2.data);
+
+      const auxEspec = response.data.espec.split(",");
+      if (!auxEspec.some(value => tagsinput.includes(value))) {
+        settagsinput(tagsinput.concat(auxEspec));
+        setString(response.data.espec);
+      }
 
       setValues(prevState => ({
         ...prevState,
@@ -86,8 +99,7 @@ function ColabUpdatee() {
         dtAdmiss: { value: response.data.dtAdmiss },
         cel: { value: response.data.cel },
         skype: { value: response.data.skype },
-        email: { value: response.data.email },
-        espec: { value: response.data.espec }
+        email: { value: response.data.email }
       }));
       setOptional(prevState => ({
         ...prevState,
@@ -96,7 +108,12 @@ function ColabUpdatee() {
       setIsLoading(false);
     }
     loadData();
-  }, [id]);
+  }, [id, tagsinput]);
+
+  const handleTagsinput = value => {
+    setString(`${value}`);
+    settagsinput(value);
+  };
 
   function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, "");
@@ -253,7 +270,7 @@ function ColabUpdatee() {
           values.cel.value,
           values.skype.value,
           values.email.value,
-          values.espec.value
+          string
         )
       );
     } else {
@@ -453,10 +470,11 @@ function ColabUpdatee() {
                                 {" "}
                                 Selecione o perfil{" "}
                               </option>
-                              <option value={1}>Analista</option>
-                              <option value={2}>Comercial</option>
-                              <option value={3}>Gestor</option>
-                              <option value={10}>Admin</option>
+                              {data2.map(perfil => (
+                                <option value={perfil.id}>
+                                  {perfil.cod} - {perfil.desc}{" "}
+                                </option>
+                              ))}
                             </Input>
                             {values.PerfilId.error === "has-danger" ? (
                               <Label className="error">
@@ -536,22 +554,14 @@ function ColabUpdatee() {
                       </Row>
 
                       <Label>Especialidade</Label>
-                      <FormGroup
-                        claclassName={`has-label ${values.espec.error}`}
-                      >
-                        <Input
-                          name="espec"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "espec", "text")
-                          }
-                          value={values.espec.value}
+                      <FormGroup claclassName="has-label">
+                        <TagsInput
+                          onChange={handleTagsinput}
+                          tagProps={{
+                            className: "react-tagsinput-tag "
+                          }}
+                          value={tagsinput}
                         />
-                        {values.espec.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.espec.message}
-                          </Label>
-                        ) : null}
                       </FormGroup>
                       <Link to="/tabelas/colab">
                         <Button

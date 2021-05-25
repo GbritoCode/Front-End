@@ -24,67 +24,61 @@ import {
   CardBody,
   CardTitle,
   FormGroup,
-  Label,
   Form,
+  Label,
   Input,
   Row,
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { tipoComissUpdate } from "~/store/modules/general/actions";
+import { Link, useParams } from "react-router-dom";
 import { store } from "~/store";
-import { normalizeCurrency } from "~/normalize";
 import api from "~/services/api";
+import { campanhaUpdate } from "~/store/modules/Cliente/actions";
 
-function TipoComissUpdate() {
+export default function UpdateCampanha() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" },
-    prcnt: { value: "", error: "", message: "" },
-    bsComiss: { value: "", error: "", message: "" }
+    cod: { value: "", error: "", message: "" },
+    desc: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      setIsLoading(true);
       const response = await api.get(`/empresa/${empresa}`);
-      const response1 = await api.get(`/tipoComiss/${id}`);
-
+      const response2 = await api.get(`/campanha/${id}/true`);
+      console.log(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        desc: { value: response1.data.desc },
-        prcnt: {
-          value: normalizeCurrency(JSON.stringify(response1.data.prcnt))
-        },
-        bsComiss: { value: response1.data.bsComiss }
+        cod: { value: response2.data.cod },
+        desc: { value: response2.data.desc }
       }));
       setIsLoading(false);
     }
     loadData();
   }, [id]);
 
+  var options = {};
+
+  const notifyElment = useRef(null);
+  function notify() {
+    notifyElment.current.notificationAlert(options);
+  }
+
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
     switch (type) {
-      case "prcnt":
-        setValues(prevState => ({
-          ...prevState,
-          [name]: { value: normalizeCurrency(target) }
-        }));
-        break;
       case "text":
         setValues(prevState => ({
           ...prevState,
@@ -94,12 +88,6 @@ function TipoComissUpdate() {
       default:
     }
   };
-  var options = {};
-
-  const notifyElment = useRef(null);
-  function notify() {
-    notifyElment.current.notificationAlert(options);
-  }
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -128,14 +116,11 @@ function TipoComissUpdate() {
     }
 
     if (valid && filled) {
-      var prcntdb = values.prcnt.value.replace(/[^\d]+/g, "");
       dispatch(
-        tipoComissUpdate(
-          id,
+        campanhaUpdate(
           values.empresaId.value,
-          values.desc.value,
-          prcntdb,
-          values.bsComiss.value
+          values.cod.value,
+          values.desc.value
         )
       );
     } else {
@@ -156,9 +141,7 @@ function TipoComissUpdate() {
   return (
     <>
       {isLoading ? (
-        <>
-          <div className="content" />
-        </>
+        <></>
       ) : (
         <>
           <div className="rna-container">
@@ -169,11 +152,31 @@ function TipoComissUpdate() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Tipo de Comissão</CardTitle>
+                    <CardTitle tag="h4">Campanha</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <Row>
+                        <Col md="4">
+                          <Label>Código</Label>
+                          <FormGroup
+                            className={`has-label ${values.cod.error}`}
+                          >
+                            <Input
+                              name="cod"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cod", "text")
+                              }
+                              value={values.cod.value}
+                            />{" "}
+                            {values.cod.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cod.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
                         <Col md="4">
                           <Label>Descrição</Label>
                           <FormGroup
@@ -181,21 +184,12 @@ function TipoComissUpdate() {
                           >
                             <Input
                               name="desc"
-                              type="select"
+                              type="text"
                               onChange={event =>
                                 handleChange(event, "desc", "text")
                               }
                               value={values.desc.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione o tipo{" "}
-                              </option>
-                              <option value={1}>Indicação</option>
-                              <option value={2}>Representação</option>
-                              <option value={3}>Prospecção</option>
-                              <option value={4}>Interna</option>
-                            </Input>
+                            />{" "}
                             {values.desc.error === "has-danger" ? (
                               <Label className="error">
                                 {values.desc.message}
@@ -203,77 +197,7 @@ function TipoComissUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
-                          <Label>Percentual</Label>
-                          <FormGroup
-                            className={`has-label ${values.prcnt.error}`}
-                          >
-                            <Input
-                              name="prcnt"
-                              type="text"
-                              onChange={event =>
-                                handleChange(event, "prcnt", "prcnt")
-                              }
-                              value={values.prcnt.value}
-                            />
-                            {values.prcnt.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.prcnt.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Base de Comissão</Label>
-                          <FormGroup
-                            className={`has-label ${values.bsComiss.error}`}
-                          >
-                            <Input
-                              name="bsComiss"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "bsComiss", "text")
-                              }
-                              value={values.bsComiss.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a Comissão{" "}
-                              </option>
-                              <option value="1">Lucro Líquido</option>
-                              <option value="2">Lucro Bruto</option>
-                              <option value="3">Total Projeto</option>
-                              <option value="4">Fixado</option>
-                            </Input>
-                            {values.bsComiss.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.bsComiss.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
                       </Row>
-                      <Link to="/tabelas/aux/tipoComiss">
-                        <Button
-                          style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
-                          }}
-                          color="secundary"
-                          size="small"
-                          className="text-left"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
                       <Button
                         style={{
                           paddingLeft: 29,
@@ -293,6 +217,28 @@ function TipoComissUpdate() {
                           size="large"
                         />
                       </Button>
+                      <Link to="/tabelas/cliente/campanha">
+                        <Button
+                          style={{
+                            paddingLeft: 32,
+                            paddingRight: 33,
+                            float: "left"
+                          }}
+                          color="secundary"
+                          size="small"
+                          className="form"
+                        >
+                          <i
+                            className="tim-icons icon-double-left"
+                            style={{
+                              paddingBottom: 4,
+                              paddingRight: 1
+                            }}
+                            size="large"
+                          />{" "}
+                          Voltar
+                        </Button>
+                      </Link>
                     </Form>
                   </CardBody>
                 </Card>
@@ -304,4 +250,3 @@ function TipoComissUpdate() {
     </>
   );
 }
-export default TipoComissUpdate;

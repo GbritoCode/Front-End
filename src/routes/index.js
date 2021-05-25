@@ -132,6 +132,16 @@ import ParcelaAtrasadaTable from "~/views/tables/oportTables/parcelaAtrasadaTabl
 import ParcelaAbertaTable from "~/views/tables/oportTables/parcelaAbertaTable";
 import OportFinTable from "~/views/tables/oportTables/oportFinalizadaTable";
 import Example from "~/views/forms/Update/General/ParametrosEmail";
+import CampanhaTable from "~/views/tables/Clientes/campanhasTable";
+import CamposDinamicosTable from "~/views/tables/Clientes/camposDinamicosProspect";
+import followUpTable from "~/views/tables/Clientes/followUpsTable";
+import CadastroCampanha from "~/views/forms/Cliente/campanhaCadastro";
+import CadastroCamposDinamicos from "~/views/forms/Cliente/camposDinamicosCadastro";
+import UpdateCampanha from "~/views/forms/Update/Cliente/campanhaUpdate";
+import UpdateCamposDinamicos from "~/views/forms/Update/Cliente/camposDinamicosUpdate";
+import CadastroFollowUps from "~/views/forms/Cliente/followUpCadastro";
+import UpdateFollowUps from "~/views/forms/Update/Cliente/followUpUpdate";
+import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
 
 export default function Routes() {
   return (
@@ -162,6 +172,26 @@ export default function Routes() {
       <Route
         path="/tabelas/cliente/prospect"
         component={prospectTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/cliente/campanha"
+        component={CampanhaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/cliente/camposDinamicos"
+        component={CamposDinamicosTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/cliente/followUps/:id"
+        component={followUpTable}
+        isPrivate
+      />
+      <Route
+        path="/timeline/cliente/followUps/:id"
+        component={FollowUpTimeline}
         isPrivate
       />
       <Route
@@ -327,6 +357,36 @@ export default function Routes() {
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------*/}
       {/** CLIENTE */}
+      <Route
+        path="/cadastro/cliente/campanha"
+        component={CadastroCampanha}
+        isPrivate
+      />
+      <Route
+        path="/update/cliente/campanha/:id"
+        component={UpdateCampanha}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/cliente/camposDinamicos"
+        component={CadastroCamposDinamicos}
+        isPrivate
+      />
+      <Route
+        path="/update/cliente/camposDinamicos/:id"
+        component={UpdateCamposDinamicos}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/cliente/followUps/:id"
+        component={CadastroFollowUps}
+        isPrivate
+      />
+      <Route
+        path="/update/cliente/FollowUps/:id"
+        component={UpdateFollowUps}
+        isPrivate
+      />
       <Route
         path="/cliente_cadastro/:prospect"
         component={CadastroCliente}

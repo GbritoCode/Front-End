@@ -16,7 +16,8 @@
 */
 /*eslint-disable*/
 import React from "react";
-import { NavLink, Redirect } from "react-router-dom";
+
+import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
@@ -64,13 +65,13 @@ class Sidebar extends React.Component {
   }
   // this function creates the links and collapses that appear in the sidebar (left menu)
   createLinks = (routes) => {
-  const { profile } = store.getState().auth.user;
-
+  const acessible = store.getState().auth.acessible;
     return routes.map((prop, key) => {
       if (prop.redirect) {
         return null;
       }
-      if(prop.profile > profile) return null
+
+      if(!acessible.includes(prop.namePerfil)) return null
       if (prop.collapse === true) {
         var st = {};
         st[prop["state"]] = !this.state[prop.state];
@@ -228,7 +229,6 @@ class Sidebar extends React.Component {
     }
     return (
       <div className="sidebar" data={activeColor}>
-      {console.log(this.props)}
         <div className="sidebar-wrapper" ref="sidebar">
           {logoImg !== null || logoText !== null ? (
             <div className="logo" style={{paddingLeft: 0}}>

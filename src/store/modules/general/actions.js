@@ -322,24 +322,27 @@ export function tipoComissUpdate(id, EmpresaId, desc, prcnt, bsComiss) {
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function perfilRequest(EmpresaId, desc, first) {
+export function perfilRequest(EmpresaId, desc, cod, string, first) {
   return {
     type: "@cadastro/PERFIL_REQUEST",
     payload: {
       EmpresaId,
       desc,
+      cod,
+      string,
       first
     }
   };
 }
-export function perfilUpdate(id, EmpresaId, desc) {
+export function perfilUpdate(id, EmpresaId, desc, cod, string) {
   return {
     type: "@update/PERFIL_REQUEST",
     payload: {
       id,
       EmpresaId,
-
-      desc
+      desc,
+      cod,
+      string
     }
   };
 }
