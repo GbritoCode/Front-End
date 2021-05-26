@@ -339,6 +339,7 @@ export default function PerfilCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
+                  <hr />
                   <Nav tabs>
                     <NavItem>
                       <NavLink
