@@ -29,9 +29,9 @@ import {
   Row,
   Col
 } from "reactstrap";
-import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { useParams, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   FileUploadContainer,
   FormField,
@@ -45,12 +45,9 @@ import {
 } from "../../../components/Styles/uploadAreaStyles";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import { store } from "~/store";
-import {
-  cotacaoRequest,
-  oportUpdate
-} from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 import TagsInput from "~/components/Tags/TagsInput";
+import history from "~/services/history";
 
 export default function CotacaoCadastro() {
   // --------- colocando no modo claro do template
@@ -58,7 +55,6 @@ export default function CotacaoCadastro() {
   const fileInputField = useRef(null);
 
   const { id } = useParams();
-  const dispatch = useDispatch();
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -158,7 +154,6 @@ export default function CotacaoCadastro() {
     loadData();
   }, [id]);
 
-  console.log(data4);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -183,7 +178,6 @@ export default function CotacaoCadastro() {
     if (newFiles.length) {
       if (files.length < 2) {
         const updatedFiles = addNewFiles(newFiles);
-        console.log(updatedFiles);
         setFileAux(updatedFiles);
       } else {
         options = {
@@ -447,56 +441,68 @@ export default function CotacaoCadastro() {
       for (const file of files) {
         formData.append("file", file);
       }
-      dispatch(
-        cotacaoRequest(
-          values.empresaId.value,
-          values.OportunidadeId.value,
-          values.probVend.value,
-          values.tipoCobranca.value,
-          values.hrsPrevst.value,
-          vlrPropdb,
-          vlrDescdb,
-          vlrLiqdb,
-          recLiqdb,
-          prevLucrodb,
-          values.numParcelas.value,
-          values.motivo.value,
-          optional.desc.value
-        )
-      );
-
-      dispatch(
-        oportUpdate(
-          data1.id,
-          data1.EmpresaId,
-          data1.ColabId,
-          data1.ClienteId,
-          data1.UndNegId,
-          data1.RecDespId,
-          data1.SegmentoId,
-          data1.RepresentanteId,
-          data1.contato,
-          data1.data,
-          3,
-          data1.cod,
-          data1.desc,
-          data1.narrativa
-        )
-      );
+      const dataToSend = {
+        EmpresaId: values.empresaId.value,
+        OportunidadeId: values.OportunidadeId.value,
+        probVend: values.probVend.value,
+        tipoCobranca: values.tipoCobranca.value,
+        hrsPrevst: values.hrsPrevst.value,
+        vlrProp: vlrPropdb,
+        vlrDesc: vlrDescdb,
+        vlrLiq: vlrLiqdb,
+        recLiq: recLiqdb,
+        prevLucro: prevLucrodb,
+        numParcelas: values.numParcelas.value,
+        motivo: values.motivo.value,
+        desc: optional.desc.value
+      };
+      formData.append("body", JSON.stringify(dataToSend));
+      // dispatch(
+      //   oportUpdate(
+      //     data1.id,
+      //     data1.EmpresaId,
+      //     data1.ColabId,
+      //     data1.ClienteId,
+      //     data1.UndNegId,
+      //     data1.RecDespId,
+      //     data1.SegmentoId,
+      //     data1.RepresentanteId,
+      //     data1.contato,
+      //     data1.data,
+      //     3,
+      //     data1.cod,
+      //     data1.desc,
+      //     data1.narrativa
+      //   )
+      // );
 
       const delay = ms => new Promise(res => setTimeout(res, ms));
       await delay(500);
 
+      // await api.post(`cotacao`, formData);
+
       if (values.motivo.value === "1") {
-        await api.post(
-          `/files/oport/cotacao/?id=${data4.id}&oportId=${data1.id}&tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
-          formData
-        );
+        await api
+          .post(
+            `/cotacao/?tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
+            formData
+          )
+          .then(() => {
+            history.push("/tabelas/oportunidade/oport");
+          })
+          .catch(err => {
+            toast.error(err.response.data.error);
+          });
       } else {
         await api.post(
-          `/files/oport/cotacao/?id=${data4.id}&oportId=${data1.id}&tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+          `/cotacao/?tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
           formData
-        );
+        ).then(() => {
+          history.push("/tabelas/oportunidade/oport");
+        })
+        .catch(err => {
+          toast.error(err.response.data.error);
+        });;
       }
     } else {
       options = {
