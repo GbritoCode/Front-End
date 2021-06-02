@@ -14,47 +14,38 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useImperativeHandle,
-  forwardRef
-} from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
 import {
   Button,
   Card,
+  CardHeader,
   CardBody,
+  CardTitle,
   Label,
   Form,
   Input,
   FormGroup,
   Row,
-  Col,
-  InputGroup,
-  InputGroupAddon,
-  ModalBody,
-  Modal
+  Col
 } from "reactstrap";
+import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { Close, Message } from "@material-ui/icons";
+import { Link, useParams } from "react-router-dom";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
+import { ClienteRequest } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
-const CadastroCliente = forwardRef((props, ref) => {
+export default function ProspectWizardStep1() {
   // --------- colocando no modo claro do template
-  const [modalMini, setModalMini] = useState(false);
-  const [stateAux, setStateAux] = useState("");
-  const toggleModalMini = () => {
-    setModalMini(!modalMini);
-  };
+  const { prospect } = useParams();
   const jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
+  const dispatch = useDispatch();
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const stateSchema = {
@@ -196,6 +187,79 @@ const CadastroCliente = forwardRef((props, ref) => {
     }
   };
 
+  function checkProsp(param, aux) {
+    switch (aux) {
+      case "title":
+        switch (param) {
+          case "false":
+            return "Cliente";
+          case "true":
+            return "Prospect";
+          default:
+            break;
+        }
+        break;
+      case "backButton":
+        switch (param) {
+          case "false":
+            return (
+              <Link to="/tabelas/cliente/cliente">
+                <Button
+                  style={{
+                    paddingLeft: 32,
+                    paddingRight: 33,
+                    float: "left"
+                  }}
+                  color="secundary"
+                  size="small"
+                  className="text-left"
+                >
+                  <i
+                    className="tim-icons icon-double-left"
+                    style={{
+                      paddingBottom: 4,
+                      paddingRight: 1
+                    }}
+                    size="large"
+                  />{" "}
+                  Voltar
+                </Button>
+              </Link>
+            );
+          case "true":
+            return (
+              <Link to="/tabelas/cliente/prospect">
+                <Button
+                  style={{
+                    paddingLeft: 32,
+                    paddingRight: 33,
+                    float: "left"
+                  }}
+                  color="secundary"
+                  size="small"
+                  className="text-left"
+                >
+                  <i
+                    className="tim-icons icon-double-left"
+                    style={{
+                      paddingBottom: 4,
+                      paddingRight: 1
+                    }}
+                    size="large"
+                  />{" "}
+                  Voltar
+                </Button>
+              </Link>
+            );
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   const checkDesc = value => {
     switch (value) {
       case "1":
@@ -262,7 +326,8 @@ const CadastroCliente = forwardRef((props, ref) => {
     }
   };
 
-  const isValidated = () => {
+  const handleSubmit = evt => {
+    evt.preventDefault();
     const aux = Object.entries(values);
     const tamanho = aux.length;
 
@@ -288,115 +353,48 @@ const CadastroCliente = forwardRef((props, ref) => {
     }
 
     if (valid && filled) {
-      values.cnpj.value = values.cnpj.value.replace(/[^\d]+/g, "");
-      return true;
+      const cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
+      dispatch(
+        ClienteRequest(
+          cnpjdb,
+          values.nomeAbv.value,
+          values.rzSoc.value,
+          optional.fantasia.value,
+          values.representante.value,
+          values.tipoComiss.value,
+          values.empresaId.value,
+          prospect
+        )
+      );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
     }
-    options = {
-      place: "tr",
-      message: (
-        <div>
-          <div>Ops! Há algo errado</div>
-        </div>
-      ),
-      type: "danger",
-      icon: "tim-icons icon-alert-circle-exc",
-      autoDismiss: 7
-    };
-    notify();
   };
-
-  useImperativeHandle(ref, () => ({
-    isValidated: () => {
-      return isValidated();
-    },
-    state: {
-      EmpresaId: values.empresaId.value,
-      CNPJ: values.cnpj.value,
-      rzSoc: values.rzSoc.value,
-      nomeAbv: values.nomeAbv.value,
-      RepresentanteId: values.representante.value,
-      TipoComisseId: values.tipoComiss.value,
-      prospect: true
-    }
-  }));
-
   return (
     <>
       <div className="rna-container">
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
-        <Modal
-          modalClassName="modal-mini "
-          isOpen={modalMini}
-          toggle={toggleModalMini}
-        >
-          <div className="modal-header justify-content-center">
-            <button
-              aria-hidden
-              className="close"
-              data-dismiss="modal"
-              type="button"
-              color="primary"
-              onClick={toggleModalMini}
-            >
-              <Close />
-            </button>
-            <div>
-              <Message fontSize="large" />
-            </div>
-          </div>
-          <ModalBody className="text-center">
-            <Label>Filtrar</Label>
-            <Input onChange={e => setStateAux(e.target.value)} />
-            <div>
-              <ul>
-                {console.log(values)}
-                {data2.map(
-                  repr =>
-                    repr.nome.includes(stateAux) && (
-                      <li
-                        onClick={() => {
-                          setModalMini(!modalMini);
-                          document.getElementsByName("representante")[0].value =
-                            repr.nome;
-                          setValues(prevState => ({
-                            ...prevState,
-                            representante: repr.id
-                          }));
-                        }}
-                      >
-                        {repr.nome}
-                      </li>
-                    )
-                )}
-              </ul>
-            </div>
-          </ModalBody>
-          <div className="modal-footer">
-            <Button
-              style={{ color: "#000" }}
-              className="btn-neutral"
-              type="button"
-              onClick={toggleModalMini}
-            >
-              Não
-            </Button>
-            <Button
-              style={{ color: "#7E7E7E" }}
-              className="btn-neutral"
-              type="button"
-              onClick={() => {}}
-            >
-              Sim
-            </Button>
-          </div>
-        </Modal>
         <Row>
           <Col md="12">
             <Card>
+              <CardHeader>
+                <CardTitle tag="h4">{checkProsp(prospect, "title")}</CardTitle>
+              </CardHeader>
               <CardBody>
-                <Form>
+                <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
                       <Label>CNPJ</Label>
@@ -421,11 +419,6 @@ const CadastroCliente = forwardRef((props, ref) => {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Input
-                      hidden
-                      value={stateAux}
-                      id="filtrandoRepresentantesModal"
-                    />
                     <Col md="4">
                       <Label>Razão Social</Label>
                       <FormGroup className={`has-label ${values.rzSoc.error}`}>
@@ -495,24 +488,26 @@ const CadastroCliente = forwardRef((props, ref) => {
                       <FormGroup
                         className={`has-label ${values.representante.error}`}
                       >
-                        <InputGroup>
-                          <Input
-                            name="representante"
-                            type="text"
-                            onChange={event =>
-                              handleChange(event, "representante", "text")
-                            }
-                          />
-                          <InputGroupAddon
-                            className="appendCustom"
-                            addonType="append"
-                          >
-                            <Button onClick={() => setModalMini(!modalMini)}>
-                              <i className="tim-icons icon-simple-remove" />
-                            </Button>
-                          </InputGroupAddon>
-                        </InputGroup>
-
+                        <Input
+                          name="representante"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "representante", "text")
+                          }
+                          value={values.representante.value}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o representante{" "}
+                          </option>
+                          {data2.map(representante => (
+                            <option value={representante.id}>
+                              {" "}
+                              {representante.nome}{" "}
+                            </option>
+                          ))}
+                        </Input>
                         {values.representante.error === "has-danger" ? (
                           <Label className="error">
                             {values.representante.message}
@@ -531,56 +526,10 @@ const CadastroCliente = forwardRef((props, ref) => {
                           onChange={event =>
                             handleChange(event, "tipoComiss", "text")
                           }
-                          onChangeCapture={async () => {
-                            const response2 = await axios({
-                              url: `https://www.receitaws.com.br/v1/cnpj/${values.cnpj.value.replace(
-                                /[^\d]+/g,
-                                ""
-                              )}`,
-                              adapter: jsonpAdapter
-                            });
-                            if (response2.data.status === "ERROR") {
-                              setValues(prevState => ({
-                                ...prevState,
-                                cnpj: {
-                                  error: "has-danger",
-                                  message: "Insira um CNPJ válido"
-                                }
-                              }));
-                            } else {
-                              sessionStorage.setItem(
-                                "cliData",
-                                JSON.stringify(values)
-                              );
-                              sessionStorage.setItem(
-                                "compData",
-                                JSON.stringify({
-                                  ClienteId: {
-                                    value: "",
-                                    error: "",
-                                    message: ""
-                                  },
-                                  CondPgmtoId: {
-                                    value: "",
-                                    error: "",
-                                    message: ""
-                                  },
-                                  cep: { value: response2.data.cep },
-                                  rua: { value: response2.data.logradouro },
-                                  numero: { value: response2.data.numero },
-                                  bairro: { value: response2.data.bairro },
-                                  cidade: { value: response2.data.municipio },
-                                  uf: { value: response2.data.uf },
-                                  inscMun: {
-                                    value: "",
-                                    error: "",
-                                    message: ""
-                                  },
-                                  inscEst: { value: "", error: "", message: "" }
-                                })
-                              );
-                            }
-                          }}
+                          onChangeCapture={sessionStorage.setItem(
+                            "CliData",
+                            JSON.stringify(values)
+                          )}
                           value={values.tipoComiss.value}
                         >
                           {" "}
@@ -603,6 +552,26 @@ const CadastroCliente = forwardRef((props, ref) => {
                       </FormGroup>
                     </Col>
                   </Row>
+                  <Button
+                    style={{
+                      paddingLeft: 29,
+                      paddingRight: 30
+                    }}
+                    className="form"
+                    color="info"
+                    type="submit"
+                  >
+                    Enviar{" "}
+                    <i
+                      className="tim-icons icon-send"
+                      style={{
+                        paddingBottom: 4,
+                        paddingLeft: 3
+                      }}
+                      size="large"
+                    />
+                  </Button>
+                  {checkProsp(prospect, "backButton")}
                 </Form>
               </CardBody>
             </Card>
@@ -611,5 +580,4 @@ const CadastroCliente = forwardRef((props, ref) => {
       </div>
     </>
   );
-});
-export default CadastroCliente;
+}

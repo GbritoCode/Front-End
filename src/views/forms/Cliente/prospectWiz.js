@@ -20,58 +20,52 @@ import ReactWizard from "react-bootstrap-wizard";
 
 // reactstrap components
 import { Col } from "reactstrap";
-import api from "~/services/api";
 
 // wizard steps
-import Step1 from "./ProspectWizardSteps/step1_Prospect";
-import Step2 from "./ProspectWizardSteps/step2_ProspectAddress";
-import Step3 from "./ProspectWizardSteps/step3_ProspectContato";
+import Step1 from "./wizSteps/stepBasic";
+import Step2 from "./wizSteps/stepAddress";
+import Step3 from "./wizSteps/stepContato";
 
 var steps = [
   {
-    stepName: "Informações básicas",
+    stepName: "About",
     stepIcon: "tim-icons icon-single-02",
     component: Step1
   },
   {
-    stepName: "Endereço",
+    stepName: "Account",
     stepIcon: "tim-icons icon-settings-gear-63",
     component: Step2
   },
   {
-    stepName: "Contato",
+    stepName: "Address",
     stepIcon: "tim-icons icon-delivery-fast",
     component: Step3
   }
 ];
 
-export default function ProspectWizard() {
-  const finishButtonClick = async allStates => {
-    api.post("/prospect", allStates);
-  };
+const Wizard = () => {
   return (
     <>
       <div className="content">
         <Col className="mr-auto ml-auto" md="10">
           <ReactWizard
             steps={steps}
-            validate
             navSteps
-            previousButtonText="Anterior"
-            finishButtonText="Enviar"
-            nextButtonText="Próximo"
-            title="Criação de Prospect"
-            description="Informações básicas de cadastro"
+            validate
+            title="Build Your Profile"
+            description="This information will let us know more about you."
             headerTextCenter
             finishButtonClasses="btn-wd btn-info"
             nextButtonClasses="btn-wd btn-info"
             previousButtonClasses="btn-wd"
             progressbar
             color="blue"
-            finishButtonClick={finishButtonClick}
           />
         </Col>
       </div>
     </>
   );
-}
+};
+
+export default Wizard;

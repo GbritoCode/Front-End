@@ -14,17 +14,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useImperativeHandle,
-  forwardRef
-} from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 // reactstrap components
 import {
+  Button,
   Card,
+  CardHeader,
   CardBody,
   Label,
   Form,
@@ -33,15 +29,23 @@ import {
   Row,
   Col
 } from "reactstrap";
+import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { normalizeFone } from "~/normalize";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { CliContRequest } from "~/store/modules/Cliente/actions";
+import api from "~/services/api";
 
-const CliContCadastro = forwardRef((props, ref) => {
+export default function ProspectWizardStep3() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({});
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const stateSchema = {
+    ClienteId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
@@ -53,21 +57,74 @@ const CliContCadastro = forwardRef((props, ref) => {
     aniver: { value: null, error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-  const [finalState, setFinalState] = useState();
   const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     async function loadData() {
+      const response = await api.get(`/cliente/${id}`);
+      setData(response.data);
+      setValues(prevState => ({
+        ...prevState,
+        ClienteId: { value: response.data.id }
+      }));
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   var options = {};
 
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
+  }
+  const query = new URLSearchParams(useLocation().search);
+  const prospect = query.get("prospect");
+
+  function checkProsp(param, aux) {
+    switch (aux) {
+      case "title":
+        switch (param) {
+          case "false":
+            return "Contato Cliente";
+          case "true":
+            return "Contato Prospect";
+          default:
+            break;
+        }
+        break;
+      case "backButton":
+        return (
+          <>
+            <Link
+              to={`/tabelas/cliente/cont/${values.ClienteId.value}/?prospect=${prospect}`}
+            >
+              <Button
+                style={{
+                  paddingLeft: 32,
+                  paddingRight: 33,
+                  float: "left"
+                }}
+                color="secundary"
+                size="small"
+                className="text-left"
+              >
+                <i
+                  className="tim-icons icon-double-left"
+                  style={{
+                    paddingBottom: 4,
+                    paddingRight: 1
+                  }}
+                  size="large"
+                />{" "}
+                Voltar
+              </Button>
+            </Link>
+          </>
+        );
+      default:
+        break;
+    }
   }
 
   const verifyNumber = value => {
@@ -140,8 +197,9 @@ const CliContCadastro = forwardRef((props, ref) => {
     }
   };
 
-  const isValidated = () => {
-    const aux = Object.entries(values);
+  const handleSubmit = evt => {
+    evt.preventDefault();
+    var aux = Object.entries(values);
     const tamanho = aux.length;
 
     for (let i = 0; i < tamanho; i++) {
@@ -164,42 +222,37 @@ const CliContCadastro = forwardRef((props, ref) => {
         break;
       }
     }
-
     if (valid && filled) {
-      values.cel.value = values.cel.value.replace(/[^\d]+/g, "");
-      values.fone.value = values.fone.value.replace(/[^\d]+/g, "");
-      setFinalState({
-        nome: values.nome.value,
-        cel: values.cel.value,
-        fone: values.fone.value,
-        skype: values.skype.value,
-        email: values.email.value,
-        tipoConta: values.tipoConta.value,
-        aniver: optional.aniver.value
-      });
-      return true;
+      var celdb = values.cel.value.replace(/[^\d]+/g, "");
+      var fonedb = values.fone.value.replace(/[^\d]+/g, "");
+      dispatch(
+        CliContRequest(
+          values.ClienteId.value,
+          values.nome.value,
+          celdb,
+          fonedb,
+          values.skype.value,
+          values.email.value,
+          optional.aniver.value,
+          values.tipoConta.value,
+          prospect
+        )
+      );
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Ops! Há algo errado</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
     }
-    options = {
-      place: "tr",
-      message: (
-        <div>
-          <div>Ops! Há algo errado</div>
-        </div>
-      ),
-      type: "danger",
-      icon: "tim-icons icon-alert-circle-exc",
-      autoDismiss: 7
-    };
-    notify();
   };
-
-  useImperativeHandle(ref, () => ({
-    isValidated: () => {
-      return isValidated();
-    },
-    state: finalState
-  }));
-
   return (
     <>
       {isLoading ? (
@@ -215,8 +268,15 @@ const CliContCadastro = forwardRef((props, ref) => {
             <Row>
               <Col md="12">
                 <Card>
+                  <CardHeader>
+                    <h3 style={{ marginBottom: 0 }}>
+                      {checkProsp(prospect, "title")}
+                    </h3>
+                    <p style={{ fontSize: 11 }}>{data.rzSoc}</p>
+                    <p style={{ fontSize: 11 }}>{normalizeCnpj(data.CNPJ)}</p>
+                  </CardHeader>
                   <CardBody>
-                    <Form id="RegisterValidation">
+                    <Form id="RegisterValidation" onSubmit={handleSubmit}>
                       <Row>
                         <Col md="4">
                           <Label>Nome</Label>
@@ -389,6 +449,27 @@ const CliContCadastro = forwardRef((props, ref) => {
                           </FormGroup>
                         </Col>
                       </Row>
+
+                      <Button
+                        style={{
+                          paddingLeft: 29,
+                          paddingRight: 30
+                        }}
+                        className="form"
+                        color="info"
+                        type="submit"
+                      >
+                        Enviar{" "}
+                        <i
+                          className="tim-icons icon-send"
+                          style={{
+                            paddingBottom: 4,
+                            paddingLeft: 3
+                          }}
+                          size="large"
+                        />
+                      </Button>
+                      {checkProsp(prospect, "backButton")}
                     </Form>
                   </CardBody>
                 </Card>
@@ -399,6 +480,4 @@ const CliContCadastro = forwardRef((props, ref) => {
       )}
     </>
   );
-});
-
-export default CliContCadastro;
+}

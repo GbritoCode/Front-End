@@ -57,6 +57,44 @@ export default function ProspectTable() {
     }
   };
   useEffect(() => {
+    sessionStorage.setItem(
+      "cliData",
+      JSON.stringify({
+        empresaId: { value: "" },
+        cnpj: { value: "" },
+        rzSoc: { value: "" },
+        nomeAbv: { value: "" },
+        representante: { value: "" },
+        tipoComiss: { value: "" }
+      })
+    );
+    sessionStorage.setItem(
+      "compData",
+      JSON.stringify({
+        ClienteId: {
+          value: "",
+          error: "",
+          message: ""
+        },
+        CondPgmtoId: {
+          value: "",
+          error: "",
+          message: ""
+        },
+        cep: { value: "" },
+        rua: { value: "" },
+        numero: { value: "" },
+        bairro: { value: "" },
+        cidade: { value: "" },
+        uf: { value: "" },
+        inscMun: {
+          value: "",
+          error: "",
+          message: ""
+        },
+        inscEst: { value: "", error: "", message: "" }
+      })
+    );
     async function loadData() {
       const response = await api.get("/cliente/?prospect=true");
       setData(
