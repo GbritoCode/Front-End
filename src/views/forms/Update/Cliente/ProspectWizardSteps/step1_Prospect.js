@@ -362,7 +362,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                             repr.nome;
                           setValues(prevState => ({
                             ...prevState,
-                            representante: repr.id
+                            representante: { value: repr.id }
                           }));
                         }}
                       >
@@ -508,7 +508,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                             addonType="append"
                           >
                             <Button onClick={() => setModalMini(!modalMini)}>
-                              <i className="tim-icons icon-simple-remove" />
+                              <i className="tim-icons icon-zoom-split" />
                             </Button>
                           </InputGroupAddon>
                         </InputGroup>
@@ -595,11 +595,6 @@ const CadastroCliente = forwardRef((props, ref) => {
                             </option>
                           ))}
                         </Input>
-                        {values.tipoComiss.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.tipoComiss.message}
-                          </Label>
-                        ) : null}
                       </FormGroup>
                     </Col>
                   </Row>

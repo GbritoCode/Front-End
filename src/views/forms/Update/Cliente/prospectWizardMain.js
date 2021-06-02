@@ -30,17 +30,17 @@ import Step3 from "./ProspectWizardSteps/step3_ProspectContato";
 var steps = [
   {
     stepName: "Informações básicas",
-    stepIcon: "tim-icons icon-single-02",
+    stepIcon: "tim-icons icon-settings-gear-63",
     component: Step1
   },
   {
-    stepName: "Endereço",
-    stepIcon: "tim-icons icon-settings-gear-63",
+    stepName: "Complemento Prospect",
+    stepIcon: "tim-icons icon-delivery-fast",
     component: Step2
   },
   {
-    stepName: "Contato",
-    stepIcon: "tim-icons icon-delivery-fast",
+    stepName: "Contato Prospect",
+    stepIcon: "tim-icons icon-single-02",
     component: Step3
   }
 ];
@@ -60,9 +60,8 @@ export default function ProspectWizard() {
             previousButtonText="Anterior"
             finishButtonText="Enviar"
             nextButtonText="Próximo"
-            title="Criação de Prospect"
-            description="Informações básicas de cadastro"
-            headerTextCenter
+            description="Novo Prospect"
+            // headerTextCenter
             finishButtonClasses="btn-wd btn-info"
             nextButtonClasses="btn-wd btn-info"
             previousButtonClasses="btn-wd"

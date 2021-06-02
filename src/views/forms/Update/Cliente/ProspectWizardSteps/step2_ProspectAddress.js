@@ -25,9 +25,7 @@ import React, {
 // reactstrap components
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardTitle,
   Form,
   Label,
   Input,
@@ -224,9 +222,6 @@ const CliCompCadastro = forwardRef((props, ref) => {
         <Row>
           <Col md="12">
             <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Complemento do Cliente</CardTitle>
-              </CardHeader>
               <CardBody>
                 <Form>
                   <Label>Cliente</Label>
