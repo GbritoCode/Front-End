@@ -74,7 +74,7 @@
         }
 
         > li > .timeline-panel {
-            background: $card-black-background;
+            background: $white;
             width: 45%;
             float: left;
             padding: 20px;
@@ -90,8 +90,8 @@
                 right: -15px;
                 display: inline-block;
                 border-top: 15px solid transparent;
-                border-left: 15px solid $black;
-                border-right: 0 solid $black;
+                border-left: 15px solid $white;
+                border-right: 0 solid $white;
                 border-bottom: 15px solid transparent;
                 content: " ";
             }
@@ -102,8 +102,8 @@
                 right: -14px;
                 display: inline-block;
                 border-top: 14px solid transparent;
-                border-left: 14px solid $card-black-background;
-                border-right: 0 solid $card-black-background;
+                border-left: 14px solid $white;
+                border-right: 0 solid $white;
                 border-bottom: 14px solid transparent;
                 content: " ";
             }

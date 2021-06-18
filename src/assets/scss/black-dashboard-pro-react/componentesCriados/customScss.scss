@@ -72,10 +72,7 @@
 }
 
 .nav-tabs {
-    display: inline-block;
     width: 100%;
-    padding-left: 100px;
-    padding-right: 100px;
     text-align: center;
 
     .nav-item > .nav-link {
@@ -180,8 +177,14 @@
     border-bottom-left-radius: 0;
     color: grey;
     margin: 0;
-
-    .i{
-      margin-top: 2px;
-    }
+}
+button.btn-icon.btn-link.like.btn.btn-secondary.addon
+{
+    padding-bottom: 20%;
+    padding-top: 45%;
+    height: 16px;
+}
+button i.tim-icons.icon-zoom-split.addon
+{
+    color: blue;
 }

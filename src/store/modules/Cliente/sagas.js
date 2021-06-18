@@ -16,7 +16,8 @@ export function* clienteCadastro({ payload }) {
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
-      prospect
+      prospect,
+      CampanhaIds
     } = payload;
     yield call(api.post, "cliente", {
       CNPJ,
@@ -26,7 +27,8 @@ export function* clienteCadastro({ payload }) {
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
-      prospect
+      prospect,
+      CampanhaIds
     });
     if (prospect === "true") {
       history.push("/tabelas/cliente/prospect");
@@ -282,11 +284,23 @@ export function* updateCliRecDesp({ payload }) {
 
 export function* campanhaCadastro({ payload }) {
   try {
-    const { EmpresaId, cod, desc } = payload;
+    const {
+      EmpresaId,
+      cod,
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
+    } = payload;
     yield call(api.post, "campanha", {
       EmpresaId,
       cod,
-      desc
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
     });
     history.push(`/tabelas/cliente/campanhas/`);
   } catch (err) {
@@ -297,16 +311,20 @@ export function* campanhaCadastro({ payload }) {
 
 export function* updateCampanha({ payload }) {
   try {
-    const { id, cod, desc } = payload;
+    const { id, cod, desc, ClienteIds, dataInic, dataFim, ColabId } = payload;
 
     const Cliente = {
       cod,
-      desc
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
     };
 
     const response = yield call(api.put, `campanha/${id}`, Cliente);
 
-    history.push(`/tabelas/cliente/campanhas`);
+    history.push(`/tabelas/cliente/campanha`);
     toast.success("Campanha Atualizada");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
@@ -366,7 +384,8 @@ export function* followUpsCadastro({ payload }) {
       dataContato,
       dataProxContato,
       detalhes,
-      reacao
+      reacao,
+      CampanhasId
     } = payload;
     yield call(api.post, "followUp", {
       EmpresaId,
@@ -376,9 +395,10 @@ export function* followUpsCadastro({ payload }) {
       dataContato,
       dataProxContato,
       detalhes,
-      reacao
+      reacao,
+      CampanhasId
     });
-    history.push(`/tabelas/cliente/followUps/${ClienteId}`);
+    history.push(`/tabelas/cliente/followUps/${ClienteId}/${CampanhasId}`);
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());

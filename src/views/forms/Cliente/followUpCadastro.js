@@ -33,6 +33,14 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
+import {
+  InsertEmoticon,
+  SentimentDissatisfied,
+  SentimentSatisfiedAltSharp,
+  SentimentVeryDissatisfied,
+  SentimentVeryDissatisfiedSharp
+} from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
@@ -42,7 +50,7 @@ export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
-  const { id } = useParams();
+  const { cliId, campId } = useParams();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
@@ -59,7 +67,7 @@ export default function CadastroFollowUps() {
     data: { value: `${year}-${month}-${date}`, error: "", message: "" },
     dataProxContato: { value: ``, error: "", message: "" },
     detalhes: { value: "", error: "", message: "" },
-    reacao: { value: "ruim", error: "", message: "" }
+    reacao: { value: "", error: "", message: "" }
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -70,7 +78,7 @@ export default function CadastroFollowUps() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
-      const response2 = await api.get(`/cliente/${id}`);
+      const response2 = await api.get(`/cliente/${cliId}`);
       const response3 = await api.get(`/cliente/cont/${response2.data.id}`);
       setData1(response1.data);
       setData2(response2.data);
@@ -85,7 +93,7 @@ export default function CadastroFollowUps() {
       setIsLoading(false);
     }
     loadData();
-  }, [id]);
+  }, [cliId]);
 
   var options = {};
   const notifyElment = useRef(null);
@@ -167,7 +175,8 @@ export default function CadastroFollowUps() {
           values.data.value,
           values.dataProxContato.value,
           values.detalhes.value,
-          values.reacao.value
+          values.reacao.value,
+          campId
         )
       );
     } else {
@@ -327,7 +336,27 @@ export default function CadastroFollowUps() {
                           <FormGroup check>
                             <Label check>
                               <Input
-                                defaultChecked
+                                hidden
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="pessima"
+                              />{" "}
+                              <Tooltip title="Péssima">
+                                <SentimentVeryDissatisfiedSharp
+                                  color={
+                                    values.reacao.value === "pessima"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
+                            </Label>
+                            <Label check>
+                              <Input
+                                hidden
                                 name="reacao"
                                 type="radio"
                                 onChange={event =>
@@ -335,10 +364,39 @@ export default function CadastroFollowUps() {
                                 }
                                 value="ruim"
                               />{" "}
-                              Ruim
+                              <Tooltip title="Ruim">
+                                <SentimentVeryDissatisfied
+                                  color={
+                                    values.reacao.value === "ruim"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
                             </Label>
                             <Label check>
                               <Input
+                                hidden
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="neutra"
+                              />{" "}
+                              <Tooltip title="Sem Reação">
+                                <SentimentDissatisfied
+                                  color={
+                                    values.reacao.value === "neutra"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
+                            </Label>
+                            <Label check>
+                              <Input
+                                hidden
                                 name="reacao"
                                 type="radio"
                                 onChange={event =>
@@ -346,10 +404,19 @@ export default function CadastroFollowUps() {
                                 }
                                 value="boa"
                               />
-                              Boa
+                              <Tooltip title="Boa">
+                                <SentimentSatisfiedAltSharp
+                                  color={
+                                    values.reacao.value === "boa"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
                             </Label>
                             <Label check>
                               <Input
+                                hidden
                                 name="reacao"
                                 type="radio"
                                 onChange={event =>
@@ -357,7 +424,15 @@ export default function CadastroFollowUps() {
                                 }
                                 value="otima"
                               />
-                              Ótima
+                              <Tooltip title="Ótima">
+                                <InsertEmoticon
+                                  color={
+                                    values.reacao.value === "otima"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
                             </Label>
                           </FormGroup>
                         </Col>

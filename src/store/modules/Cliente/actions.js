@@ -12,7 +12,8 @@ export function ClienteRequest(
   RepresentanteId,
   TipoComisseId,
   EmpresaId,
-  prospect
+  prospect,
+  CampanhaIds
 ) {
   return {
     type: "@cadastro/CADASTRO_REQUEST",
@@ -24,7 +25,8 @@ export function ClienteRequest(
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
-      prospect
+      prospect,
+      CampanhaIds
     }
   };
 }
@@ -217,24 +219,48 @@ export function cliRecDespUpdate(
 //--------------------------------------------------------
 //--------------------------------------------------------
 
-export function campanhaCadastro(EmpresaId, cod, desc) {
+export function campanhaCadastro(
+  EmpresaId,
+  cod,
+  desc,
+  ClienteIds,
+  dataInic,
+  dataFim,
+  ColabId
+) {
   return {
     type: "@cadastro/CAMPANHA_REQUEST",
     payload: {
       EmpresaId,
       cod,
-      desc
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
     }
   };
 }
 
-export function campanhaUpdate(id, cod, desc) {
+export function campanhaUpdate(
+  id,
+  cod,
+  desc,
+  ClienteIds,
+  dataInic,
+  dataFim,
+  ColabId
+) {
   return {
     type: "@update/CAMPANHA_REQUEST",
     payload: {
       id,
       cod,
-      desc
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
     }
   };
 }
@@ -275,7 +301,8 @@ export function followUpCadastro(
   dataContato,
   dataProxContato,
   detalhes,
-  reacao
+  reacao,
+  CampanhasId
 ) {
   return {
     type: "@cadastro/FOLLOW_UP_REQUEST",
@@ -287,7 +314,8 @@ export function followUpCadastro(
       dataContato,
       dataProxContato,
       detalhes,
-      reacao
+      reacao,
+      CampanhasId
     }
   };
 }

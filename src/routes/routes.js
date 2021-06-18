@@ -177,6 +177,8 @@ import CadastroFollowUps from "~/views/forms/Cliente/followUpCadastro";
 import UpdateFollowUps from "~/views/forms/Update/Cliente/followUpUpdate";
 import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
 import ProspectWizard from "~/views/forms/Update/Cliente/prospectWizardMain";
+import ProspeccaoTable from "~/views/tables/comercial/prospeccaoTable";
+import CampanhaClienteTable from "~/views/tables/Clientes/campanhas_clientesTables";
 
 const routes = [
   {
@@ -324,6 +326,23 @@ const routes = [
   },
   {
     collapse: true,
+    name: "Vendas",
+    namePerfil: "Vendas",
+    icon: "tim-icons icon-molecule-40",
+    state: "VendasCollapse",
+    views: [
+      {
+        path: "/tabelas/prospeccao/campanha",
+        name: "Prospecção",
+        namePerfil: "Prospecção",
+        mini: "PRP",
+        component: ProspeccaoTable,
+        layout: "/admin"
+      }
+    ]
+  },
+  {
+    collapse: true,
     name: "Cadastros",
     namePerfil: "Cadastros",
     icon: "tim-icons icon-puzzle-10",
@@ -412,6 +431,16 @@ const routes = [
         profile: 2
       },
       {
+        path: "/tabelas/campanhas/clientes/:id",
+        name: "Campanhas Clientes",
+        namePerfil: "Campanhas Cliente Tab",
+        mini: "CCT",
+        component: CampanhaClienteTable,
+        layout: "/admin",
+        profile: 2,
+        redirect: true
+      },
+      {
         path: "/tabelas/cliente/camposDinamicos",
         name: "Campos Dinâmicos",
         namePerfil: "Campos Dinâmicos Tab",
@@ -421,7 +450,7 @@ const routes = [
         profile: 2
       },
       {
-        path: "/tabelas/cliente/FollowUps/:id",
+        path: "/tabelas/cliente/FollowUps/:cliId/:campId",
         name: "Follow Ups",
         namePerfil: "Follow Ups Tab",
         mini: "FUP",
@@ -431,7 +460,7 @@ const routes = [
         profile: 2
       },
       {
-        path: "/timeline/cliente/FollowUps/:id",
+        path: "/timeline/cliente/FollowUps/:cliId/:campId",
         name: "Follow Ups",
         namePerfil: "Follow Ups Tab",
         mini: "FUP",
@@ -736,7 +765,7 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/cadastro/cliente/followUps/:id",
+        path: "/cadastro/cliente/followUps/:cliId/:campId",
         name: "Follow Ups",
         namePerfil: "Follow Ups Cad",
         mini: "RF",

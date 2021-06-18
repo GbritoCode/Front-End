@@ -21,6 +21,8 @@ import React, {
   useImperativeHandle,
   forwardRef
 } from "react";
+import classNames from "classnames";
+import ReactTable from "react-table-v6";
 
 // reactstrap components
 import {
@@ -34,36 +36,41 @@ import {
   Row,
   Col,
   InputGroup,
-  InputGroupAddon,
-  ModalBody,
-  Modal
+  InputGroupAddon
 } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import { Close, Message } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import { normalizeCnpj, normalizeCurrency } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
+import Modal from "~/components/Modal/modalLarge";
+import { Header, Footer } from "~/components/Modal/modalStyles";
 
 /* eslint-disable eqeqeq */
 const CadastroCliente = forwardRef((props, ref) => {
   // --------- colocando no modo claro do template
-  const [modalMini, setModalMini] = useState(false);
-  const [stateAux, setStateAux] = useState("");
-  const toggleModalMini = () => {
-    setModalMini(!modalMini);
-  };
+  const [isOpenRepr, setIsOpenRepr] = useState(false);
+  const [isOpenCamp, setIsOpenCamp] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
     rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
-    tipoComiss: { value: "", error: "", message: "" }
+    tipoComiss: { value: "", error: "", message: "" },
+    CampanhaIds: {
+      value: "",
+      error: "",
+      message: "",
+      array: [],
+      optional: true
+    }
   };
   const optionalSchema = {
     fantasia: { value: "", error: "", message: "" }
@@ -77,12 +84,15 @@ const CadastroCliente = forwardRef((props, ref) => {
       const response = await api.get(`empresa/${empresa}`);
       const response1 = await api.get(`tipoComiss/`);
       const response2 = await api.get(`representante/`);
+      const response3 = await api.get(`campanha/`);
       setData1(response1.data);
       setData2(response2.data);
+      setData3(response3.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
       }));
+      setIsLoading(false);
     }
     loadData();
   }, []);
@@ -198,13 +208,13 @@ const CadastroCliente = forwardRef((props, ref) => {
 
   const checkDesc = value => {
     switch (value) {
-      case "1":
+      case 1:
         return "Indicação";
-      case "2":
+      case 2:
         return "Representação";
-      case "3":
+      case 3:
         return "Prospecção";
-      case "4":
+      case 4:
         return "Interna";
       default:
     }
@@ -275,15 +285,17 @@ const CadastroCliente = forwardRef((props, ref) => {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -316,294 +328,453 @@ const CadastroCliente = forwardRef((props, ref) => {
       nomeAbv: values.nomeAbv.value,
       RepresentanteId: values.representante.value,
       TipoComisseId: values.tipoComiss.value,
-      prospect: true
+      prospect: true,
+      CampanhaIds: values.CampanhaIds.array
     }
   }));
 
   return (
     <>
-      <div className="rna-container">
-        <NotificationAlert ref={notifyElment} />
-      </div>
-      <div className="content">
-        <Modal
-          modalClassName="modal-mini "
-          isOpen={modalMini}
-          toggle={toggleModalMini}
-        >
-          <div className="modal-header justify-content-center">
-            <button
-              aria-hidden
-              className="close"
-              data-dismiss="modal"
-              type="button"
-              color="primary"
-              onClick={toggleModalMini}
-            >
-              <Close />
-            </button>
-            <div>
-              <Message fontSize="large" />
-            </div>
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <div className="rna-container">
+            <NotificationAlert ref={notifyElment} />
           </div>
-          <ModalBody className="text-center">
-            <Label>Filtrar</Label>
-            <Input onChange={e => setStateAux(e.target.value)} />
-            <div>
-              <ul>
-                {console.log(values)}
-                {data2.map(
-                  repr =>
-                    repr.nome.includes(stateAux) && (
-                      <li
-                        onClick={() => {
-                          setModalMini(!modalMini);
-                          document.getElementsByName("representante")[0].value =
-                            repr.nome;
-                          setValues(prevState => ({
-                            ...prevState,
-                            representante: { value: repr.id }
-                          }));
-                        }}
-                      >
-                        {repr.nome}
-                      </li>
+          <div className="content">
+            <Modal
+              onClose={() => {
+                setIsOpenRepr(!isOpenRepr);
+              }}
+              open={isOpenRepr}
+            >
+              <Header>
+                {" "}
+                <h4 className="modalHeader">Representante</h4>
+              </Header>
+              <ReactTable
+                data={data2.map((repr, index) => {
+                  return {
+                    idd: index,
+                    id: repr.id,
+                    Empresa: repr.Empresa.nome,
+                    nome: repr.nome,
+                    TipoComisse: repr.TipoComisse.desc,
+                    vlrFixMens: normalizeCurrency(
+                      JSON.stringify(repr.vlrFixMens)
                     )
-                )}
-              </ul>
-            </div>
-          </ModalBody>
-          <div className="modal-footer">
-            <Button
-              style={{ color: "#000" }}
-              className="btn-neutral"
-              type="button"
-              onClick={toggleModalMini}
-            >
-              Não
-            </Button>
-            <Button
-              style={{ color: "#7E7E7E" }}
-              className="btn-neutral"
-              type="button"
-              onClick={() => {}}
-            >
-              Sim
-            </Button>
-          </div>
-        </Modal>
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardBody>
-                <Form>
-                  <Row>
-                    <Col md="4">
-                      <Label>CNPJ</Label>
-                      <FormGroup className={`has-label ${values.cnpj.error}`}>
-                        <Input
-                          maxLength={18}
-                          name="cnpj"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "cnpj", "cnpj")
-                          }
-                          value={values.cnpj.value}
-                          onBlur={e => {
-                            const { value } = e.target;
-                            renderCnpjState(value);
-                            cnpjRequest(value);
-                          }}
-                        />
+                  };
+                })}
+                getTdProps={(state, rowInfo) => {
+                  return {
+                    onClick: () => {
+                      setValues(prevState => ({
+                        ...prevState,
+                        representante: { value: rowInfo.original.id }
+                      }));
+                      document.getElementsByName("representante")[0].value =
+                        rowInfo.original.nome;
+                      setIsOpenRepr(false);
+                    }
+                  };
+                }}
+                filterable
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .includes(filter.value.toLowerCase())
+                    : true;
+                }}
+                previousText="Anterior"
+                nextText="Próximo"
+                loadingText="Carregando"
+                noDataText="Dados não encontrados"
+                pageText="Página"
+                ofText="de"
+                rowsText="Linhas"
+                columns={[
+                  {
+                    Header: "Nome",
+                    accessor: "nome"
+                  },
+                  {
+                    Header: "Valor Fixo Mensal",
+                    accessor: "vlrFixMens"
+                  },
+                  {
+                    Header: "Comissão",
+                    accessor: "TipoComisse"
+                  }
+                ]}
+                defaultPageSize={5}
+                className="-striped -highlight"
+              />
+              <Footer>
+                <Button
+                  className="btn-neutral"
+                  onClick={() => {
+                    setIsOpenRepr(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </Footer>
+            </Modal>
 
-                        {values.cnpj.error === "has-danger" ? (
-                          <Label className="error">{values.cnpj.message}</Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Input
-                      hidden
-                      value={stateAux}
-                      id="filtrandoRepresentantesModal"
-                    />
-                    <Col md="4">
-                      <Label>Razão Social</Label>
-                      <FormGroup className={`has-label ${values.rzSoc.error}`}>
-                        <Input
-                          disabled
-                          id="rzSoc"
-                          name="rzSoc"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "rzSoc", "text")
-                          }
-                          value={values.rzSoc.value}
-                        />
-                        {values.rzSoc.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.rzSoc.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Nome Fanasia</Label>
-                      <FormGroup
-                        className={`has-label ${optional.fantasia.error}`}
-                      >
-                        <Input
-                          disabled
-                          onChange={event =>
-                            handleChange(event, "fantasia", "optional")
-                          }
-                          value={optional.fantasia.value}
-                          name="nomeAbv"
-                          type="text"
-                        />
-                        {optional.fantasia.error === "has-danger" ? (
-                          <Label className="error">
-                            {optional.fantasia.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                  </Row>
+            <Modal
+              onClose={() => {
+                setIsOpenCamp(!isOpenCamp);
+              }}
+              open={isOpenCamp}
+            >
+              <Header>
+                {" "}
+                <h4 className="modalHeader">Campanha</h4>
+              </Header>
 
-                  <Row>
-                    <Col md="4">
-                      <Label>Nome Abreviado</Label>
-                      <FormGroup
-                        className={`has-label ${values.nomeAbv.error}`}
-                      >
-                        <Input
-                          name="name_abv"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "nomeAbv", "text")
-                          }
-                          value={values.nomeAbv.value}
-                        />
-                        {values.nomeAbv.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.nomeAbv.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Representante</Label>
-                      <FormGroup
-                        className={`has-label ${values.representante.error}`}
-                      >
-                        <InputGroup>
-                          <Input
-                            name="representante"
-                            type="text"
-                            onChange={event =>
-                              handleChange(event, "representante", "text")
-                            }
-                          />
-                          <InputGroupAddon
-                            className="appendCustom"
-                            addonType="append"
+              <ReactTable
+                data={data3.map((camp, index) => {
+                  return {
+                    idd: index,
+                    id: camp.id,
+                    cod: camp.cod,
+                    desc: camp.desc
+                  };
+                })}
+                getTdProps={(state, rowInfo) => {
+                  return {
+                    onClick: () => {
+                      setValues(prevState => ({
+                        ...prevState,
+                        CampanhaIds: {
+                          value: "filled",
+                          array: [
+                            ...prevState.CampanhaIds.array,
+                            rowInfo.original.id
+                          ]
+                        }
+                      }));
+                      document.getElementsByName(
+                        "CampanhaIds"
+                      )[0].value = `${rowInfo.original.cod} - ${rowInfo.original.desc}`;
+                    }
+                  };
+                }}
+                filterable
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .includes(filter.value.toLowerCase())
+                    : true;
+                }}
+                previousText="Anterior"
+                nextText="Próximo"
+                loadingText="Carregando"
+                noDataText="Dados não encontrados"
+                pageText="Página"
+                ofText="de"
+                rowsText="Linhas"
+                columns={[
+                  {
+                    Header: "Código",
+                    accessor: "cod"
+                  },
+                  {
+                    Header: "Descrição",
+                    accessor: "desc"
+                  }
+                ]}
+                defaultPageSize={5}
+                className="-striped -highlight"
+              />
+
+              <Footer>
+                <Button
+                  className="btn-neutral"
+                  onClick={() => {
+                    setIsOpenCamp(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </Footer>
+            </Modal>
+            <Row>
+              <Col md="12">
+                <Card>
+                  <CardBody>
+                    <Form>
+                      <Row>
+                        <Col md="4">
+                          <Label>CNPJ</Label>
+                          <FormGroup
+                            className={`has-label ${values.cnpj.error}`}
                           >
-                            <Button onClick={() => setModalMini(!modalMini)}>
-                              <i className="tim-icons icon-zoom-split" />
-                            </Button>
-                          </InputGroupAddon>
-                        </InputGroup>
+                            <Input
+                              maxLength={18}
+                              name="cnpj"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cnpj", "cnpj")
+                              }
+                              value={values.cnpj.value}
+                              onBlur={e => {
+                                const { value } = e.target;
+                                renderCnpjState(value);
+                                cnpjRequest(value);
+                              }}
+                            />
 
-                        {values.representante.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.representante.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Tipo Comissão</Label>
-                      <FormGroup
-                        className={`has-label ${values.tipoComiss.error}`}
-                      >
-                        <Input
-                          name="tipoComiss"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "tipoComiss", "text")
-                          }
-                          onChangeCapture={async () => {
-                            const response2 = await axios({
-                              url: `https://www.receitaws.com.br/v1/cnpj/${values.cnpj.value.replace(
-                                /[^\d]+/g,
-                                ""
-                              )}`,
-                              adapter: jsonpAdapter
-                            });
-                            if (response2.data.status === "ERROR") {
-                              setValues(prevState => ({
-                                ...prevState,
-                                cnpj: {
-                                  error: "has-danger",
-                                  message: "Insira um CNPJ válido"
+                            {values.cnpj.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cnpj.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Razão Social</Label>
+                          <FormGroup
+                            className={`has-label ${values.rzSoc.error}`}
+                          >
+                            <Input
+                              disabled
+                              id="rzSoc"
+                              name="rzSoc"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "rzSoc", "text")
+                              }
+                              value={values.rzSoc.value}
+                            />
+                            {values.rzSoc.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.rzSoc.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Nome Fanasia</Label>
+                          <FormGroup
+                            className={`has-label ${optional.fantasia.error}`}
+                          >
+                            <Input
+                              disabled
+                              onChange={event =>
+                                handleChange(event, "fantasia", "optional")
+                              }
+                              value={optional.fantasia.value}
+                              name="nomeAbv"
+                              type="text"
+                            />
+                            {optional.fantasia.error === "has-danger" ? (
+                              <Label className="error">
+                                {optional.fantasia.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md="4">
+                          <Label>Nome Abreviado</Label>
+                          <FormGroup
+                            className={`has-label ${values.nomeAbv.error}`}
+                          >
+                            <Input
+                              name="name_abv"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "nomeAbv", "text")
+                              }
+                              value={values.nomeAbv.value}
+                            />
+                            {values.nomeAbv.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.nomeAbv.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Representante</Label>
+                          <FormGroup
+                            className={`has-label ${values.representante.error}`}
+                          >
+                            <InputGroup>
+                              <Input
+                                disabled
+                                name="representante"
+                                type="text"
+                                onChange={event =>
+                                  handleChange(event, "representante", "text")
                                 }
-                              }));
-                            } else {
-                              sessionStorage.setItem(
-                                "cliData",
-                                JSON.stringify(values)
-                              );
-                              sessionStorage.setItem(
-                                "compData",
-                                JSON.stringify({
-                                  ClienteId: {
-                                    value: "",
-                                    error: "",
-                                    message: ""
-                                  },
-                                  CondPgmtoId: {
-                                    value: "",
-                                    error: "",
-                                    message: ""
-                                  },
-                                  cep: { value: response2.data.cep },
-                                  rua: { value: response2.data.logradouro },
-                                  numero: { value: response2.data.numero },
-                                  bairro: { value: response2.data.bairro },
-                                  cidade: { value: response2.data.municipio },
-                                  uf: { value: response2.data.uf },
-                                  inscMun: {
-                                    value: "",
-                                    error: "",
-                                    message: ""
-                                  },
-                                  inscEst: { value: "", error: "", message: "" }
-                                })
-                              );
-                            }
-                          }}
-                          value={values.tipoComiss.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o tipo de comissão{" "}
-                          </option>
-                          {data1.map(tipoComiss => (
-                            <option value={tipoComiss.id}>
+                                placeholder="Selecione um Representante"
+                              />
+                              <InputGroupAddon
+                                className="appendCustom"
+                                addonType="append"
+                              >
+                                <Button
+                                  className={classNames(
+                                    "btn-icon btn-link like addon"
+                                  )}
+                                  onClick={() => {
+                                    setIsOpenRepr(true);
+                                  }}
+                                >
+                                  <i className="tim-icons icon-zoom-split addon" />
+                                </Button>
+                              </InputGroupAddon>
+                            </InputGroup>
+
+                            {values.representante.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.representante.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo Comissão</Label>
+                          <FormGroup
+                            className={`has-label ${values.tipoComiss.error}`}
+                          >
+                            <Input
+                              name="tipoComiss"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "tipoComiss", "text")
+                              }
+                              onChangeCapture={async () => {
+                                const response2 = await axios({
+                                  url: `https://www.receitaws.com.br/v1/cnpj/${values.cnpj.value.replace(
+                                    /[^\d]+/g,
+                                    ""
+                                  )}`,
+                                  adapter: jsonpAdapter
+                                });
+                                if (response2.data.status === "ERROR") {
+                                  setValues(prevState => ({
+                                    ...prevState,
+                                    cnpj: {
+                                      error: "has-danger",
+                                      message: "Insira um CNPJ válido"
+                                    }
+                                  }));
+                                } else {
+                                  sessionStorage.setItem(
+                                    "cliData",
+                                    JSON.stringify(values)
+                                  );
+                                  sessionStorage.setItem(
+                                    "compData",
+                                    JSON.stringify({
+                                      ClienteId: {
+                                        value: "",
+                                        error: "",
+                                        message: ""
+                                      },
+                                      CondPgmtoId: {
+                                        value: "",
+                                        error: "",
+                                        message: ""
+                                      },
+                                      cep: { value: response2.data.cep },
+                                      rua: { value: response2.data.logradouro },
+                                      numero: { value: response2.data.numero },
+                                      bairro: { value: response2.data.bairro },
+                                      cidade: {
+                                        value: response2.data.municipio
+                                      },
+                                      uf: { value: response2.data.uf },
+                                      inscMun: {
+                                        value: "",
+                                        error: "",
+                                        message: ""
+                                      },
+                                      inscEst: {
+                                        value: "",
+                                        error: "",
+                                        message: ""
+                                      }
+                                    })
+                                  );
+                                }
+                              }}
+                              value={values.tipoComiss.value}
+                            >
                               {" "}
-                              {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+                              <option disabled value="">
+                                {" "}
+                                Selecione o tipo de comissão{" "}
+                              </option>
+                              {data1.map(tipoComiss => (
+                                <option value={tipoComiss.id}>
+                                  {" "}
+                                  {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Campanhas</Label>
+                          <FormGroup
+                            className={`has-label ${values.CampanhaIds.error}`}
+                          >
+                            <InputGroup>
+                              <Input
+                                disabled
+                                name="CampanhaIds"
+                                type="text"
+                                onChange={event =>
+                                  handleChange(event, "CampanhaIds", "text")
+                                }
+                                placeholder="Selecione as Campanhas"
+                              />
+                              <InputGroupAddon
+                                className="appendCustom"
+                                addonType="append"
+                              >
+                                <Button
+                                  className={classNames(
+                                    "btn-icon btn-link like addon"
+                                  )}
+                                  onClick={() => {
+                                    setIsOpenCamp(true);
+                                  }}
+                                >
+                                  <i className="tim-icons icon-zoom-split addon" />
+                                </Button>
+                              </InputGroupAddon>
+                            </InputGroup>
+
+                            {values.CampanhaIds.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.CampanhaIds.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </>
   );
 });

@@ -33,6 +33,14 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
+import {
+  InsertEmoticon,
+  SentimentDissatisfied,
+  SentimentSatisfiedAltSharp,
+  SentimentVeryDissatisfied,
+  SentimentVeryDissatisfiedSharp
+} from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
@@ -339,7 +347,31 @@ export default function UpdateFollowUps() {
                           <FormGroup check>
                             <Label check>
                               <Input
-                                defaultChecked
+                                defaultChecked={
+                                  values.reacao.value === "pessima"
+                                }
+                                hidden
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="pessima"
+                              />{" "}
+                              <Tooltip title="Péssima">
+                                <SentimentVeryDissatisfiedSharp
+                                  color={
+                                    values.reacao.value === "pessima"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
+                            </Label>
+                            <Label check>
+                              <Input
+                                defaultChecked={values.reacao.value === "ruim"}
+                                hidden
                                 name="reacao"
                                 type="radio"
                                 onChange={event =>
@@ -347,10 +379,43 @@ export default function UpdateFollowUps() {
                                 }
                                 value="ruim"
                               />{" "}
-                              Ruim
+                              <Tooltip title="Ruim">
+                                <SentimentVeryDissatisfied
+                                  color={
+                                    values.reacao.value === "ruim"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
                             </Label>
                             <Label check>
                               <Input
+                                defaultChecked={
+                                  values.reacao.value === "neutra"
+                                }
+                                hidden
+                                name="reacao"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "reacao", "text")
+                                }
+                                value="neutra"
+                              />{" "}
+                              <Tooltip title="Sem Reação">
+                                <SentimentDissatisfied
+                                  color={
+                                    values.reacao.value === "neutra"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
+                            </Label>
+                            <Label check>
+                              <Input
+                                defaultChecked={values.reacao.value === "boa"}
+                                hidden
                                 name="reacao"
                                 type="radio"
                                 onChange={event =>
@@ -358,10 +423,20 @@ export default function UpdateFollowUps() {
                                 }
                                 value="boa"
                               />
-                              Boa
+                              <Tooltip title="Boa">
+                                <SentimentSatisfiedAltSharp
+                                  color={
+                                    values.reacao.value === "boa"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
                             </Label>
                             <Label check>
                               <Input
+                                defaultChecked={values.reacao.value === "otima"}
+                                hidden
                                 name="reacao"
                                 type="radio"
                                 onChange={event =>
@@ -369,7 +444,15 @@ export default function UpdateFollowUps() {
                                 }
                                 value="otima"
                               />
-                              Ótima
+                              <Tooltip title="Ótima">
+                                <InsertEmoticon
+                                  color={
+                                    values.reacao.value === "otima"
+                                      ? "null"
+                                      : "disabled"
+                                  }
+                                />
+                              </Tooltip>
                             </Label>
                           </FormGroup>
                         </Col>

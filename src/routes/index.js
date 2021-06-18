@@ -143,6 +143,8 @@ import CadastroFollowUps from "~/views/forms/Cliente/followUpCadastro";
 import UpdateFollowUps from "~/views/forms/Update/Cliente/followUpUpdate";
 import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
 import ProspectWizard from "~/views/forms/Update/Cliente/prospectWizardMain";
+import ProspeccaoTable from "~/views/tables/comercial/prospeccaoTable";
+import CampanhaClienteTable from "~/views/tables/Clientes/campanhas_clientesTables";
 
 export default function Routes() {
   return (
@@ -186,12 +188,12 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/cliente/followUps/:id"
+        path="/tabelas/cliente/followUps/:cliId/:campId"
         component={followUpTable}
         isPrivate
       />
       <Route
-        path="/timeline/cliente/followUps/:id"
+        path="/timeline/cliente/followUps/:cliId/:campId"
         component={FollowUpTimeline}
         isPrivate
       />
@@ -348,6 +350,16 @@ export default function Routes() {
         component={PeriodTokenTable}
         isPrivate
       />
+      <Route
+        path="/tabelas/prospeccao/campanha"
+        component={ProspeccaoTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/campanhas/clientes/:id"
+        component={CampanhaClienteTable}
+        isPrivate
+      />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -379,7 +391,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cadastro/cliente/followUps/:id"
+        path="/cadastro/cliente/followUps/:cliId/:campId"
         component={CadastroFollowUps}
         isPrivate
       />

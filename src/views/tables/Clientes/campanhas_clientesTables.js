@@ -29,14 +29,15 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Close, Message, WatchLaterOutlined } from "@material-ui/icons";
+import { Close, Message } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
+import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 
-class followUpTable extends Component {
+class CampanhaClienteTable extends Component {
   state = {
     data: []
   };
@@ -59,42 +60,28 @@ class followUpTable extends Component {
   };
 
   loadData = async () => {
-    const { cliId, campId } = this.props.match.params;
-    const response = await api.get(
-      `/followUp/${cliId}/false/?ClienteId=${cliId}&CampanhaId=${campId}`
-    );
+    const { id } = this.props.match.params;
+    const response = await api.get(`/cliente/?CampanhaId=${id}`);
 
     this.setState({
-      data: response.data.map((followUp, key) => {
+      data: response.data.map((client, key) => {
         return {
           idd: key,
-          id: followUp.id,
-          EmpresaId: followUp.EmpresaId,
-          Colab: followUp.Colab,
-          Cliente: followUp.Cliente.nomeAbv,
-          CliContNome: followUp.CliCont.nome,
-          dataContato: followUp.dataContato,
-          dataProxContato: followUp.dataProxContato,
-          detalhes: followUp.detalhes,
-          reacao: followUp.reacao,
+          id: client.id,
+          CNPJ: normalizeCnpj(client.CNPJ),
+          nomeAbv: client.nomeAbv,
+          RepresentanteId: client.RepresentanteId,
+          Representante: client.Representante.nome,
+          TipoComisseId: client.TipoComisseId,
+          TipoComiss: this.checkDesc(client.TipoComisse.desc),
+          EmpresaId: client.EmpresaId,
+          prospect: client.prospect,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              {/* use this button to add a edit kind of action */}
-              <Link to={`/update/cliente/followUps/${followUp.id}`}>
-                <Button
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                >
-                  <i className="tim-icons icon-pencil" />
-                </Button>
-              </Link>
-              {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
-                  this.setState({ excluding: followUp.id });
+                  this.setState({ excluding: client.id });
                   this.toggleModalMini();
                 }}
                 color="danger"
@@ -110,8 +97,22 @@ class followUpTable extends Component {
     });
   };
 
+  checkDesc = value => {
+    switch (value) {
+      case 1:
+        return "Indicação";
+      case 2:
+        return "Representação";
+      case 3:
+        return "Prospecção";
+      case 4:
+        return "Interna";
+      default:
+    }
+  };
+
   render() {
-    const { cliId, campId } = this.props.match.params;
+    const { id } = this.props.match.params;
     return (
       <>
         <div className="content">
@@ -136,7 +137,7 @@ class followUpTable extends Component {
               </div>
             </div>
             <ModalBody className="text-center">
-              <p>Deseja deletar o registro?</p>
+              <p>Deseja remover o cliente desta campanha?</p>
             </ModalBody>
             <div className="modal-footer">
               <Button
@@ -153,7 +154,9 @@ class followUpTable extends Component {
                 type="button"
                 onClick={async () => {
                   await api
-                    .delete(`cliente/${this.state.excluding}`)
+                    .delete(
+                      `campanha/${this.state.excluding}/?removeRelation=true&CampanhaId=${id}`
+                    )
                     .then(result => {
                       toast.success(result.data);
                       this.reloadData();
@@ -173,8 +176,8 @@ class followUpTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Histórico
-                  <Link to={`/cadastro/cliente/followUps/${cliId}/${campId}`}>
+                  Clientes
+                  <Link to="/cliente_cadastro/false">
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
                         style={{
@@ -183,18 +186,6 @@ class followUpTable extends Component {
                         className={classNames("btn-icon btn-link like")}
                       >
                         <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
-                    <Tooltip title="TimeLine" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <WatchLaterOutlined fontSize="large" />
                       </Button>
                     </Tooltip>
                   </Link>
@@ -222,20 +213,20 @@ class followUpTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "Cliente",
-                      accessor: "Cliente"
+                      Header: "CNPJ",
+                      accessor: "CNPJ"
                     },
                     {
-                      Header: "Nome Contato",
-                      accessor: "CliContNome"
+                      Header: "Nome Abreviado",
+                      accessor: "nomeAbv"
                     },
                     {
-                      Header: "Data Contato",
-                      accessor: "dataContato"
+                      Header: "Representante",
+                      accessor: "Representante"
                     },
                     {
-                      Header: "Data Próximo Contato",
-                      accessor: "dataProxContato"
+                      Header: "Tipo de comissão",
+                      accessor: "TipoComiss"
                     },
                     {
                       Header: "Ações",
@@ -259,4 +250,4 @@ class followUpTable extends Component {
   }
 }
 
-export default followUpTable;
+export default CampanhaClienteTable;

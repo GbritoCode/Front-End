@@ -60,6 +60,7 @@ export default function PerfilCadastro() {
   const [ParentPagesCounter, setParentPagesCounter] = useState({
     Dashboards: { count: 0, value: "Dashboards" },
     Administração: { count: 0, value: "Administração" },
+    Vendas: { count: 0, value: "Vendas" },
     Cadastros: { count: 0, value: "Cadastros" },
     Apontamentos: { count: 0, value: "Apontamentos" },
     Oportunidades: { count: 0, value: "Oportunidades" }
@@ -113,18 +114,6 @@ export default function PerfilCadastro() {
           }
           return true;
         });
-        // if (
-        //   ParentPagesCounter[parentRoute].count <
-        //   routes.parentRoute.views.length
-        // ) {
-        //   setParentPagesCounter(prevState => ({
-        //     ...prevState,
-        //     [route.namePerfil]: {
-        //       count: prevState[route.namePerfil].count + 1,
-        //       value: route.namePerfil
-        //     }
-        //   }));
-        // }
         break;
       case false:
         setPermittedPages(permittedPages.filter(element => element !== name));
@@ -339,7 +328,9 @@ export default function PerfilCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
+
                   <hr />
+
                   <Nav tabs>
                     <NavItem>
                       <NavLink
@@ -357,6 +348,7 @@ export default function PerfilCadastro() {
                         Dashboards
                       </NavLink>
                     </NavItem>
+
                     <NavItem>
                       <NavLink
                         data-toggle="tab"
@@ -373,6 +365,24 @@ export default function PerfilCadastro() {
                         Administração
                       </NavLink>
                     </NavItem>
+
+                    <NavItem>
+                      <NavLink
+                        data-toggle="tab"
+                        href="#"
+                        className={
+                          horizontalTabs === "Vendas"
+                            ? "active perfilPage"
+                            : "perfilPage"
+                        }
+                        onClick={e =>
+                          changeActiveTab(e, "horizontalTabs", "Vendas")
+                        }
+                      >
+                        Vendas
+                      </NavLink>
+                    </NavItem>
+
                     <NavItem>
                       <NavLink
                         data-toggle="tab"
@@ -389,6 +399,7 @@ export default function PerfilCadastro() {
                         Cadastros
                       </NavLink>
                     </NavItem>
+
                     <NavItem>
                       <NavLink
                         data-toggle="tab"
@@ -405,6 +416,7 @@ export default function PerfilCadastro() {
                         Apontamentos
                       </NavLink>
                     </NavItem>
+
                     <NavItem>
                       <NavLink
                         data-toggle="tab"
@@ -474,6 +486,7 @@ export default function PerfilCadastro() {
                         })}
                       </Row>
                     </TabPane>
+
                     <TabPane tabId="admin">
                       <Row>
                         <Col md="4" style={{ marginBottom: 10 }}>
@@ -525,6 +538,56 @@ export default function PerfilCadastro() {
                         })}
                       </Row>
                     </TabPane>
+
+                    <TabPane tabId="Vendas">
+                      <Row>
+                        <Col md="4" style={{ marginBottom: 10 }}>
+                          <CustomInput
+                            id="selectAllVendas"
+                            type="switch"
+                            label="Selecionar todos"
+                            onChange={e =>
+                              handleSwitchAllChange(e.target.checked, "Vendas")
+                            }
+                          />
+                        </Col>
+                      </Row>
+                      <Row>
+                        {routes.map(route => {
+                          if (
+                            route.layout !== "/auth" &&
+                            route.namePerfil === "Vendas"
+                          ) {
+                            return route.views.map((view, index) => {
+                              if (!view.redirect) {
+                                return (
+                                  <>
+                                    <Col md="4" key={index}>
+                                      <CustomInput
+                                        id={view.namePerfil}
+                                        type="switch"
+                                        label={view.name}
+                                        onChange={e =>
+                                          handleSwitchChange(
+                                            e.target.checked,
+                                            e.target.id,
+                                            route.namePerfil,
+                                            "selectAllVendas"
+                                          )
+                                        }
+                                      />
+                                    </Col>
+                                  </>
+                                );
+                              }
+                              return true;
+                            });
+                          }
+                          return true;
+                        })}
+                      </Row>
+                    </TabPane>
+
                     <TabPane tabId="Cadastros">
                       <Row>
                         <Col md="4" style={{ marginBottom: 10 }}>

@@ -89,7 +89,7 @@ class AdminNavbar extends React.Component {
 
   // eslint-disable-next-line class-methods-use-this
   logout() {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "/";
   }
 

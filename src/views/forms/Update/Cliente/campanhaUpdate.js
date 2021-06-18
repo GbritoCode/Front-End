@@ -15,6 +15,8 @@
 
 */
 import React, { useRef, useEffect, useState } from "react";
+import classNames from "classnames";
+import ReactTable from "react-table-v6";
 
 // reactstrap components
 import {
@@ -28,14 +30,21 @@ import {
   Label,
   Input,
   Row,
-  Col
+  Col,
+  InputGroup,
+  InputGroupAddon
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
+import { Tooltip } from "@material-ui/core";
+import { List } from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaUpdate } from "~/store/modules/Cliente/actions";
+import Modal from "~/components/Modal/modalLarge";
+import { Header, Footer } from "~/components/Modal/modalStyles";
+import { normalizeCpf } from "~/normalize";
 
 export default function UpdateCampanha() {
   // --------- colocando no modo claro do template
@@ -46,23 +55,40 @@ export default function UpdateCampanha() {
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" }
+    desc: { value: "", error: "", message: "" },
+    dataInic: { value: "", error: "", message: "" },
+    dataFim: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   const [isLoading, setIsLoading] = useState(true);
+  const [data2, setData2] = useState([]);
+  const [data1, setData1] = useState([]);
+  const [isOpenColab, setIsOpenColab] = useState(false);
+  const [colabNome, setColabNome] = useState("");
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
-      const response2 = await api.get(`/campanha/${id}/true`);
-      console.log(response2.data);
+      const response1 = await api.get(`/campanha/${id}/true`);
+      const response2 = await api.get(`/colab`);
+      setData1(response1.data);
+      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
-        cod: { value: response2.data.cod },
-        desc: { value: response2.data.desc }
+        cod: { value: response1.data.cod },
+        desc: { value: response1.data.desc },
+        dataInic: { value: response1.data.dataInic },
+        dataFim: { value: response1.data.dataFim },
+        ColabId: { value: response1.data.ColabId }
       }));
+
+      setColabNome(
+        response2.data.find(arr => arr.id === response1.data.ColabId).nome
+      );
+
       setIsLoading(false);
     }
     loadData();
@@ -120,7 +146,10 @@ export default function UpdateCampanha() {
         campanhaUpdate(
           values.empresaId.value,
           values.cod.value,
-          values.desc.value
+          values.desc.value,
+          values.dataInic.value,
+          values.dataFim.value,
+          values.ColabId.value
         )
       );
     } else {
@@ -148,10 +177,100 @@ export default function UpdateCampanha() {
             <NotificationAlert ref={notifyElment} />
           </div>
           <div className="content">
+            <Modal
+              onClose={() => {
+                setIsOpenColab(false);
+              }}
+              open={isOpenColab}
+            >
+              <Header>
+                {" "}
+                <h4 className="modalHeader">Representante</h4>
+              </Header>
+
+              <ReactTable
+                data={data2.map((colab, index) => {
+                  return {
+                    idd: index,
+                    id: colab.id,
+                    CPF: normalizeCpf(colab.CPF),
+                    nome: colab.nome,
+                    dtAdmiss: colab.dtAdmiss,
+                    espec: colab.espec
+                  };
+                })}
+                getTdProps={(state, rowInfo) => {
+                  return {
+                    onClick: () => {
+                      setValues(prevState => ({
+                        ...prevState,
+                        ColabId: {
+                          value: rowInfo.original.id
+                        }
+                      }));
+                      document.getElementsByName("ColabId")[0].value =
+                        rowInfo.original.nome;
+                      setIsOpenColab(false);
+                    }
+                  };
+                }}
+                filterable
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .includes(filter.value.toLowerCase())
+                    : true;
+                }}
+                previousText="Anterior"
+                nextText="Próximo"
+                loadingText="Carregando"
+                noDataText="Dados não encontrados"
+                pageText="Página"
+                ofText="de"
+                rowsText="Linhas"
+                columns={[
+                  {
+                    Header: "Nome",
+                    accessor: "nome"
+                  },
+                  {
+                    Header: "CPF",
+                    accessor: "CPF"
+                  },
+                  {
+                    Header: "Data de Adimissão",
+                    accessor: "dtAdmiss"
+                  },
+                  {
+                    Header: "Especialidade",
+                    accessor: "espec"
+                  }
+                ]}
+                defaultPageSize={5}
+                className="-striped -highlight"
+              />
+
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Link to={`/tabelas/campanhas/clientes/${data1.id}`}>
+                      <Tooltip title="Clientes" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <List fontSize="large" />
+                        </Button>
+                      </Tooltip>
+                    </Link>
                     <CardTitle tag="h4">Campanha</CardTitle>
                   </CardHeader>
                   <CardBody>
@@ -163,6 +282,7 @@ export default function UpdateCampanha() {
                             className={`has-label ${values.cod.error}`}
                           >
                             <Input
+                              disabled
                               name="cod"
                               type="text"
                               onChange={event =>
@@ -183,6 +303,7 @@ export default function UpdateCampanha() {
                             className={`has-label ${values.desc.error}`}
                           >
                             <Input
+                              disabled
                               name="desc"
                               type="text"
                               onChange={event =>
@@ -193,6 +314,83 @@ export default function UpdateCampanha() {
                             {values.desc.error === "has-danger" ? (
                               <Label className="error">
                                 {values.desc.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Responsável</Label>
+                          <FormGroup
+                            className={`has-label ${values.ColabId.error}`}
+                          >
+                            <InputGroup>
+                              <Input
+                                disabled
+                                name="ColabId"
+                                type="text"
+                                defaultValue={colabNome}
+                                placeholder="Selecione o Responsável"
+                              />
+                              <InputGroupAddon
+                                className="appendCustom"
+                                addonType="append"
+                              >
+                                <Button
+                                  className={classNames(
+                                    "btn-icon btn-link like addon"
+                                  )}
+                                  onClick={() => setIsOpenColab(!isOpenColab)}
+                                >
+                                  <i className="tim-icons icon-zoom-split addon" />
+                                </Button>
+                              </InputGroupAddon>
+                            </InputGroup>
+
+                            {values.ColabId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ColabId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Data Início</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataInic.error}`}
+                          >
+                            <Input
+                              name="dataInic"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataInic", "text")
+                              }
+                              value={values.dataInic.value}
+                            />{" "}
+                            {values.dataInic.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataInic.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Data Fim</Label>
+                          <FormGroup
+                            className={`has-label ${values.dataFim.error}`}
+                          >
+                            <Input
+                              name="dataFim"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "dataFim", "text")
+                              }
+                              value={values.dataFim.value}
+                            />{" "}
+                            {values.dataFim.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.dataFim.message}
                               </Label>
                             ) : null}
                           </FormGroup>

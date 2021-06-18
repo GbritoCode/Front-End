@@ -63,6 +63,7 @@ function PerfilUpdate() {
   const [ParentPagesCounter, setParentPagesCounter] = useState({
     Dashboards: { count: 0, value: "Dashboards" },
     Administração: { count: 0, value: "Administração" },
+    Vendas: { count: 0, value: "Vendas" },
     Cadastros: { count: 0, value: "Cadastros" },
     Apontamentos: { count: 0, value: "Apontamentos" },
     Oportunidades: { count: 0, value: "Oportunidades" }
@@ -316,6 +317,7 @@ function PerfilUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
+
                       <Nav tabs>
                         <NavItem>
                           <NavLink
@@ -333,6 +335,7 @@ function PerfilUpdate() {
                             Dashboards
                           </NavLink>
                         </NavItem>
+
                         <NavItem>
                           <NavLink
                             data-toggle="tab"
@@ -349,6 +352,24 @@ function PerfilUpdate() {
                             Administração
                           </NavLink>
                         </NavItem>
+
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={
+                              horizontalTabs === "Vendas"
+                                ? "active perfilPage"
+                                : "perfilPage"
+                            }
+                            onClick={e =>
+                              changeActiveTab(e, "horizontalTabs", "Vendas")
+                            }
+                          >
+                            Vendas
+                          </NavLink>
+                        </NavItem>
+
                         <NavItem>
                           <NavLink
                             data-toggle="tab"
@@ -365,6 +386,7 @@ function PerfilUpdate() {
                             Cadastros
                           </NavLink>
                         </NavItem>
+
                         <NavItem>
                           <NavLink
                             data-toggle="tab"
@@ -385,6 +407,7 @@ function PerfilUpdate() {
                             Apontamentos
                           </NavLink>
                         </NavItem>
+
                         <NavItem>
                           <NavLink
                             data-toggle="tab"
@@ -449,6 +472,7 @@ function PerfilUpdate() {
                             })}
                           </Row>
                         </TabPane>
+
                         <TabPane tabId="admin">
                           <Row>
                             {routes.map(route => {
@@ -487,6 +511,46 @@ function PerfilUpdate() {
                             })}
                           </Row>
                         </TabPane>
+
+                        <TabPane tabId="Vendas">
+                          <Row>
+                            {routes.map(route => {
+                              if (
+                                route.layout !== "/auth" &&
+                                route.namePerfil === "Vendas"
+                              ) {
+                                return route.views.map((view, index) => {
+                                  if (!view.redirect) {
+                                    return (
+                                      <>
+                                        <Col md="4" key={index}>
+                                          <CustomInput
+                                            defaultChecked={permittedPages.includes(
+                                              view.namePerfil
+                                            )}
+                                            id={view.namePerfil}
+                                            type="switch"
+                                            label={view.name}
+                                            onChange={e =>
+                                              handleSwitchChange(
+                                                e.target.checked,
+                                                e.target.id,
+                                                route.namePerfil
+                                              )
+                                            }
+                                          />
+                                        </Col>
+                                      </>
+                                    );
+                                  }
+                                  return true;
+                                });
+                              }
+                              return true;
+                            })}
+                          </Row>
+                        </TabPane>
+
                         <TabPane tabId="Cadastros">
                           <Row>
                             {routes.map(route => {
@@ -526,6 +590,7 @@ function PerfilUpdate() {
                             })}
                           </Row>
                         </TabPane>
+
                         <TabPane tabId="Apontamentos">
                           <Row>
                             {routes.map(route => {
@@ -565,6 +630,7 @@ function PerfilUpdate() {
                             })}
                           </Row>
                         </TabPane>
+
                         <TabPane tabId="Oportunidades">
                           <Row>
                             {routes.map(route => {
@@ -605,6 +671,7 @@ function PerfilUpdate() {
                           </Row>
                         </TabPane>
                       </TabContent>
+
                       <Button
                         style={{
                           paddingLeft: 29,
