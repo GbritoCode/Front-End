@@ -29,7 +29,7 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Close, Message, WatchLaterOutlined } from "@material-ui/icons";
+import { Close, Message, Timeline } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -194,7 +194,7 @@ class followUpTable extends Component {
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <WatchLaterOutlined fontSize="large" />
+                        <Timeline fontSize="large" />
                       </Button>
                     </Tooltip>
                   </Link>
