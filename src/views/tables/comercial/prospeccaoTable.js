@@ -42,20 +42,6 @@ function ProspeccaoTable() {
   const [isOpen, setIsOpen] = useState(true);
   const history = useHistory();
 
-  const checkDesc = value => {
-    switch (value) {
-      case 1:
-        return "Indicação";
-      case 2:
-        return "Representação";
-      case 3:
-        return "Prospecção";
-      case 4:
-        return "Interna";
-      default:
-    }
-  };
-
   useEffect(() => {
     async function loadData() {
       const response = await api.get("/campanha");
@@ -67,7 +53,6 @@ function ProspeccaoTable() {
                 isToday(parseISO(arr.dataFim))) &&
               !isBefore(new Date(), parseISO(arr.dataInic))
           )
-
           .map((camp, key) => {
             return {
               idd: key,
@@ -113,12 +98,14 @@ function ProspeccaoTable() {
                             id: client.id,
                             CNPJ: normalizeCnpj(client.CNPJ),
                             nomeAbv: client.nomeAbv,
+                            rzSoc: client.rzSoc,
                             RepresentanteId: client.RepresentanteId,
                             Representante: client.Representante.nome,
                             TipoComisseId: client.TipoComisseId,
-                            TipoComiss: checkDesc(client.TipoComisse.desc),
+                            TipoComiss: client.TipoComisse.desc,
                             EmpresaId: client.EmpresaId,
                             prospect: client.prospect,
+                            created: client.createdAt,
                             actions: (
                               // we've added some custom button actions
                               <div className="actions-right">
@@ -165,11 +152,11 @@ function ProspeccaoTable() {
                 rowsText="Linhas"
                 columns={[
                   {
-                    Header: "Cod",
+                    Header: "Código",
                     accessor: "cod"
                   },
                   {
-                    Header: "Desc",
+                    Header: "Descrição",
                     accessor: "desc"
                   },
                   {
@@ -232,20 +219,36 @@ function ProspeccaoTable() {
                     rowsText="Linhas"
                     columns={[
                       {
-                        Header: "CNPJ",
-                        accessor: "CNPJ"
+                        Header: "Nome Abreviado",
+                        accessor: "nomeAbv",
+                        minWidth: 120
                       },
                       {
-                        Header: "Nome Abreviado",
-                        accessor: "nomeAbv"
+                        Header: "Razão Social",
+                        accessor: "rzSoc",
+                        minWidth: 300
                       },
                       {
                         Header: "Representante",
-                        accessor: "Representante"
+                        accessor: "Representante",
+                        minWidth: 150
                       },
                       {
-                        Header: "Tipo de comissão",
-                        accessor: "TipoComiss"
+                        Header: "Retorno",
+                        accessor: "created"
+                      },
+                      {
+                        Header: "sla",
+                        accessor: "situacao",
+                        filterable: false,
+                        maxWidth: 50,
+                        getProps: (state, rowInfo, column) => {
+                          return {
+                            style: {
+                              background: "red"
+                            }
+                          };
+                        }
                       },
                       {
                         Header: "Ações",

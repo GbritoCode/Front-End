@@ -460,6 +460,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                       document.getElementsByName(
                         "CampanhaIds"
                       )[0].value = `${rowInfo.original.cod} - ${rowInfo.original.desc}`;
+                      setIsOpenCamp(false);
                     }
                   };
                 }}

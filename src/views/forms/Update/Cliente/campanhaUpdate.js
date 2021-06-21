@@ -144,6 +144,7 @@ export default function UpdateCampanha() {
     if (valid && filled) {
       dispatch(
         campanhaUpdate(
+          id,
           values.empresaId.value,
           values.cod.value,
           values.desc.value,

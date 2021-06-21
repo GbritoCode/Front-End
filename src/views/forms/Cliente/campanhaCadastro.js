@@ -180,6 +180,17 @@ export default function CadastroCampanha() {
       default:
     }
   };
+
+  const checkProsp = value => {
+    switch (value) {
+      case true:
+        return "Prospect";
+      case false:
+        return "Cliente";
+      default:
+    }
+  };
+
   return (
     <>
       {isLoading ? (
@@ -210,10 +221,12 @@ export default function CadastroCampanha() {
                     nomeAbv: client.nomeAbv,
                     RepresentanteId: client.RepresentanteId,
                     Representante: client.Representante.nome,
+                    rzSoc: client.rzSoc,
                     TipoComisseId: client.TipoComisseId,
                     TipoComiss: checkDesc(client.TipoComisse.desc),
                     EmpresaId: client.EmpresaId,
-                    prospect: client.prospect,
+                    prospect: checkProsp(client.prospect),
+                    implantacao: client.createdAt,
                     actions: (
                       // we've added some custom button actions
                       <div className="actions-right">
@@ -256,25 +269,25 @@ export default function CadastroCampanha() {
                 rowsText="Linhas"
                 columns={[
                   {
-                    Header: "CNPJ",
-                    accessor: "CNPJ"
-                  },
-                  {
                     Header: "Nome Abreviado",
                     accessor: "nomeAbv"
                   },
                   {
-                    Header: "Representante",
-                    accessor: "Representante"
+                    Header: "Razão Social",
+                    accessor: "rzSoc"
                   },
                   {
-                    Header: "Tipo de comissão",
-                    accessor: "TipoComiss"
+                    Header: "Tipo",
+                    accessor: "prospect"
                   },
                   {
-                    Header: "Tipo de comissão",
-                    accessor: "actions"
+                    Header: "Implantação",
+                    accessor: "implantacao"
                   }
+                  // {
+                  //   Header: "Tipo de comissão",
+                  //   accessor: "actions"
+                  // }
                 ]}
                 defaultPageSize={5}
                 className="-striped -highlight"
@@ -374,8 +387,11 @@ export default function CadastroCampanha() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Campanha</CardTitle>
-                    <Tooltip title="Clientes" placement="top" interactive>
+                    <Tooltip
+                      title="Relacionamentos Campanha"
+                      placement="top"
+                      interactive
+                    >
                       <Button
                         style={{
                           float: "right"
@@ -386,6 +402,7 @@ export default function CadastroCampanha() {
                         <List fontSize="large" />
                       </Button>
                     </Tooltip>
+                    <CardTitle tag="h4">Campanha</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -410,7 +427,7 @@ export default function CadastroCampanha() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
+                        <Col md="8">
                           <Label>Descrição</Label>
                           <FormGroup
                             className={`has-label ${values.desc.error}`}
@@ -430,6 +447,8 @@ export default function CadastroCampanha() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Responsável</Label>
                           <FormGroup
@@ -467,8 +486,6 @@ export default function CadastroCampanha() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Data Início</Label>
                           <FormGroup
@@ -510,6 +527,29 @@ export default function CadastroCampanha() {
                           </FormGroup>
                         </Col>
                       </Row>
+
+                      <Row>
+                        <Col md="12">
+                          <Label>Objetivo</Label>
+                          <FormGroup
+                            className={`has-label ${values.ColabId.error}`}
+                          >
+                            <Input
+                              name="ColabId"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "ColabId", "text")
+                              }
+                            />
+                            {values.ColabId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ColabId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
                       <Button
                         style={{
                           paddingLeft: 29,

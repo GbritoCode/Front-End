@@ -298,6 +298,20 @@ export default function PerfilCadastro() {
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
+                      <Label>Código</Label>
+                      <FormGroup className={`has-label ${values.cod.error}`}>
+                        <Input
+                          name="license"
+                          type="text"
+                          onChange={event => handleChange(event, "cod", "text")}
+                          value={values.cod.value}
+                        />
+                        {values.cod.error === "has-danger" ? (
+                          <Label className="error">{values.cod.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
                       <Label>Descrição</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
@@ -310,20 +324,6 @@ export default function PerfilCadastro() {
                         />
                         {values.desc.error === "has-danger" ? (
                           <Label className="error">{values.desc.message}</Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Código</Label>
-                      <FormGroup className={`has-label ${values.cod.error}`}>
-                        <Input
-                          name="license"
-                          type="text"
-                          onChange={event => handleChange(event, "cod", "text")}
-                          value={values.cod.value}
-                        />
-                        {values.cod.error === "has-danger" ? (
-                          <Label className="error">{values.cod.message}</Label>
                         ) : null}
                       </FormGroup>
                     </Col>
@@ -576,6 +576,27 @@ export default function PerfilCadastro() {
                                           )
                                         }
                                       />
+                                      {view.name === "Prospecção" ? (
+                                        <>
+                                          {" "}
+                                          <Row>
+                                            <CustomInput
+                                              style={{ marginLeft: 30 }}
+                                              id="selectAllAdmin"
+                                              type="radio"
+                                              label="Acesso Total"
+                                            />
+                                          </Row>
+                                          <Row>
+                                            <CustomInput
+                                              style={{ marginLeft: 30 }}
+                                              id="selectAllAdmin"
+                                              type="radio"
+                                              label="Acesso Restrito Representante"
+                                            />
+                                          </Row>
+                                        </>
+                                      ) : null}
                                     </Col>
                                   </>
                                 );

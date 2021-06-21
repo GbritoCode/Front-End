@@ -302,7 +302,7 @@ export function* campanhaCadastro({ payload }) {
       dataFim,
       ColabId
     });
-    history.push(`/tabelas/cliente/campanhas/`);
+    history.push(`/tabelas/cliente/campanha`);
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());
