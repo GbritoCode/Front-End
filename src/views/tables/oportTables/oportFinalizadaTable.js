@@ -60,9 +60,9 @@ function OportFinTable() {
       case 4:
         return "Aprovada";
       case 5:
-        return "Finalizada";
-      case 6:
         return "Reprovada";
+      case 6:
+        return "Finalizada";
       default:
     }
   };
