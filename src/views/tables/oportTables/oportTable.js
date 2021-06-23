@@ -61,9 +61,9 @@ function OportTable() {
       case 4:
         return "Aprovada";
       case 5:
-        return "Finalizada";
-      case 6:
         return "Reprovada";
+      case 6:
+        return "Finalizada";
       default:
     }
   };
@@ -265,10 +265,10 @@ function OportTable() {
               style={{ color: "#7E7E7E" }}
               className="btn-neutral"
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 if (altering.fase === 5) {
                   if (altering.motivo) {
-                    api
+                    await api
                       .put(`oportunidade/${altering.altering}`, {
                         fase: altering.fase,
                         motivo: altering.motivo
@@ -288,7 +288,7 @@ function OportTable() {
                     }
                   }
                 } else {
-                  api
+                  await api
                     .put(`oportunidade/${altering.altering}`, {
                       fase: altering.fase
                     })
