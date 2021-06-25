@@ -32,7 +32,7 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   InsertEmoticon,
   SentimentDissatisfied,
@@ -45,6 +45,7 @@ import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpUpdate } from "~/store/modules/Cliente/actions";
+import history from "~/services/history";
 
 export default function UpdateFollowUps() {
   // --------- colocando no modo claro do template
@@ -498,29 +499,28 @@ export default function UpdateFollowUps() {
                           size="large"
                         />
                       </Button>
-                      <Link to={`/tabelas/cliente/followUps/${data2.id}`}>
-                        <Button
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33,
+                          float: "left"
+                        }}
+                        onClick={() => history.goBack()}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33,
+                            paddingBottom: 4,
+                            paddingRight: 1,
                             float: "left"
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1,
-                              float: "left"
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
                     </Form>
                   </CardBody>
                 </Card>

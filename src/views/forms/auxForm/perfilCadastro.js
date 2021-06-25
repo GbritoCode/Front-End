@@ -55,6 +55,7 @@ export default function PerfilCadastro() {
     cod: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
+  const [radioValue, setRadioValue] = useState("");
   const [horizontalTabs, sethorizontalTabs] = useState("Dashboards");
   const [permittedPages, setPermittedPages] = useState([]);
   const [ParentPagesCounter, setParentPagesCounter] = useState({
@@ -77,6 +78,7 @@ export default function PerfilCadastro() {
     }
     loadData();
   }, []);
+  console.log(radioValue);
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault();
     switch (tabState) {
@@ -101,14 +103,10 @@ export default function PerfilCadastro() {
         }));
         routes.map(route => {
           if (route.namePerfil === parentRoute) {
-            console.log(ParentPagesCounter[route.name]);
-            console.log(route.views.filter(view => !view.redirect).length);
             if (
               ParentPagesCounter[route.name].count ===
               route.views.filter(view => !view.redirect).length - 1
             ) {
-              console.log(ParentPagesCounter[route.name]);
-              console.log(route.views.filter(view => !view.redirect).length);
               document.getElementById(selectAllId).checked = true;
             }
           }
@@ -126,14 +124,10 @@ export default function PerfilCadastro() {
         }));
         routes.map(route => {
           if (route.namePerfil === parentRoute) {
-            console.log(ParentPagesCounter[route.name]);
-            console.log(route.views.filter(view => !view.redirect).length);
             if (
               ParentPagesCounter[route.name].count !==
               route.views.filter(view => !view.redirect).length - 1
             ) {
-              console.log(ParentPagesCounter[route.name]);
-              console.log(route.views.filter(view => !view.redirect).length);
               document.getElementById(selectAllId).checked = false;
             }
           }
@@ -143,8 +137,6 @@ export default function PerfilCadastro() {
       default:
     }
   };
-
-  console.log(ParentPagesCounter);
 
   const handleSwitchAllChange = (checked, parentRoute) => {
     switch (checked) {
@@ -220,14 +212,20 @@ export default function PerfilCadastro() {
     notifyElment.current.notificationAlert(options);
   }
 
+  console.log(permittedPages);
+
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
     let string = "";
+
     for (const page of permittedPages) {
       if (string.search(page) < 0) {
         string += `${page},`;
+      }
+      if (page === "Prospecção") {
+        string += `${radioValue},`;
       }
     }
 
@@ -515,6 +513,7 @@ export default function PerfilCadastro() {
                                   <>
                                     <Col md="4" key={index}>
                                       <CustomInput
+                                        key={index}
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}
@@ -564,37 +563,79 @@ export default function PerfilCadastro() {
                                   <>
                                     <Col md="4" key={index}>
                                       <CustomInput
+                                        key={index}
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}
-                                        onChange={e =>
+                                        onChange={e => {
+                                          e.target.checked &&
+                                            setRadioValue("acessoRestrito");
+                                          !e.target.checked &&
+                                            setRadioValue("");
                                           handleSwitchChange(
                                             e.target.checked,
                                             e.target.id,
                                             route.namePerfil,
                                             "selectAllVendas"
-                                          )
-                                        }
+                                          );
+                                        }}
                                       />
                                       {view.name === "Prospecção" ? (
                                         <>
                                           {" "}
-                                          <Row>
-                                            <CustomInput
-                                              style={{ marginLeft: 30 }}
-                                              id="selectAllAdmin"
-                                              type="radio"
-                                              label="Acesso Total"
-                                            />
-                                          </Row>
-                                          <Row>
-                                            <CustomInput
-                                              style={{ marginLeft: 30 }}
-                                              id="selectAllAdmin"
-                                              type="radio"
-                                              label="Acesso Restrito Representante"
-                                            />
-                                          </Row>
+                                          <FormGroup tag="fieldset">
+                                            <FormGroup check>
+                                              <Label id="switchChildren" check>
+                                                <Input
+                                                  checked={
+                                                    permittedPages.find(
+                                                      page =>
+                                                        page === "Prospecção"
+                                                    ) === "Prospecção" &&
+                                                    radioValue === "acessoTotal"
+                                                  }
+                                                  type="radio"
+                                                  name="acessoTotal"
+                                                  id="acessoTotal"
+                                                  onChange={() =>
+                                                    permittedPages.find(
+                                                      page =>
+                                                        page === "Prospecção"
+                                                    ) === "Prospecção" &&
+                                                    setRadioValue("acessoTotal")
+                                                  }
+                                                />{" "}
+                                                Acesso Total
+                                              </Label>
+                                            </FormGroup>
+                                            <FormGroup check>
+                                              <Label id="switchChildren" check>
+                                                <Input
+                                                  checked={
+                                                    permittedPages.find(
+                                                      page =>
+                                                        page === "Prospecção"
+                                                    ) === "Prospecção" &&
+                                                    radioValue ===
+                                                      "acessoRestrito"
+                                                  }
+                                                  type="radio"
+                                                  name="acessoRestrito"
+                                                  id="acessoRestrito"
+                                                  onChange={() =>
+                                                    permittedPages.find(
+                                                      page =>
+                                                        page === "Prospecção"
+                                                    ) === "Prospecção" &&
+                                                    setRadioValue(
+                                                      "acessoRestrito"
+                                                    )
+                                                  }
+                                                />{" "}
+                                                Acesso Restrito
+                                              </Label>
+                                            </FormGroup>
+                                          </FormGroup>
                                         </>
                                       ) : null}
                                     </Col>
@@ -638,6 +679,7 @@ export default function PerfilCadastro() {
                                   <>
                                     <Col md="4" key={index}>
                                       <CustomInput
+                                        key={index}
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}
@@ -690,6 +732,7 @@ export default function PerfilCadastro() {
                                   <>
                                     <Col md="4" key={index}>
                                       <CustomInput
+                                        key={index}
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}
@@ -742,6 +785,7 @@ export default function PerfilCadastro() {
                                   <>
                                     <Col md="4" key={index}>
                                       <CustomInput
+                                        key={index}
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}

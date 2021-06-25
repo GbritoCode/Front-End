@@ -473,12 +473,13 @@ export function* updatePerfil({ payload }) {
 
 export function* representanteCadastro({ payload }) {
   try {
-    const { EmpresaId, nome, TipoComisseId, vlrFixMens } = payload;
+    const { EmpresaId, nome, TipoComisseId, vlrFixMens, ColabId } = payload;
     yield call(api.post, "representante", {
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens
+      vlrFixMens,
+      ColabId
     });
     history.push("/tabelas/general/representante");
   } catch (err) {

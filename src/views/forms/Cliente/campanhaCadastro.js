@@ -65,9 +65,11 @@ export default function CadastroCampanha() {
     dataFim: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" }
   };
-
+  let reactTable = useRef(null);
   const [values, setValues] = useState(stateSchema);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+  const [filteredData, setFilteredData] = useState([]);
+  const [defaultFilteredData, setDefaultFilteredData] = useState([]);
   const [isOpenColab, setIsOpenColab] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -81,6 +83,47 @@ export default function CadastroCampanha() {
       const response2 = await api.get(`/colab`);
       setData(response.data);
       setData2(response2.data);
+      setDefaultFilteredData(
+        response.data.map((client, index) => {
+          return {
+            _original: {
+              idd: index,
+              id: client.id,
+              CNPJ: normalizeCnpj(client.CNPJ),
+              nomeAbv: client.nomeAbv,
+              RepresentanteId: client.RepresentanteId,
+              Representante: client.Representante.nome,
+              rzSoc: client.rzSoc,
+              TipoComisseId: client.TipoComisseId,
+              TipoComiss: checkDesc(client.TipoComisse.desc),
+              EmpresaId: client.EmpresaId,
+              prospect: checkProsp(client.prospect),
+              implantacao: client.createdAt
+            }
+          };
+        })
+      );
+      setFilteredData({
+        data: response.data.map((client, index) => {
+          return {
+            _original: {
+              idd: index,
+              id: client.id,
+              CNPJ: normalizeCnpj(client.CNPJ),
+              nomeAbv: client.nomeAbv,
+              RepresentanteId: client.RepresentanteId,
+              Representante: client.Representante.nome,
+              rzSoc: client.rzSoc,
+              TipoComisseId: client.TipoComisseId,
+              TipoComiss: checkDesc(client.TipoComisse.desc),
+              EmpresaId: client.EmpresaId,
+              prospect: checkProsp(client.prospect),
+              implantacao: client.createdAt
+            }
+          };
+        }),
+        default: true
+      });
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response1.data.id }
@@ -97,6 +140,12 @@ export default function CadastroCampanha() {
     notifyElment.current.notificationAlert(options);
   }
 
+  const checker = () => {
+    if (!isOpen && !filteredData.default) {
+      setFilteredData({ data: defaultFilteredData, default: true });
+    }
+  };
+  checker();
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
@@ -190,6 +239,8 @@ export default function CadastroCampanha() {
       default:
     }
   };
+  console.log(filteredData);
+  console.log(values.ClienteIds.array);
 
   return (
     <>
@@ -209,10 +260,17 @@ export default function CadastroCampanha() {
             >
               <Header>
                 {" "}
-                <h4 className="modalHeader">Representante</h4>
+                <h4 className="modalHeader">Clientes/Prospects</h4>
               </Header>
 
               <ReactTable
+                ref={r => (reactTable = r)}
+                onFilteredChange={() => {
+                  setFilteredData({
+                    data: reactTable.getResolvedState().sortedData,
+                    default: false
+                  });
+                }}
                 data={data.map((client, index) => {
                   return {
                     idd: index,
@@ -226,28 +284,49 @@ export default function CadastroCampanha() {
                     TipoComiss: checkDesc(client.TipoComisse.desc),
                     EmpresaId: client.EmpresaId,
                     prospect: checkProsp(client.prospect),
-                    implantacao: client.createdAt,
-                    actions: (
-                      // we've added some custom button actions
-                      <div className="actions-right">
-                        <Input id={client.id} type="checkbox" />
-                      </div>
-                    )
+                    implantacao: client.createdAt
                   };
                 })}
                 getTdProps={(state, rowInfo) => {
                   return {
                     onClick: () => {
-                      setValues(prevState => ({
-                        ...prevState,
-                        ClienteIds: {
-                          value: "filled",
-                          array: [
-                            ...prevState.ClienteIds.array,
-                            rowInfo.original.id
-                          ]
-                        }
-                      }));
+                      console.log(rowInfo.row);
+                      rowInfo.original.clicado = true;
+                      // eslint-disable-next-line no-unused-expressions
+                      values.ClienteIds.array.findIndex(
+                        arr => arr === rowInfo.original.id
+                      ) > -1
+                        ? setValues(prevState => ({
+                            ...prevState,
+                            ClienteIds: {
+                              optional: true,
+                              value: "filled",
+                              array: values.ClienteIds.array.filter(
+                                arr => arr !== rowInfo.original.id
+                              )
+                            }
+                          }))
+                        : setValues(prevState => ({
+                            ...prevState,
+                            ClienteIds: {
+                              optional: true,
+                              value: "filled",
+                              array: [
+                                ...prevState.ClienteIds.array,
+                                rowInfo.original.id
+                              ]
+                            }
+                          }));
+                    },
+                    style: {
+                      background:
+                        values.ClienteIds.array.findIndex(
+                          arr =>
+                            arr ===
+                            (rowInfo === undefined ? -1 : rowInfo.original.id)
+                        ) > -1
+                          ? "#ccffcc"
+                          : null
                     }
                   };
                 }}
@@ -274,7 +353,12 @@ export default function CadastroCampanha() {
                   },
                   {
                     Header: "Razão Social",
-                    accessor: "rzSoc"
+                    accessor: "rzSoc",
+                    minWidth: 250
+                  },
+                  {
+                    Header: "Representante",
+                    accessor: "Representante"
                   },
                   {
                     Header: "Tipo",
@@ -284,12 +368,9 @@ export default function CadastroCampanha() {
                     Header: "Implantação",
                     accessor: "implantacao"
                   }
-                  // {
-                  //   Header: "Tipo de comissão",
-                  //   accessor: "actions"
-                  // }
                 ]}
-                defaultPageSize={5}
+                defaultPageSize={6}
+                pageSizeOptions={[6, 10, 50, 100]}
                 className="-striped -highlight"
               />
 
@@ -298,9 +379,38 @@ export default function CadastroCampanha() {
                   className="btn-neutral"
                   onClick={() => {
                     setIsOpen(false);
+                    setFilteredData({
+                      data: defaultFilteredData,
+                      default: true
+                    });
                   }}
                 >
                   Close
+                </Button>
+                <Button
+                  style={{ float: "right" }}
+                  className="btn-neutral"
+                  onClick={() => {
+                    for (let i = 0; i < filteredData.data.length; i += 1) {
+                      setValues(prevState => ({
+                        ...prevState,
+                        ClienteIds: {
+                          optional: true,
+                          value: "filled",
+                          array: [
+                            ...prevState.ClienteIds.array,
+                            filteredData.data[i]._original.id
+                          ]
+                        }
+                      }));
+                    }
+                    setFilteredData({
+                      data: defaultFilteredData,
+                      default: true
+                    });
+                  }}
+                >
+                  Relacionar
                 </Button>
               </Footer>
             </Modal>
@@ -313,7 +423,7 @@ export default function CadastroCampanha() {
             >
               <Header>
                 {" "}
-                <h4 className="modalHeader">Representante</h4>
+                <h4 className="modalHeader">Responsável</h4>
               </Header>
 
               <ReactTable

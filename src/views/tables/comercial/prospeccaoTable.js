@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /*!
 
 =========================================================
@@ -19,7 +20,7 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, CardTitle, Col, Button } from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
 
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -30,6 +31,7 @@ import Modal from "~/components/Modal/modalLarge";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 import { Footer, Header } from "~/components/Modal/modalStyles";
+import { store } from "~/store";
 
 /* eslint-disable eqeqeq */
 function ProspeccaoTable() {
@@ -37,12 +39,31 @@ function ProspeccaoTable() {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [data, setData] = useState();
+  const [campanha, setCampanha] = useState({
+    cod: "--",
+    desc: "--"
+  });
   const [data2, setData2] = useState([]);
+  const [access, setAccess] = useState("");
+  const [Colab, setColab] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
   const history = useHistory();
 
   useEffect(() => {
+    const { acessible } = store.getState().auth;
+    const { id } = store.getState().auth.user.Colab;
+    setColab(id);
+    switch (!!acessible.find(acc => acc === "acessoRestrito")) {
+      case true:
+        setAccess("acessoRestrito");
+        break;
+      case false:
+        setAccess("acessoTotal");
+        break;
+      default:
+    }
+
     async function loadData() {
       const response = await api.get("/campanha");
       setData(
@@ -69,6 +90,51 @@ function ProspeccaoTable() {
     loadData();
   }, [dispatch, history]);
 
+  const checkSituacao = days => {
+    console.log(days);
+    switch (true) {
+      case days <= 0:
+        return (
+          <div
+            style={{
+              background: "red",
+              borderRadius: "50%",
+              width: "20px",
+              height: "20px"
+            }}
+          />
+        );
+      case days > 0 && days < 4:
+        return (
+          <div
+            style={{
+              background: "yellow",
+              borderRadius: "50%",
+              width: "20px",
+              height: "20px"
+            }}
+          />
+        );
+      case days > 5:
+        return (
+          <div
+            style={{
+              background: "#4ede6b",
+              borderRadius: "50%",
+              width: "20px",
+              height: "20px"
+            }}
+          />
+        );
+      case days === "--":
+        return "--";
+      default:
+    }
+  };
+
+  console.log(data2);
+  console.log(access);
+  console.log(Colab);
   return (
     <>
       {isLoading ? (
@@ -91,45 +157,134 @@ function ProspeccaoTable() {
                 getTdProps={(state, rowInfo) => {
                   return {
                     onClick: () => {
-                      setData2(
-                        rowInfo.original.clientes.map((client, key) => {
-                          return {
-                            idd: key,
-                            id: client.id,
-                            CNPJ: normalizeCnpj(client.CNPJ),
-                            nomeAbv: client.nomeAbv,
-                            rzSoc: client.rzSoc,
-                            RepresentanteId: client.RepresentanteId,
-                            Representante: client.Representante.nome,
-                            TipoComisseId: client.TipoComisseId,
-                            TipoComiss: client.TipoComisse.desc,
-                            EmpresaId: client.EmpresaId,
-                            prospect: client.prospect,
-                            created: client.createdAt,
-                            actions: (
-                              // we've added some custom button actions
-                              <div className="actions-right">
-                                <Tooltip title="Follow Up">
-                                  <Button
-                                    color="default"
-                                    size="sm"
-                                    className={classNames(
-                                      "btn-icon btn-link like"
-                                    )}
-                                    onClick={() => {
-                                      history.push(
-                                        `/tabelas/cliente/followUps/${client.id}/${rowInfo.original.id}`
-                                      );
-                                    }}
-                                  >
-                                    <i className="tim-icons icon-attach-87" />
-                                  </Button>
-                                </Tooltip>
-                              </div>
-                            )
-                          };
-                        })
-                      );
+                      setCampanha({
+                        cod: rowInfo.original.cod,
+                        desc: rowInfo.original.desc
+                      });
+                      access === "acessoRestrito" &&
+                        setData2(
+                          rowInfo.original.clientes
+                            .filter(arr => arr.Representante.ColabId === Colab)
+                            .map((client, key) => {
+                              return {
+                                idd: key,
+                                id: client.id,
+                                CNPJ: normalizeCnpj(client.CNPJ),
+                                nomeAbv: client.nomeAbv,
+                                rzSoc: client.rzSoc,
+                                RepresentanteId: client.RepresentanteId,
+                                Representante: client.Representante.nome,
+                                TipoComisseId: client.TipoComisseId,
+                                TipoComiss: client.TipoComisse.desc,
+                                EmpresaId: client.EmpresaId,
+                                prospect: client.prospect,
+                                created: client.createdAt,
+                                retorno:
+                                  client.FollowUps.find(
+                                    arr =>
+                                      arr.CampanhasId === rowInfo.original.id
+                                  ) !== undefined
+                                    ? client.FollowUps.find(
+                                        arr =>
+                                          arr.CampanhasId ===
+                                          rowInfo.original.id
+                                      ).dataProxContato
+                                    : "--",
+                                situacao: checkSituacao(
+                                  client.FollowUps.find(
+                                    arr =>
+                                      arr.CampanhasId === rowInfo.original.id
+                                  ) !== undefined
+                                    ? client.FollowUps.find(
+                                        arr =>
+                                          arr.CampanhasId ===
+                                          rowInfo.original.id
+                                      ).distanceFromToday
+                                    : "--"
+                                ),
+                                actions: (
+                                  // we've added some custom button actions
+                                  <div className="actions-right">
+                                    <Tooltip title="Follow Up">
+                                      <Button
+                                        color="default"
+                                        size="sm"
+                                        className={classNames(
+                                          "btn-icon btn-link like"
+                                        )}
+                                        onClick={() => {
+                                          history.push(
+                                            `/tabelas/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                          );
+                                        }}
+                                      >
+                                        <i className="tim-icons icon-attach-87" />
+                                      </Button>
+                                    </Tooltip>
+                                  </div>
+                                )
+                              };
+                            })
+                        );
+                      access === "acessoTotal" &&
+                        setData2(
+                          rowInfo.original.clientes.map((client, key) => {
+                            return {
+                              idd: key,
+                              id: client.id,
+                              CNPJ: normalizeCnpj(client.CNPJ),
+                              nomeAbv: client.nomeAbv,
+                              rzSoc: client.rzSoc,
+                              RepresentanteId: client.RepresentanteId,
+                              Representante: client.Representante.nome,
+                              TipoComisseId: client.TipoComisseId,
+                              TipoComiss: client.TipoComisse.desc,
+                              EmpresaId: client.EmpresaId,
+                              prospect: client.prospect,
+                              created: client.createdAt,
+                              retorno:
+                                client.FollowUps.find(
+                                  arr => arr.CampanhasId === rowInfo.original.id
+                                ) !== undefined
+                                  ? client.FollowUps.find(
+                                      arr =>
+                                        arr.CampanhasId === rowInfo.original.id
+                                    ).dataProxContato
+                                  : "--",
+                              situacao: checkSituacao(
+                                client.FollowUps.find(
+                                  arr => arr.CampanhasId === rowInfo.original.id
+                                ) !== undefined
+                                  ? client.FollowUps.find(
+                                      arr =>
+                                        arr.CampanhasId === rowInfo.original.id
+                                    ).distanceFromToday
+                                  : "--"
+                              ),
+                              actions: (
+                                // we've added some custom button actions
+                                <div className="actions-right">
+                                  <Tooltip title="Follow Up">
+                                    <Button
+                                      color="default"
+                                      size="sm"
+                                      className={classNames(
+                                        "btn-icon btn-link like"
+                                      )}
+                                      onClick={() => {
+                                        history.push(
+                                          `/tabelas/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                        );
+                                      }}
+                                    >
+                                      <i className="tim-icons icon-attach-87" />
+                                    </Button>
+                                  </Tooltip>
+                                </div>
+                              )
+                            };
+                          })
+                        );
                       setIsOpen(false);
                     }
                   };
@@ -182,20 +337,21 @@ function ProspeccaoTable() {
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h4">
-                    Prospecção
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        setIsOpen(!isOpen);
-                      }}
-                    >
-                      <FilterList />
-                    </Button>
-                  </CardTitle>
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => {
+                      setIsOpen(!isOpen);
+                    }}
+                  >
+                    <FilterList />
+                  </Button>
+                  <h3 style={{ marginBottom: 0 }}>Prospecção</h3>
+                  <p style={{ fontSize: 14 }}>
+                    {campanha.cod} | {campanha.desc}
+                  </p>
                 </CardHeader>
                 <CardBody>
                   <ReactTable
@@ -235,20 +391,13 @@ function ProspeccaoTable() {
                       },
                       {
                         Header: "Retorno",
-                        accessor: "created"
+                        accessor: "retorno"
                       },
                       {
                         Header: "sla",
                         accessor: "situacao",
                         filterable: false,
-                        maxWidth: 50,
-                        getProps: (state, rowInfo, column) => {
-                          return {
-                            style: {
-                              background: "red"
-                            }
-                          };
-                        }
+                        maxWidth: 50
                       },
                       {
                         Header: "Ações",

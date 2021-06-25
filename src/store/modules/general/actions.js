@@ -353,7 +353,8 @@ export function representanteRequest(
   EmpresaId,
   nome,
   TipoComisseId,
-  vlrFixMens
+  vlrFixMens,
+  ColabId
 ) {
   return {
     type: "@cadastro/REPRESENTANTE_REQUEST",
@@ -361,7 +362,8 @@ export function representanteRequest(
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens
+      vlrFixMens,
+      ColabId
     }
   };
 }
@@ -370,7 +372,8 @@ export function RepresentanteUpdate(
   EmpresaId,
   nome,
   TipoComisseId,
-  vlrFixMens
+  vlrFixMens,
+  ColabId
 ) {
   return {
     type: "@update/REPRESENTANTE_REQUEST",
@@ -379,7 +382,8 @@ export function RepresentanteUpdate(
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens
+      vlrFixMens,
+      ColabId
     }
   };
 }

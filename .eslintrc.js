@@ -45,7 +45,8 @@ module.exports = {
     "import/no-extraneous-dependencies":"off",
     "react/prop-types":"off",
     "react/no-string-refs":"off",
-    "react/no-array-index-key":"off"
+    "react/no-array-index-key":"off",
+    "no-unused-expressions":"off"
   },
   settings: {
     "import/resolver": {

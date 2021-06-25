@@ -49,6 +49,8 @@ import { Header, Footer } from "~/components/Modal/modalStyles";
 /* eslint-disable eqeqeq */
 const CadastroCliente = forwardRef((props, ref) => {
   // --------- colocando no modo claro do template
+  const [access, setAccess] = useState("");
+  const [colab, setColab] = useState("");
   const [isOpenRepr, setIsOpenRepr] = useState(false);
   const [isOpenCamp, setIsOpenCamp] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +81,19 @@ const CadastroCliente = forwardRef((props, ref) => {
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
-    const { empresa } = store.getState().auth;
+    const { empresa, acessible } = store.getState().auth;
+    const { nome } = store.getState().auth.user.Colab;
+    setColab(nome);
+    console.log(access);
+    switch (!!acessible.find(acc => acc === "acessoRestrito")) {
+      case true:
+        setAccess("acessoRestrito");
+        break;
+      case false:
+        setAccess("acessoTotal");
+        break;
+      default:
+    }
     async function loadData() {
       const response = await api.get(`empresa/${empresa}`);
       const response1 = await api.get(`tipoComiss/`);
@@ -95,7 +109,7 @@ const CadastroCliente = forwardRef((props, ref) => {
       setIsLoading(false);
     }
     loadData();
-  }, []);
+  }, [access, colab]);
 
   let options = {};
 
@@ -451,10 +465,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                         ...prevState,
                         CampanhaIds: {
                           value: "filled",
-                          array: [
-                            ...prevState.CampanhaIds.array,
-                            rowInfo.original.id
-                          ]
+                          array: [rowInfo.original.id]
                         }
                       }));
                       document.getElementsByName(
@@ -609,7 +620,38 @@ const CadastroCliente = forwardRef((props, ref) => {
                           <FormGroup
                             className={`has-label ${values.representante.error}`}
                           >
-                            <InputGroup>
+                            {access === "acessoTotal" && (
+                              <InputGroup>
+                                <Input
+                                  disabled
+                                  name="representante"
+                                  type="text"
+                                  onChange={event =>
+                                    handleChange(event, "representante", "text")
+                                  }
+                                  defaultValue={
+                                    access === "acessoRestrito" ? colab : ""
+                                  }
+                                  placeholder="Selecione um representante"
+                                />
+                                <InputGroupAddon
+                                  className="appendCustom"
+                                  addonType="append"
+                                >
+                                  <Button
+                                    className={classNames(
+                                      "btn-icon btn-link like addon"
+                                    )}
+                                    onClick={() => {
+                                      setIsOpenRepr(true);
+                                    }}
+                                  >
+                                    <i className="tim-icons icon-zoom-split addon" />
+                                  </Button>
+                                </InputGroupAddon>
+                              </InputGroup>
+                            )}
+                            {access === "acessoRestrito" && (
                               <Input
                                 disabled
                                 name="representante"
@@ -617,25 +659,12 @@ const CadastroCliente = forwardRef((props, ref) => {
                                 onChange={event =>
                                   handleChange(event, "representante", "text")
                                 }
-                                placeholder="Selecione um Representante"
+                                defaultValue={
+                                  access === "acessoRestrito" ? colab : ""
+                                }
+                                placeholder="Selecione um representante"
                               />
-                              <InputGroupAddon
-                                className="appendCustom"
-                                addonType="append"
-                              >
-                                <Button
-                                  className={classNames(
-                                    "btn-icon btn-link like addon"
-                                  )}
-                                  onClick={() => {
-                                    setIsOpenRepr(true);
-                                  }}
-                                >
-                                  <i className="tim-icons icon-zoom-split addon" />
-                                </Button>
-                              </InputGroupAddon>
-                            </InputGroup>
-
+                            )}
                             {values.representante.error === "has-danger" ? (
                               <Label className="error">
                                 {values.representante.message}

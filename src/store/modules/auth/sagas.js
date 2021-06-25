@@ -1,6 +1,5 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
-import jwt from "jsonwebtoken";
 import history from "~/services/history";
 import api from "~/services/api";
 
@@ -11,9 +10,8 @@ export function* signIn({ payload }) {
     const { email, senha } = payload;
 
     const response = yield call(api.post, "sessions", { email, senha });
-    const { token, user } = response.data;
-    const decoded = jwt.verify(token, "f29618255c309de4469993cce24286ea");
-    yield put(signInSuccess(token, user, decoded.acessible));
+    const { token, user, acessible } = response.data;
+    yield put(signInSuccess(token, user, acessible));
 
     history.push(0);
   } catch (err) {

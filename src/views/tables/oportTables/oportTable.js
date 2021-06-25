@@ -361,7 +361,7 @@ function OportTable() {
                   {
                     Header: "descrição",
                     accessor: "desc",
-                    width: 301,
+                    minWidth: 350,
                     filterMethod: (filter, row) => {
                       const id = filter.pivotId || filter.id;
                       return row[id] !== undefined
@@ -377,7 +377,8 @@ function OportTable() {
                   },
                   {
                     Header: "Cliente",
-                    accessor: "Cliente"
+                    accessor: "Cliente",
+                    minWidth: 140
                   },
                   {
                     Header: "data",
@@ -388,7 +389,7 @@ function OportTable() {
                     accessor: "actions",
                     sortable: false,
                     filterable: false,
-                    minWidth: 212
+                    minWidth: 161
                   }
                 ]}
                 defaultPageSize={10}

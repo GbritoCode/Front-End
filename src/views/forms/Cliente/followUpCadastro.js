@@ -478,7 +478,9 @@ export default function CadastroFollowUps() {
                           size="large"
                         />
                       </Button>
-                      <Link to="/tabelas/cliente/followUps/">
+                      <Link
+                        to={`/tabelas/cliente/followUps/${cliId}/${campId}`}
+                      >
                         <Button
                           style={{
                             paddingLeft: 32,
