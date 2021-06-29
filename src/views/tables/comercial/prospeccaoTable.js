@@ -108,7 +108,7 @@ function ProspeccaoTable() {
         return (
           <div
             style={{
-              background: "yellow",
+              background: "#ff9933",
               borderRadius: "50%",
               width: "20px",
               height: "20px"

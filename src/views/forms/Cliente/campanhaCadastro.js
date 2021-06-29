@@ -37,7 +37,7 @@ import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { List } from "@material-ui/icons";
+import { Close, DoneAll, List } from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaCadastro } from "~/store/modules/Cliente/actions";
@@ -67,13 +67,37 @@ export default function CadastroCampanha() {
   };
   let reactTable = useRef(null);
   const [values, setValues] = useState(stateSchema);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [defaultFilteredData, setDefaultFilteredData] = useState([]);
   const [isOpenColab, setIsOpenColab] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
+
+  const checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
+  };
+
+  const checkProsp = value => {
+    switch (value) {
+      case true:
+        return "Prospect";
+      case false:
+        return "Cliente";
+      default:
+    }
+  };
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
@@ -146,6 +170,7 @@ export default function CadastroCampanha() {
     }
   };
   checker();
+
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
@@ -216,32 +241,6 @@ export default function CadastroCampanha() {
     }
   };
 
-  const checkDesc = value => {
-    switch (value) {
-      case "1":
-        return "Indicação";
-      case "2":
-        return "Representação";
-      case "3":
-        return "Prospecção";
-      case "4":
-        return "Interna";
-      default:
-    }
-  };
-
-  const checkProsp = value => {
-    switch (value) {
-      case true:
-        return "Prospect";
-      case false:
-        return "Cliente";
-      default:
-    }
-  };
-  console.log(filteredData);
-  console.log(values.ClienteIds.array);
-
   return (
     <>
       {isLoading ? (
@@ -260,6 +259,52 @@ export default function CadastroCampanha() {
             >
               <Header>
                 {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setFilteredData({
+                        data: defaultFilteredData,
+                        default: true
+                      });
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Relacionar Todos" placement="top" interactive>
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      for (let i = 0; i < filteredData.data.length; i += 1) {
+                        setValues(prevState => ({
+                          ...prevState,
+                          ClienteIds: {
+                            optional: true,
+                            value: "filled",
+                            array: [
+                              ...prevState.ClienteIds.array,
+                              filteredData.data[i]._original.id
+                            ]
+                          }
+                        }));
+                      }
+                      setFilteredData({
+                        data: defaultFilteredData,
+                        default: true
+                      });
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <DoneAll fontSize="large" />
+                  </Button>
+                </Tooltip>
                 <h4 className="modalHeader">Clientes/Prospects</h4>
               </Header>
 
@@ -374,45 +419,7 @@ export default function CadastroCampanha() {
                 className="-striped -highlight"
               />
 
-              <Footer>
-                <Button
-                  className="btn-neutral"
-                  onClick={() => {
-                    setIsOpen(false);
-                    setFilteredData({
-                      data: defaultFilteredData,
-                      default: true
-                    });
-                  }}
-                >
-                  Close
-                </Button>
-                <Button
-                  style={{ float: "right" }}
-                  className="btn-neutral"
-                  onClick={() => {
-                    for (let i = 0; i < filteredData.data.length; i += 1) {
-                      setValues(prevState => ({
-                        ...prevState,
-                        ClienteIds: {
-                          optional: true,
-                          value: "filled",
-                          array: [
-                            ...prevState.ClienteIds.array,
-                            filteredData.data[i]._original.id
-                          ]
-                        }
-                      }));
-                    }
-                    setFilteredData({
-                      data: defaultFilteredData,
-                      default: true
-                    });
-                  }}
-                >
-                  Relacionar
-                </Button>
-              </Footer>
+              <Footer />
             </Modal>
 
             <Modal
