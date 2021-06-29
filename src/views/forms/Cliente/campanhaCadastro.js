@@ -63,7 +63,8 @@ export default function CadastroCampanha() {
     },
     dataInic: { value: "", error: "", message: "" },
     dataFim: { value: "", error: "", message: "" },
-    ColabId: { value: "", error: "", message: "" }
+    ColabId: { value: "", error: "", message: "" },
+    objetivo: { value: "", error: "", message: "" }
   };
   let reactTable = useRef(null);
   const [values, setValues] = useState(stateSchema);
@@ -222,7 +223,8 @@ export default function CadastroCampanha() {
           values.ClienteIds.array,
           values.dataInic.value,
           values.dataFim.value,
-          values.ColabId.value
+          values.ColabId.value,
+          values.objetivo.value
         )
       );
     } else {
@@ -649,18 +651,18 @@ export default function CadastroCampanha() {
                         <Col md="12">
                           <Label>Objetivo</Label>
                           <FormGroup
-                            className={`has-label ${values.ColabId.error}`}
+                            className={`has-label ${values.objetivo.error}`}
                           >
                             <Input
-                              name="ColabId"
+                              name="objetivo"
                               type="textarea"
                               onChange={event =>
-                                handleChange(event, "ColabId", "text")
+                                handleChange(event, "objetivo", "text")
                               }
                             />
-                            {values.ColabId.error === "has-danger" ? (
+                            {values.objetivo.error === "has-danger" ? (
                               <Label className="error">
-                                {values.ColabId.message}
+                                {values.objetivo.message}
                               </Label>
                             ) : null}
                           </FormGroup>

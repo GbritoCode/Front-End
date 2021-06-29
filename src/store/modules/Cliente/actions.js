@@ -226,7 +226,8 @@ export function campanhaCadastro(
   ClienteIds,
   dataInic,
   dataFim,
-  ColabId
+  ColabId,
+  objetivo
 ) {
   return {
     type: "@cadastro/CAMPANHA_REQUEST",
@@ -237,7 +238,8 @@ export function campanhaCadastro(
       ClienteIds,
       dataInic,
       dataFim,
-      ColabId
+      ColabId,
+      objetivo
     }
   };
 }

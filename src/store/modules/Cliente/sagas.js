@@ -291,7 +291,8 @@ export function* campanhaCadastro({ payload }) {
       ClienteIds,
       dataInic,
       dataFim,
-      ColabId
+      ColabId,
+      objetivo
     } = payload;
     yield call(api.post, "campanha", {
       EmpresaId,
@@ -300,7 +301,8 @@ export function* campanhaCadastro({ payload }) {
       ClienteIds,
       dataInic,
       dataFim,
-      ColabId
+      ColabId,
+      objetivo
     });
     history.push(`/tabelas/cliente/campanha`);
   } catch (err) {

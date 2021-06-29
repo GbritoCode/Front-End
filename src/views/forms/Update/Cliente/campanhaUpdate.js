@@ -58,7 +58,8 @@ export default function UpdateCampanha() {
     desc: { value: "", error: "", message: "" },
     dataInic: { value: "", error: "", message: "" },
     dataFim: { value: "", error: "", message: "" },
-    ColabId: { value: "", error: "", message: "" }
+    ColabId: { value: "", error: "", message: "" },
+    objetivo: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +83,8 @@ export default function UpdateCampanha() {
         desc: { value: response1.data.desc },
         dataInic: { value: response1.data.dataInic },
         dataFim: { value: response1.data.dataFim },
-        ColabId: { value: response1.data.ColabId }
+        ColabId: { value: response1.data.ColabId },
+        objetivo: { value: response1.data.objetivo }
       }));
 
       setColabNome(
@@ -150,7 +152,8 @@ export default function UpdateCampanha() {
           values.desc.value,
           values.dataInic.value,
           values.dataFim.value,
-          values.ColabId.value
+          values.ColabId.value,
+          values.objetivo.value
         )
       );
     } else {
@@ -298,7 +301,7 @@ export default function UpdateCampanha() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
+                        <Col md="8">
                           <Label>Descrição</Label>
                           <FormGroup
                             className={`has-label ${values.desc.error}`}
@@ -319,6 +322,8 @@ export default function UpdateCampanha() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Responsável</Label>
                           <FormGroup
@@ -354,8 +359,6 @@ export default function UpdateCampanha() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Data Início</Label>
                           <FormGroup
@@ -397,6 +400,29 @@ export default function UpdateCampanha() {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Objetivo</Label>
+                          <FormGroup
+                            className={`has-label ${values.objetivo.error}`}
+                          >
+                            <Input
+                              name="objetivo"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "objetivo", "text")
+                              }
+                              value={values.objetivo.value}
+                            />
+                            {values.objetivo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.objetivo.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
                       <Button
                         style={{
                           paddingLeft: 29,

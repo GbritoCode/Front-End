@@ -220,6 +220,20 @@ const CadastroCliente = forwardRef((props, ref) => {
     }
   };
 
+  const checkDesc = value => {
+    switch (value) {
+      case "1":
+        return "Indicação";
+      case "2":
+        return "Representação";
+      case "3":
+        return "Prospecção";
+      case "4":
+        return "Interna";
+      default:
+    }
+  };
+
   const verifyNumber = value => {
     const numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -735,7 +749,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                               {data1.map(tipoComiss => (
                                 <option value={tipoComiss.id}>
                                   {" "}
-                                  {tipoComiss.id} - {tipoComiss.desc}{" "}
+                                  {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
                                 </option>
                               ))}
                             </Input>
