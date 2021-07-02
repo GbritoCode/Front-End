@@ -21,6 +21,7 @@ import ReactWizard from "react-bootstrap-wizard";
 // reactstrap components
 import { Col } from "reactstrap";
 import api from "~/services/api";
+import history from "~/services/history";
 
 // wizard steps
 import Step1 from "./ProspectWizardSteps/step1_Prospect";
@@ -47,7 +48,9 @@ var steps = [
 
 export default function ProspectWizard() {
   const finishButtonClick = async allStates => {
-    api.post("/prospect", allStates);
+    await api
+      .post("/prospect", allStates)
+      .then(history.push("/tabelas/cliente/prospect"));
   };
   return (
     <>

@@ -304,7 +304,9 @@ export function followUpCadastro(
   dataProxContato,
   detalhes,
   reacao,
-  CampanhasId
+  CampanhasId,
+  proxPasso,
+  prefContato
 ) {
   return {
     type: "@cadastro/FOLLOW_UP_REQUEST",
@@ -317,7 +319,9 @@ export function followUpCadastro(
       dataProxContato,
       detalhes,
       reacao,
-      CampanhasId
+      CampanhasId,
+      proxPasso,
+      prefContato
     }
   };
 }
@@ -330,7 +334,9 @@ export function followUpUpdate(
   dataContato,
   dataProxContato,
   detalhes,
-  reacao
+  reacao,
+  proxPasso,
+  prefContato
 ) {
   return {
     type: "@update/FOLLOW_UP_REQUEST",
@@ -342,7 +348,9 @@ export function followUpUpdate(
       dataContato,
       dataProxContato,
       detalhes,
-      reacao
+      reacao,
+      proxPasso,
+      prefContato
     }
   };
 }

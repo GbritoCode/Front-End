@@ -264,7 +264,7 @@ const Panels = () => {
                         <Form onSubmit={handleSubmit}>
                           <Row>
                             <Col md="4">
-                              <Label>Email de Envio</Label>
+                              <Label>Email de Orçamento</Label>
                               <FormGroup
                                 className={`has-label ${values.fromEmailOrc.error}`}
                               >
@@ -302,7 +302,7 @@ const Panels = () => {
                         <Form onSubmit={handleSubmit}>
                           <Row>
                             <Col md="4">
-                              <Label>Email de Envio</Label>
+                              <Label>Email de Revisão</Label>
                               <FormGroup
                                 className={`has-label ${values.fromEmailRev.error}`}
                               >
@@ -340,7 +340,7 @@ const Panels = () => {
                         <Form onSubmit={handleSubmit}>
                           <Row>
                             <Col md="4">
-                              <Label>Email de Envio</Label>
+                              <Label>Email de Faturamento</Label>
                               <FormGroup
                                 className={`has-label ${values.fromEmailFat.error}`}
                               >
@@ -384,7 +384,7 @@ const Panels = () => {
                         color="secundary"
                         size="small"
                         className="form"
-                        onClick={() => history.goBack()}
+                        onClick={() => history.push("/dashboard")}
                       >
                         <i
                           className="tim-icons icon-double-left"

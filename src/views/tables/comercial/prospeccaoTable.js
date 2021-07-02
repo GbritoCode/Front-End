@@ -22,7 +22,7 @@ import ReactTable from "react-table-v6";
 
 import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import { FilterList } from "@material-ui/icons";
@@ -37,19 +37,20 @@ import { store } from "~/store";
 function ProspeccaoTable() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+  const { idCampanha } = useParams();
   const dispatch = useDispatch();
-  const [data, setData] = useState();
   const [campanha, setCampanha] = useState({
     cod: "--",
     desc: "--"
   });
+
+  const [data, setData] = useState();
   const [data2, setData2] = useState([]);
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(idCampanha === undefined);
   const history = useHistory();
-
   useEffect(() => {
     const { acessible } = store.getState().auth;
     const { id } = store.getState().auth.user.Colab;
@@ -63,9 +64,146 @@ function ProspeccaoTable() {
         break;
       default:
     }
-
     async function loadData() {
       const response = await api.get("/campanha");
+      if (idCampanha !== undefined) {
+        const camp = response.data.find(
+          arr => arr.id === parseInt(idCampanha, 10)
+        );
+        setCampanha({ cod: camp.cod, desc: camp.desc });
+        access === "acessoRestrito" &&
+          setData2(
+            camp.Clientes.filter(
+              arr => arr.Representante.ColabId === Colab
+            ).map((client, key) => {
+              return {
+                idd: key,
+                id: client.id,
+                CNPJ: normalizeCnpj(client.CNPJ),
+                nomeAbv: client.nomeAbv,
+                rzSoc: client.rzSoc,
+                RepresentanteId: client.RepresentanteId,
+                Representante: client.Representante.nome,
+                TipoComisseId: client.TipoComisseId,
+                TipoComiss: client.TipoComisse.desc,
+                EmpresaId: client.EmpresaId,
+                prospect: client.prospect,
+                created: client.createdAt,
+                retorno:
+                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                  undefined
+                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                        .dataProxContato
+                    : "--",
+                situacao: checkSituacao(
+                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                    undefined
+                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                        .distanceFromToday
+                    : "--"
+                ),
+                actions: (
+                  // we've added some custom button actions
+                  <div className="actions-right">
+                    <Tooltip title="Novo Follow Up">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.push(
+                            `/cadastro/cliente/followUps/${client.id}/${camp.id}`
+                          );
+                        }}
+                      >
+                        <i className="tim-icons icon-simple-add" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Ver Follow Ups">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.push(
+                            `/tabelas/cliente/followUps/${client.id}/${camp.id}`
+                          );
+                        }}
+                      >
+                        <i className="tim-icons icon-attach-87" />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                )
+              };
+            })
+          );
+        access === "acessoTotal" &&
+          setData2(
+            camp.Clientes.map((client, key) => {
+              return {
+                idd: key,
+                id: client.id,
+                CNPJ: normalizeCnpj(client.CNPJ),
+                nomeAbv: client.nomeAbv,
+                rzSoc: client.rzSoc,
+                RepresentanteId: client.RepresentanteId,
+                Representante: client.Representante.nome,
+                TipoComisseId: client.TipoComisseId,
+                TipoComiss: client.TipoComisse.desc,
+                EmpresaId: client.EmpresaId,
+                prospect: client.prospect,
+                created: client.createdAt,
+                retorno:
+                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                  undefined
+                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                        .dataProxContato
+                    : "--",
+                situacao: checkSituacao(
+                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                    undefined
+                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                        .distanceFromToday
+                    : "--"
+                ),
+                actions: (
+                  // we've added some custom button actions
+                  <div className="actions-right">
+                    <Tooltip title="Novo Follow Up">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.push(
+                            `/cadastro/cliente/followUps/${client.id}/${camp.id}`
+                          );
+                        }}
+                      >
+                        <i className="tim-icons icon-simple-add" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Ver Follow Ups">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.push(
+                            `/tabelas/cliente/followUps/${client.id}/${camp.id}`
+                          );
+                        }}
+                      >
+                        <i className="tim-icons icon-attach-87" />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                )
+              };
+            })
+          );
+      }
       setData(
         response.data
           .filter(
@@ -88,10 +226,9 @@ function ProspeccaoTable() {
       setIsLoading(false);
     }
     loadData();
-  }, [dispatch, history]);
+  }, [Colab, access, dispatch, history, idCampanha]);
 
   const checkSituacao = days => {
-    console.log(days);
     switch (true) {
       case days <= 0:
         return (
@@ -132,9 +269,6 @@ function ProspeccaoTable() {
     }
   };
 
-  console.log(data2);
-  console.log(access);
-  console.log(Colab);
   return (
     <>
       {isLoading ? (
@@ -205,7 +339,23 @@ function ProspeccaoTable() {
                                 actions: (
                                   // we've added some custom button actions
                                   <div className="actions-right">
-                                    <Tooltip title="Follow Up">
+                                    <Tooltip title="Novo Follow Up">
+                                      <Button
+                                        color="default"
+                                        size="sm"
+                                        className={classNames(
+                                          "btn-icon btn-link like"
+                                        )}
+                                        onClick={() => {
+                                          history.push(
+                                            `/cadastro/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                          );
+                                        }}
+                                      >
+                                        <i className="tim-icons icon-simple-add" />
+                                      </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Ver Follow Ups">
                                       <Button
                                         color="default"
                                         size="sm"
@@ -264,7 +414,23 @@ function ProspeccaoTable() {
                               actions: (
                                 // we've added some custom button actions
                                 <div className="actions-right">
-                                  <Tooltip title="Follow Up">
+                                  <Tooltip title="Novo Follow Up">
+                                    <Button
+                                      color="default"
+                                      size="sm"
+                                      className={classNames(
+                                        "btn-icon btn-link like"
+                                      )}
+                                      onClick={() => {
+                                        history.push(
+                                          `/cadastro/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                        );
+                                      }}
+                                    >
+                                      <i className="tim-icons icon-simple-add" />
+                                    </Button>
+                                  </Tooltip>
+                                  <Tooltip title="Ver Follow Ups">
                                     <Button
                                       color="default"
                                       size="sm"
@@ -391,12 +557,36 @@ function ProspeccaoTable() {
                       },
                       {
                         Header: "Retorno",
-                        accessor: "retorno"
+                        accessor: "retorno",
+                        defaultSortMethod: (a, b, desc) => {
+                          // force null and undefined to the bottom
+                          a = a === null || a === undefined ? -Infinity : a;
+                          b = b === null || b === undefined ? -Infinity : b;
+                          // force any string values to lowercase
+                          a = typeof a === "string" ? a.toLowerCase() : a;
+                          b = typeof b === "string" ? b.toLowerCase() : b;
+                          // Return either 1 or -1 to indicate a sort priority
+                          const aSplitted = a.split("/");
+                          const bSplitted = b.split("/");
+
+                          a = `${aSplitted[2]}-${aSplitted[1]}-${aSplitted[0]}`;
+                          b = `${bSplitted[2]}-${bSplitted[1]}-${bSplitted[0]}`;
+
+                          if (a > b) {
+                            return 1;
+                          }
+                          if (a < b) {
+                            return -1;
+                          }
+                          // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
+                          return 0;
+                        }
                       },
                       {
                         Header: "sla",
                         accessor: "situacao",
                         filterable: false,
+                        sortable: false,
                         maxWidth: 50
                       },
                       {

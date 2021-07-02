@@ -351,7 +351,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/prospeccao/campanha"
+        path="/tabelas/prospeccao/campanha/:idCampanha?"
         component={ProspeccaoTable}
         isPrivate
       />

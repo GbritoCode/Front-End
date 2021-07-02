@@ -387,7 +387,9 @@ export function* followUpsCadastro({ payload }) {
       dataProxContato,
       detalhes,
       reacao,
-      CampanhasId
+      CampanhasId,
+      proxPasso,
+      prefContato
     } = payload;
     yield call(api.post, "followUp", {
       EmpresaId,
@@ -398,7 +400,9 @@ export function* followUpsCadastro({ payload }) {
       dataProxContato,
       detalhes,
       reacao,
-      CampanhasId
+      CampanhasId,
+      proxPasso,
+      prefContato
     });
     history.push(`/tabelas/cliente/followUps/${ClienteId}/${CampanhasId}`);
   } catch (err) {
@@ -417,7 +421,9 @@ export function* updateFollowUps({ payload }) {
       dataContato,
       dataProxContato,
       detalhes,
-      reacao
+      reacao,
+      proxPasso,
+      prefContato
     } = payload;
 
     const Cliente = {
@@ -427,12 +433,14 @@ export function* updateFollowUps({ payload }) {
       dataContato,
       dataProxContato,
       detalhes,
-      reacao
+      reacao,
+      proxPasso,
+      prefContato
     };
 
     const response = yield call(api.put, `followUp/${id}`, Cliente);
 
-    history.push(`/tabelas/cliente/followUps/${ClienteId}`);
+    history.goBack();
     toast.success("Follow Up Atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {

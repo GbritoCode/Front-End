@@ -29,7 +29,7 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Close, Message, Timeline } from "@material-ui/icons";
+import { ArrowBackIos, Close, Message, Timeline } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -173,7 +173,7 @@ class followUpTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Histórico
+                  Acompanhamento
                   <Link to={`/cadastro/cliente/followUps/${cliId}/${campId}`}>
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
@@ -195,6 +195,18 @@ class followUpTable extends Component {
                         className={classNames("btn-icon btn-link like")}
                       >
                         <Timeline fontSize="large" />
+                      </Button>
+                    </Tooltip>
+                  </Link>
+                  <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
+                    <Tooltip title="Voltar">
+                      <Button
+                        style={{
+                          float: "right"
+                        }}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <ArrowBackIos />
                       </Button>
                     </Tooltip>
                   </Link>

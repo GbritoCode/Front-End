@@ -377,7 +377,9 @@ const CadastroCliente = forwardRef((props, ref) => {
                     TipoComisse: repr.TipoComisse.desc,
                     vlrFixMens: normalizeCurrency(
                       JSON.stringify(repr.vlrFixMens)
-                    )
+                    ),
+                    dtAdmiss: repr.Colab === null ? "--" : repr.Colab.dtAdmiss,
+                    perfil: repr.Colab === null ? "--" : repr.Colab.Perfil.desc
                   };
                 })}
                 getTdProps={(state, rowInfo) => {
@@ -415,12 +417,16 @@ const CadastroCliente = forwardRef((props, ref) => {
                     accessor: "nome"
                   },
                   {
-                    Header: "Valor Fixo Mensal",
-                    accessor: "vlrFixMens"
-                  },
-                  {
                     Header: "Comissão",
                     accessor: "TipoComisse"
+                  },
+                  {
+                    Header: "Data Admissão",
+                    accessor: "dtAdmiss"
+                  },
+                  {
+                    Header: "Perfil",
+                    accessor: "perfil"
                   }
                 ]}
                 defaultPageSize={5}

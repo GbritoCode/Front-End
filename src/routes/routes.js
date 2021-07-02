@@ -332,7 +332,7 @@ const routes = [
     state: "VendasCollapse",
     views: [
       {
-        path: "/tabelas/prospeccao/campanha",
+        path: "/tabelas/prospeccao/campanha/:idCampanha?",
         name: "Prospecção",
         namePerfil: "Prospecção",
         mini: "PRP",
