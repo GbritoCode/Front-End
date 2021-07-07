@@ -179,7 +179,9 @@ export default function ColabCompCadastro() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -352,7 +354,7 @@ export default function ColabCompCadastro() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to="/tables/colab/comp/1">
+                      <Link to={`/tables/colab/comp/${data.id}`}>
                         <Button
                           style={{
                             paddingLeft: 32,

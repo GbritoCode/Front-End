@@ -41,6 +41,7 @@ import {
   Close,
   InsertEmoticon,
   Message,
+  Send,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
@@ -51,6 +52,9 @@ import { normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpCadastro } from "~/store/modules/Cliente/actions";
+import ModalLarge from "~/components/Modal/modalLarge";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import TagsInput from "~/components/Tags/TagsInput";
 
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
@@ -60,10 +64,13 @@ export default function CadastroFollowUps() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [data4, setData4] = useState([]);
+  const [tagsinput, settagsinput] = useState([]);
+  const [string, setString] = useState("");
 
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
 
@@ -80,7 +87,20 @@ export default function CadastroFollowUps() {
     prefContato: { value: "", error: "", message: "" }
   };
 
+  const meetingSchema = {
+    title: { value: "", error: "", message: "" },
+    date: { value: "", error: "", message: "" },
+    startTime: { value: "", error: "", message: "" },
+    endTime: { value: "", error: "", message: "" },
+    mainParticipant: { value: "", error: "", message: "" },
+    location: { value: "", error: "", message: "" },
+    description: { value: "", error: "", message: "" },
+    organizerNome: { value: "", error: "", message: "" },
+    organizerEmail: { value: "", error: "", message: "" }
+  };
+
   const [values, setValues] = useState(stateSchema);
+  const [meetingValues, setMeetingValues] = useState(meetingSchema);
   useEffect(() => {
     const { empresa } = store.getState().auth;
     const idColab = store.getState().auth.user.Colab.id;
@@ -96,6 +116,11 @@ export default function CadastroFollowUps() {
       setData3(response3.data);
       setData4(response4.data);
 
+      setMeetingValues(prevState => ({
+        ...prevState,
+        organizerName: { value: response1.data.nome },
+        organizerEmail: { value: response1.data.email }
+      }));
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
@@ -112,6 +137,33 @@ export default function CadastroFollowUps() {
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
+
+  const handleTagsinput = value => {
+    const verifyEmail = email => {
+      var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (emailRex.test(email)) {
+        return true;
+      }
+      return false;
+    };
+    if (verifyEmail(value[value.length - 1])) {
+      setString(`${value}`);
+      settagsinput(value);
+    } else {
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>Digite um email válido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
+    }
+  };
 
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
@@ -133,6 +185,11 @@ export default function CadastroFollowUps() {
 
   const handleContatoChange = idd => {
     const cont = data3.find(arr => arr.id === parseInt(idd, 10));
+    setMeetingValues(prevState => ({
+      ...prevState,
+      mainParticipant: { value: cont.email }
+    }));
+    document.getElementsByName("meetingMainParticipant").value = cont.email;
     document.getElementById("email").value = cont.email;
     document.getElementById("telefone").value = normalizeFone(cont.fone);
     document.getElementById("celular").value = normalizeFone(cont.cel);
@@ -166,6 +223,12 @@ export default function CadastroFollowUps() {
           [name]: { value: target }
         }));
         break;
+      case "meeting":
+        setMeetingValues(prevState => ({
+          ...prevState,
+          [name]: { value: target }
+        }));
+        break;
       default:
     }
   };
@@ -183,15 +246,17 @@ export default function CadastroFollowUps() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -259,7 +324,7 @@ export default function CadastroFollowUps() {
               <ModalBody className="text-center">
                 <p>
                   {" "}
-                  O cliente {data2.nomeAbv} será encerrado na campanha{" "}
+                  A prospecção para {data2.nomeAbv} será encerrado na campanha{" "}
                   {data4.cod}{" "}
                 </p>
               </ModalBody>
@@ -283,11 +348,261 @@ export default function CadastroFollowUps() {
                   style={{ color: "#7E7E7E" }}
                   className="btn-neutral"
                   type="button"
+                  onClick={toggleModalMini}
                 >
                   Sim
                 </Button>
               </div>
             </Modal>
+
+            <ModalLarge
+              onClose={() => {
+                setIsOpen(!isOpen);
+              }}
+              open={isOpen}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <Tooltip title="Enviar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={async () => {
+                      var aux = Object.entries(meetingValues);
+                      const tamanho = aux.length;
+                      for (let j = 0; j < tamanho; j++) {
+                        if (!aux[j][1].optional === true) {
+                          if (aux[j][1].value !== "") {
+                            var meetingFilled = true;
+                          } else {
+                            meetingFilled = false;
+                            setMeetingValues(prevState => ({
+                              ...prevState,
+                              [aux[j][0]]: {
+                                error: "has-danger",
+                                message: "Campo obrigatório"
+                              }
+                            }));
+                            break;
+                          }
+                        }
+                      }
+                      if (meetingFilled) {
+                        await api.post(`/followUp/meeting/?Cc=${""}`, {
+                          meetingValues,
+                          string,
+                          tagsinput
+                        });
+                      }
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Send fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>Enviar Convite</h3>
+                <p style={{ fontSize: 14 }}>
+                  {data4.cod} | {data2.nomeAbv}
+                </p>{" "}
+              </Header>
+              <Row>
+                <Col md="4">
+                  <Label>Nome do Evento</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.title.error}`}
+                  >
+                    <Input
+                      name="meetingTitle"
+                      type="text"
+                      onChange={event =>
+                        handleChange(event, "title", "meeting")
+                      }
+                      value={meetingValues.title.value}
+                    />
+                    {meetingValues.title.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.title.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>{" "}
+                <Col md="4">
+                  <Label>Organizador</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.organizerName.error}`}
+                  >
+                    <Input
+                      disabled
+                      name="meetingOrganizerName"
+                      type="text"
+                      onChange={event =>
+                        handleChange(event, "organizerName", "meeting")
+                      }
+                      value={`${data1.nome} - ${data1.email}`}
+                    />
+                    {meetingValues.organizerName.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.organizerName.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>{" "}
+                <Col md="4">
+                  <Label>Local</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.location.error}`}
+                  >
+                    <Input
+                      name="meetingEndTime"
+                      type="text"
+                      onChange={event =>
+                        handleChange(event, "location", "meeting")
+                      }
+                      value={meetingValues.location.value}
+                    />
+                    {meetingValues.location.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.location.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>{" "}
+              </Row>
+              <Row>
+                <Col md="4">
+                  <Label>Data</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.date.error}`}
+                  >
+                    <Input
+                      name="meetingDate"
+                      type="date"
+                      onChange={event => handleChange(event, "date", "meeting")}
+                      value={meetingValues.date.value}
+                    />
+                    {meetingValues.date.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.date.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col md="4">
+                  {" "}
+                  <Label>Hora Inicial</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.startTime.error}`}
+                  >
+                    <Input
+                      name="meetingStartTime"
+                      type="time"
+                      onChange={event =>
+                        handleChange(event, "startTime", "meeting")
+                      }
+                      value={meetingValues.startTime.value}
+                    />
+                    {meetingValues.startTime.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.startTime.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col md="4">
+                  <Label>Hora Final</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.endTime.error}`}
+                  >
+                    <Input
+                      name="meetingEndTime"
+                      type="time"
+                      onChange={event =>
+                        handleChange(event, "endTime", "meeting")
+                      }
+                      value={meetingValues.endTime.value}
+                    />
+                    {meetingValues.endTime.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.endTime.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="4">
+                  <Label>Contato Principal</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.mainParticipant.error}`}
+                  >
+                    <Input
+                      disabled
+                      name="meetingMainParticipant"
+                      type="text"
+                      onChange={event =>
+                        handleChange(event, "mainParticipant", "meeting")
+                      }
+                      value={meetingValues.mainParticipant.value}
+                    />
+                    {meetingValues.mainParticipant.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.mainParticipant.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>{" "}
+                <Col md="8">
+                  <Label style={{ display: "block" }}>
+                    Adicionar Participantes
+                  </Label>
+                  <TagsInput
+                    onChange={handleTagsinput}
+                    tagProps={{
+                      className: "react-tagsinput-tag "
+                    }}
+                    value={tagsinput}
+                  />
+                </Col>{" "}
+              </Row>
+              <Row>
+                <Col md="12">
+                  <Label>Detalhes</Label>
+                  <FormGroup
+                    className={`has-label ${meetingValues.description.error}`}
+                  >
+                    <Input
+                      name="metingDescription"
+                      type="textarea"
+                      onChange={event =>
+                        handleChange(event, "description", "meeting")
+                      }
+                      value={meetingValues.description.value}
+                    />{" "}
+                    {meetingValues.description.error === "has-danger" ? (
+                      <Label className="error">
+                        {meetingValues.description.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </ModalLarge>
+
             <Row>
               <Col md="12">
                 <Card>
@@ -613,17 +928,17 @@ export default function CadastroFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Responsável</Label>
+                          <Label>Agendar Reunião</Label>
                           <FormGroup className="has-label">
                             <InputGroup>
                               <Input
                                 disabled
-                                name="ColabId"
+                                name="reuniao"
                                 type="text"
                                 onChange={event =>
-                                  handleChange(event, "ColabId", "text")
+                                  handleChange(event, "reuniao", "text")
                                 }
-                                placeholder="Selecione o Responsável"
+                                placeholder="Agende a Reunião"
                               />
                               <InputGroupAddon
                                 className="appendCustom"
@@ -633,9 +948,9 @@ export default function CadastroFollowUps() {
                                   className={classNames(
                                     "btn-icon btn-link like addon"
                                   )}
-                                  // onClick={() => setIsOpenColab(!isOpenColab)}
+                                  onClick={() => setIsOpen(!isOpen)}
                                 >
-                                  <i className="tim-icons icon-zoom-split addon" />
+                                  <i className="tim-icons icon-email-85 addon" />
                                 </Button>
                               </InputGroupAddon>
                             </InputGroup>

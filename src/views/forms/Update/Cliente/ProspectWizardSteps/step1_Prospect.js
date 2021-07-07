@@ -40,6 +40,8 @@ import {
 } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import { Tooltip } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import { normalizeCnpj, normalizeCurrency } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
@@ -365,6 +367,19 @@ const CadastroCliente = forwardRef((props, ref) => {
             >
               <Header>
                 {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenRepr(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
                 <h4 className="modalHeader">Representante</h4>
               </Header>
               <ReactTable
@@ -432,16 +447,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                 defaultPageSize={5}
                 className="-striped -highlight"
               />
-              <Footer>
-                <Button
-                  className="btn-neutral"
-                  onClick={() => {
-                    setIsOpenRepr(false);
-                  }}
-                >
-                  Close
-                </Button>
-              </Footer>
+              <Footer />
             </Modal>
 
             <Modal
@@ -452,6 +458,19 @@ const CadastroCliente = forwardRef((props, ref) => {
             >
               <Header>
                 {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenCamp(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
                 <h4 className="modalHeader">Campanha</h4>
               </Header>
 
