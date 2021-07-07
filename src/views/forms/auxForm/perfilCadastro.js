@@ -212,8 +212,6 @@ export default function PerfilCadastro() {
     notifyElment.current.notificationAlert(options);
   }
 
-  console.log(permittedPages);
-
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);

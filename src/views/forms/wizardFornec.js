@@ -147,12 +147,12 @@ export default function FornecCadastro() {
       }));
     }
     async function Aux() {
-      await api.get("/empresa").then(async result => {
+      await api.get(`/empresa/${empresa}`).then(async result => {
         setValues(prevState => ({
           ...prevState,
-          cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
+          cnpj: { value: normalizeCnpj(result.data.idFederal) }
         }));
-        cnpjRequest(result.data[0].idFederal);
+        cnpjRequest(result.data.idFederal);
       });
       loadData();
     }

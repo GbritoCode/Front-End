@@ -304,7 +304,7 @@ export function followUpCadastro(
   dataProxContato,
   detalhes,
   reacao,
-  CampanhasId,
+  CampanhaId,
   proxPasso,
   prefContato
 ) {
@@ -319,7 +319,7 @@ export function followUpCadastro(
       dataProxContato,
       detalhes,
       reacao,
-      CampanhasId,
+      CampanhaId,
       proxPasso,
       prefContato
     }

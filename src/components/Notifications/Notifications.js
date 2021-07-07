@@ -20,7 +20,10 @@ export default function Notifications() {
   const [notify, setNotify] = useState([]);
 
   useEffect(() => {
-    const { id: idColab } = store.getState().auth.user.Colab;
+    const { id: idColab } =
+      store.getState().auth.user.Colab === null
+        ? 0
+        : store.getState().auth.user.Colab;
     async function loadNotifications() {
       const response = await api.get(`/notifications/${idColab}`);
 

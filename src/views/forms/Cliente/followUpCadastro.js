@@ -15,6 +15,7 @@
 
 */
 import React, { useRef, useEffect, useState } from "react";
+import classNames from "classnames";
 
 // reactstrap components
 import {
@@ -22,26 +23,31 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Label,
   Form,
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  InputGroup,
+  InputGroupAddon,
+  Modal,
+  ModalBody
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import {
+  Close,
   InsertEmoticon,
+  Message,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
   SentimentVeryDissatisfiedSharp
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpCadastro } from "~/store/modules/Cliente/actions";
@@ -53,9 +59,11 @@ export default function CadastroFollowUps() {
   const { cliId, campId } = useParams();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [modalMini, setModalMini] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
+  const [data4, setData4] = useState([]);
 
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
 
@@ -82,9 +90,11 @@ export default function CadastroFollowUps() {
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
       const response2 = await api.get(`/cliente/${cliId}`);
       const response3 = await api.get(`/cliente/cont/${response2.data.id}`);
+      const response4 = await api.get(`/campanha/${campId}/true`);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
+      setData4(response4.data);
 
       setValues(prevState => ({
         ...prevState,
@@ -95,7 +105,7 @@ export default function CadastroFollowUps() {
       setIsLoading(false);
     }
     loadData();
-  }, [cliId]);
+  }, [campId, cliId]);
 
   var options = {};
   const notifyElment = useRef(null);
@@ -109,6 +119,16 @@ export default function CadastroFollowUps() {
       return true;
     }
     return false;
+  };
+
+  const toggleModalMini = () => {
+    setModalMini(!modalMini);
+  };
+  const checkAction = value => {
+    if (value === "10") {
+      console.log(value);
+      setModalMini(true);
+    }
   };
 
   const handleContatoChange = idd => {
@@ -216,11 +236,66 @@ export default function CadastroFollowUps() {
             <NotificationAlert ref={notifyElment} />
           </div>
           <div className="content">
+            <Modal
+              modalClassName="modal-mini "
+              isOpen={modalMini}
+              toggle={toggleModalMini}
+            >
+              <div className="modal-header justify-content-center">
+                <button
+                  aria-hidden
+                  className="close"
+                  data-dismiss="modal"
+                  type="button"
+                  color="primary"
+                  onClick={toggleModalMini}
+                >
+                  <Close />
+                </button>
+                <div>
+                  <Message fontSize="large" />
+                </div>
+              </div>
+              <ModalBody className="text-center">
+                <p>
+                  {" "}
+                  O cliente {data2.nomeAbv} será encerrado na campanha{" "}
+                  {data4.cod}{" "}
+                </p>
+              </ModalBody>
+              <div className="modal-footer">
+                <Button
+                  style={{ color: "#000" }}
+                  className="btn-neutral"
+                  type="button"
+                  onClick={() => {
+                    document.getElementsByName("proxPasso")[0].value = "";
+                    setValues(prevState => ({
+                      ...prevState,
+                      proxPasso: { value: "" }
+                    }));
+                    toggleModalMini();
+                  }}
+                >
+                  Não
+                </Button>
+                <Button
+                  style={{ color: "#7E7E7E" }}
+                  className="btn-neutral"
+                  type="button"
+                >
+                  Sim
+                </Button>
+              </div>
+            </Modal>
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Follow Up</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Prospecção</h3>
+                    <p style={{ fontSize: 14 }}>
+                      {data4.cod} | {data2.nomeAbv}
+                    </p>{" "}
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -267,21 +342,36 @@ export default function CadastroFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Data Próximo Contato</Label>
+                          <Label>Contato</Label>
                           <FormGroup
-                            className={`has-label ${values.dataProxContato.error}`}
+                            className={`has-label ${values.CliContId.error}`}
                           >
                             <Input
-                              name="dataProxContato"
-                              type="date"
-                              onChange={event =>
-                                handleChange(event, "dataProxContato", "text")
+                              name="CliContId"
+                              type="select"
+                              onChangeCapture={e =>
+                                handleContatoChange(e.target.value)
                               }
-                              value={values.dataProxContato.value}
-                            />
-                            {values.dataProxContato.error === "has-danger" ? (
+                              onChange={event =>
+                                handleChange(event, "CliContId", "text")
+                              }
+                              value={values.CliContId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione o contato{" "}
+                              </option>
+                              {data3.map(CliContId => (
+                                <option value={CliContId.id}>
+                                  {" "}
+                                  {CliContId.id} - {CliContId.nome}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.CliContId.error === "has-danger" ? (
                               <Label className="error">
-                                {values.dataProxContato.message}
+                                {values.CliContId.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -289,54 +379,77 @@ export default function CadastroFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Cliente</Label>
-                          <FormGroup
-                            className={`has-label ${values.ClienteId.error}`}
-                          >
+                          <Label>Email</Label>
+                          <FormGroup className="has-label">
                             <Input
                               disabled
-                              name="ClienteId"
+                              name="email"
+                              id="email"
                               type="text"
-                              onChange={event =>
-                                handleChange(event, "ClienteId", "text")
-                              }
-                              defaultValue={`${data2.nomeAbv} - ${normalizeCnpj(
-                                data2.CNPJ
-                              )}`}
                             />
-                            {values.ClienteId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.ClienteId.message}
-                              </Label>
-                            ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Ação</Label>
+                          <Label>Telefone</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              name="telefone"
+                              id="telefone"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Celular</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              name="celular"
+                              id="celular"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Skype</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              name="skype"
+                              id="skype"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Preferência de Contato</Label>
                           <FormGroup
-                            className={`has-label ${values.proxPasso.error}`}
+                            className={`has-label ${values.prefContato.error}`}
                           >
                             <Input
-                              name="proxPasso"
+                              name="prefContato"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "proxPasso", "text")
+                                handleChange(event, "prefContato", "text")
                               }
-                              value={values.proxPasso.value}
+                              value={values.prefContato.value}
                             >
                               {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione a ação{" "}
+                                Selecione o contato{" "}
                               </option>
-                              <option value={1}>Retornar ligação</option>
-                              <option value={2}>Reunião agendada</option>
-                              <option value={3}>Solicitado orçamento</option>
-                              <option value={10}>Finalizar</option>
+                              <option value={1}>Email </option>
+                              <option value={2}>Telefone </option>
+                              <option value={3}>Whatsapp </option>
+                              <option value={4}>Skype </option>
                             </Input>
-                            {values.proxPasso.error === "has-danger" ? (
+                            {values.prefContato.error === "has-danger" ? (
                               <Label className="error">
-                                {values.proxPasso.message}
+                                {values.prefContato.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -449,114 +562,83 @@ export default function CadastroFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Contato</Label>
+                          <Label>Data Próximo Contato</Label>
                           <FormGroup
-                            className={`has-label ${values.CliContId.error}`}
+                            className={`has-label ${values.dataProxContato.error}`}
                           >
                             <Input
-                              name="CliContId"
-                              type="select"
-                              onChangeCapture={e =>
-                                handleContatoChange(e.target.value)
-                              }
+                              name="dataProxContato"
+                              type="date"
                               onChange={event =>
-                                handleChange(event, "CliContId", "text")
+                                handleChange(event, "dataProxContato", "text")
                               }
-                              value={values.CliContId.value}
-                            >
-                              {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione o contato{" "}
-                              </option>
-                              {data3.map(CliContId => (
-                                <option value={CliContId.id}>
-                                  {" "}
-                                  {CliContId.id} - {CliContId.nome}{" "}
-                                </option>
-                              ))}
-                            </Input>
-                            {values.CliContId.error === "has-danger" ? (
+                              value={values.dataProxContato.value}
+                            />
+                            {values.dataProxContato.error === "has-danger" ? (
                               <Label className="error">
-                                {values.CliContId.message}
+                                {values.dataProxContato.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Preferência de Contato</Label>
+                          <Label>Ação</Label>
                           <FormGroup
-                            className={`has-label ${values.prefContato.error}`}
+                            className={`has-label ${values.proxPasso.error}`}
                           >
                             <Input
-                              name="prefContato"
+                              name="proxPasso"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "prefContato", "text")
+                                handleChange(event, "proxPasso", "text")
                               }
-                              value={values.prefContato.value}
+                              onChangeCapture={e => checkAction(e.target.value)}
+                              value={values.proxPasso.value}
                             >
                               {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione o contato{" "}
+                                Selecione a ação{" "}
                               </option>
-                              <option value={1}>Email </option>
-                              <option value={2}>Telefone </option>
-                              <option value={3}>Whatsapp </option>
-                              <option value={4}>Skype </option>
+                              <option value={1}>Retornar Ligação</option>
+                              <option value={2}>Agendar Reunião</option>
+                              <option value={3}>Solicitar Orçamento</option>
+                              <option value={10}>Finalizar Prospecção</option>
                             </Input>
-                            {values.prefContato.error === "has-danger" ? (
+                            {values.proxPasso.error === "has-danger" ? (
                               <Label className="error">
-                                {values.prefContato.message}
+                                {values.proxPasso.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Email</Label>
+                          <Label>Responsável</Label>
                           <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              name="email"
-                              id="email"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="4">
-                          <Label>Telefone</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              name="telefone"
-                              id="telefone"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Celular</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              name="celular"
-                              id="celular"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Skype</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              name="skype"
-                              id="skype"
-                              type="text"
-                            />
+                            <InputGroup>
+                              <Input
+                                disabled
+                                name="ColabId"
+                                type="text"
+                                onChange={event =>
+                                  handleChange(event, "ColabId", "text")
+                                }
+                                placeholder="Selecione o Responsável"
+                              />
+                              <InputGroupAddon
+                                className="appendCustom"
+                                addonType="append"
+                              >
+                                <Button
+                                  className={classNames(
+                                    "btn-icon btn-link like addon"
+                                  )}
+                                  // onClick={() => setIsOpenColab(!isOpenColab)}
+                                >
+                                  <i className="tim-icons icon-zoom-split addon" />
+                                </Button>
+                              </InputGroupAddon>
+                            </InputGroup>
                           </FormGroup>
                         </Col>
                       </Row>

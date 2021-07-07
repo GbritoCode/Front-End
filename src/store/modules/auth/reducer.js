@@ -23,7 +23,11 @@ export default function auth(state = INITIAL_STATE, action) {
         draft.acessible = action.payload.acessible;
         draft.signed = true;
         draft.loading = false;
-        draft.empresa = 1;
+        draft.empresa = action.payload.empresa;
+        break;
+      }
+      case "@cadastro/EMPRESA_REQUEST": {
+        draft.empresa = action.payload.idFederal;
         break;
       }
       case "@colab/FIRST_COLAB_SUCCESS": {

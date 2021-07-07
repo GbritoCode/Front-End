@@ -49,7 +49,9 @@ function ProspeccaoTable() {
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(idCampanha === undefined);
+  const [isOpen, setIsOpen] = useState(
+    idCampanha === undefined || idCampanha === ":idCampanha"
+  );
   const history = useHistory();
   useEffect(() => {
     const { acessible } = store.getState().auth;
@@ -66,7 +68,7 @@ function ProspeccaoTable() {
     }
     async function loadData() {
       const response = await api.get("/campanha");
-      if (idCampanha !== undefined) {
+      if (idCampanha !== ":idCampanha" && idCampanha !== undefined) {
         const camp = response.data.find(
           arr => arr.id === parseInt(idCampanha, 10)
         );
@@ -90,15 +92,15 @@ function ProspeccaoTable() {
                 prospect: client.prospect,
                 created: client.createdAt,
                 retorno:
-                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                  client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
                   undefined
-                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
                         .dataProxContato
                     : "--",
                 situacao: checkSituacao(
-                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                  client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
                     undefined
-                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
                         .distanceFromToday
                     : "--"
                 ),
@@ -155,15 +157,15 @@ function ProspeccaoTable() {
                 prospect: client.prospect,
                 created: client.createdAt,
                 retorno:
-                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                  client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
                   undefined
-                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
                         .dataProxContato
                     : "--",
                 situacao: checkSituacao(
-                  client.FollowUps.find(arr => arr.CampanhasId === camp.id) !==
+                  client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
                     undefined
-                    ? client.FollowUps.find(arr => arr.CampanhasId === camp.id)
+                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
                         .distanceFromToday
                     : "--"
                 ),
@@ -316,23 +318,21 @@ function ProspeccaoTable() {
                                 retorno:
                                   client.FollowUps.find(
                                     arr =>
-                                      arr.CampanhasId === rowInfo.original.id
+                                      arr.CampanhaId === rowInfo.original.id
                                   ) !== undefined
                                     ? client.FollowUps.find(
                                         arr =>
-                                          arr.CampanhasId ===
-                                          rowInfo.original.id
+                                          arr.CampanhaId === rowInfo.original.id
                                       ).dataProxContato
                                     : "--",
                                 situacao: checkSituacao(
                                   client.FollowUps.find(
                                     arr =>
-                                      arr.CampanhasId === rowInfo.original.id
+                                      arr.CampanhaId === rowInfo.original.id
                                   ) !== undefined
                                     ? client.FollowUps.find(
                                         arr =>
-                                          arr.CampanhasId ===
-                                          rowInfo.original.id
+                                          arr.CampanhaId === rowInfo.original.id
                                       ).distanceFromToday
                                     : "--"
                                 ),
@@ -394,20 +394,20 @@ function ProspeccaoTable() {
                               created: client.createdAt,
                               retorno:
                                 client.FollowUps.find(
-                                  arr => arr.CampanhasId === rowInfo.original.id
+                                  arr => arr.CampanhaId === rowInfo.original.id
                                 ) !== undefined
                                   ? client.FollowUps.find(
                                       arr =>
-                                        arr.CampanhasId === rowInfo.original.id
+                                        arr.CampanhaId === rowInfo.original.id
                                     ).dataProxContato
                                   : "--",
                               situacao: checkSituacao(
                                 client.FollowUps.find(
-                                  arr => arr.CampanhasId === rowInfo.original.id
+                                  arr => arr.CampanhaId === rowInfo.original.id
                                 ) !== undefined
                                   ? client.FollowUps.find(
                                       arr =>
-                                        arr.CampanhasId === rowInfo.original.id
+                                        arr.CampanhaId === rowInfo.original.id
                                     ).distanceFromToday
                                   : "--"
                               ),
@@ -558,7 +558,7 @@ function ProspeccaoTable() {
                       {
                         Header: "Retorno",
                         accessor: "retorno",
-                        defaultSortMethod: (a, b, desc) => {
+                        sortType: (a, b, desc) => {
                           // force null and undefined to the bottom
                           a = a === null || a === undefined ? -Infinity : a;
                           b = b === null || b === undefined ? -Infinity : b;

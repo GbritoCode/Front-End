@@ -14,7 +14,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import { Tooltip } from "@material-ui/core";
+import classNames from "classnames";
 import {
+  ArrowBackIos,
   MoodSharp,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
@@ -23,9 +26,10 @@ import {
 } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 // reactstrap components
-import { Badge, Card, CardBody, Row, Col } from "reactstrap";
+import { Badge, Card, CardBody, Row, Col, Button } from "reactstrap";
 import { normalizeFone } from "~/normalize";
 import api from "~/services/api";
 
@@ -39,7 +43,7 @@ export default function FollowUpTimeline() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get(
-        `/followUp/${cliId}/false/?ClienteId=${cliId}&CampanhaId${campId}`
+        `/followUp/${cliId}/false/?ClienteId=${cliId}&CampanhaId=${campId}`
       );
       setData(response.data);
       setIsLoading(false);
@@ -92,6 +96,18 @@ export default function FollowUpTimeline() {
           <div className="content">
             <div className="header text-center">
               <h3 className="title">Timeline</h3>
+              <Link to={`/tabelas/cliente/followUps/${cliId}/${campId}`}>
+                <Tooltip title="Voltar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <ArrowBackIos />
+                  </Button>
+                </Tooltip>
+              </Link>
             </div>
             <Row>
               <Col md="12">

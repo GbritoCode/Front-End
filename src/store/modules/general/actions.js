@@ -23,10 +23,17 @@ export function AreaUpdate(id, EmpresaId, descArea) {
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function empresaRequest(idFederal, nome, license, UserId, first) {
+export function empresaRequest(
+  idFederal,
+  nome,
+  license,
+  UserId,
+  first,
+  empresa
+) {
   return {
     type: "@cadastro/EMPRESA_REQUEST",
-    payload: { idFederal, nome, license, UserId, first }
+    payload: { idFederal, nome, license, UserId, first, empresa }
   };
 }
 export function EmpresaUpdate(id, idFederal, nome, license, UserId) {

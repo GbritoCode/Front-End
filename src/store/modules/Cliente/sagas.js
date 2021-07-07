@@ -387,7 +387,7 @@ export function* followUpsCadastro({ payload }) {
       dataProxContato,
       detalhes,
       reacao,
-      CampanhasId,
+      CampanhaId,
       proxPasso,
       prefContato
     } = payload;
@@ -400,11 +400,11 @@ export function* followUpsCadastro({ payload }) {
       dataProxContato,
       detalhes,
       reacao,
-      CampanhasId,
+      CampanhaId,
       proxPasso,
       prefContato
     });
-    history.push(`/tabelas/cliente/followUps/${ClienteId}/${CampanhasId}`);
+    history.push(`/tabelas/cliente/followUps/${ClienteId}/${CampanhaId}`);
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());

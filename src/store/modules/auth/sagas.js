@@ -11,11 +11,20 @@ export function* signIn({ payload }) {
 
     const response = yield call(api.post, "sessions", { email, senha });
     const { token, user, acessible } = response.data;
-    yield put(signInSuccess(token, user, acessible));
+    console.log(response.data);
+    yield put(
+      signInSuccess(
+        token,
+        user,
+        acessible,
+        user.Empresa === undefined ? "" : user.Empresa.idFederal
+      )
+    );
 
     history.push(0);
   } catch (err) {
-    toast.error("Falha na autenticação, verifique seus dados");
+    console.log(err);
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
