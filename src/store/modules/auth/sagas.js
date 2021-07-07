@@ -17,7 +17,7 @@ export function* signIn({ payload }) {
         token,
         user,
         acessible,
-        user.Empresa === undefined ? "" : user.Empresa.idFederal
+        user.Empresa === undefined ? "" : user.empresa.idFederal
       )
     );
 
