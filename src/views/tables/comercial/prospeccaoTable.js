@@ -25,7 +25,7 @@ import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
-import { FilterList } from "@material-ui/icons";
+import { FilterList, Close } from "@material-ui/icons";
 import { isAfter, isBefore, isToday, parseISO } from "date-fns";
 import Modal from "~/components/Modal/modalLarge";
 import { normalizeCnpj } from "~/normalize";
@@ -286,6 +286,19 @@ function ProspeccaoTable() {
             >
               <Header>
                 {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
                 <h4 className="modalHeader">Campanha</h4>
               </Header>
               <ReactTable
@@ -488,16 +501,7 @@ function ProspeccaoTable() {
                 defaultPageSize={5}
                 className="-striped -highlight"
               />
-              <Footer>
-                <Button
-                  className="btn-neutral"
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                >
-                  Close
-                </Button>
-              </Footer>
+              <Footer />
             </Modal>
 
             <Col xs={12} md={12}>

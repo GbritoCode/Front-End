@@ -287,7 +287,7 @@ export default function ColabCadastro() {
           <Card>
             <CardHeader>
               <CardTitle style={{ textAlign: "center" }} tag="h4">
-                Efetue o seu cadastro coomo Colaborador
+                Efetue o seu cadastro como Colaborador
               </CardTitle>
             </CardHeader>
             <CardBody>

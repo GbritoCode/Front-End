@@ -95,7 +95,7 @@ export default function CadastroFollowUps() {
     mainParticipant: { value: "", error: "", message: "" },
     location: { value: "", error: "", message: "" },
     description: { value: "", error: "", message: "" },
-    organizerNome: { value: "", error: "", message: "" },
+    organizerName: { value: "", error: "", message: "" },
     organizerEmail: { value: "", error: "", message: "" }
   };
 
@@ -400,14 +400,16 @@ export default function CadastroFollowUps() {
                           }
                         }
                       }
+                      console.log(meetingValues);
+                      console.log(meetingFilled);
                       if (meetingFilled) {
                         await api.post(`/followUp/meeting/?Cc=${""}`, {
                           meetingValues,
                           string,
                           tagsinput
                         });
+                        setIsOpen(false);
                       }
-                      setIsOpen(false);
                     }}
                     className={classNames("btn-icon btn-link like")}
                   >
