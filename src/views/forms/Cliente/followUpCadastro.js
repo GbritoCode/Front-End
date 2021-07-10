@@ -40,12 +40,13 @@ import { Link, useParams } from "react-router-dom";
 import {
   Close,
   InsertEmoticon,
+  MailOutline,
   Message,
-  Send,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
-  SentimentVeryDissatisfiedSharp
+  SentimentVeryDissatisfiedSharp,
+  Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import { normalizeFone } from "~/normalize";
@@ -64,7 +65,7 @@ export default function CadastroFollowUps() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -324,33 +325,18 @@ export default function CadastroFollowUps() {
               <ModalBody className="text-center">
                 <p>
                   {" "}
-                  A prospecção para {data2.nomeAbv} será encerrado na campanha{" "}
-                  {data4.cod}{" "}
+                  Ao clicar em enviar, a prospecção para {data2.nomeAbv} será
+                  encerrado na campanha {data4.cod}{" "}
                 </p>
               </ModalBody>
               <div className="modal-footer">
                 <Button
-                  style={{ color: "#000" }}
-                  className="btn-neutral"
-                  type="button"
-                  onClick={() => {
-                    document.getElementsByName("proxPasso")[0].value = "";
-                    setValues(prevState => ({
-                      ...prevState,
-                      proxPasso: { value: "" }
-                    }));
-                    toggleModalMini();
-                  }}
-                >
-                  Não
-                </Button>
-                <Button
                   style={{ color: "#7E7E7E" }}
-                  className="btn-neutral"
+                  className="btn-neutral  "
                   type="button"
                   onClick={toggleModalMini}
                 >
-                  Sim
+                  Ok
                 </Button>
               </div>
             </Modal>
@@ -413,7 +399,7 @@ export default function CadastroFollowUps() {
                     }}
                     className={classNames("btn-icon btn-link like")}
                   >
-                    <Send fontSize="large" />
+                    <MailOutline fontSize="large" />
                   </Button>
                 </Tooltip>{" "}
                 <h3 style={{ marginBottom: 0 }}>Enviar Convite</h3>
@@ -609,7 +595,19 @@ export default function CadastroFollowUps() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Prospecção</h3>
+                    <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
+                      <Tooltip title="TimeLine" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <Timeline fontSize="large" />
+                        </Button>
+                      </Tooltip>
+                    </Link>
+                    <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                     <p style={{ fontSize: 14 }}>
                       {data4.cod} | {data2.nomeAbv}
                     </p>{" "}
@@ -898,6 +896,7 @@ export default function CadastroFollowUps() {
                             ) : null}
                           </FormGroup>
                         </Col>
+
                         <Col md="4">
                           <Label>Ação</Label>
                           <FormGroup
@@ -925,6 +924,42 @@ export default function CadastroFollowUps() {
                             {values.proxPasso.error === "has-danger" ? (
                               <Label className="error">
                                 {values.proxPasso.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col hidden={values.proxPasso.value !== "10"} md="4">
+                          <Label>Contato</Label>
+                          <FormGroup
+                            className={`has-label ${values.CliContId.error}`}
+                          >
+                            <Input
+                              hidden={values.proxPasso.value !== "10"}
+                              name="CliContId"
+                              type="select"
+                              onChangeCapture={e =>
+                                handleContatoChange(e.target.value)
+                              }
+                              onChange={event =>
+                                handleChange(event, "CliContId", "text")
+                              }
+                              value={values.CliContId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione o contato{" "}
+                              </option>
+                              {data3.map(CliContId => (
+                                <option value={CliContId.id}>
+                                  {" "}
+                                  {CliContId.id} - {CliContId.nome}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.CliContId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.CliContId.message}
                               </Label>
                             ) : null}
                           </FormGroup>

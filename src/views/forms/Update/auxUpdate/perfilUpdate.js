@@ -58,6 +58,7 @@ function PerfilUpdate() {
     cod: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
+  const [radioValue, setRadioValue] = useState("");
   const [horizontalTabs, sethorizontalTabs] = useState("Dashboards");
   const [permittedPages, setPermittedPages] = useState([]);
   const [ParentPagesCounter, setParentPagesCounter] = useState({
@@ -66,7 +67,7 @@ function PerfilUpdate() {
     Vendas: { count: 0, value: "Vendas" },
     Cadastros: { count: 0, value: "Cadastros" },
     Apontamentos: { count: 0, value: "Apontamentos" },
-    Oportunidades: { count: 0, value: "Oportunidades" }
+    "Oportunidades side": { count: 0, value: "Oportunidades" }
   });
 
   useEffect(() => {
@@ -81,15 +82,19 @@ function PerfilUpdate() {
         empresaId: { value: response.data.id },
         cod: { value: response1.data.cod }
       }));
-
+      if (response1.data.permittedPages.split(",").includes("acessoRestrito")) {
+        setRadioValue("acessoRestrito");
+      } else if (
+        response1.data.permittedPages.split(",").includes("acessoTotal")
+      ) {
+        setRadioValue("acessoTotal");
+      }
       routes.map(route => {
         if (route.layout !== "/auth") {
           route.views.map(view => {
             if (
               response1.data.permittedPages.split(",").includes(view.namePerfil)
             ) {
-              console.log(route.namePerfil);
-              console.log(view);
               setParentPagesCounter(prevState => ({
                 ...prevState,
                 [route.namePerfil]: {
@@ -108,6 +113,8 @@ function PerfilUpdate() {
     }
     loadData();
   }, [id]);
+  console.log(permittedPages);
+  console.log(ParentPagesCounter);
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault();
     switch (tabState) {
@@ -175,17 +182,26 @@ function PerfilUpdate() {
       if (string.search(page) < 0) {
         string += `${page},`;
       }
+      if (page === "Prospecção") {
+        string += `${radioValue},`;
+      }
     }
+    console.log(string);
+    console.log(ParentPagesCounter);
 
     Object.entries(ParentPagesCounter).forEach(page => {
       if (page[1].count > 0) {
+        console.log(`${ParentPagesCounter.Oportunidades}enter`);
         if (string.search(page[1].value) < 0) {
+          console.log(`${ParentPagesCounter.Oportunidades}add`);
           string += `${page[1].value},`;
         }
       } else if (page[1].count === 0) {
+        console.log(`${ParentPagesCounter.Oportunidades}sub`);
         string = string.replace(`${page[1].value},`, "");
       }
     });
+    console.log(string);
 
     for (let i = 0; i < tamanho; i++) {
       if (!(aux[i][1].error === "has-danger")) {
@@ -509,14 +525,89 @@ function PerfilUpdate() {
                                             id={view.namePerfil}
                                             type="switch"
                                             label={view.name}
-                                            onChange={e =>
+                                            onChange={e => {
+                                              e.target.checked &&
+                                                setRadioValue("acessoRestrito");
+                                              !e.target.checked &&
+                                                setRadioValue("");
                                               handleSwitchChange(
                                                 e.target.checked,
                                                 e.target.id,
                                                 route.namePerfil
-                                              )
-                                            }
+                                              );
+                                            }}
                                           />
+                                          {view.name === "Prospecção" ? (
+                                            <>
+                                              {" "}
+                                              <FormGroup tag="fieldset">
+                                                <FormGroup check>
+                                                  <Label
+                                                    id="switchChildren"
+                                                    check
+                                                  >
+                                                    <Input
+                                                      checked={
+                                                        permittedPages.find(
+                                                          page =>
+                                                            page ===
+                                                            "Prospecção"
+                                                        ) === "Prospecção" &&
+                                                        radioValue ===
+                                                          "acessoTotal"
+                                                      }
+                                                      type="radio"
+                                                      name="acessoTotal"
+                                                      id="acessoTotal"
+                                                      onChange={() =>
+                                                        permittedPages.find(
+                                                          page =>
+                                                            page ===
+                                                            "Prospecção"
+                                                        ) === "Prospecção" &&
+                                                        setRadioValue(
+                                                          "acessoTotal"
+                                                        )
+                                                      }
+                                                    />{" "}
+                                                    Acesso Total
+                                                  </Label>
+                                                </FormGroup>
+                                                <FormGroup check>
+                                                  <Label
+                                                    id="switchChildren"
+                                                    check
+                                                  >
+                                                    <Input
+                                                      checked={
+                                                        permittedPages.find(
+                                                          page =>
+                                                            page ===
+                                                            "Prospecção"
+                                                        ) === "Prospecção" &&
+                                                        radioValue ===
+                                                          "acessoRestrito"
+                                                      }
+                                                      type="radio"
+                                                      name="acessoRestrito"
+                                                      id="acessoRestrito"
+                                                      onChange={() =>
+                                                        permittedPages.find(
+                                                          page =>
+                                                            page ===
+                                                            "Prospecção"
+                                                        ) === "Prospecção" &&
+                                                        setRadioValue(
+                                                          "acessoRestrito"
+                                                        )
+                                                      }
+                                                    />{" "}
+                                                    Acesso Restrito
+                                                  </Label>
+                                                </FormGroup>
+                                              </FormGroup>
+                                            </>
+                                          ) : null}
                                         </Col>
                                       </>
                                     );
@@ -615,7 +706,7 @@ function PerfilUpdate() {
                               if (
                                 route.layout !== "/auth" &&
                                 !route.redirect &&
-                                route.namePerfil === "Oportunidades"
+                                route.namePerfil === "Oportunidades side"
                               ) {
                                 return route.views.map((view, index) => {
                                   if (!view.redirect) {

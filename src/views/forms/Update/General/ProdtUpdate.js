@@ -45,7 +45,8 @@ function ProdtUpdatee() {
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    descProdt: { value: "", error: "", message: "" }
+    descProdt: { value: "", error: "", message: "" },
+    id: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -55,7 +56,8 @@ function ProdtUpdatee() {
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
-        descProdt: { value: response.data.descProdt }
+        descProdt: { value: response.data.descProdt },
+        id: { value: response.data.id }
       }));
     }
     setIsLoading(false);
@@ -146,24 +148,48 @@ function ProdtUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Descrição do Produto</Label>
-                      <FormGroup
-                        className={`has-label ${values.descProdt.error}`}
-                      >
-                        <Input
-                          name="descProdt"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "descProdt", "text")
-                          }
-                          value={values.descProdt.value}
-                        />
-                        {values.descProdt.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.descProdt.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
+                      <Row>
+                        <Col md="4">
+                          <Label>Código</Label>
+                          <FormGroup className={`has-label ${values.id.error}`}>
+                            <Input
+                              disabled
+                              name="id"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "id", "text")
+                              }
+                              value={values.id.value}
+                            />{" "}
+                            {values.id.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.id.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Descrição do Produto</Label>
+                          <FormGroup
+                            className={`has-label ${values.descProdt.error}`}
+                          >
+                            <Input
+                              name="descProdt"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "descProdt", "text")
+                              }
+                              value={values.descProdt.value}
+                            />
+                            {values.descProdt.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.descProdt.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+
                       <Link to="/tabelas/general/prodt">
                         <Button
                           style={{

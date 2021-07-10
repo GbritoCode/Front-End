@@ -49,16 +49,19 @@ const Panels = () => {
   const [tagsinputOrc, settagsinputOrc] = useState([]);
   const [tagsinputRev, settagsinputRev] = useState([]);
   const [tagsinputFat, settagsinputFat] = useState([]);
+  const [tagsinputCRM, settagsinputCRM] = useState([]);
   const [stringOrc, setStringOrc] = useState("");
   const [stringRev, setStringRev] = useState("");
   const [stringFat, setStringFat] = useState("");
+  const [stringCRM, setStringCRM] = useState("");
   const [horizontalTabs, sethorizontalTabs] = useState("Orçamento");
   const stateSchema = {
     id: { value: "", error: "", message: "" },
     empresaId: { value: 1, error: "", message: "" },
     fromEmailOrc: { value: "", error: "", message: "" },
     fromEmailRev: { value: "", error: "", message: "" },
-    fromEmailFat: { value: "", error: "", message: "" }
+    fromEmailFat: { value: "", error: "", message: "" },
+    fromEmailCRM: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
@@ -69,27 +72,33 @@ const Panels = () => {
         id: { value: response.data.id },
         fromEmailOrc: { value: response.data.fromEmailOrc },
         fromEmailRev: { value: response.data.fromEmailRev },
-        fromEmailFat: { value: response.data.fromEmailFat }
+        fromEmailFat: { value: response.data.fromEmailFat },
+        fromEmailCRM: { value: response.data.fromEmailCRM }
       }));
-      const auxOrc = response.data.bccEmailOrc.split(",");
-      if (!auxOrc.some(value => tagsinputOrc.includes(value))) {
-        settagsinputOrc(tagsinputOrc.concat(auxOrc));
-        setStringOrc(response.data.bccEmailOrc);
-      }
-      const auxRev = response.data.bccEmailRev.split(",");
-      if (!auxRev.some(value => tagsinputRev.includes(value))) {
-        settagsinputRev(tagsinputRev.concat(auxRev));
-        setStringRev(response.data.bccEmailRev);
-      }
-      const auxFat = response.data.bccEmailFat.split(",");
-      if (!auxFat.some(value => tagsinputFat.includes(value))) {
-        settagsinputFat(tagsinputFat.concat(auxFat));
-        setStringFat(response.data.bccEmailFat);
-      }
+      settagsinputOrc(
+        response.data.bccEmailOrc.split(",").filter(arr => arr !== "")
+      );
+      setStringOrc(response.data.bccEmailOrc);
+
+      settagsinputRev(
+        response.data.bccEmailRev.split(",").filter(arr => arr !== "")
+      );
+      setStringRev(response.data.bccEmailRev);
+
+      settagsinputFat(
+        response.data.bccEmailFat.split(",").filter(arr => arr !== "")
+      );
+      setStringFat(response.data.bccEmailFat);
+
+      settagsinputCRM(
+        response.data.bccEmailCRM.split(",").filter(arr => arr !== "")
+      );
+      setStringCRM(response.data.bccEmailCRM);
+
       setIsLoading(false);
     }
     loadData();
-  }, [tagsinputFat, tagsinputOrc, tagsinputRev]);
+  }, []);
 
   var options = {};
 
@@ -119,6 +128,10 @@ const Panels = () => {
   const handleTagsinputFat = value => {
     setStringFat(`${value}`);
     settagsinputFat(value);
+  };
+  const handleTagsinputCRM = value => {
+    setStringCRM(`${value}`);
+    settagsinputCRM(value);
   };
 
   const handleChange = (event, name, type) => {
@@ -169,9 +182,11 @@ const Panels = () => {
           stringOrc,
           stringRev,
           stringFat,
+          stringCRM,
           values.fromEmailOrc.value,
           values.fromEmailRev.value,
-          values.fromEmailFat.value
+          values.fromEmailFat.value,
+          values.fromEmailCRM.value
         )
       );
     } else {
@@ -251,6 +266,22 @@ const Panels = () => {
                           }
                         >
                           Faturamento
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          data-toggle="tab"
+                          href="#"
+                          className={
+                            horizontalTabs === "CRM"
+                              ? "active emailParam"
+                              : "emailParam"
+                          }
+                          onClick={e =>
+                            changeActiveTab(e, "horizontalTabs", "CRM")
+                          }
+                        >
+                          CRM
                         </NavLink>
                       </NavItem>
                     </Nav>
@@ -369,6 +400,44 @@ const Panels = () => {
                                   className: "react-tagsinput-tag "
                                 }}
                                 value={tagsinputFat}
+                              />
+                            </Col>
+                          </Row>
+                        </Form>
+                      </TabPane>
+                      <TabPane tabId="CRM">
+                        <Form onSubmit={handleSubmit}>
+                          <Row>
+                            <Col md="4">
+                              <Label>Email de CRM</Label>
+                              <FormGroup
+                                className={`has-label ${values.fromEmailCRM.error}`}
+                              >
+                                <Input
+                                  name="fromEmailCRM"
+                                  type="text"
+                                  onChange={event =>
+                                    handleChange(event, "fromEmailCRM", "text")
+                                  }
+                                  value={values.fromEmailCRM.value}
+                                />
+                                {values.fromEmailCRM.error === "has-danger" ? (
+                                  <Label className="error">
+                                    {values.fromEmailCRM.message}
+                                  </Label>
+                                ) : null}
+                              </FormGroup>
+                            </Col>
+                            <Col md="8">
+                              <Label style={{ display: "block" }}>
+                                Cópia Email
+                              </Label>
+                              <TagsInput
+                                onChange={handleTagsinputCRM}
+                                tagProps={{
+                                  className: "react-tagsinput-tag "
+                                }}
+                                value={tagsinputCRM}
                               />
                             </Col>
                           </Row>

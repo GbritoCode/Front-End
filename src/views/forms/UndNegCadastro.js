@@ -44,17 +44,24 @@ export default function UndNegCadastro() {
   const dispatch = useDispatch();
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    descUndNeg: { value: "", error: "", message: "" }
+    descUndNeg: { value: "", error: "", message: "" },
+    id: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
+    let id = 1;
     const { empresa } = store.getState().auth;
     async function loadData() {
+      const response1 = await api.get(`/und_neg`);
       const response = await api.get(`/empresa/${empresa}`);
+      if (response1.data) {
+        id = response1.data[response1.data.length - 1].id + 1;
+      }
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id }
+        empresaId: { value: response.data.id },
+        id: { value: id }
       }));
     }
     loadData();
@@ -138,22 +145,45 @@ export default function UndNegCadastro() {
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
-                  <Label>Descrição da Unidade de Negócio</Label>
-                  <FormGroup className={`has-label ${values.descUndNeg.error}`}>
-                    <Input
-                      name="descUndNeg"
-                      type="text"
-                      onChange={event =>
-                        handleChange(event, "descUndNeg", "text")
-                      }
-                      value={values.descUndNeg.value}
-                    />
-                    {values.descUndNeg.error === "has-danger" ? (
-                      <Label className="error">
-                        {values.descUndNeg.message}
-                      </Label>
-                    ) : null}
-                  </FormGroup>
+                  <Row>
+                    <Col md="4">
+                      <Label>Código</Label>
+                      <FormGroup className={`has-label ${values.id.error}`}>
+                        <Input
+                          disabled
+                          name="id"
+                          type="text"
+                          onChange={event => handleChange(event, "id", "text")}
+                          value={values.id.value}
+                        />{" "}
+                        {values.id.error === "has-danger" ? (
+                          <Label className="error">{values.id.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      {" "}
+                      <Label>Descrição da Unidade de Negócio</Label>
+                      <FormGroup
+                        className={`has-label ${values.descUndNeg.error}`}
+                      >
+                        <Input
+                          name="descUndNeg"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "descUndNeg", "text")
+                          }
+                          value={values.descUndNeg.value}
+                        />
+                        {values.descUndNeg.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.descUndNeg.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+
                   <Link to="/tabelas/general/und_neg">
                     <Button
                       style={{

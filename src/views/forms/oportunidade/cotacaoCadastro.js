@@ -94,13 +94,11 @@ export default function CotacaoCadastro() {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
-        const response4 = await api.get(`/cotacao/?last=true`);
         const response5 = await api.get(
           `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
         );
         setData1(response1.data);
         setData3(response3.data);
-        setData4({ id: response4.data.id + 1 });
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.id },
@@ -117,7 +115,7 @@ export default function CotacaoCadastro() {
         setData1(response1.data);
         setData3(response3.data);
         setData4(response2.data);
-        setData4(prevState => ({ ...prevState, id: response2.data[0].id + 1 }));
+        setData4(prevState => ({ ...prevState }));
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response2.data[0].EmpresaId },

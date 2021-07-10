@@ -36,7 +36,7 @@ export function* clienteCadastro({ payload }) {
     }
     history.push("/tabelas/cliente/cliente");
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -89,7 +89,8 @@ export function* cliContCadastro({ payload }) {
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     } = payload;
     yield call(api.post, "cliente/cont", {
       ClienteId,
@@ -99,7 +100,8 @@ export function* cliContCadastro({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta
+      tipoConta,
+      linkedin
     });
     history.push(`/tabelas/cliente/cont/${ClienteId}/?prospect=${prospect}`);
   } catch (err) {
@@ -120,7 +122,8 @@ export function* updateCliCont({ payload }) {
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     } = payload;
 
     const Cliente = {
@@ -131,7 +134,8 @@ export function* updateCliCont({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta
+      tipoConta,
+      linkedin
     };
 
     const response = yield call(api.put, `cliente/cont/${id}`, Cliente);

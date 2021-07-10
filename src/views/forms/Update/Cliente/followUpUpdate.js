@@ -22,7 +22,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Label,
   Form,
   Input,
@@ -41,7 +40,7 @@ import {
   SentimentVeryDissatisfiedSharp
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpUpdate } from "~/store/modules/Cliente/actions";
@@ -59,6 +58,7 @@ export default function UpdateFollowUps() {
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
+  const [data4, setData4] = useState({});
 
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
 
@@ -91,6 +91,7 @@ export default function UpdateFollowUps() {
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
+      setData4(response4.data);
       setContato(
         response3.data.find(arr => arr.id === response4.data.CliContId)
       );
@@ -233,7 +234,10 @@ export default function UpdateFollowUps() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h4">Follow Up</CardTitle>
+                    <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
+                    <p style={{ fontSize: 14 }}>
+                      {data4.Campanha.cod} | {data2.nomeAbv}
+                    </p>{" "}
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -280,21 +284,36 @@ export default function UpdateFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Data Próximo Contato</Label>
+                          <Label>Contato</Label>
                           <FormGroup
-                            className={`has-label ${values.dataProxContato.error}`}
+                            className={`has-label ${values.CliContId.error}`}
                           >
                             <Input
-                              name="dataProxContato"
-                              type="date"
-                              onChange={event =>
-                                handleChange(event, "dataProxContato", "text")
+                              name="CliContId"
+                              type="select"
+                              onChangeCapture={e =>
+                                handleContatoChange(e.target.value)
                               }
-                              value={values.dataProxContato.value}
-                            />
-                            {values.dataProxContato.error === "has-danger" ? (
+                              onChange={event =>
+                                handleChange(event, "CliContId", "text")
+                              }
+                              value={values.CliContId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione o contato{" "}
+                              </option>
+                              {data3.map(CliContId => (
+                                <option value={CliContId.id}>
+                                  {" "}
+                                  {CliContId.nome} - {CliContId.email}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.CliContId.error === "has-danger" ? (
                               <Label className="error">
-                                {values.dataProxContato.message}
+                                {values.CliContId.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -302,60 +321,86 @@ export default function UpdateFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Cliente</Label>
-                          <FormGroup
-                            className={`has-label ${values.ClienteId.error}`}
-                          >
+                          <Label>Email</Label>
+                          <FormGroup className="has-label">
                             <Input
                               disabled
-                              name="ClienteId"
+                              defaultValue={contato.email}
+                              name="email"
+                              id="email"
                               type="text"
-                              onChange={event =>
-                                handleChange(event, "ClienteId", "text")
-                              }
-                              defaultValue={`${data2.nomeAbv} - ${normalizeCnpj(
-                                data2.CNPJ
-                              )}`}
-                            >
-                              {data2.nomeAbv} - {normalizeCnpj(data2.CNPJ)}
-                            </Input>
-                            {values.ClienteId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.ClienteId.message}
-                              </Label>
-                            ) : null}
+                            />
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Ação</Label>
+                          <Label>Telefone</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={normalizeFone(contato.fone)}
+                              name="telefone"
+                              id="telefone"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Celular</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={normalizeFone(contato.cel)}
+                              name="celular"
+                              id="celular"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        {" "}
+                        <Col md="4">
+                          <Label>Skype</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={contato.skype}
+                              name="skype"
+                              id="skype"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>{" "}
+                        <Col md="4">
+                          <Label>Preferência de Contato</Label>
                           <FormGroup
-                            className={`has-label ${values.proxPasso.error}`}
+                            className={`has-label ${values.prefContato.error}`}
                           >
                             <Input
-                              name="proxPasso"
+                              name="prefContato"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "proxPasso", "text")
+                                handleChange(event, "prefContato", "text")
                               }
-                              value={values.proxPasso.value}
+                              value={values.prefContato.value}
                             >
                               {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione a ação{" "}
+                                Selecione o contato{" "}
                               </option>
-                              <option value={1}>Retornar ligação</option>
-                              <option value={2}>Reunião agendada</option>
-                              <option value={3}>Solicitado orçamento</option>
-                              <option value={10}>Finalizar</option>
+                              <option value={1}>Email </option>
+                              <option value={2}>Telefone </option>
+                              <option value={3}>Whatsapp </option>
+                              <option value={4}>Skype </option>
                             </Input>
-                            {values.proxPasso.error === "has-danger" ? (
+                            {values.prefContato.error === "has-danger" ? (
                               <Label className="error">
-                                {values.proxPasso.message}
+                                {values.prefContato.message}
                               </Label>
                             ) : null}
                           </FormGroup>
-                        </Col>
+                        </Col>{" "}
                         <Col md="4">
                           <Label>Reação</Label>
                           <FormGroup check>
@@ -470,124 +515,58 @@ export default function UpdateFollowUps() {
                             </Label>
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
-                          <Label>Contato</Label>
+                          <Label>Data Próximo Contato</Label>
                           <FormGroup
-                            className={`has-label ${values.CliContId.error}`}
+                            className={`has-label ${values.dataProxContato.error}`}
                           >
                             <Input
-                              name="CliContId"
-                              type="select"
-                              onChangeCapture={e =>
-                                handleContatoChange(e.target.value)
-                              }
+                              name="dataProxContato"
+                              type="date"
                               onChange={event =>
-                                handleChange(event, "CliContId", "text")
+                                handleChange(event, "dataProxContato", "text")
                               }
-                              value={values.CliContId.value}
-                            >
-                              {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione o contato{" "}
-                              </option>
-                              {data3.map(CliContId => (
-                                <option value={CliContId.id}>
-                                  {" "}
-                                  {CliContId.nome} - {CliContId.email}{" "}
-                                </option>
-                              ))}
-                            </Input>
-                            {values.CliContId.error === "has-danger" ? (
+                              value={values.dataProxContato.value}
+                            />
+                            {values.dataProxContato.error === "has-danger" ? (
                               <Label className="error">
-                                {values.CliContId.message}
+                                {values.dataProxContato.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Preferência de Contato</Label>
+                          <Label>Ação</Label>
                           <FormGroup
-                            className={`has-label ${values.prefContato.error}`}
+                            className={`has-label ${values.proxPasso.error}`}
                           >
                             <Input
-                              name="prefContato"
+                              name="proxPasso"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "prefContato", "text")
+                                handleChange(event, "proxPasso", "text")
                               }
-                              value={values.prefContato.value}
+                              value={values.proxPasso.value}
                             >
                               {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione o contato{" "}
+                                Selecione a ação{" "}
                               </option>
-                              <option value={1}>Email </option>
-                              <option value={2}>Telefone </option>
-                              <option value={3}>Whatsapp </option>
-                              <option value={4}>Skype </option>
+                              <option value={1}>Retornar ligação</option>
+                              <option value={2}>Reunião agendada</option>
+                              <option value={3}>Solicitado orçamento</option>
+                              <option value={10}>Finalizar</option>
                             </Input>
-                            {values.prefContato.error === "has-danger" ? (
+                            {values.proxPasso.error === "has-danger" ? (
                               <Label className="error">
-                                {values.prefContato.message}
+                                {values.proxPasso.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
-                          <Label>Email</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              defaultValue={contato.email}
-                              name="email"
-                              id="email"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
                       </Row>
-                      <Row>
-                        <Col md="4">
-                          <Label>Telefone</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              defaultValue={normalizeFone(contato.fone)}
-                              name="telefone"
-                              id="telefone"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Celular</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              defaultValue={normalizeFone(contato.cel)}
-                              name="celular"
-                              id="celular"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Skype</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              defaultValue={contato.skype}
-                              name="skype"
-                              id="skype"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                      </Row>
+                      <Row />
                       <Row>
                         <Col md="12">
                           <Label>Detalhes</Label>

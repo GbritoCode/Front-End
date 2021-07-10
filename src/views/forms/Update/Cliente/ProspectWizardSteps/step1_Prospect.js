@@ -84,9 +84,8 @@ const CadastroCliente = forwardRef((props, ref) => {
 
   useEffect(() => {
     const { empresa, acessible } = store.getState().auth;
-    const { nome } = store.getState().auth.user.Colab;
+    const { nome, id } = store.getState().auth.user.Colab;
     setColab(nome);
-    console.log(access);
     switch (!!acessible.find(acc => acc === "acessoRestrito")) {
       case true:
         setAccess("acessoRestrito");
@@ -106,7 +105,13 @@ const CadastroCliente = forwardRef((props, ref) => {
       setData3(response3.data);
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id }
+        empresaId: { value: response.data.id },
+        representante: {
+          value:
+            access === "acessoRestrito"
+              ? response2.data.find(arr => arr.ColabId === id).id
+              : ""
+        }
       }));
       setIsLoading(false);
     }
@@ -114,7 +119,6 @@ const CadastroCliente = forwardRef((props, ref) => {
   }, [access, colab]);
 
   let options = {};
-
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
@@ -169,11 +173,8 @@ const CadastroCliente = forwardRef((props, ref) => {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response = await axios({
-      url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-      adapter: jsonpAdapter
-    });
-    if (response.data.status === "ERROR") {
+    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+    if (response1.data) {
       setValues(prevState => ({
         ...prevState,
         cnpj: {
@@ -185,7 +186,7 @@ const CadastroCliente = forwardRef((props, ref) => {
         place: "tr",
         message: (
           <div>
-            <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+            <div>O CNPJ já existe</div>
           </div>
         ),
         type: "danger",
@@ -194,14 +195,49 @@ const CadastroCliente = forwardRef((props, ref) => {
       };
       notify();
     } else {
-      setValues(prevState => ({
-        ...prevState,
-        rzSoc: { value: response.data.nome }
-      }));
-      setOptional(prevState => ({
-        ...prevState,
-        fantasia: { value: response.data.fantasia }
-      }));
+      const response = await axios({
+        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+        adapter: jsonpAdapter
+      });
+      if (response.data.status === "ERROR") {
+        setValues(prevState => ({
+          ...prevState,
+          cnpj: {
+            error: "has-danger",
+            message: "Insira um CNPJ válido"
+          }
+        }));
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      } else {
+        document.getElementById("situacao").value = response.data.situacao;
+        document.getElementById("cep").value = response.data.cep;
+        document.getElementById("rua").value = response.data.logradouro;
+        document.getElementById("numero").value = response.data.numero;
+        document.getElementById("bairro").value = response.data.bairro;
+        document.getElementById("cidade").value = response.data.municipio;
+        document.getElementById("uf").value = response.data.uf;
+        document.getElementById("complemento").value =
+          response.data.complemento;
+        setValues(prevState => ({
+          ...prevState,
+          rzSoc: { value: response.data.nome }
+        }));
+        setOptional(prevState => ({
+          ...prevState,
+          fantasia: { value: response.data.fantasia }
+        }));
+      }
     }
   }
 
@@ -575,6 +611,17 @@ const CadastroCliente = forwardRef((props, ref) => {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Situação Cadastral</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              id="situacao"
+                              name="situacao"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Razão Social</Label>
                           <FormGroup
                             className={`has-label ${values.rzSoc.error}`}
@@ -596,6 +643,9 @@ const CadastroCliente = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+
+                      <Row>
                         <Col md="4">
                           <Label>Nome Fanasia</Label>
                           <FormGroup
@@ -617,9 +667,6 @@ const CadastroCliente = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-
-                      <Row>
                         <Col md="4">
                           <Label>Nome Abreviado</Label>
                           <FormGroup
@@ -697,6 +744,8 @@ const CadastroCliente = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Tipo Comissão</Label>
                           <FormGroup
@@ -708,62 +757,6 @@ const CadastroCliente = forwardRef((props, ref) => {
                               onChange={event =>
                                 handleChange(event, "tipoComiss", "text")
                               }
-                              onChangeCapture={async () => {
-                                const response2 = await axios({
-                                  url: `https://www.receitaws.com.br/v1/cnpj/${values.cnpj.value.replace(
-                                    /[^\d]+/g,
-                                    ""
-                                  )}`,
-                                  adapter: jsonpAdapter
-                                });
-                                if (response2.data.status === "ERROR") {
-                                  setValues(prevState => ({
-                                    ...prevState,
-                                    cnpj: {
-                                      error: "has-danger",
-                                      message: "Insira um CNPJ válido"
-                                    }
-                                  }));
-                                } else {
-                                  sessionStorage.setItem(
-                                    "cliData",
-                                    JSON.stringify(values)
-                                  );
-                                  sessionStorage.setItem(
-                                    "compData",
-                                    JSON.stringify({
-                                      ClienteId: {
-                                        value: "",
-                                        error: "",
-                                        message: ""
-                                      },
-                                      CondPgmtoId: {
-                                        value: "",
-                                        error: "",
-                                        message: ""
-                                      },
-                                      cep: { value: response2.data.cep },
-                                      rua: { value: response2.data.logradouro },
-                                      numero: { value: response2.data.numero },
-                                      bairro: { value: response2.data.bairro },
-                                      cidade: {
-                                        value: response2.data.municipio
-                                      },
-                                      uf: { value: response2.data.uf },
-                                      inscMun: {
-                                        value: "",
-                                        error: "",
-                                        message: ""
-                                      },
-                                      inscEst: {
-                                        value: "",
-                                        error: "",
-                                        message: ""
-                                      }
-                                    })
-                                  );
-                                }
-                              }}
                               value={values.tipoComiss.value}
                             >
                               {" "}
@@ -780,8 +773,6 @@ const CadastroCliente = forwardRef((props, ref) => {
                             </Input>
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Campanhas</Label>
                           <FormGroup

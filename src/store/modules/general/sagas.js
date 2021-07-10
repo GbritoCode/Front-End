@@ -644,9 +644,11 @@ export function* updateEmailParams({ payload }) {
       bccEmailOrc,
       bccEmailRev,
       bccEmailFat,
+      bccEmailCRM,
       fromEmailOrc,
       fromEmailRev,
-      fromEmailFat
+      fromEmailFat,
+      fromEmailCRM
     } = payload;
 
     const Colab = {
@@ -654,9 +656,11 @@ export function* updateEmailParams({ payload }) {
       bccEmailOrc,
       bccEmailRev,
       bccEmailFat,
+      bccEmailCRM,
       fromEmailOrc,
       fromEmailRev,
-      fromEmailFat
+      fromEmailFat,
+      fromEmailCRM
     };
 
     const response = yield call(api.put, `emailParams/${id}`, Colab);

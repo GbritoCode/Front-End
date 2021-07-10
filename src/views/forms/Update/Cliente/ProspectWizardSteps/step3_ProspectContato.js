@@ -47,7 +47,8 @@ const CliContCadastro = forwardRef((props, ref) => {
     fone: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" }
+    tipoConta: { value: "", error: "", message: "" },
+    linkedin: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     aniver: { value: null, error: "", message: "" }
@@ -175,7 +176,8 @@ const CliContCadastro = forwardRef((props, ref) => {
         skype: values.skype.value,
         email: values.email.value,
         tipoConta: values.tipoConta.value,
-        aniver: optional.aniver.value
+        aniver: optional.aniver.value,
+        linkedin: optional.aniver.value
       });
       return true;
     }
@@ -384,6 +386,26 @@ const CliContCadastro = forwardRef((props, ref) => {
                             {values.email.error === "has-danger" ? (
                               <Label className="error">
                                 {values.email.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Linkedin</Label>
+                          <FormGroup
+                            className={`has-label ${values.linkedin.error}`}
+                          >
+                            <Input
+                              name="linkedin"
+                              type="linkedin"
+                              onChange={event =>
+                                handleChange(event, "linkedin", "text")
+                              }
+                              value={values.linkedin.value}
+                            />
+                            {values.linkedin.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.linkedin.message}
                               </Label>
                             ) : null}
                           </FormGroup>

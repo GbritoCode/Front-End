@@ -495,9 +495,11 @@ export function EmailParamsUpdate(
   bccEmailOrc,
   bccEmailRev,
   bccEmailFat,
+  bccEmailCRM,
   fromEmailOrc,
   fromEmailRev,
-  fromEmailFat
+  fromEmailFat,
+  fromEmailCRM
 ) {
   return {
     type: "@update/EMAIL_PARAMS_REQUEST",
@@ -507,9 +509,11 @@ export function EmailParamsUpdate(
       bccEmailOrc,
       bccEmailRev,
       bccEmailFat,
+      bccEmailCRM,
       fromEmailOrc,
       fromEmailRev,
-      fromEmailFat
+      fromEmailFat,
+      fromEmailCRM
     }
   };
 }

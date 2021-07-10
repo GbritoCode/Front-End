@@ -49,7 +49,8 @@ export default function CliContUpdatee() {
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
     aniver: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" }
+    tipoConta: { value: "", error: "", message: "" },
+    linkedin: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
   const [data1, setData1] = useState({});
@@ -65,35 +66,15 @@ export default function CliContUpdatee() {
 
       setValues(prevState => ({
         ...prevState,
-        ClienteId: { value: response.data.ClienteId }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        nome: { value: response.data.nome }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        cel: { value: response.data.cel }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        fone: { value: response.data.fone }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        aniver: { value: response.data.aniver }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        tipoConta: { value: response.data.tipoConta }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        skype: { value: response.data.skype }
-      }));
-      setValues(prevState => ({
-        ...prevState,
-        email: { value: response.data.email }
+        ClienteId: { value: response.data.ClienteId },
+        nome: { value: response.data.nome },
+        cel: { value: response.data.cel },
+        fone: { value: response.data.fone },
+        aniver: { value: response.data.aniver },
+        tipoConta: { value: response.data.tipoConta },
+        skype: { value: response.data.skype },
+        email: { value: response.data.email },
+        linkedin: { value: response.data.linkedin }
       }));
       setIsLoading(false);
     }
@@ -256,7 +237,8 @@ export default function CliContUpdatee() {
           values.email.value,
           values.aniver.value,
           values.tipoConta.value,
-          prospect
+          prospect,
+          values.linkedin.value
         )
       );
     } else {
@@ -300,22 +282,28 @@ export default function CliContUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form id="RegisterValidation" onSubmit={handleSubmit}>
-                      <Label>Nome</Label>
-                      <FormGroup className={`has-label ${values.nome.error}`}>
-                        <Input
-                          name="nome"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "nome", "text")
-                          }
-                          value={values.nome.value}
-                        />
-                        {values.nome.error === "has-danger" ? (
-                          <Label className="error">{values.nome.message}</Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
-                        <Col md="3">
+                        <Col md="4">
+                          <Label>Nome</Label>
+                          <FormGroup
+                            className={`has-label ${values.nome.error}`}
+                          >
+                            <Input
+                              name="nome"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "nome", "text")
+                              }
+                              value={values.nome.value}
+                            />
+                            {values.nome.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.nome.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Celular</Label>
                           <FormGroup
                             className={`has-label ${values.cel.error}`}
@@ -342,7 +330,7 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="3">
+                        <Col md="4">
                           <Label>Telefone</Label>
                           <FormGroup
                             className={`has-label ${values.fone.error}`}
@@ -369,7 +357,9 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="3">
+                      </Row>
+                      <Row>
+                        <Col md="4">
                           <FormGroup
                             className={`has-label ${values.aniver.error}`}
                           >
@@ -389,7 +379,7 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="3">
+                        <Col md="4">
                           <Label>Tipo de Contato</Label>
                           <FormGroup
                             className={`has-label ${values.tipoConta.error}`}
@@ -416,9 +406,7 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
-                        <Col md="6">
+                        <Col md="4">
                           <Label>Skype</Label>
                           <FormGroup
                             className={`has-label ${values.skype.error}`}
@@ -438,7 +426,9 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="6">
+                      </Row>
+                      <Row>
+                        <Col md="4">
                           <Label>Email</Label>
                           <FormGroup
                             className={`has-label ${values.email.error}`}
@@ -454,6 +444,26 @@ export default function CliContUpdatee() {
                             {values.email.error === "has-danger" ? (
                               <Label className="error">
                                 {values.email.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Linkedin</Label>
+                          <FormGroup
+                            className={`has-label ${values.linkedin.error}`}
+                          >
+                            <Input
+                              name="linkedin"
+                              type="linkedin"
+                              onChange={event =>
+                                handleChange(event, "linkedin", "text")
+                              }
+                              value={values.linkedin.value}
+                            />
+                            {values.linkedin.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.linkedin.message}
                               </Label>
                             ) : null}
                           </FormGroup>

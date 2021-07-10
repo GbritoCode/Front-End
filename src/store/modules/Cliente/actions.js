@@ -69,7 +69,8 @@ export function CliContRequest(
   email,
   aniver,
   tipoConta,
-  prospect
+  prospect,
+  linkedin
 ) {
   return {
     type: "@cadastro/CADASTRO_CONT_REQUEST",
@@ -82,7 +83,8 @@ export function CliContRequest(
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     }
   };
 }
@@ -97,7 +99,8 @@ export function CliContUpdate(
   email,
   aniver,
   tipoConta,
-  prospect
+  prospect,
+  linkedin
 ) {
   return {
     type: "@update/CONT_REQUEST",
@@ -111,7 +114,8 @@ export function CliContUpdate(
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     }
   };
 }

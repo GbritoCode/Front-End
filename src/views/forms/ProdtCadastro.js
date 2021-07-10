@@ -44,17 +44,24 @@ export default function ProdtCadastro() {
   const dispatch = useDispatch();
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
-    descProdt: { value: "", error: "", message: "" }
+    descProdt: { value: "", error: "", message: "" },
+    id: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
+      let id = 1;
       const response = await api.get(`/empresa/${empresa}`);
+      const response1 = await api.get(`/prodt/`);
+      if (response1.data) {
+        id = response1.data[response1.data.length - 1].id + 1;
+      }
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response.data.id }
+        empresaId: { value: response.data.id },
+        id: { value: id }
       }));
     }
     loadData();
@@ -139,6 +146,21 @@ export default function ProdtCadastro() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <Row>
+                    <Col md="4">
+                      <Label>Código</Label>
+                      <FormGroup className={`has-label ${values.id.error}`}>
+                        <Input
+                          disabled
+                          name="id"
+                          type="text"
+                          onChange={event => handleChange(event, "id", "text")}
+                          value={values.id.value}
+                        />{" "}
+                        {values.id.error === "has-danger" ? (
+                          <Label className="error">{values.id.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
                     <Col md="4">
                       <Label>Descrição do Produto</Label>
                       <FormGroup

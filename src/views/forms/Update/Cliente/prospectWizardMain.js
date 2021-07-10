@@ -50,7 +50,7 @@ export default function ProspectWizard() {
   const finishButtonClick = async allStates => {
     await api
       .post("/prospect", allStates)
-      .then(history.push("/tabelas/cliente/prospect"));
+      .then(() => history.push("/tabelas/cliente/prospect"));
   };
   return (
     <>

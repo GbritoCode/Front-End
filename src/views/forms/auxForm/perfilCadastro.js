@@ -543,9 +543,12 @@ export default function PerfilCadastro() {
                             id="selectAllVendas"
                             type="switch"
                             label="Selecionar todos"
-                            onChange={e =>
-                              handleSwitchAllChange(e.target.checked, "Vendas")
-                            }
+                            onChange={e => {
+                              e.target.checked &&
+                                setRadioValue("acessoRestrito");
+                              !e.target.checked && setRadioValue("");
+                              handleSwitchAllChange(e.target.checked, "Vendas");
+                            }}
                           />
                         </Col>
                       </Row>

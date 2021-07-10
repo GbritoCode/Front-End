@@ -34,8 +34,6 @@ import {
   Col
 } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
-import { normalizeCnpj } from "~/normalize";
-import api from "~/services/api";
 
 const CliCompCadastro = forwardRef((props, ref) => {
   // --------- colocando no modo claro do template
@@ -45,46 +43,14 @@ const CliCompCadastro = forwardRef((props, ref) => {
   let options = useRef();
 
   const stateSchema = {
-    CondPgmtoId: { value: "", error: "", message: "" },
+    CondPgmtoId: { value: 1, error: "", message: "" },
     inscMun: { value: "", error: "", message: "" },
     inscEst: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     complemento: { value: "", error: "", message: "" }
   };
-  const [data, setData] = useState({
-    empresaId: { value: "" },
-    cnpj: { value: "" },
-    rzSoc: { value: "" },
-    nomeAbv: { value: "" },
-    representante: { value: "" },
-    tipoComiss: { value: "" }
-  });
-  const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState({
-    ClienteId: {
-      value: "",
-      error: "",
-      message: ""
-    },
-    CondPgmtoId: {
-      value: "",
-      error: "",
-      message: ""
-    },
-    cep: { value: "" },
-    rua: { value: "" },
-    numero: { value: "" },
-    bairro: { value: "" },
-    cidade: { value: "" },
-    uf: { value: "" },
-    inscMun: {
-      value: "",
-      error: "",
-      message: ""
-    },
-    inscEst: { value: "", error: "", message: "" }
-  });
+
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
 
@@ -97,16 +63,7 @@ const CliCompCadastro = forwardRef((props, ref) => {
   }
   useEffect(() => {
     // ------------------- busca de dados das apis, e setar as variáveis que dependem das apis
-    async function loadData() {
-      const cliData = JSON.parse(sessionStorage.getItem("cliData"));
-      const compData = JSON.parse(sessionStorage.getItem("compData"));
-      console.log(cliData);
-      console.log(compData);
-      const response1 = await api.get(`/condPgmto`);
-      setData(cliData);
-      setData1(response1.data);
-      setData2(compData);
-    }
+    async function loadData() {}
     if (firstRender.current) {
       firstRender.current = false;
       loadData();
@@ -224,50 +181,24 @@ const CliCompCadastro = forwardRef((props, ref) => {
             <Card>
               <CardBody>
                 <Form>
-                  <Label>Cliente</Label>
-                  <FormGroup className="has-label ">
-                    <Input
-                      disabled
-                      value={`${data.nomeAbv.value} - ${normalizeCnpj(
-                        data.cnpj.value
-                      )}`}
-                      name="ClienteId"
-                      type="text"
-                    />
-                  </FormGroup>
                   <Row>
                     <Col md="4">
                       <Label>CEP</Label>
                       <FormGroup className="has-label">
-                        <Input
-                          disabled
-                          value={data2.cep.value}
-                          name="cep"
-                          type="text"
-                        />
+                        <Input disabled id="cep" name="cep" type="text" />
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       <Label>Rua</Label>
                       <FormGroup className="has-label">
-                        <Input
-                          disabled
-                          value={data2.rua.value}
-                          name="rua"
-                          type="text"
-                        />
+                        <Input disabled id="rua" name="rua" type="text" />
                       </FormGroup>
                     </Col>
 
                     <Col md="4">
                       <Label>Número</Label>
                       <FormGroup className="has-label ">
-                        <Input
-                          disabled
-                          value={data2.numero.value}
-                          name="numero"
-                          type="numeric"
-                        />
+                        <Input disabled id="numero" name="numero" type="text" />
                       </FormGroup>
                     </Col>
                   </Row>
@@ -282,8 +213,8 @@ const CliCompCadastro = forwardRef((props, ref) => {
                           onChange={event =>
                             handleChange(event, "complemento", "optional")
                           }
-                          value={optional.complemento.value}
-                          name="nomeAbv"
+                          id="complemento"
+                          name="complemento"
                           type="text"
                         />
                         {optional.complemento.error === "has-danger" ? (
@@ -296,12 +227,7 @@ const CliCompCadastro = forwardRef((props, ref) => {
                     <Col md="4">
                       <Label>Bairro</Label>
                       <FormGroup className="has-label ">
-                        <Input
-                          disabled
-                          value={data2.bairro.value}
-                          name="bairro"
-                          type="text"
-                        />
+                        <Input disabled id="bairro" name="bairro" type="text" />
                       </FormGroup>
                     </Col>
                   </Row>
@@ -309,23 +235,13 @@ const CliCompCadastro = forwardRef((props, ref) => {
                     <Col md="4">
                       <Label>Cidade</Label>
                       <FormGroup className="has-label ">
-                        <Input
-                          disabled
-                          value={data2.cidade.value}
-                          name="cidade"
-                          type="text"
-                        />
+                        <Input disabled id="cidade" name="cidade" type="text" />
                       </FormGroup>
                     </Col>
                     <Col md="4">
                       <Label>UF</Label>
                       <FormGroup className="has-label ">
-                        <Input
-                          disabled
-                          value={data2.uf.value}
-                          name="uf"
-                          type="select"
-                        >
+                        <Input disabled id="uf" name="uf" type="select">
                           <option disabled value="">
                             {" "}
                             Selecione o estado{" "}
@@ -398,37 +314,6 @@ const CliCompCadastro = forwardRef((props, ref) => {
                         {values.inscEst.error === "has-danger" ? (
                           <Label className="error">
                             {values.inscEst.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <Label>Condição de Pagamento</Label>
-                      <FormGroup
-                        className={`has-label ${values.CondPgmtoId.error}`}
-                      >
-                        <Input
-                          name="CondPgmtoId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "CondPgmtoId", "text")
-                          }
-                          value={values.CondPgmtoId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione a condição de pagamento{" "}
-                          </option>
-                          {data1.map(condPgmto => (
-                            <option value={condPgmto.id}>
-                              {condPgmto.cod} - {condPgmto.desc}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.CondPgmtoId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.CondPgmtoId.message}
                           </Label>
                         ) : null}
                       </FormGroup>

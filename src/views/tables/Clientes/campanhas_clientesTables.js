@@ -29,7 +29,7 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Close, DoneAll, Message } from "@material-ui/icons";
+import { Check, Close, DoneAll, Message } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -164,6 +164,7 @@ export default function CampanhaClienteTable() {
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };
+  console.log(values.ClienteIds.array);
 
   return (
     <>
@@ -191,6 +192,66 @@ export default function CampanhaClienteTable() {
                 className={classNames("btn-icon btn-link like")}
               >
                 <Close fontSize="large" />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={async () => {
+                  await api
+                    .post(`/campanha/relate/?CampanhaId=${id}`, {
+                      ClienteIds: values.ClienteIds.array
+                    })
+                    .then(res => {
+                      toast.success(res.data.message);
+                      setData(
+                        ...data,
+                        data2
+                          .filter(arr =>
+                            values.ClienteIds.array.includes(arr.id)
+                          )
+                          .map((client, index) => {
+                            return {
+                              idd: index,
+                              id: client.id,
+                              CNPJ: normalizeCnpj(client.CNPJ),
+                              nomeAbv: client.nomeAbv,
+                              RepresentanteId: client.RepresentanteId,
+                              Representante: client.Representante.nome,
+                              rzSoc: client.rzSoc,
+                              TipoComisseId: client.TipoComisseId,
+                              EmpresaId: client.EmpresaId,
+                              prospect: checkProsp(client.prospect),
+                              implantacao: client.createdAt,
+                              actions: (
+                                // we've added some custom button actions
+                                <div className="actions-right">
+                                  <Button
+                                    onClick={() => {
+                                      setExcluding(client.id);
+                                      setModalMini(!modalMini);
+                                    }}
+                                    color="danger"
+                                    size="sm"
+                                    className={classNames(
+                                      "btn-icon btn-link like"
+                                    )}
+                                  >
+                                    <i className="tim-icons icon-simple-remove" />
+                                  </Button>{" "}
+                                </div>
+                              )
+                            };
+                          })
+                      );
+                      // history.go(0);
+                    });
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Check fontSize="large" />
               </Button>
             </Tooltip>
             <Tooltip title="Relacionar Todos" placement="top" interactive>

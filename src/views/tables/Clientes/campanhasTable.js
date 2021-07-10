@@ -69,6 +69,8 @@ class CampanhaTable extends Component {
           EmpresaId: campanha.EmpresaId,
           cod: campanha.cod,
           desc: campanha.desc,
+          dataInic: campanha.dataInic,
+          dataFim: campanha.dataFim,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -207,6 +209,14 @@ class CampanhaTable extends Component {
                     {
                       Header: "Descrição",
                       accessor: "desc"
+                    },
+                    {
+                      Header: "Data Início",
+                      accessor: "dataInic"
+                    },
+                    {
+                      Header: "Data Fim",
+                      accessor: "dataFim"
                     },
                     {
                       Header: "Ações",

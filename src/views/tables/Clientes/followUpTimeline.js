@@ -26,12 +26,12 @@ import {
 } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
 
 // reactstrap components
 import { Badge, Card, CardBody, Row, Col, Button } from "reactstrap";
 import { normalizeFone } from "~/normalize";
 import api from "~/services/api";
+import history from "~/services/history";
 
 export default function FollowUpTimeline() {
   document.body.classList.add("white-content");
@@ -94,20 +94,19 @@ export default function FollowUpTimeline() {
       ) : (
         <>
           <div className="content">
-            <div className="header text-center">
+            <div style={{ marginBottom: "0px" }} className="header text-center">
               <h3 className="title">Timeline</h3>
-              <Link to={`/tabelas/cliente/followUps/${cliId}/${campId}`}>
-                <Tooltip title="Voltar">
-                  <Button
-                    style={{
-                      float: "right"
-                    }}
-                    className={classNames("btn-icon btn-link like")}
-                  >
-                    <ArrowBackIos />
-                  </Button>
-                </Tooltip>
-              </Link>
+              <Tooltip title="Voltar">
+                <Button
+                  style={{
+                    textAlign: "center"
+                  }}
+                  className={classNames("btn-icon btn-link like")}
+                  onClick={() => history.goBack()}
+                >
+                  <ArrowBackIos />
+                </Button>
+              </Tooltip>
             </div>
             <Row>
               <Col md="12">

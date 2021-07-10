@@ -38,6 +38,8 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import ReactTable from "react-table-v6";
+import { Tooltip } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
@@ -414,6 +416,19 @@ export default function CadastroCliente() {
         >
           <Header>
             {" "}
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => {
+                  setIsOpenCamp(false);
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Close fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
             <h4 className="modalHeader">Campanha</h4>
           </Header>
 
@@ -442,6 +457,7 @@ export default function CadastroCliente() {
                   document.getElementsByName(
                     "CampanhaIds"
                   )[0].value = `${rowInfo.original.cod} - ${rowInfo.original.desc}`;
+                  setIsOpenCamp(!isOpenCamp);
                 }
               };
             }}

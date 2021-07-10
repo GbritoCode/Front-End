@@ -627,7 +627,7 @@ const routes = [
   {
     collapse: true,
     name: "Oportunidades",
-    namePerfil: "Oportunidades",
+    namePerfil: "Oportunidades side",
     icon: "tim-icons icon-pin",
     state: "OportunidadeCollapse",
     profile: 2,

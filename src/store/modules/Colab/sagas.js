@@ -11,6 +11,7 @@ import {
 } from "./actions";
 import { store } from "~/store";
 
+let result;
 export function* colabCadastro({ payload }) {
   try {
     const {
@@ -29,7 +30,7 @@ export function* colabCadastro({ payload }) {
     } = payload;
 
     if (!first) {
-      const result = yield call(api.post, "users", {
+      result = yield call(api.post, "users", {
         nome,
         email,
         senha: "Aidera2020",
@@ -75,6 +76,7 @@ export function* colabCadastro({ payload }) {
     }
     history.push("/tabelas/colab");
   } catch (err) {
+    yield call(api.delete, `users/${result.data.id}`);
     toast.error(err.response.data.error);
   }
 }
