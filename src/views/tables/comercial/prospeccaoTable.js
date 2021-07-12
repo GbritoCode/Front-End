@@ -76,7 +76,9 @@ function ProspeccaoTable() {
         access === "acessoRestrito" &&
           setData2(
             camp.Clientes.filter(
-              arr => arr.Representante.ColabId === Colab
+              arr =>
+                arr.Representante.ColabId === Colab &&
+                arr.Campanhas_Clientes.ativo === true
             ).map((client, key) => {
               return {
                 idd: key,
@@ -142,7 +144,9 @@ function ProspeccaoTable() {
           );
         access === "acessoTotal" &&
           setData2(
-            camp.Clientes.map((client, key) => {
+            camp.Clientes.filter(
+              arr => arr.Campanhas_Clientes.ativo === true
+            ).map((client, key) => {
               return {
                 idd: key,
                 id: client.id,
@@ -206,6 +210,8 @@ function ProspeccaoTable() {
             })
           );
       }
+      console.log(response.data[0].Clientes[0].Campanhas_Clientes.ativo);
+
       setData(
         response.data
           .filter(
@@ -313,7 +319,11 @@ function ProspeccaoTable() {
                       access === "acessoRestrito" &&
                         setData2(
                           rowInfo.original.clientes
-                            .filter(arr => arr.Representante.ColabId === Colab)
+                            .filter(
+                              arr =>
+                                arr.Representante.ColabId === Colab &&
+                                arr.Campanhas_Clientes.ativo === true
+                            )
                             .map((client, key) => {
                               return {
                                 idd: key,
@@ -391,78 +401,84 @@ function ProspeccaoTable() {
                         );
                       access === "acessoTotal" &&
                         setData2(
-                          rowInfo.original.clientes.map((client, key) => {
-                            return {
-                              idd: key,
-                              id: client.id,
-                              CNPJ: normalizeCnpj(client.CNPJ),
-                              nomeAbv: client.nomeAbv,
-                              rzSoc: client.rzSoc,
-                              RepresentanteId: client.RepresentanteId,
-                              Representante: client.Representante.nome,
-                              TipoComisseId: client.TipoComisseId,
-                              TipoComiss: client.TipoComisse.desc,
-                              EmpresaId: client.EmpresaId,
-                              prospect: client.prospect,
-                              created: client.createdAt,
-                              retorno:
-                                client.FollowUps.find(
-                                  arr => arr.CampanhaId === rowInfo.original.id
-                                ) !== undefined
-                                  ? client.FollowUps.find(
-                                      arr =>
-                                        arr.CampanhaId === rowInfo.original.id
-                                    ).dataProxContato
-                                  : "--",
-                              situacao: checkSituacao(
-                                client.FollowUps.find(
-                                  arr => arr.CampanhaId === rowInfo.original.id
-                                ) !== undefined
-                                  ? client.FollowUps.find(
-                                      arr =>
-                                        arr.CampanhaId === rowInfo.original.id
-                                    ).distanceFromToday
-                                  : "--"
-                              ),
-                              actions: (
-                                // we've added some custom button actions
-                                <div className="actions-right">
-                                  <Tooltip title="Novo Follow Up">
-                                    <Button
-                                      color="default"
-                                      size="sm"
-                                      className={classNames(
-                                        "btn-icon btn-link like"
-                                      )}
-                                      onClick={() => {
-                                        history.push(
-                                          `/cadastro/cliente/followUps/${client.id}/${rowInfo.original.id}`
-                                        );
-                                      }}
-                                    >
-                                      <i className="tim-icons icon-simple-add" />
-                                    </Button>
-                                  </Tooltip>
-                                  <Tooltip title="Ver Follow Ups">
-                                    <Button
-                                      color="default"
-                                      size="sm"
-                                      className={classNames(
-                                        "btn-icon btn-link like"
-                                      )}
-                                      onClick={() => {
-                                        history.push(
-                                          `/tabelas/cliente/followUps/${client.id}/${rowInfo.original.id}`
-                                        );
-                                      }}
-                                    >
-                                      <i className="tim-icons icon-attach-87" />
-                                    </Button>
-                                  </Tooltip>
-                                </div>
-                              )
-                            };
-                          })
+                          rowInfo.original.clientes
+                            .filter(
+                              arr => arr.Campanhas_Clientes.ativo === true
+                            )
+                            .map((client, key) => {
+                              return {
+                                idd: key,
+                                id: client.id,
+                                CNPJ: normalizeCnpj(client.CNPJ),
+                                nomeAbv: client.nomeAbv,
+                                rzSoc: client.rzSoc,
+                                RepresentanteId: client.RepresentanteId,
+                                Representante: client.Representante.nome,
+                                TipoComisseId: client.TipoComisseId,
+                                TipoComiss: client.TipoComisse.desc,
+                                EmpresaId: client.EmpresaId,
+                                prospect: client.prospect,
+                                created: client.createdAt,
+                                retorno:
+                                  client.FollowUps.find(
+                                    arr =>
+                                      arr.CampanhaId === rowInfo.original.id
+                                  ) !== undefined
+                                    ? client.FollowUps.find(
+                                        arr =>
+                                          arr.CampanhaId === rowInfo.original.id
+                                      ).dataProxContato
+                                    : "--",
+                                situacao: checkSituacao(
+                                  client.FollowUps.find(
+                                    arr =>
+                                      arr.CampanhaId === rowInfo.original.id
+                                  ) !== undefined
+                                    ? client.FollowUps.find(
+                                        arr =>
+                                          arr.CampanhaId === rowInfo.original.id
+                                      ).distanceFromToday
+                                    : "--"
+                                ),
+                                actions: (
+                                  // we've added some custom button actions
+                                  <div className="actions-right">
+                                    <Tooltip title="Novo Follow Up">
+                                      <Button
+                                        color="default"
+                                        size="sm"
+                                        className={classNames(
+                                          "btn-icon btn-link like"
+                                        )}
+                                        onClick={() => {
+                                          history.push(
+                                            `/cadastro/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                          );
+                                        }}
+                                      >
+                                        <i className="tim-icons icon-simple-add" />
+                                      </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Ver Follow Ups">
+                                      <Button
+                                        color="default"
+                                        size="sm"
+                                        className={classNames(
+                                          "btn-icon btn-link like"
+                                        )}
+                                        onClick={() => {
+                                          history.push(
+                                            `/tabelas/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                          );
+                                        }}
+                                      >
+                                        <i className="tim-icons icon-attach-87" />
+                                      </Button>
+                                    </Tooltip>
+                                  </div>
+                                )
+                              };
+                            })
                         );
                       setIsOpen(false);
                     }

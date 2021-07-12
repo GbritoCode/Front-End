@@ -85,7 +85,8 @@ export default function CadastroFollowUps() {
     detalhes: { value: "", error: "", message: "" },
     reacao: { value: "", error: "", message: "" },
     proxPasso: { value: "", error: "", message: "" },
-    prefContato: { value: "", error: "", message: "" }
+    prefContato: { value: "", error: "", message: "" },
+    ativo: { value: true, error: "", message: "" }
   };
 
   const meetingSchema = {
@@ -179,6 +180,10 @@ export default function CadastroFollowUps() {
   };
   const checkAction = value => {
     if (value === "10") {
+      setValues(prevState => ({
+        ...prevState,
+        ativo: { value: false }
+      }));
       console.log(value);
       setModalMini(true);
     }
@@ -929,39 +934,21 @@ export default function CadastroFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col hidden={values.proxPasso.value !== "10"} md="4">
-                          <Label>Contato</Label>
-                          <FormGroup
-                            className={`has-label ${values.CliContId.error}`}
-                          >
+                          <Label>Motivo</Label>
+                          <FormGroup className="has-label ">
                             <Input
+                              disabled
                               hidden={values.proxPasso.value !== "10"}
                               name="CliContId"
                               type="select"
-                              onChangeCapture={e =>
-                                handleContatoChange(e.target.value)
-                              }
-                              onChange={event =>
-                                handleChange(event, "CliContId", "text")
-                              }
-                              value={values.CliContId.value}
+                              placeholder="Selecione o Motivo"
                             >
                               {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione o contato{" "}
+                                Selecione o Motivo{" "}
                               </option>
-                              {data3.map(CliContId => (
-                                <option value={CliContId.id}>
-                                  {" "}
-                                  {CliContId.id} - {CliContId.nome}{" "}
-                                </option>
-                              ))}
                             </Input>
-                            {values.CliContId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.CliContId.message}
-                              </Label>
-                            ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
