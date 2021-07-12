@@ -1037,7 +1037,7 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/cadastro/oportunidade/cotacao/:id",
+        path: "/cadastro/oportunidade/cotacao/:id/:rev?",
         name: "Oportunidades",
         namePerfil: "Oportunidades Cad",
         mini: "OPT",

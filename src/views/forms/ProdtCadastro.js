@@ -55,7 +55,7 @@ export default function ProdtCadastro() {
       let id = 1;
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/prodt/`);
-      if (response1.data) {
+      if (response1.data !== []) {
         id = response1.data[response1.data.length - 1].id + 1;
       }
       setValues(prevState => ({

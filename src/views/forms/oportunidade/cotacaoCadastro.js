@@ -49,12 +49,12 @@ import api from "~/services/api";
 import TagsInput from "~/components/Tags/TagsInput";
 import history from "~/services/history";
 
-export default function CotacaoCadastro() {
+export default function CotacaoCadastro(props) {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const fileInputField = useRef(null);
 
-  const { id } = useParams();
+  const { id, rev } = useParams();
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +76,7 @@ export default function CotacaoCadastro() {
     recLiq: { value: "", error: "", message: "" },
     prevLucro: { value: "", error: "", message: "" },
     numParcelas: { value: "", error: "", message: "" },
-    motivo: { value: "1", error: "", message: "" },
+    motivo: { value: rev === "true" ? "2" : "1", error: "", message: "" },
     email: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
@@ -86,6 +86,7 @@ export default function CotacaoCadastro() {
   const [filesAux, setFileAux] = useState({});
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
+  console.log(values.motivo);
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
@@ -139,7 +140,6 @@ export default function CotacaoCadastro() {
             value: normalizeCalcCurrency(response2.data[0].prevLucro)
           },
           numParcelas: { value: response2.data[0].numParcelas },
-          motivo: { value: response2.data[0].motivo },
           email: { value: response5.data.email }
         }));
         setOptional(prevState => ({
@@ -781,7 +781,7 @@ export default function CotacaoCadastro() {
                           <FormGroup check>
                             <Label check>
                               <Input
-                                defaultChecked
+                                defaultChecked={rev !== "true"}
                                 name="motivo"
                                 type="radio"
                                 onChange={event =>
@@ -793,6 +793,7 @@ export default function CotacaoCadastro() {
                             </Label>
                             <Label check>
                               <Input
+                                defaultChecked={rev === "true"}
                                 name="motivo"
                                 type="radio"
                                 onChange={event =>

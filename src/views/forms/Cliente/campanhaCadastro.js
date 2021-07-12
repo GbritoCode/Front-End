@@ -37,7 +37,7 @@ import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Close, DoneAll, List } from "@material-ui/icons";
+import { Check, Close, DoneAll, List } from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaCadastro } from "~/store/modules/Cliente/actions";
@@ -276,6 +276,23 @@ export default function CadastroCampanha() {
                     className={classNames("btn-icon btn-link like")}
                   >
                     <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setFilteredData({
+                        data: defaultFilteredData,
+                        default: true
+                      });
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
                   </Button>
                 </Tooltip>
                 <Tooltip title="Relacionar Todos" placement="top" interactive>

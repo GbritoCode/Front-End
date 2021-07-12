@@ -114,7 +114,7 @@ function OportTable() {
                       className={classNames("btn-icon btn-link like")}
                       onClick={() => {
                         history.push(
-                          `/cadastro/oportunidade/cotacao/${oport.id}`
+                          `/cadastro/oportunidade/cotacao/${oport.id}/true`
                         );
                       }}
                     >

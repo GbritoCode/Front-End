@@ -66,12 +66,20 @@ export function* colabCadastro({ payload }) {
         espec,
         UserId: id
       });
+
+      if (first === true) {
+        sessionStorage.removeItem("persist:gobarber");
+        // history.push("/login");
+      }
+      sessionStorage.removeItem("persist:gobarber");
       const user = yield call(api.get, `users/${id}`);
+
       yield put(firstColabSuccess(user.data));
     }
 
     if (first === true) {
-      history.push("/dashboard");
+      sessionStorage.removeItem("persist:gobarber");
+      // history.push("/login");
       return;
     }
     history.push("/tabelas/colab");

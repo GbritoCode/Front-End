@@ -55,7 +55,7 @@ export default function UndNegCadastro() {
     async function loadData() {
       const response1 = await api.get(`/und_neg`);
       const response = await api.get(`/empresa/${empresa}`);
-      if (response1.data) {
+      if (response1.data !== []) {
         id = response1.data[response1.data.length - 1].id + 1;
       }
       setValues(prevState => ({

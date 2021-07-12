@@ -580,7 +580,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cadastro/oportunidade/cotacao/:id"
+        path="/cadastro/oportunidade/cotacao/:id/:rev?"
         component={CotacaoCadastro}
         isPrivate
       />

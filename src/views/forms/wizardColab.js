@@ -251,6 +251,7 @@ export default function ColabCadastro() {
           "fake"
         )
       );
+      sessionStorage.removeItem("persist:gobarber");
     } else {
       options = {
         place: "tr",
