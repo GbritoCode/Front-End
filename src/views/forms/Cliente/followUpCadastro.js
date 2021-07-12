@@ -408,7 +408,7 @@ export default function CadastroFollowUps() {
                 </p>{" "}
               </Header>
               <Row>
-                <Col md="4">
+                <Col sm="4">
                   <Label>Nome do Evento</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.title.error}`}
@@ -428,7 +428,7 @@ export default function CadastroFollowUps() {
                     ) : null}
                   </FormGroup>
                 </Col>{" "}
-                <Col md="4">
+                <Col sm="4">
                   <Label>Organizador</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.organizerName.error}`}
@@ -449,7 +449,7 @@ export default function CadastroFollowUps() {
                     ) : null}
                   </FormGroup>
                 </Col>{" "}
-                <Col md="4">
+                <Col sm="4">
                   <Label>Local</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.location.error}`}
@@ -471,7 +471,7 @@ export default function CadastroFollowUps() {
                 </Col>{" "}
               </Row>
               <Row>
-                <Col md="4">
+                <Col sm="4">
                   <Label>Data</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.date.error}`}
@@ -489,7 +489,7 @@ export default function CadastroFollowUps() {
                     ) : null}
                   </FormGroup>
                 </Col>
-                <Col md="4">
+                <Col sm="4">
                   {" "}
                   <Label>Hora Inicial</Label>
                   <FormGroup
@@ -510,7 +510,7 @@ export default function CadastroFollowUps() {
                     ) : null}
                   </FormGroup>
                 </Col>
-                <Col md="4">
+                <Col sm="4">
                   <Label>Hora Final</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.endTime.error}`}
@@ -532,7 +532,7 @@ export default function CadastroFollowUps() {
                 </Col>
               </Row>
               <Row>
-                <Col md="4">
+                <Col sm="4">
                   <Label>Contato Principal</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.mainParticipant.error}`}
@@ -553,7 +553,7 @@ export default function CadastroFollowUps() {
                     ) : null}
                   </FormGroup>
                 </Col>{" "}
-                <Col md="8">
+                <Col sm="8">
                   <Label style={{ display: "block" }}>
                     Adicionar Participantes
                   </Label>
@@ -567,7 +567,7 @@ export default function CadastroFollowUps() {
                 </Col>{" "}
               </Row>
               <Row>
-                <Col md="12">
+                <Col sm="12">
                   <Label>Detalhes</Label>
                   <FormGroup
                     className={`has-label ${meetingValues.description.error}`}
@@ -916,7 +916,7 @@ export default function CadastroFollowUps() {
                                 {" "}
                                 Selecione a ação{" "}
                               </option>
-                              <option value={1}>Retornar Ligação</option>
+                              <option value={1}>Retornar Contato</option>
                               <option value={2}>Agendar Reunião</option>
                               <option value={3}>Solicitar Orçamento</option>
                               <option value={10}>Finalizar Prospecção</option>

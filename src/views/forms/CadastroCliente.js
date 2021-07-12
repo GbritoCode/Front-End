@@ -153,11 +153,8 @@ export default function CadastroCliente() {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response = await axios({
-      url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-      adapter: jsonpAdapter
-    });
-    if (response.data.status === "ERROR") {
+    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+    if (response1.data) {
       setValues(prevState => ({
         ...prevState,
         cnpj: {
@@ -169,7 +166,7 @@ export default function CadastroCliente() {
         place: "tr",
         message: (
           <div>
-            <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+            <div>O CNPJ já existe</div>
           </div>
         ),
         type: "danger",
@@ -178,14 +175,40 @@ export default function CadastroCliente() {
       };
       notify();
     } else {
-      setValues(prevState => ({
-        ...prevState,
-        rzSoc: { value: response.data.nome }
-      }));
-      setOptional(prevState => ({
-        ...prevState,
-        fantasia: { value: response.data.fantasia }
-      }));
+      const response = await axios({
+        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+        adapter: jsonpAdapter
+      });
+      if (response.data.status === "ERROR") {
+        setValues(prevState => ({
+          ...prevState,
+          cnpj: {
+            error: "has-danger",
+            message: "Insira um CNPJ válido"
+          }
+        }));
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      } else {
+        setValues(prevState => ({
+          ...prevState,
+          rzSoc: { value: response.data.nome }
+        }));
+        setOptional(prevState => ({
+          ...prevState,
+          fantasia: { value: response.data.fantasia }
+        }));
+      }
     }
   }
 

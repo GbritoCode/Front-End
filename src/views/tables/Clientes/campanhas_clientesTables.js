@@ -29,15 +29,22 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Check, Close, DoneAll, Message } from "@material-ui/icons";
+import {
+  ArrowBackIos,
+  Check,
+  Close,
+  DoneAll,
+  Message
+} from "@material-ui/icons";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import ModalLarge from "~/components/Modal/modalLarge";
+import history from "~/services/history";
 
 export default function CampanhaClienteTable() {
   document.body.classList.add("white-content");
@@ -127,7 +134,23 @@ export default function CampanhaClienteTable() {
               TipoComisseId: client.TipoComisseId,
               EmpresaId: client.EmpresaId,
               prospect: checkProsp(client.prospect),
-              implantacao: client.createdAt
+              implantacao: client.createdAt,
+              actions: (
+                // we've added some custom button actions
+                <div className="actions-right">
+                  <Button
+                    onClick={() => {
+                      setExcluding(client.id);
+                      setModalMini(!modalMini);
+                    }}
+                    color="danger"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>{" "}
+                </div>
+              )
             };
           })
       );
@@ -146,7 +169,23 @@ export default function CampanhaClienteTable() {
               TipoComiss: client.TipoComisse.desc,
               EmpresaId: client.EmpresaId,
               prospect: checkProsp(client.prospect),
-              implantacao: client.createdAt
+              implantacao: client.createdAt,
+              actions: (
+                // we've added some custom button actions
+                <div className="actions-right">
+                  <Button
+                    onClick={() => {
+                      setExcluding(client.id);
+                      setModalMini(!modalMini);
+                    }}
+                    color="danger"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>{" "}
+                </div>
+              )
             }
           };
         })
@@ -164,7 +203,7 @@ export default function CampanhaClienteTable() {
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };
-  console.log(values.ClienteIds.array);
+  console.log(data);
 
   return (
     <>
@@ -206,47 +245,18 @@ export default function CampanhaClienteTable() {
                     })
                     .then(res => {
                       toast.success(res.data.message);
-                      setData(
-                        ...data,
-                        data2
-                          .filter(arr =>
-                            values.ClienteIds.array.includes(arr.id)
-                          )
-                          .map((client, index) => {
-                            return {
-                              idd: index,
-                              id: client.id,
-                              CNPJ: normalizeCnpj(client.CNPJ),
-                              nomeAbv: client.nomeAbv,
-                              RepresentanteId: client.RepresentanteId,
-                              Representante: client.Representante.nome,
-                              rzSoc: client.rzSoc,
-                              TipoComisseId: client.TipoComisseId,
-                              EmpresaId: client.EmpresaId,
-                              prospect: checkProsp(client.prospect),
-                              implantacao: client.createdAt,
-                              actions: (
-                                // we've added some custom button actions
-                                <div className="actions-right">
-                                  <Button
-                                    onClick={() => {
-                                      setExcluding(client.id);
-                                      setModalMini(!modalMini);
-                                    }}
-                                    color="danger"
-                                    size="sm"
-                                    className={classNames(
-                                      "btn-icon btn-link like"
-                                    )}
-                                  >
-                                    <i className="tim-icons icon-simple-remove" />
-                                  </Button>{" "}
-                                </div>
-                              )
-                            };
-                          })
+                      console.log(
+                        data2.filter(arr =>
+                          values.ClienteIds.array.includes(arr.id)
+                        )
                       );
-                      // history.go(0);
+                      setData(prevState => [
+                        ...prevState,
+                        data2.filter(arr =>
+                          values.ClienteIds.array.includes(arr.id)
+                        )[0]
+                      ]);
+                      history.go(0);
                     });
                 }}
                 className={classNames("btn-icon btn-link like")}
@@ -459,6 +469,18 @@ export default function CampanhaClienteTable() {
                     <AddIcon fontSize="large" />
                   </Button>
                 </Tooltip>
+                <Link to={`/update/cliente/campanha/${id}`}>
+                  <Tooltip title="Voltar">
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <ArrowBackIos />
+                    </Button>
+                  </Tooltip>
+                </Link>
               </CardTitle>
             </CardHeader>
             <CardBody>

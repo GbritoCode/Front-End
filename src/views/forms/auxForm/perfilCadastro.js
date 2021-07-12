@@ -78,7 +78,6 @@ export default function PerfilCadastro() {
     }
     loadData();
   }, []);
-  console.log(radioValue);
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault();
     switch (tabState) {

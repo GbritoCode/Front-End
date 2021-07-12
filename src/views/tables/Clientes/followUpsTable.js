@@ -23,7 +23,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  CardTitle,
   Col,
   Button,
   Modal,
@@ -58,20 +57,35 @@ class followUpTable extends Component {
     this.loadData();
   };
 
+  checkAcao = value => {
+    switch (value) {
+      case 1:
+        return "Retornar Contato";
+      case 2:
+        return "Agendar Reunião";
+      case 3:
+        return "Solicitar Orçamento";
+      case 10:
+        return "Finalizar";
+      default:
+    }
+  };
+
   loadData = async () => {
     const { cliId, campId } = this.props.match.params;
     const response = await api.get(
       `/followUp/${cliId}/false/?ClienteId=${cliId}&CampanhaId=${campId}`
     );
-
+    const response1 = await api.get(`/cliente/${cliId}`);
     this.setState({
+      cli: response1.data,
       data: response.data.map((followUp, key) => {
         return {
           idd: key,
           id: followUp.id,
           EmpresaId: followUp.EmpresaId,
           Colab: followUp.Colab,
-          Cliente: followUp.Cliente.nomeAbv,
+          acao: this.checkAcao(followUp.proxPasso),
           CliContNome: followUp.CliCont.nome,
           dataContato: followUp.dataContato,
           dataProxContato: followUp.dataProxContato,
@@ -172,45 +186,46 @@ class followUpTable extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">
-                  Acompanhamento
-                  <Link to={`/cadastro/cliente/followUps/${cliId}/${campId}`}>
-                    <Tooltip title="Novo" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <AddIcon fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
-                    <Tooltip title="TimeLine" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <Timeline fontSize="large" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                </CardTitle>
+                <Link to={`/cadastro/cliente/followUps/${cliId}/${campId}`}>
+                  <Tooltip title="Novo" placement="top" interactive>
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <AddIcon fontSize="large" />
+                    </Button>
+                  </Tooltip>
+                </Link>
+                <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
+                  <Tooltip title="TimeLine" placement="top" interactive>
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <Timeline fontSize="large" />
+                    </Button>
+                  </Tooltip>
+                </Link>
+                <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
+                  <Tooltip title="Voltar">
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <ArrowBackIos />
+                    </Button>
+                  </Tooltip>
+                </Link>
+                <h3 style={{ marginBottom: 0 }}>Prospecção</h3>
+                <p style={{ fontSize: 14 }}>
+                  {this.state.cli === undefined ? "" : this.state.cli.nomeAbv}
+                </p>
               </CardHeader>
               <CardBody>
                 <ReactTable
@@ -234,16 +249,20 @@ class followUpTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "Cliente",
-                      accessor: "Cliente"
-                    },
-                    {
                       Header: "Nome Contato",
                       accessor: "CliContNome"
                     },
                     {
                       Header: "Data Contato",
                       accessor: "dataContato"
+                    },
+                    {
+                      Header: "Reação",
+                      accessor: "reacao"
+                    },
+                    {
+                      Header: "Ação",
+                      accessor: "acao"
                     },
                     {
                       Header: "Data Próximo Contato",
