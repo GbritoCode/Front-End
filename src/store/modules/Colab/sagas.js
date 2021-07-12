@@ -67,20 +67,21 @@ export function* colabCadastro({ payload }) {
         UserId: id
       });
 
-      sessionStorage.removeItem("persist:gobarber");
+      sessionStorage.clear();
       const user = yield call(api.get, `users/${id}`);
-      sessionStorage.removeItem("persist:gobarber");
+      sessionStorage.clear();
 
       yield put(firstColabSuccess(user.data));
     }
 
     if (first === true) {
-      sessionStorage.removeItem("persist:gobarber");
+      sessionStorage.clear();
       history.push("/login");
       return;
     }
     history.push("/tabelas/colab");
   } catch (err) {
+    console.log(err);
     yield call(api.delete, `users/${result.data.id}`);
     toast.error(err.response.data.error);
   }

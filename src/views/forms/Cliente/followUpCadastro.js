@@ -975,7 +975,11 @@ export default function CadastroFollowUps() {
                                 onChange={event =>
                                   handleChange(event, "reuniao", "text")
                                 }
-                                placeholder="Agende a Reunião"
+                                placeholder={
+                                  meetingValues.date.value === ""
+                                    ? "Agendar Reunião"
+                                    : `${meetingValues.date.value} | ${meetingValues.startTime.value} |${meetingValues.endTime.value}`
+                                }
                               />
                               <InputGroupAddon
                                 className="appendCustom"

@@ -222,7 +222,7 @@ class followUpTable extends Component {
                     </Button>
                   </Tooltip>
                 </Link>
-                <h3 style={{ marginBottom: 0 }}>Prospecção</h3>
+                <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                 <p style={{ fontSize: 14 }}>
                   {this.state.cli === undefined ? "" : this.state.cli.nomeAbv}
                 </p>
