@@ -408,6 +408,9 @@ export function* followUpsCadastro({ payload }) {
       proxPasso,
       prefContato
     });
+    if (proxPasso === "10") {
+      history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
+    }
     history.push(`/tabelas/cliente/followUps/${ClienteId}/${CampanhaId}`);
   } catch (err) {
     toast.error(err.response.data.error);
