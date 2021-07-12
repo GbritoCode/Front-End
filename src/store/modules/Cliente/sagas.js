@@ -409,7 +409,9 @@ export function* followUpsCadastro({ payload }) {
       prefContato
     });
     if (proxPasso === "10") {
+      console.log(typeof proxPasso);
       history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
+      return;
     }
     history.push(`/tabelas/cliente/followUps/${ClienteId}/${CampanhaId}`);
   } catch (err) {
