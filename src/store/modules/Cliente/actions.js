@@ -12,7 +12,8 @@ export function ClienteRequest(
   RepresentanteId,
   TipoComisseId,
   EmpresaId,
-  prospect
+  prospect,
+  CampanhaIds
 ) {
   return {
     type: "@cadastro/CADASTRO_REQUEST",
@@ -24,7 +25,8 @@ export function ClienteRequest(
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
-      prospect
+      prospect,
+      CampanhaIds
     }
   };
 }
@@ -67,7 +69,8 @@ export function CliContRequest(
   email,
   aniver,
   tipoConta,
-  prospect
+  prospect,
+  linkedin
 ) {
   return {
     type: "@cadastro/CADASTRO_CONT_REQUEST",
@@ -80,7 +83,8 @@ export function CliContRequest(
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     }
   };
 }
@@ -95,7 +99,8 @@ export function CliContUpdate(
   email,
   aniver,
   tipoConta,
-  prospect
+  prospect,
+  linkedin
 ) {
   return {
     type: "@update/CONT_REQUEST",
@@ -109,7 +114,8 @@ export function CliContUpdate(
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     }
   };
 }
@@ -210,6 +216,145 @@ export function cliRecDespUpdate(
       valorRec,
       dataInic,
       dataFim
+    }
+  };
+}
+
+//--------------------------------------------------------
+//--------------------------------------------------------
+
+export function campanhaCadastro(
+  EmpresaId,
+  cod,
+  desc,
+  ClienteIds,
+  dataInic,
+  dataFim,
+  ColabId,
+  objetivo
+) {
+  return {
+    type: "@cadastro/CAMPANHA_REQUEST",
+    payload: {
+      EmpresaId,
+      cod,
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId,
+      objetivo
+    }
+  };
+}
+
+export function campanhaUpdate(
+  id,
+  cod,
+  desc,
+  ClienteIds,
+  dataInic,
+  dataFim,
+  ColabId
+) {
+  return {
+    type: "@update/CAMPANHA_REQUEST",
+    payload: {
+      id,
+      cod,
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
+    }
+  };
+}
+
+//--------------------------------------
+//--------------------------------------
+
+export function camposDinamicosCadastro(EmpresaId, nome, valor) {
+  return {
+    type: "@cadastro/CAMPOS_DINAMICOS_REQUEST",
+    payload: {
+      EmpresaId,
+      nome,
+      valor
+    }
+  };
+}
+
+export function camposDinamicosUpdate(id, nome, valor) {
+  return {
+    type: "@update/CAMPOS_DINAMICOS_REQUEST",
+    payload: {
+      id,
+      nome,
+      valor
+    }
+  };
+}
+
+//-----------------------------------
+//-----------------------------------
+
+export function followUpCadastro(
+  EmpresaId,
+  ColabId,
+  ClienteId,
+  CliContId,
+  dataContato,
+  dataProxContato,
+  detalhes,
+  reacao,
+  CampanhaId,
+  proxPasso,
+  prefContato
+) {
+  return {
+    type: "@cadastro/FOLLOW_UP_REQUEST",
+    payload: {
+      EmpresaId,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao,
+      CampanhaId,
+      proxPasso,
+      prefContato
+    }
+  };
+}
+
+export function followUpUpdate(
+  id,
+  ColabId,
+  ClienteId,
+  CliContId,
+  dataContato,
+  dataProxContato,
+  detalhes,
+  reacao,
+  proxPasso,
+  prefContato
+) {
+  return {
+    type: "@update/FOLLOW_UP_REQUEST",
+    payload: {
+      id,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao,
+      proxPasso,
+      prefContato
     }
   };
 }

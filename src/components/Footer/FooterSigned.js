@@ -24,7 +24,7 @@ import api from "~/services/api";
 import { normalizeCnpj } from "~/normalize";
 
 const FooterSigned = (props) => {
-  const [data, setData] = useState({})
+  const [data, setData] = useState({nome: '', idFederal: ''})
   useEffect(()=>{
       const { empresa } = store.getState().auth;
     async function loadData(){
@@ -36,9 +36,9 @@ const FooterSigned = (props) => {
   return (
     <footer className={"footer" + (props.default ? " footer-default" : "")}>
       <Container fluid={props.fluid ? true : false}>
-        <div className="copyright">
+         { data ===null? '': <div className="copyright">
            {data.nome} | {normalizeCnpj(data.idFederal)}
-        </div>
+        </div>}
       </Container>
     </footer>
   );

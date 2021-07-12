@@ -190,14 +190,14 @@
 
   .custom-control-input:checked ~ .custom-control-label {
     &::after {
-      background-color: $custom-control-indicator-bg;
       transform: translateX($custom-switch-width - $custom-control-indicator-size);
     }
   }
 
-  .custom-control-input:disabled {
+  .custom-control-input {
     &:checked ~ .custom-control-label::before {
-      background-color: $custom-control-indicator-checked-disabled-bg;
+      background-color: #2675f6;
+      border-color: #2675f6;
     }
   }
 }

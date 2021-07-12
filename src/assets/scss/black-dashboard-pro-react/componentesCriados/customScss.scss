@@ -11,6 +11,23 @@
 //-------------------------------------------
 
 //-------------------------------------------
+// <Perfl page >
+//-------------------------------------------
+
+.perfilPage.nav-link {
+  width: 140px;
+}
+
+label#switchChildren{
+  margin-left: 30px;
+}
+
+//-------------------------------------------
+// </Perfl page >
+//-------------------------------------------
+
+
+//-------------------------------------------
 // <download icon on preview >
 //-------------------------------------------
 
@@ -25,3 +42,153 @@
 // </download icon on preview >
 //-------------------------------------------
 
+.nav-tabs {
+
+  .nav-item {
+    margin-bottom: -1px
+  }
+
+  .nav-link {
+    border: 1px solid transparent;
+    // @include border-top-radius($nav-tabs-border-radius);
+
+
+    &.disabled {
+      color: gray;
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  .nav-link.active,
+  .nav-item.show .nav-link {
+    color: #237ef7;
+    background-color: gray;
+    border-color: purple;
+  }
+
+  .dropdown-menu {
+    // Make dropdown border overlap tab border
+    // margin-top: -$nav-tabs-border-width;
+    // Remove the top rounded corners here since there is a hard edge above the menu
+    // @include border-top-radius(0);
+  }
+}
+
+.nav-tabs {
+    width: 100%;
+    text-align: center;
+
+    .nav-item > .nav-link {
+        margin-bottom: 5px;
+    }
+  }
+
+  .nav-tabs {
+        border-bottom: solid 1px #8e929d;
+        // padding: $padding-base-vertical $padding-base-horizontal;
+
+        > .nav-item{
+            > .nav-link{
+                // color: $white;
+                margin: 0;
+                margin-right: 5px;
+                background-color: transparent;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                // border-radius: 30px;
+                // padding: $padding-btn-vertical $padding-round-horizontal;
+                // line-height: $line-height-sm;
+
+                // &:hover {
+                //     background-color: transparent;
+                //     border: 1px solid darken(black,5%);
+                //     border-bottom: 1px solid white;
+                //     // color: rgba($white, 0.8);
+                // }
+
+                &.active{
+                    border: 1px solid #8e929d;
+                    border-bottom: 1px solid white;
+                    background-color: transparent;
+                }
+
+                i.tim-icons{
+                    font-size: 14px;
+                    position: relative;
+                    top: 1px;
+                    margin-right: 3px;
+                }
+            }
+
+            &.disabled > .nav-link,
+            &.disabled > .nav-link:hover {
+                color: rgba(255,255,255,0.5);
+            }
+        }
+
+        &.nav-tabs-neutral{
+            > .nav-item{
+                > .nav-link{
+                    // color: $black;
+
+                    &.active{
+                        // border-color: $opacity-5;
+                        // color: $black;
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+    // Textual addons
+//
+// Serves as a catch-all element for any text or radio/checkbox input you wish
+// to prepend or append to an input.
+
+// .input-group-text {
+//   display: flex;
+//   align-items: center;
+//   padding: $input-padding-y $input-padding-x;
+//   margin-bottom: 0; // Allow use of <label> elements by overriding our default margin-bottom
+//   @include font-size($input-font-size); // Match inputs
+//   font-weight: $font-weight-normal;
+//   line-height: $input-line-height;
+//   color: $input-group-addon-color;
+//   text-align: center;
+//   white-space: nowrap;
+//   background-color: $input-group-addon-bg;
+//   border: $input-border-width solid $input-group-addon-border-color;
+//   @include border-radius($input-border-radius);
+
+//   // Nuke default margins from checkboxes and radios to vertically center within.
+//   input[type="radio"],
+//   input[type="checkbox"] {
+//     margin-top: 0;
+//   }
+// }
+
+.appendCustom.input-group-append
+{
+    background-color: transparent;
+    border: 1px solid lighten(#8e929d,5%);
+    border-radius: 5px;
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    color: grey;
+    margin: 0;
+}
+button.btn-icon.btn-link.like.btn.btn-secondary.addon
+{
+    padding-bottom: 20%;
+    padding-top: 45%;
+    height: 16px;
+}
+button i.tim-icons.icon-zoom-split.addon
+{
+    color: blue;
+}

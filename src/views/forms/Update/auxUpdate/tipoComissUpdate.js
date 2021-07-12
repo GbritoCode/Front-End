@@ -38,7 +38,7 @@ import { store } from "~/store";
 import { normalizeCurrency } from "~/normalize";
 import api from "~/services/api";
 
-function AreaUpdatee() {
+function TipoComissUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
@@ -304,4 +304,4 @@ function AreaUpdatee() {
     </>
   );
 }
-export default AreaUpdatee;
+export default TipoComissUpdate;

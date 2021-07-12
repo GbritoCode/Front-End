@@ -47,7 +47,7 @@ export default function WizardCadastro() {
   const stateSchema = {
     cnpj: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
-    license: { value: "", error: "", message: "" },
+    license: { value: "0000", error: "", message: "" },
     userId: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
@@ -349,24 +349,6 @@ export default function WizardCadastro() {
                   </Col>
                 </Row>
                 <Row>
-                  <Col md="6">
-                    <Label>License</Label>
-                    <FormGroup className={`has-label ${values.license.error}`}>
-                      <Input
-                        name="license"
-                        type="text"
-                        onChange={event =>
-                          handleChange(event, "license", "text")
-                        }
-                        value={values.license.value}
-                      />
-                      {values.license.error === "has-danger" ? (
-                        <Label className="error">
-                          {values.license.message}
-                        </Label>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
                   <Col md="6">
                     <Label>Usuário</Label>
                     <FormGroup className={`has-label ${values.userId.error}`}>

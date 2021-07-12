@@ -16,7 +16,8 @@ export function* clienteCadastro({ payload }) {
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
-      prospect
+      prospect,
+      CampanhaIds
     } = payload;
     yield call(api.post, "cliente", {
       CNPJ,
@@ -26,7 +27,8 @@ export function* clienteCadastro({ payload }) {
       RepresentanteId,
       TipoComisseId,
       EmpresaId,
-      prospect
+      prospect,
+      CampanhaIds
     });
     if (prospect === "true") {
       history.push("/tabelas/cliente/prospect");
@@ -34,7 +36,7 @@ export function* clienteCadastro({ payload }) {
     }
     history.push("/tabelas/cliente/cliente");
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -87,7 +89,8 @@ export function* cliContCadastro({ payload }) {
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     } = payload;
     yield call(api.post, "cliente/cont", {
       ClienteId,
@@ -97,7 +100,8 @@ export function* cliContCadastro({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta
+      tipoConta,
+      linkedin
     });
     history.push(`/tabelas/cliente/cont/${ClienteId}/?prospect=${prospect}`);
   } catch (err) {
@@ -118,7 +122,8 @@ export function* updateCliCont({ payload }) {
       email,
       aniver,
       tipoConta,
-      prospect
+      prospect,
+      linkedin
     } = payload;
 
     const Cliente = {
@@ -129,7 +134,8 @@ export function* updateCliCont({ payload }) {
       skype,
       email,
       aniver,
-      tipoConta
+      tipoConta,
+      linkedin
     };
 
     const response = yield call(api.put, `cliente/cont/${id}`, Cliente);
@@ -277,13 +283,189 @@ export function* updateCliRecDesp({ payload }) {
   }
 }
 
+//---------------------------------------------
+//---------------------------------------------
+
+export function* campanhaCadastro({ payload }) {
+  try {
+    const {
+      EmpresaId,
+      cod,
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId,
+      objetivo
+    } = payload;
+    yield call(api.post, "campanha", {
+      EmpresaId,
+      cod,
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId,
+      objetivo
+    });
+    history.push(`/tabelas/cliente/campanha`);
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+export function* updateCampanha({ payload }) {
+  try {
+    const { id, cod, desc, ClienteIds, dataInic, dataFim, ColabId } = payload;
+
+    const Cliente = {
+      cod,
+      desc,
+      ClienteIds,
+      dataInic,
+      dataFim,
+      ColabId
+    };
+
+    const response = yield call(api.put, `campanha/${id}`, Cliente);
+
+    history.push(`/tabelas/cliente/campanha`);
+    toast.success("Campanha Atualizada");
+    yield put(ClienteUpdateSuccess(response.data));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+//---------------------------------------------
+//---------------------------------------------
+
+export function* camposDinamicosCadastro({ payload }) {
+  try {
+    const { EmpresaId, nome, valor } = payload;
+    yield call(api.post, "camposDinamicos", {
+      EmpresaId,
+      nome,
+      valor
+    });
+    history.push(`/tabelas/cliente/camposDinamicos/`);
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+export function* updateCamposDinamicos({ payload }) {
+  try {
+    const { id, nome, valor } = payload;
+
+    const Cliente = {
+      nome,
+      valor
+    };
+
+    const response = yield call(api.put, `camposDinamicos/${id}`, Cliente);
+
+    history.push(`/tabelas/cliente/camposDinamicos`);
+    toast.success("Campo Dinâmico Atualizado");
+    yield put(ClienteUpdateSuccess(response.data));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+//---------------------------------------------
+//---------------------------------------------
+
+export function* followUpsCadastro({ payload }) {
+  try {
+    const {
+      EmpresaId,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao,
+      CampanhaId,
+      proxPasso,
+      prefContato
+    } = payload;
+    yield call(api.post, "followUp", {
+      EmpresaId,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao,
+      CampanhaId,
+      proxPasso,
+      prefContato
+    });
+    history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+export function* updateFollowUps({ payload }) {
+  try {
+    const {
+      id,
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao,
+      proxPasso,
+      prefContato
+    } = payload;
+
+    const Cliente = {
+      ColabId,
+      ClienteId,
+      CliContId,
+      dataContato,
+      dataProxContato,
+      detalhes,
+      reacao,
+      proxPasso,
+      prefContato
+    };
+
+    const response = yield call(api.put, `followUp/${id}`, Cliente);
+
+    history.goBack();
+    toast.success("Follow Up Atualizado");
+    yield put(ClienteUpdateSuccess(response.data));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
 export default all([
   takeLatest("@cadastro/CADASTRO_REQUEST", clienteCadastro),
   takeLatest("@cadastro/CADASTRO_CONT_REQUEST", cliContCadastro),
   takeLatest("@cadastro/CADASTRO_COMP_REQUEST", cliCompCadastro),
   takeLatest("@cadastro/CADASTRO_REC_DESP_REQUEST", cliRecDespCadastro),
+  takeLatest("@cadastro/CAMPANHA_REQUEST", campanhaCadastro),
+  takeLatest("@cadastro/CAMPOS_DINAMICOS_REQUEST", camposDinamicosCadastro),
+  takeLatest("@cadastro/FOLLOW_UP_REQUEST", followUpsCadastro),
   takeLatest("@update/CLIENTE_REQUEST", updateCliente),
   takeLatest("@update/CONT_REQUEST", updateCliCont),
   takeLatest("@update/COMP_REQUEST", updateCliComp),
-  takeLatest("@update/CLI_REC_DESP_REQUEST", updateCliRecDesp)
+  takeLatest("@update/CLI_REC_DESP_REQUEST", updateCliRecDesp),
+  takeLatest("@update/CAMPANHA_REQUEST", updateCampanha),
+  takeLatest("@update/CAMPOS_DINAMICOS_REQUEST", updateCamposDinamicos),
+  takeLatest("@update/FOLLOW_UP_REQUEST", updateFollowUps)
 ]);

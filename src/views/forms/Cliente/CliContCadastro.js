@@ -51,7 +51,8 @@ export default function CliContCadastro() {
     fone: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" }
+    tipoConta: { value: "", error: "", message: "" },
+    linkedin: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     aniver: { value: null, error: "", message: "" }
@@ -235,7 +236,8 @@ export default function CliContCadastro() {
           values.email.value,
           optional.aniver.value,
           values.tipoConta.value,
-          prospect
+          prospect,
+          values.linkedin.value
         )
       );
     } else {
@@ -256,7 +258,9 @@ export default function CliContCadastro() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">
@@ -442,6 +446,26 @@ export default function CliContCadastro() {
                             {values.email.error === "has-danger" ? (
                               <Label className="error">
                                 {values.email.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Linkedin</Label>
+                          <FormGroup
+                            className={`has-label ${values.linkedin.error}`}
+                          >
+                            <Input
+                              name="linkedin"
+                              type="linkedin"
+                              onChange={event =>
+                                handleChange(event, "linkedin", "text")
+                              }
+                              value={values.linkedin.value}
+                            />
+                            {values.linkedin.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.linkedin.message}
                               </Label>
                             ) : null}
                           </FormGroup>

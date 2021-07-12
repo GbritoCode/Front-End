@@ -1,6 +1,5 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { toast } from "react-toastify";
-
 import history from "~/services/history";
 import api from "~/services/api";
 
@@ -11,13 +10,21 @@ export function* signIn({ payload }) {
     const { email, senha } = payload;
 
     const response = yield call(api.post, "sessions", { email, senha });
-    const { token, user } = response.data;
-
-    yield put(signInSuccess(token, user));
+    const { token, user, acessible } = response.data;
+    console.log(response.data);
+    yield put(
+      signInSuccess(
+        token,
+        user,
+        acessible,
+        user.empresa === undefined ? "" : user.empresa.idFederal
+      )
+    );
 
     history.push(0);
   } catch (err) {
-    toast.error("Falha na autenticação, verifique seus dados");
+    console.log(err);
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }

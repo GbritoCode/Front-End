@@ -28,16 +28,24 @@ import {
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  InputGroupAddon,
+  InputGroup
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import classNames from "classnames";
+import ReactTable from "react-table-v6";
+import { Tooltip } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
+import Modal from "~/components/Modal/modalLarge";
+import { Header, Footer } from "~/components/Modal/modalStyles";
 
 /* eslint-disable eqeqeq */
 export default function CadastroCliente() {
@@ -46,15 +54,24 @@ export default function CadastroCliente() {
   const jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
+  const [isOpenCamp, setIsOpenCamp] = useState(false);
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
     rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
-    tipoComiss: { value: "", error: "", message: "" }
+    tipoComiss: { value: "", error: "", message: "" },
+    CampanhaIds: {
+      value: "",
+      error: "",
+      message: "",
+      array: [],
+      optional: true
+    }
   };
   const optionalSchema = {
     fantasia: { value: "", error: "", message: "" }
@@ -68,8 +85,10 @@ export default function CadastroCliente() {
       const response = await api.get(`empresa/${empresa}`);
       const response1 = await api.get(`tipoComiss/`);
       const response2 = await api.get(`representante/`);
+      const response3 = await api.get(`campanha/`);
       setData1(response1.data);
       setData2(response2.data);
+      setData3(response3.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -134,11 +153,8 @@ export default function CadastroCliente() {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response = await axios({
-      url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-      adapter: jsonpAdapter
-    });
-    if (response.data.status === "ERROR") {
+    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+    if (response1.data) {
       setValues(prevState => ({
         ...prevState,
         cnpj: {
@@ -150,7 +166,7 @@ export default function CadastroCliente() {
         place: "tr",
         message: (
           <div>
-            <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+            <div>O CNPJ já existe</div>
           </div>
         ),
         type: "danger",
@@ -159,14 +175,40 @@ export default function CadastroCliente() {
       };
       notify();
     } else {
-      setValues(prevState => ({
-        ...prevState,
-        rzSoc: { value: response.data.nome }
-      }));
-      setOptional(prevState => ({
-        ...prevState,
-        fantasia: { value: response.data.fantasia }
-      }));
+      const response = await axios({
+        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+        adapter: jsonpAdapter
+      });
+      if (response.data.status === "ERROR") {
+        setValues(prevState => ({
+          ...prevState,
+          cnpj: {
+            error: "has-danger",
+            message: "Insira um CNPJ válido"
+          }
+        }));
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      } else {
+        setValues(prevState => ({
+          ...prevState,
+          rzSoc: { value: response.data.nome }
+        }));
+        setOptional(prevState => ({
+          ...prevState,
+          fantasia: { value: response.data.fantasia }
+        }));
+      }
     }
   }
 
@@ -340,15 +382,17 @@ export default function CadastroCliente() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -387,6 +431,101 @@ export default function CadastroCliente() {
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
+        <Modal
+          onClose={() => {
+            setIsOpenCamp(!isOpenCamp);
+          }}
+          open={isOpenCamp}
+        >
+          <Header>
+            {" "}
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => {
+                  setIsOpenCamp(false);
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Close fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <h4 className="modalHeader">Campanha</h4>
+          </Header>
+
+          <ReactTable
+            data={data3.map((camp, index) => {
+              return {
+                idd: index,
+                id: camp.id,
+                cod: camp.cod,
+                desc: camp.desc
+              };
+            })}
+            getTdProps={(state, rowInfo) => {
+              return {
+                onClick: () => {
+                  setValues(prevState => ({
+                    ...prevState,
+                    CampanhaIds: {
+                      value: "filled",
+                      array: [
+                        ...prevState.CampanhaIds.array,
+                        rowInfo.original.id
+                      ]
+                    }
+                  }));
+                  document.getElementsByName(
+                    "CampanhaIds"
+                  )[0].value = `${rowInfo.original.cod} - ${rowInfo.original.desc}`;
+                  setIsOpenCamp(!isOpenCamp);
+                }
+              };
+            }}
+            filterable
+            defaultFilterMethod={(filter, row) => {
+              const id = filter.pivotId || filter.id;
+              return row[id] !== undefined
+                ? String(row[id])
+                    .toLowerCase()
+                    .includes(filter.value.toLowerCase())
+                : true;
+            }}
+            previousText="Anterior"
+            nextText="Próximo"
+            loadingText="Carregando"
+            noDataText="Dados não encontrados"
+            pageText="Página"
+            ofText="de"
+            rowsText="Linhas"
+            columns={[
+              {
+                Header: "Código",
+                accessor: "cod"
+              },
+              {
+                Header: "Descrição",
+                accessor: "desc"
+              }
+            ]}
+            defaultPageSize={5}
+            className="-striped -highlight"
+          />
+
+          <Footer>
+            <Button
+              className="btn-neutral"
+              onClick={() => {
+                setIsOpenCamp(false);
+              }}
+            >
+              Close
+            </Button>
+          </Footer>
+        </Modal>
+
         <Row>
           <Col md="12">
             <Card>
@@ -543,6 +682,47 @@ export default function CadastroCliente() {
                         {values.tipoComiss.error === "has-danger" ? (
                           <Label className="error">
                             {values.tipoComiss.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                      <Label>Campanhas</Label>
+                      <FormGroup
+                        className={`has-label ${values.CampanhaIds.error}`}
+                      >
+                        <InputGroup>
+                          <Input
+                            disabled
+                            name="CampanhaIds"
+                            type="text"
+                            onChange={event =>
+                              handleChange(event, "CampanhaIds", "text")
+                            }
+                            placeholder="Selecione as Campanhas"
+                          />
+                          <InputGroupAddon
+                            className="appendCustom"
+                            addonType="append"
+                          >
+                            <Button
+                              className={classNames(
+                                "btn-icon btn-link like addon"
+                              )}
+                              onClick={() => {
+                                setIsOpenCamp(true);
+                              }}
+                            >
+                              <i className="tim-icons icon-zoom-split addon" />
+                            </Button>
+                          </InputGroupAddon>
+                        </InputGroup>
+
+                        {values.CampanhaIds.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.CampanhaIds.message}
                           </Label>
                         ) : null}
                       </FormGroup>

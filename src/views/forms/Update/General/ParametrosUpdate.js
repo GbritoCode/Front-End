@@ -214,7 +214,7 @@ function ParametrosUpdatee() {
 
       dispatch(
         ParametrosUpdate(
-          id,
+          1,
           values.empresaId.value,
           IRPJdb,
           CSLLdb,

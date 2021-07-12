@@ -432,10 +432,12 @@ export function* updateTipoComiss({ payload }) {
 
 export function* perfilCadastro({ payload }) {
   try {
-    const { EmpresaId, desc, first } = payload;
+    const { EmpresaId, desc, cod, string: permittedPages, first } = payload;
     yield call(api.post, "perfil", {
       EmpresaId,
-      desc
+      desc,
+      cod,
+      permittedPages
     });
     if (first === false) {
       history.push("/tabelas/aux/perfil");
@@ -447,12 +449,13 @@ export function* perfilCadastro({ payload }) {
 }
 export function* updatePerfil({ payload }) {
   try {
-    const { id, EmpresaId, desc } = payload;
+    const { id, EmpresaId, desc, cod, string: permittedPages } = payload;
 
     const Colab = {
       EmpresaId,
-
-      desc
+      desc,
+      cod,
+      permittedPages
     };
 
     const response = yield call(api.put, `perfil/${id}`, Colab);
@@ -470,12 +473,13 @@ export function* updatePerfil({ payload }) {
 
 export function* representanteCadastro({ payload }) {
   try {
-    const { EmpresaId, nome, TipoComisseId, vlrFixMens } = payload;
+    const { EmpresaId, nome, TipoComisseId, vlrFixMens, ColabId } = payload;
     yield call(api.post, "representante", {
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens
+      vlrFixMens,
+      ColabId
     });
     history.push("/tabelas/general/representante");
   } catch (err) {
@@ -640,9 +644,11 @@ export function* updateEmailParams({ payload }) {
       bccEmailOrc,
       bccEmailRev,
       bccEmailFat,
+      bccEmailCRM,
       fromEmailOrc,
       fromEmailRev,
-      fromEmailFat
+      fromEmailFat,
+      fromEmailCRM
     } = payload;
 
     const Colab = {
@@ -650,9 +656,11 @@ export function* updateEmailParams({ payload }) {
       bccEmailOrc,
       bccEmailRev,
       bccEmailFat,
+      bccEmailCRM,
       fromEmailOrc,
       fromEmailRev,
-      fromEmailFat
+      fromEmailFat,
+      fromEmailCRM
     };
 
     const response = yield call(api.put, `emailParams/${id}`, Colab);

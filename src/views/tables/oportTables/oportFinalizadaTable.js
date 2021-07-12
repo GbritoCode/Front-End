@@ -60,9 +60,9 @@ function OportFinTable() {
       case 4:
         return "Aprovada";
       case 5:
-        return "Finalizada";
-      case 6:
         return "Reprovada";
+      case 6:
+        return "Finalizada";
       default:
     }
   };
@@ -259,7 +259,7 @@ function OportFinTable() {
                   {
                     Header: "descrição",
                     accessor: "desc",
-                    width: 301,
+                    minWidth: 350,
                     filterMethod: (filter, row) => {
                       const id = filter.pivotId || filter.id;
                       return row[id] !== undefined
@@ -275,7 +275,8 @@ function OportFinTable() {
                   },
                   {
                     Header: "Cliente",
-                    accessor: "Cliente"
+                    accessor: "Cliente",
+                    minWidth: 140
                   },
                   {
                     Header: "data",
@@ -286,7 +287,7 @@ function OportFinTable() {
                     accessor: "actions",
                     sortable: false,
                     filterable: false,
-                    minWidth: 212
+                    minWidth: 161
                   }
                 ]}
                 defaultPageSize={10}

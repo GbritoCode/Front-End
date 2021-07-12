@@ -33,7 +33,6 @@ import {
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
-import { Link } from "react-router-dom";
 import { normalizeCnpj, normalizeFone, validarCNPJ } from "~/normalize";
 import { store } from "~/store";
 import { fornecRequest } from "~/store/modules/general/actions";
@@ -147,12 +146,12 @@ export default function FornecCadastro() {
       }));
     }
     async function Aux() {
-      await api.get("/empresa").then(async result => {
+      await api.get(`/empresa/${empresa}`).then(async result => {
         setValues(prevState => ({
           ...prevState,
-          cnpj: { value: normalizeCnpj(result.data[0].idFederal) }
+          cnpj: { value: normalizeCnpj(result.data.idFederal) }
         }));
-        cnpjRequest(result.data[0].idFederal);
+        cnpjRequest(result.data.idFederal);
       });
       loadData();
     }
@@ -669,27 +668,6 @@ export default function FornecCadastro() {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Link to="/tabelas/general/fornec">
-                  <Button
-                    style={{
-                      paddingLeft: 32,
-                      paddingRight: 33
-                    }}
-                    color="secundary"
-                    size="small"
-                    className="form"
-                  >
-                    <i
-                      className="tim-icons icon-double-left"
-                      style={{
-                        paddingBottom: 4,
-                        paddingRight: 1
-                      }}
-                      size="large"
-                    />{" "}
-                    Voltar
-                  </Button>
-                </Link>
                 <Button
                   style={{
                     paddingLeft: 29,

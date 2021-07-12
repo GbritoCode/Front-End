@@ -11,6 +11,7 @@ import {
 } from "./actions";
 import { store } from "~/store";
 
+let result;
 export function* colabCadastro({ payload }) {
   try {
     const {
@@ -29,7 +30,7 @@ export function* colabCadastro({ payload }) {
     } = payload;
 
     if (!first) {
-      const result = yield call(api.post, "users", {
+      result = yield call(api.post, "users", {
         nome,
         email,
         senha: "Aidera2020",
@@ -65,16 +66,23 @@ export function* colabCadastro({ payload }) {
         espec,
         UserId: id
       });
+
+      sessionStorage.clear();
       const user = yield call(api.get, `users/${id}`);
+      sessionStorage.clear();
+
       yield put(firstColabSuccess(user.data));
     }
 
     if (first === true) {
-      history.push("/dashboard");
+      sessionStorage.clear();
+      history.push("/login");
       return;
     }
     history.push("/tabelas/colab");
   } catch (err) {
+    console.log(err);
+    yield call(api.delete, `users/${result.data.id}`);
     toast.error(err.response.data.error);
   }
 }
@@ -112,7 +120,7 @@ export function* updateColab({ payload }) {
       nome,
       email,
       CPF,
-      colabId: id
+      ColabId: id
     });
 
     const response = yield call(api.put, `colab/${id}`, Colab);

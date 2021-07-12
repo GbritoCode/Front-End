@@ -2,6 +2,7 @@ import produce from "immer";
 
 const INITIAL_STATE = {
   token: null,
+  acessible: null,
   signed: false,
   loading: false,
   empresa: null,
@@ -19,13 +20,14 @@ export default function auth(state = INITIAL_STATE, action) {
       case "@auth/SIGN_IN_SUCCESS": {
         draft.token = action.payload.token;
         draft.user = action.payload.user;
+        draft.acessible = action.payload.acessible;
         draft.signed = true;
         draft.loading = false;
-        draft.empresa = 1;
+        draft.empresa = action.payload.empresa;
         break;
       }
-      case "@colab/FIRST_COLAB_SUCCESS": {
-        draft.user = action.payload.user;
+      case "@cadastro/EMPRESA_REQUEST": {
+        draft.empresa = action.payload.idFederal;
         break;
       }
       case "@auth/SIGN_FAILURE": {

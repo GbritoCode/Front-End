@@ -181,7 +181,6 @@ class Admin extends React.Component {
             <i className="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted" />
           </button>
         </div>
-        {console.log(this.state)}
         <Sidebar
           {...this.props}
           routes={routes}

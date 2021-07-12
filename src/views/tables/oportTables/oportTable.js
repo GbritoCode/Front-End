@@ -61,9 +61,9 @@ function OportTable() {
       case 4:
         return "Aprovada";
       case 5:
-        return "Finalizada";
-      case 6:
         return "Reprovada";
+      case 6:
+        return "Finalizada";
       default:
     }
   };
@@ -114,7 +114,7 @@ function OportTable() {
                       className={classNames("btn-icon btn-link like")}
                       onClick={() => {
                         history.push(
-                          `/cadastro/oportunidade/cotacao/${oport.id}`
+                          `/cadastro/oportunidade/cotacao/${oport.id}/true`
                         );
                       }}
                     >
@@ -265,10 +265,10 @@ function OportTable() {
               style={{ color: "#7E7E7E" }}
               className="btn-neutral"
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 if (altering.fase === 5) {
                   if (altering.motivo) {
-                    api
+                    await api
                       .put(`oportunidade/${altering.altering}`, {
                         fase: altering.fase,
                         motivo: altering.motivo
@@ -288,7 +288,7 @@ function OportTable() {
                     }
                   }
                 } else {
-                  api
+                  await api
                     .put(`oportunidade/${altering.altering}`, {
                       fase: altering.fase
                     })
@@ -361,7 +361,7 @@ function OportTable() {
                   {
                     Header: "descrição",
                     accessor: "desc",
-                    width: 301,
+                    minWidth: 350,
                     filterMethod: (filter, row) => {
                       const id = filter.pivotId || filter.id;
                       return row[id] !== undefined
@@ -377,7 +377,8 @@ function OportTable() {
                   },
                   {
                     Header: "Cliente",
-                    accessor: "Cliente"
+                    accessor: "Cliente",
+                    minWidth: 140
                   },
                   {
                     Header: "data",
@@ -388,7 +389,7 @@ function OportTable() {
                     accessor: "actions",
                     sortable: false,
                     filterable: false,
-                    minWidth: 212
+                    minWidth: 161
                   }
                 ]}
                 defaultPageSize={10}

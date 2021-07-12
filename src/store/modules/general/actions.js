@@ -23,10 +23,17 @@ export function AreaUpdate(id, EmpresaId, descArea) {
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function empresaRequest(idFederal, nome, license, UserId, first) {
+export function empresaRequest(
+  idFederal,
+  nome,
+  license,
+  UserId,
+  first,
+  empresa
+) {
   return {
     type: "@cadastro/EMPRESA_REQUEST",
-    payload: { idFederal, nome, license, UserId, first }
+    payload: { idFederal, nome, license, UserId, first, empresa }
   };
 }
 export function EmpresaUpdate(id, idFederal, nome, license, UserId) {
@@ -322,24 +329,27 @@ export function tipoComissUpdate(id, EmpresaId, desc, prcnt, bsComiss) {
 //----------------------------------------------------
 //----------------------------------------------------
 
-export function perfilRequest(EmpresaId, desc, first) {
+export function perfilRequest(EmpresaId, desc, cod, string, first) {
   return {
     type: "@cadastro/PERFIL_REQUEST",
     payload: {
       EmpresaId,
       desc,
+      cod,
+      string,
       first
     }
   };
 }
-export function perfilUpdate(id, EmpresaId, desc) {
+export function perfilUpdate(id, EmpresaId, desc, cod, string) {
   return {
     type: "@update/PERFIL_REQUEST",
     payload: {
       id,
       EmpresaId,
-
-      desc
+      desc,
+      cod,
+      string
     }
   };
 }
@@ -350,7 +360,8 @@ export function representanteRequest(
   EmpresaId,
   nome,
   TipoComisseId,
-  vlrFixMens
+  vlrFixMens,
+  ColabId
 ) {
   return {
     type: "@cadastro/REPRESENTANTE_REQUEST",
@@ -358,7 +369,8 @@ export function representanteRequest(
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens
+      vlrFixMens,
+      ColabId
     }
   };
 }
@@ -367,7 +379,8 @@ export function RepresentanteUpdate(
   EmpresaId,
   nome,
   TipoComisseId,
-  vlrFixMens
+  vlrFixMens,
+  ColabId
 ) {
   return {
     type: "@update/REPRESENTANTE_REQUEST",
@@ -376,7 +389,8 @@ export function RepresentanteUpdate(
       EmpresaId,
       nome,
       TipoComisseId,
-      vlrFixMens
+      vlrFixMens,
+      ColabId
     }
   };
 }
@@ -481,9 +495,11 @@ export function EmailParamsUpdate(
   bccEmailOrc,
   bccEmailRev,
   bccEmailFat,
+  bccEmailCRM,
   fromEmailOrc,
   fromEmailRev,
-  fromEmailFat
+  fromEmailFat,
+  fromEmailCRM
 ) {
   return {
     type: "@update/EMAIL_PARAMS_REQUEST",
@@ -493,9 +509,11 @@ export function EmailParamsUpdate(
       bccEmailOrc,
       bccEmailRev,
       bccEmailFat,
+      bccEmailCRM,
       fromEmailOrc,
       fromEmailRev,
-      fromEmailFat
+      fromEmailFat,
+      fromEmailCRM
     }
   };
 }

@@ -67,6 +67,7 @@ class perfilTable extends Component {
           idd: perfil.id,
           Empresa: perfil.Empresa.nome,
           desc: perfil.desc,
+          cod: perfil.cod,
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
@@ -197,6 +198,10 @@ class perfilTable extends Component {
                   ofText="de"
                   rowsText="Linhas"
                   columns={[
+                    {
+                      Header: "Código",
+                      accessor: "cod"
+                    },
                     {
                       Header: "Descrição",
                       accessor: "desc"

@@ -16,6 +16,7 @@
 */
 import React, { useRef, useEffect, useState } from "react";
 
+import classNames from "classnames";
 // reactstrap components
 import {
   Button,
@@ -28,27 +29,35 @@ import {
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  InputGroup,
+  InputGroupAddon
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
-import { normalizeCurrency } from "~/normalize";
+import ReactTable from "react-table-v6";
+import { normalizeCpf, normalizeCurrency } from "~/normalize";
 import { store } from "~/store";
 import { representanteRequest } from "~/store/modules/general/actions";
 import api from "~/services/api";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import Modal from "~/components/Modal/modalLarge";
 
 export default function RepresentanteCadastro() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     tipoComiss: { value: "", error: "", message: "" },
-    vlrFixMens: { value: "", error: "", message: "" }
+    vlrFixMens: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -57,7 +66,9 @@ export default function RepresentanteCadastro() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/tipoComiss/`);
+      const response2 = await api.get(`/colab/`);
       setData1(response1.data);
+      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -164,7 +175,8 @@ export default function RepresentanteCadastro() {
           values.empresaId.value,
           values.nome.value,
           values.tipoComiss.value,
-          vlrFixMensdb
+          vlrFixMensdb,
+          values.ColabId.value
         )
       );
     } else {
@@ -188,6 +200,91 @@ export default function RepresentanteCadastro() {
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
+        <Modal
+          onClose={() => {
+            setIsOpen(false);
+          }}
+          open={isOpen}
+        >
+          <Header>
+            {" "}
+            <h4 className="modalHeader">Representante</h4>
+          </Header>
+
+          <ReactTable
+            data={data2
+              .filter(
+                arr => arr.Perfil.permittedPages.search("Prospecção") > -1
+              )
+              .map((colab, index) => {
+                return {
+                  idd: index,
+                  id: colab.id,
+                  CPF: normalizeCpf(colab.CPF),
+                  nome: colab.nome,
+                  dtAdmiss: colab.dtAdmiss,
+                  espec: colab.espec
+                };
+              })}
+            getTdProps={(state, rowInfo) => {
+              return {
+                onClick: () => {
+                  setValues(prevState => ({
+                    ...prevState,
+                    ColabId: {
+                      value: rowInfo.original.id
+                    },
+                    nome: {
+                      value: rowInfo.original.nome
+                    }
+                  }));
+                  document.getElementsByName("nome")[0].value =
+                    rowInfo.original.nome;
+                  setIsOpen(false);
+                }
+              };
+            }}
+            filterable
+            defaultFilterMethod={(filter, row) => {
+              const id = filter.pivotId || filter.id;
+              return row[id] !== undefined
+                ? String(row[id])
+                    .toLowerCase()
+                    .includes(filter.value.toLowerCase())
+                : true;
+            }}
+            previousText="Anterior"
+            nextText="Próximo"
+            loadingText="Carregando"
+            noDataText="Dados não encontrados"
+            pageText="Página"
+            ofText="de"
+            rowsText="Linhas"
+            columns={[
+              {
+                Header: "Nome",
+                accessor: "nome"
+              },
+              {
+                Header: "CPF",
+                accessor: "CPF"
+              },
+              {
+                Header: "Data de Adimissão",
+                accessor: "dtAdmiss"
+              },
+              {
+                Header: "Especialidade",
+                accessor: "espec"
+              }
+            ]}
+            defaultPageSize={5}
+            className="-striped -highlight"
+          />
+
+          <Footer />
+        </Modal>
+
         <Row>
           <Col md="12">
             <Card>
@@ -200,14 +297,27 @@ export default function RepresentanteCadastro() {
                     <Col md="4">
                       <Label>Nome</Label>
                       <FormGroup className={`has-label ${values.nome.error}`}>
-                        <Input
-                          name="nome"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "nome", "text")
-                          }
-                          value={values.nome.value}
-                        />{" "}
+                        <InputGroup>
+                          <Input
+                            disabled
+                            name="nome"
+                            type="text"
+                            placeholder="Selecione o Colaborador"
+                          />
+                          <InputGroupAddon
+                            className="appendCustom"
+                            addonType="append"
+                          >
+                            <Button
+                              className={classNames(
+                                "btn-icon btn-link like addon"
+                              )}
+                              onClick={() => setIsOpen(!isOpen)}
+                            >
+                              <i className="tim-icons icon-zoom-split addon" />
+                            </Button>
+                          </InputGroupAddon>
+                        </InputGroup>
                         {values.nome.error === "has-danger" ? (
                           <Label className="error">{values.nome.message}</Label>
                         ) : null}

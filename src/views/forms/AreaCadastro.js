@@ -150,7 +150,7 @@ export default function CadastroCliente() {
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
-                      <Label>Id</Label>
+                      <Label>Código</Label>
                       <FormGroup className={`has-label ${values.id.error}`}>
                         <Input
                           disabled

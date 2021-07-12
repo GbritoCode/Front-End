@@ -2942,7 +2942,7 @@ input[type="button"].btn-block {
     background-color: transparent;
     transform: translateX(0.9375rem); }
   .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
-    background-color: rgba(225, 78, 202, 0.5); }
+    background-color: #247df7; }
 
 .custom-select {
   display: inline-block;

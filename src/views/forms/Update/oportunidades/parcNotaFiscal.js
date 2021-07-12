@@ -209,7 +209,6 @@ export default function ParcelaUpdate() {
     if (newFiles.length) {
       if (files.length < 2) {
         const updatedFiles = addNewFiles(newFiles);
-        console.log(updatedFiles);
         setFileAux(updatedFiles);
       } else {
         options = {
@@ -640,7 +639,6 @@ export default function ParcelaUpdate() {
                                     }
                                   )
                                 : filePreview.map(file => {
-                                    console.log(file);
                                     return (
                                       <PreviewContainer key={file.nome}>
                                         <div>

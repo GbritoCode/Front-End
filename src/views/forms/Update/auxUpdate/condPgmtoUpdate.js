@@ -37,7 +37,7 @@ import { condPgmtoUpdate } from "~/store/modules/general/actions";
 import { store } from "~/store";
 import api from "~/services/api";
 
-function AreaUpdatee() {
+function CondPgmtoUpdate() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
@@ -299,4 +299,4 @@ function AreaUpdatee() {
     </>
   );
 }
-export default AreaUpdatee;
+export default CondPgmtoUpdate;

@@ -32,10 +32,10 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { colabRequest } from "~/store/modules/Colab/actions";
 import { store } from "~/store";
 import { normalizeFone, normalizeCpf } from "~/normalize";
 import api from "~/services/api";
+import history from "~/services/history";
 
 /* eslint-disable eqeqeq */
 export default function ColabCadastro() {
@@ -46,6 +46,7 @@ export default function ColabCadastro() {
 
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
+  const { id } = store.getState().auth.user;
 
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -204,7 +205,7 @@ export default function ColabCadastro() {
     }
   };
 
-  const handleSubmit = evt => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
@@ -231,26 +232,31 @@ export default function ColabCadastro() {
     }
 
     if (valid && filled) {
-      const first = true;
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
       var celdb = values.cel.value.replace(/[^\d]+/g, "");
 
-      dispatch(
-        colabRequest(
-          cpfdb,
-          values.fornecId.value,
-          values.empresaId.value,
-          values.nome.value,
-          values.dtAdmiss.value,
-          celdb,
-          values.PerfilId.value,
-          values.skype.value,
-          values.email.value,
-          values.espec.value,
-          first,
-          "fake"
-        )
-      );
+      sessionStorage.removeItem("persist:gobarber");
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+      await api
+        .post("/colab", {
+          CPF: cpfdb,
+          FornecId: values.fornecId.value,
+          EmpresaId: values.empresaId.value,
+          nome: values.nome.value,
+          dtAdmiss: values.dtAdmiss.value,
+          cel: celdb,
+          PerfilId: values.PerfilId.value,
+          skype: values.skype.value,
+          email: values.email.value,
+          espec: values.espec.value,
+          UserId: id
+        })
+        .then(async () => {
+          sessionStorage.removeItem("persist:gobarber");
+          await delay(500);
+          history.push("login");
+        });
     } else {
       options = {
         place: "tr",
@@ -287,7 +293,7 @@ export default function ColabCadastro() {
           <Card>
             <CardHeader>
               <CardTitle style={{ textAlign: "center" }} tag="h4">
-                Efetue o seu cadastro coomo Colaborador
+                Efetue o seu cadastro como Colaborador
               </CardTitle>
             </CardHeader>
             <CardBody>

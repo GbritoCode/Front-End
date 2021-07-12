@@ -362,7 +362,7 @@ function ColabCompUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to={`/tables/colab/comp/${id}`}>
+                      <Link to={`/tables/colab/comp/${data1.id}`}>
                         <Button
                           style={{
                             paddingLeft: 32,

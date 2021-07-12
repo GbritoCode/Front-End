@@ -49,12 +49,12 @@ import api from "~/services/api";
 import TagsInput from "~/components/Tags/TagsInput";
 import history from "~/services/history";
 
-export default function CotacaoCadastro() {
+export default function CotacaoCadastro(props) {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const fileInputField = useRef(null);
 
-  const { id } = useParams();
+  const { id, rev } = useParams();
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +76,7 @@ export default function CotacaoCadastro() {
     recLiq: { value: "", error: "", message: "" },
     prevLucro: { value: "", error: "", message: "" },
     numParcelas: { value: "", error: "", message: "" },
-    motivo: { value: "1", error: "", message: "" },
+    motivo: { value: rev === "true" ? "2" : "1", error: "", message: "" },
     email: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
@@ -86,6 +86,7 @@ export default function CotacaoCadastro() {
   const [filesAux, setFileAux] = useState({});
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
+  console.log(values.motivo);
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
@@ -94,13 +95,11 @@ export default function CotacaoCadastro() {
         const response = await api.get(`/empresa/${empresa}`);
         const response1 = await api.get(`/oportunidade/${id}`);
         const response3 = await api.get(`/parametros/?one=true`);
-        const response4 = await api.get(`/cotacao/?last=true`);
         const response5 = await api.get(
           `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
         );
         setData1(response1.data);
         setData3(response3.data);
-        setData4({ id: response4.data.id + 1 });
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.id },
@@ -117,7 +116,7 @@ export default function CotacaoCadastro() {
         setData1(response1.data);
         setData3(response3.data);
         setData4(response2.data);
-        setData4(prevState => ({ ...prevState, id: response2.data[0].id + 1 }));
+        setData4(prevState => ({ ...prevState }));
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response2.data[0].EmpresaId },
@@ -141,7 +140,6 @@ export default function CotacaoCadastro() {
             value: normalizeCalcCurrency(response2.data[0].prevLucro)
           },
           numParcelas: { value: response2.data[0].numParcelas },
-          motivo: { value: response2.data[0].motivo },
           email: { value: response5.data.email }
         }));
         setOptional(prevState => ({
@@ -494,15 +492,17 @@ export default function CotacaoCadastro() {
             toast.error(err.response.data.error);
           });
       } else {
-        await api.post(
-          `/cotacao/?tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
-          formData
-        ).then(() => {
-          history.push("/tabelas/oportunidade/oport");
-        })
-        .catch(err => {
-          toast.error(err.response.data.error);
-        });;
+        await api
+          .post(
+            `/cotacao/?tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+            formData
+          )
+          .then(() => {
+            history.push("/tabelas/oportunidade/oport");
+          })
+          .catch(err => {
+            toast.error(err.response.data.error);
+          });
       }
     } else {
       options = {
@@ -781,7 +781,7 @@ export default function CotacaoCadastro() {
                           <FormGroup check>
                             <Label check>
                               <Input
-                                defaultChecked
+                                defaultChecked={rev !== "true"}
                                 name="motivo"
                                 type="radio"
                                 onChange={event =>
@@ -793,6 +793,7 @@ export default function CotacaoCadastro() {
                             </Label>
                             <Label check>
                               <Input
+                                defaultChecked={rev === "true"}
                                 name="motivo"
                                 type="radio"
                                 onChange={event =>
