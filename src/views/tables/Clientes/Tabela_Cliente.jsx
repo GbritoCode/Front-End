@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
@@ -36,226 +36,274 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
+import { store } from "~/store";
 
-class Tabela_Cliente extends Component {
-  state = {
-    data: []
+export default function Tabela_Cliente() {
+  document.body.classList.add("white-content");
+
+  const [data, setData] = useState([]);
+  const [excluding, setExcluding] = useState([]);
+  const [modalMini, setModalMini] = useState(false);
+  const [access, setAccess] = useState("");
+
+  const toggleModalMini = () => {
+    setModalMini(!modalMini);
   };
 
-  componentDidMount() {
-    // --------- colocando no modo claro do template
-    document.body.classList.add("white-content");
-    this.loadData();
-  }
+  const delay = ms => new Promise(res => setTimeout(res, ms));
 
-  toggleModalMini = () => {
-    this.setState({ modalMini: !this.state.modalMini });
+  const reloadData = async () => {
+    await delay(500);
   };
 
-  delay = ms => new Promise(res => setTimeout(res, ms));
-
-  reloadData = async () => {
-    await this.delay(500);
-    this.loadData();
-  };
-
-  loadData = async () => {
-    const response = await api.get("/cliente/?prospect=false");
-
-    this.setState({
-      data: response.data.map((client, key) => {
-        return {
-          idd: key,
-          id: client.id,
-          CNPJ: normalizeCnpj(client.CNPJ),
-          nomeAbv: client.nomeAbv,
-          RepresentanteId: client.RepresentanteId,
-          Representante: client.Representante.nome,
-          TipoComisseId: client.TipoComisseId,
-          TipoComiss: this.checkDesc(client.TipoComisse.desc),
-          EmpresaId: client.EmpresaId,
-          prospect: client.prospect,
-          actions: (
-            // we've added some custom button actions
-            <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              {/* use this button to add a edit kind of action */}
-              <Link to={`/cliente_update/${client.id}/false`}>
-                <Button
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                >
-                  <i className="tim-icons icon-pencil" />
-                </Button>
-              </Link>
-              {/* use this button to remove the data row */}
-              <Button
-                onClick={() => {
-                  this.setState({ excluding: client.id });
-                  this.toggleModalMini();
-                }}
-                color="danger"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <i className="tim-icons icon-simple-remove" />
-              </Button>{" "}
-            </div>
-          )
-        };
-      })
-    });
-  };
-
-  checkDesc = value => {
-    switch (value) {
-      case 1:
-        return "Indicação";
-      case 2:
-        return "Representação";
-      case 3:
-        return "Prospecção";
-      case 4:
-        return "Interna";
+  useEffect(() => {
+    const { id } = store.getState().auth.user.Colab;
+    const { acessible } = store.getState().auth;
+    console.log(!!acessible.find(acc => acc === "acessoRestritoCli"));
+    switch (true) {
+      case !!acessible.find(acc => acc === "acessoRestritoCli"):
+        setAccess("acessoRestritoCli");
+        break;
+      case !!acessible.find(acc => acc === "acessoTotalCli"):
+        setAccess("acessoTotalCli");
+        break;
       default:
     }
-  };
 
-  render() {
-    return (
-      <>
-        <div className="content">
-          <Modal
-            modalClassName="modal-mini "
-            isOpen={this.state.modalMini}
-            toggle={this.toggleModalMini}
-          >
-            <div className="modal-header justify-content-center">
-              <button
-                aria-hidden
-                className="close"
-                data-dismiss="modal"
-                type="button"
-                color="primary"
-                onClick={this.toggleModalMini}
-              >
-                <Close />
-              </button>
-              <div>
-                <Message fontSize="large" />
-              </div>
-            </div>
-            <ModalBody className="text-center">
-              <p>Deseja deletar o registro?</p>
-            </ModalBody>
-            <div className="modal-footer">
-              <Button
-                style={{ color: "#000" }}
-                className="btn-neutral"
-                type="button"
-                onClick={this.toggleModalMini}
-              >
-                Não
-              </Button>
-              <Button
-                style={{ color: "#7E7E7E" }}
-                className="btn-neutral"
-                type="button"
-                onClick={async () => {
-                  await api
-                    .delete(`cliente/${this.state.excluding}`)
-                    .then(result => {
-                      toast.success(result.data);
-                      this.reloadData();
-                      this.setState({ excluding: undefined });
-                    })
-                    .catch(err => {
-                      toast.error(err.response.data.error);
-                    });
-                  this.toggleModalMini();
-                }}
-              >
-                Sim
-              </Button>
-            </div>
-          </Modal>
-          <Col xs={12} md={12}>
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">
-                  Clientes
-                  <Link to="/cliente_cadastro/false">
-                    <Tooltip title="Novo" placement="top" interactive>
+    const loadData = async () => {
+      const response = await api.get("/cliente/?prospect=false");
+      console.log(access);
+      access === "acessoTotalCli" &&
+        setData(
+          response.data.map((client, key) => {
+            return {
+              idd: key,
+              id: client.id,
+              CNPJ: normalizeCnpj(client.CNPJ),
+              nomeAbv: client.nomeAbv,
+              contNome: client.CliConts[0].nome,
+              contEmail: client.CliConts[0].email,
+              RepresentanteId: client.RepresentanteId,
+              Representante: client.Representante.nome,
+              EmpresaId: client.EmpresaId,
+              prospect: client.prospect,
+              actions: (
+                // we've added some custom button actions
+                <div className="actions-right">
+                  {/* use this button to add a like kind of action */}
+                  {/* use this button to add a edit kind of action */}
+                  <Link to={`/cliente_update/${client.id}/false`}>
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-pencil" />
+                    </Button>
+                  </Link>
+                  {/* use this button to remove the data row */}
+                  <Button
+                    onClick={() => {
+                      setExcluding(client.id);
+                      setModalMini(!modalMini);
+                    }}
+                    color="danger"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>{" "}
+                </div>
+              )
+            };
+          })
+        );
+
+      access === "acessoRestritoCli" &&
+        setData(
+          response.data
+            .filter(arr => arr.Representante.ColabId === id)
+            .map((client, key) => {
+              return {
+                idd: key,
+                id: client.id,
+                CNPJ: normalizeCnpj(client.CNPJ),
+                nomeAbv: client.nomeAbv,
+                contNome: client.CliConts[0].nome,
+                contEmail: client.CliConts[0].email,
+                RepresentanteId: client.RepresentanteId,
+                Representante: client.Representante.nome,
+                EmpresaId: client.EmpresaId,
+                prospect: client.prospect,
+                actions: (
+                  // we've added some custom button actions
+                  <div className="actions-right">
+                    {/* use this button to add a like kind of action */}
+                    {/* use this button to add a edit kind of action */}
+                    <Link to={`/cliente_update/${client.id}/false`}>
                       <Button
-                        style={{
-                          float: "right"
-                        }}
+                        color="default"
+                        size="sm"
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <AddIcon fontSize="large" />
+                        <i className="tim-icons icon-pencil" />
                       </Button>
-                    </Tooltip>
-                  </Link>
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <ReactTable
-                  data={this.state.data}
-                  filterable
-                  resizable
-                  defaultFilterMethod={(filter, row) => {
-                    const id = filter.pivotId || filter.id;
-                    return row[id] !== undefined
-                      ? String(row[id])
-                          .toLowerCase()
-                          .includes(filter.value.toLowerCase())
-                      : true;
-                  }}
-                  previousText="Anterior"
-                  nextText="Próximo"
-                  loadingText="Carregando"
-                  noDataText="Dados não encontrados"
-                  pageText="Página"
-                  ofText="de"
-                  rowsText="Linhas"
-                  columns={[
-                    {
-                      Header: "CNPJ",
-                      accessor: "CNPJ"
-                    },
-                    {
-                      Header: "Nome Abreviado",
-                      accessor: "nomeAbv"
-                    },
-                    {
-                      Header: "Representante",
-                      accessor: "Representante"
-                    },
-                    {
-                      Header: "Tipo de comissão",
-                      accessor: "TipoComiss"
-                    },
-                    {
-                      Header: "Ações",
-                      accessor: "actions",
-                      sortable: false,
-                      filterable: false
-                    }
-                  ]}
-                  defaultPageSize={10}
-                  showPagination
-                  showPageJump
-                  showPaginationBottom
-                  className="-striped -highlight"
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </div>
-      </>
-    );
-  }
-}
+                    </Link>
+                    {/* use this button to remove the data row */}
+                    <Button
+                      onClick={() => {
+                        setExcluding(client.id);
+                        setModalMini(!modalMini);
+                      }}
+                      color="danger"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-simple-remove" />
+                    </Button>{" "}
+                  </div>
+                )
+              };
+            })
+        );
+    };
+    loadData();
+  }, [access, modalMini]);
 
-export default Tabela_Cliente;
+  return (
+    <>
+      <div className="content">
+        <Modal
+          modalClassName="modal-mini "
+          isOpen={modalMini}
+          toggle={toggleModalMini}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalMini}
+            >
+              <Close />
+            </button>
+            <div>
+              <Message fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <p>Deseja deletar o registro?</p>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalMini}
+            >
+              Não
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={async () => {
+                await api
+                  .delete(`cliente/${excluding}`)
+                  .then(result => {
+                    toast.success(result.data);
+                    reloadData();
+                    setExcluding(undefined);
+                  })
+                  .catch(err => {
+                    toast.error(err.response.data.error);
+                  });
+                toggleModalMini();
+              }}
+            >
+              Sim
+            </Button>
+          </div>
+        </Modal>
+        <Col xs={12} md={12}>
+          <Card>
+            <CardHeader>
+              <CardTitle tag="h4">
+                Clientes
+                <Link to="/cliente_cadastro/false">
+                  <Tooltip title="Novo" placement="top" interactive>
+                    <Button
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <AddIcon fontSize="large" />
+                    </Button>
+                  </Tooltip>
+                </Link>
+              </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <ReactTable
+                data={data}
+                filterable
+                resizable
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .includes(filter.value.toLowerCase())
+                    : true;
+                }}
+                previousText="Anterior"
+                nextText="Próximo"
+                loadingText="Carregando"
+                noDataText="Dados não encontrados"
+                pageText="Página"
+                ofText="de"
+                rowsText="Linhas"
+                columns={[
+                  {
+                    Header: "CNPJ",
+                    accessor: "CNPJ"
+                  },
+                  {
+                    Header: "Nome Abreviado",
+                    accessor: "nomeAbv"
+                  },
+                  {
+                    Header: "Contato",
+                    accessor: "contNome"
+                  },
+                  {
+                    Header: "Email",
+                    accessor: "contEmail"
+                  },
+                  {
+                    Header: "Representante",
+                    accessor: "Representante"
+                  },
+                  {
+                    Header: "Ações",
+                    accessor: "actions",
+                    sortable: false,
+                    filterable: false
+                  }
+                ]}
+                defaultPageSize={10}
+                showPagination
+                showPageJump
+                showPaginationBottom
+                className="-striped -highlight"
+              />
+            </CardBody>
+          </Card>
+        </Col>
+      </div>
+    </>
+  );
+}

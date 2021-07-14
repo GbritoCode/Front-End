@@ -179,14 +179,14 @@ const CadastroCliente = forwardRef((props, ref) => {
         ...prevState,
         cnpj: {
           error: "has-danger",
-          message: "Insira um CNPJ válido"
+          message: "O CNPJ já existe"
         }
       }));
       options = {
         place: "tr",
         message: (
           <div>
-            <div>O CNPJ já existe</div>
+            <div>O CNPJ informado já existe como prospect ou cliente </div>
           </div>
         ),
         type: "danger",
@@ -647,7 +647,7 @@ const CadastroCliente = forwardRef((props, ref) => {
 
                       <Row>
                         <Col md="4">
-                          <Label>Nome Fanasia</Label>
+                          <Label>Nome Fantasia</Label>
                           <FormGroup
                             className={`has-label ${optional.fantasia.error}`}
                           >

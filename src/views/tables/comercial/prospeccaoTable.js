@@ -57,11 +57,11 @@ function ProspeccaoTable() {
     const { acessible } = store.getState().auth;
     const { id } = store.getState().auth.user.Colab;
     setColab(id);
-    switch (!!acessible.find(acc => acc === "acessoRestrito")) {
-      case true:
+    switch (true) {
+      case !!acessible.find(acc => acc === "acessoRestrito"):
         setAccess("acessoRestrito");
         break;
-      case false:
+      case !!acessible.find(acc => acc === "acessoTotal"):
         setAccess("acessoTotal");
         break;
       default:
