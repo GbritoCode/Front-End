@@ -167,7 +167,7 @@ class followUpTable extends Component {
                 type="button"
                 onClick={async () => {
                   await api
-                    .delete(`cliente/${this.state.excluding}`)
+                    .delete(`followUp/${this.state.excluding}`)
                     .then(result => {
                       toast.success(result.data);
                       this.reloadData();

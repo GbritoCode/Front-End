@@ -55,7 +55,9 @@ export default function PerfilCadastro() {
     cod: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
-  const [radioValue, setRadioValue] = useState("");
+  const [radioValue, setRadioValue] = useState("acessoRestrito");
+  const [radioValueCli, setRadioValueCli] = useState("acessoRestritoCli");
+  const [radioValueProsp, setRadioValueProsp] = useState("acessoRestritoProsp");
   const [horizontalTabs, sethorizontalTabs] = useState("Dashboards");
   const [permittedPages, setPermittedPages] = useState([]);
   const [ParentPagesCounter, setParentPagesCounter] = useState({
@@ -78,6 +80,7 @@ export default function PerfilCadastro() {
     }
     loadData();
   }, []);
+
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault();
     switch (tabState) {
@@ -223,9 +226,13 @@ export default function PerfilCadastro() {
       }
       if (page === "Prospecção") {
         string += `${radioValue},`;
+      } else if (page === "Clientes Tab") {
+        string += `${radioValueCli},`;
+      } else if (page === "Prospects Tab") {
+        string += `${radioValueProsp},`;
       }
     }
-
+    console.log(string);
     Object.entries(ParentPagesCounter).forEach(page => {
       if (page[1].count > 0) string += `${page[1].value},`;
     });
@@ -567,74 +574,70 @@ export default function PerfilCadastro() {
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}
-                                        onChange={e => {
-                                          e.target.checked &&
-                                            setRadioValue("acessoRestrito");
-                                          !e.target.checked &&
-                                            setRadioValue("");
+                                        onChange={e =>
                                           handleSwitchChange(
                                             e.target.checked,
                                             e.target.id,
                                             route.namePerfil,
                                             "selectAllVendas"
-                                          );
-                                        }}
+                                          )
+                                        }
                                       />
                                       {view.name === "Prospecção" ? (
                                         <>
                                           {" "}
-                                          <FormGroup tag="fieldset">
-                                            <FormGroup check>
-                                              <Label id="switchChildren" check>
-                                                <Input
-                                                  checked={
-                                                    permittedPages.find(
-                                                      page =>
-                                                        page === "Prospecção"
-                                                    ) === "Prospecção" &&
-                                                    radioValue === "acessoTotal"
-                                                  }
-                                                  type="radio"
-                                                  name="acessoTotal"
-                                                  id="acessoTotal"
-                                                  onChange={() =>
-                                                    permittedPages.find(
-                                                      page =>
-                                                        page === "Prospecção"
-                                                    ) === "Prospecção" &&
-                                                    setRadioValue("acessoTotal")
-                                                  }
-                                                />{" "}
-                                                Acesso Total
-                                              </Label>
-                                            </FormGroup>
-                                            <FormGroup check>
-                                              <Label id="switchChildren" check>
-                                                <Input
-                                                  checked={
-                                                    permittedPages.find(
-                                                      page =>
-                                                        page === "Prospecção"
-                                                    ) === "Prospecção" &&
-                                                    radioValue ===
-                                                      "acessoRestrito"
-                                                  }
-                                                  type="radio"
-                                                  name="acessoRestrito"
-                                                  id="acessoRestrito"
-                                                  onChange={() =>
-                                                    permittedPages.find(
-                                                      page =>
-                                                        page === "Prospecção"
-                                                    ) === "Prospecção" &&
-                                                    setRadioValue(
-                                                      "acessoRestrito"
-                                                    )
-                                                  }
-                                                />{" "}
-                                                Acesso Restrito
-                                              </Label>
-                                            </FormGroup>
+                                          <FormGroup
+                                            className="checkFormInline"
+                                            check
+                                          >
+                                            <Label id="switchChildren" check>
+                                              <Input
+                                                checked={
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospecção"
+                                                  ) === "Prospecção" &&
+                                                  radioValue === "acessoTotal"
+                                                }
+                                                type="radio"
+                                                name="acessoTotal"
+                                                id="acessoTotal"
+                                                onChange={() =>
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospecção"
+                                                  ) === "Prospecção" &&
+                                                  setRadioValue("acessoTotal")
+                                                }
+                                              />{" "}
+                                              Total
+                                            </Label>
+
+                                            <Label id="switchChildren" check>
+                                              <Input
+                                                checked={
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospecção"
+                                                  ) === "Prospecção" &&
+                                                  radioValue ===
+                                                    "acessoRestrito"
+                                                }
+                                                type="radio"
+                                                name="acessoRestrito"
+                                                id="acessoRestrito"
+                                                onChange={() =>
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospecção"
+                                                  ) === "Prospecção" &&
+                                                  setRadioValue(
+                                                    "acessoRestrito"
+                                                  )
+                                                }
+                                              />{" "}
+                                              Restrito
+                                            </Label>
                                           </FormGroup>
                                         </>
                                       ) : null}
@@ -683,15 +686,140 @@ export default function PerfilCadastro() {
                                         id={view.namePerfil}
                                         type="switch"
                                         label={view.name}
-                                        onChange={e =>
+                                        onChange={e => {
                                           handleSwitchChange(
                                             e.target.checked,
                                             e.target.id,
                                             route.namePerfil,
                                             "selectAllCad"
-                                          )
-                                        }
+                                          );
+                                        }}
                                       />
+                                      {view.name === "Clientes" ? (
+                                        <>
+                                          {" "}
+                                          <FormGroup
+                                            className="checkFormInline"
+                                            check
+                                          >
+                                            <Label id="switchChildren" check>
+                                              <Input
+                                                checked={
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Clientes Tab"
+                                                  ) === "Clientes Tab" &&
+                                                  radioValueCli ===
+                                                    "acessoTotalCli"
+                                                }
+                                                type="radio"
+                                                name="acessoTotalCli"
+                                                id="acessoTotalCli"
+                                                onChange={() =>
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Clientes Tab"
+                                                  ) === "Clientes Tab" &&
+                                                  setRadioValueCli(
+                                                    "acessoTotalCli"
+                                                  )
+                                                }
+                                              />{" "}
+                                              Total
+                                            </Label>
+
+                                            <Label id="switchChildren" check>
+                                              <Input
+                                                checked={
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Clientes Tab"
+                                                  ) === "Clientes Tab" &&
+                                                  radioValueCli ===
+                                                    "acessoRestritoCli"
+                                                }
+                                                type="radio"
+                                                name="acessoRestritoCli"
+                                                id="acessoRestritoCli"
+                                                onChange={() =>
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Clientes Tab"
+                                                  ) === "Clientes Tab" &&
+                                                  setRadioValueCli(
+                                                    "acessoRestritoCli"
+                                                  )
+                                                }
+                                              />{" "}
+                                              Restrito
+                                            </Label>
+                                          </FormGroup>
+                                        </>
+                                      ) : null}
+                                      {/* {
+                                        --
+                                      } */}
+                                      {view.name === "Prospects" ? (
+                                        <>
+                                          {" "}
+                                          <FormGroup
+                                            className="checkFormInline"
+                                            check
+                                          >
+                                            <Label id="switchChildren" check>
+                                              <Input
+                                                checked={
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospects Tab"
+                                                  ) === "Prospects Tab" &&
+                                                  radioValueProsp ===
+                                                    "acessoTotalProsp"
+                                                }
+                                                type="radio"
+                                                name="acessoTotalProsp"
+                                                id="acessoTotalProsp"
+                                                onChange={() =>
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospects Tab"
+                                                  ) === "Prospects Tab" &&
+                                                  setRadioValueProsp(
+                                                    "acessoTotalProsp"
+                                                  )
+                                                }
+                                              />{" "}
+                                              Total
+                                            </Label>
+
+                                            <Label id="switchChildren" check>
+                                              <Input
+                                                checked={
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospects Tab"
+                                                  ) === "Prospects Tab" &&
+                                                  radioValueProsp ===
+                                                    "acessoRestritoProsp"
+                                                }
+                                                type="radio"
+                                                name="acessoRestritoProsp"
+                                                id="acessoRestritoProsp"
+                                                onChange={() =>
+                                                  permittedPages.find(
+                                                    page =>
+                                                      page === "Prospects Tab"
+                                                  ) === "Prospects Tab" &&
+                                                  setRadioValueProsp(
+                                                    "acessoRestritoProsp"
+                                                  )
+                                                }
+                                              />{" "}
+                                              Restrito
+                                            </Label>
+                                          </FormGroup>
+                                        </>
+                                      ) : null}
                                     </Col>
                                   </>
                                 );

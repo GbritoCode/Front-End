@@ -36,128 +36,152 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
+import { store } from "~/store";
 
 export default function ProspectTable() {
   document.body.classList.add("white-content");
   const [data, setData] = useState();
   const [modalMini, setModalMini] = useState(false);
   const [excluding, setExcluding] = useState(false);
-  const checkDesc = value => {
-    switch (value) {
-      case "1":
-        return "Indicação";
-      case "2":
-        return "Representação";
-      case "3":
-        return "Prospecção";
-      case "4":
-        return "Interna";
+  const [access, setAccess] = useState("");
+
+  useEffect(() => {
+    const { id } = store.getState().auth.user.Colab;
+    const { acessible } = store.getState().auth;
+    switch (true) {
+      case !!acessible.find(acc => acc === "acessoRestritoProsp"):
+        setAccess("acessoRestritoProsp");
+        break;
+      case !!acessible.find(acc => acc === "acessoTotalProsp"):
+        setAccess("acessoTotalProsp");
+        break;
       default:
     }
-  };
-  useEffect(() => {
-    sessionStorage.setItem(
-      "cliData",
-      JSON.stringify({
-        empresaId: { value: "" },
-        cnpj: { value: "" },
-        rzSoc: { value: "" },
-        nomeAbv: { value: "" },
-        representante: { value: "" },
-        tipoComiss: { value: "" }
-      })
-    );
-    sessionStorage.setItem(
-      "compData",
-      JSON.stringify({
-        ClienteId: {
-          value: "",
-          error: "",
-          message: ""
-        },
-        CondPgmtoId: {
-          value: "",
-          error: "",
-          message: ""
-        },
-        cep: { value: "" },
-        rua: { value: "" },
-        numero: { value: "" },
-        bairro: { value: "" },
-        cidade: { value: "" },
-        uf: { value: "" },
-        inscMun: {
-          value: "",
-          error: "",
-          message: ""
-        },
-        inscEst: { value: "", error: "", message: "" }
-      })
-    );
     async function loadData() {
       const response = await api.get("/cliente/?prospect=true");
-      setData(
-        response.data.map((client, key) => {
-          return {
-            idd: key,
-            id: client.id,
-            CNPJ: normalizeCnpj(client.CNPJ),
-            fantasia: client.fantasia,
-            rzSoc: client.rzSoc,
-            nomeAbv: client.nomeAbv,
-            RepresentanteId: client.RepresentanteId,
-            Representante: client.Representante.nome,
-            TipoComisseId: client.TipoComisseId,
-            TipoComiss: checkDesc(client.TipoComisse.desc),
-            EmpresaId: client.EmpresaId,
-            prospect: client.prospect,
-            actions: (
-              // we've added some custom button actions
-              <div className="actions-right">
-                {/* use this button to add a like kind of action */}
-                <Tooltip title="Aprovar">
+      access === "acessoTotalProsp" &&
+        setData(
+          response.data.map((client, key) => {
+            return {
+              idd: key,
+              id: client.id,
+              CNPJ: normalizeCnpj(client.CNPJ),
+              nomeAbv: client.nomeAbv,
+              contNome: client.CliConts[0].nome,
+              contEmail: client.CliConts[0].email,
+              RepresentanteId: client.RepresentanteId,
+              Representante: client.Representante.nome,
+              EmpresaId: client.EmpresaId,
+              prospect: client.prospect,
+              actions: (
+                // we've added some custom button actions
+                <div className="actions-right">
+                  {/* use this button to add a like kind of action */}
+                  <Tooltip title="Aprovar">
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        setExcluding({ id: client.id, action: "update" });
+                        setModalMini(!modalMini);
+                      }}
+                    >
+                      <i className="tim-icons icon-check-2" />
+                    </Button>
+                  </Tooltip>
+                  {/* use this button to add a edit kind of action */}
+                  <Link to={`/cliente_update/${client.id}/true`}>
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-pencil" />
+                    </Button>
+                  </Link>
+                  {/* use this button to remove the data row */}
                   <Button
-                    color="default"
-                    size="sm"
-                    className={classNames("btn-icon btn-link like")}
                     onClick={() => {
-                      setExcluding({ id: client.id, action: "update" });
+                      setExcluding({ id: client.id, action: "delete" });
                       setModalMini(!modalMini);
                     }}
-                  >
-                    <i className="tim-icons icon-check-2" />
-                  </Button>
-                </Tooltip>
-                {/* use this button to add a edit kind of action */}
-                <Link to={`/cliente_update/${client.id}/true`}>
-                  <Button
-                    color="default"
+                    color="danger"
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                   >
-                    <i className="tim-icons icon-pencil" />
-                  </Button>
-                </Link>
-                {/* use this button to remove the data row */}
-                <Button
-                  onClick={() => {
-                    setExcluding({ id: client.id, action: "delete" });
-                    setModalMini(!modalMini);
-                  }}
-                  color="danger"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                >
-                  <i className="tim-icons icon-simple-remove" />
-                </Button>{" "}
-              </div>
-            )
-          };
-        })
-      );
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>{" "}
+                </div>
+              )
+            };
+          })
+        );
+
+      access === "acessoRestritoProsp" &&
+        setData(
+          response.data
+            .filter(arr => arr.Representante.ColabId === id)
+            .map((client, key) => {
+              return {
+                idd: key,
+                id: client.id,
+                CNPJ: normalizeCnpj(client.CNPJ),
+                nomeAbv: client.nomeAbv,
+                contNome: client.CliConts[0].nome,
+                contEmail: client.CliConts[0].email,
+                RepresentanteId: client.RepresentanteId,
+                Representante: client.Representante.nome,
+                EmpresaId: client.EmpresaId,
+                prospect: client.prospect,
+                actions: (
+                  // we've added some custom button actions
+                  <div className="actions-right">
+                    {/* use this button to add a like kind of action */}
+                    <Tooltip title="Aprovar">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          setExcluding({ id: client.id, action: "update" });
+                          setModalMini(!modalMini);
+                        }}
+                      >
+                        <i className="tim-icons icon-check-2" />
+                      </Button>
+                    </Tooltip>
+                    {/* use this button to add a edit kind of action */}
+                    <Link to={`/cliente_update/${client.id}/true`}>
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <i className="tim-icons icon-pencil" />
+                      </Button>
+                    </Link>
+                    {/* use this button to remove the data row */}
+                    <Button
+                      onClick={() => {
+                        setExcluding({ id: client.id, action: "delete" });
+                        setModalMini(!modalMini);
+                      }}
+                      color="danger"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-simple-remove" />
+                    </Button>{" "}
+                  </div>
+                )
+              };
+            })
+        );
     }
     loadData();
-  }, [modalMini]);
+  }, [access, modalMini]);
+
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };
@@ -286,12 +310,16 @@ export default function ProspectTable() {
                     accessor: "nomeAbv"
                   },
                   {
-                    Header: "Representante",
-                    accessor: "Representante"
+                    Header: "Contato",
+                    accessor: "contNome"
                   },
                   {
-                    Header: "Tipo de comissão",
-                    accessor: "TipoComiss"
+                    Header: "Email",
+                    accessor: "contEmail"
+                  },
+                  {
+                    Header: "Representante",
+                    accessor: "Representante"
                   },
                   {
                     Header: "Ações",

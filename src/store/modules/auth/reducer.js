@@ -26,8 +26,12 @@ export default function auth(state = INITIAL_STATE, action) {
         draft.empresa = action.payload.empresa;
         break;
       }
+      case "@colab/FIRST_COLAB_SUCCESS": {
+        draft.user = action.payload.user;
+        break;
+      }
       case "@cadastro/EMPRESA_REQUEST": {
-        draft.empresa = action.payload.idFederal;
+        draft.user = action.payload.idFederal;
         break;
       }
       case "@auth/SIGN_FAILURE": {
