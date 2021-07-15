@@ -68,8 +68,10 @@ export default function ProspectTable() {
               id: client.id,
               CNPJ: normalizeCnpj(client.CNPJ),
               nomeAbv: client.nomeAbv,
-              contNome: client.CliConts[0].nome,
-              contEmail: client.CliConts[0].email,
+              contNome:
+                client.CliConts.length === 0 ? "--" : client.CliConts[0].nome,
+              contEmail:
+                client.CliConts.length === 0 ? "--" : client.CliConts[0].email,
               RepresentanteId: client.RepresentanteId,
               Representante: client.Representante.nome,
               EmpresaId: client.EmpresaId,
@@ -129,8 +131,12 @@ export default function ProspectTable() {
                 id: client.id,
                 CNPJ: normalizeCnpj(client.CNPJ),
                 nomeAbv: client.nomeAbv,
-                contNome: client.CliConts[0].nome,
-                contEmail: client.CliConts[0].email,
+                contNome:
+                  client.CliConts.length === 0 ? "--" : client.CliConts[0].nome,
+                contEmail:
+                  client.CliConts.length === 0
+                    ? "--"
+                    : client.CliConts[0].email,
                 RepresentanteId: client.RepresentanteId,
                 Representante: client.Representante.nome,
                 EmpresaId: client.EmpresaId,
