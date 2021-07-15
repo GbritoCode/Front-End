@@ -49,11 +49,6 @@ export default function ProspectTable() {
     const { id } = store.getState().auth.user.Colab;
     const { acessible } = store.getState().auth;
 
-    console.log(id);
-    console.log(acessible);
-    console.log(!!acessible.find(acc => acc === "acessoRestritoProsp"));
-    console.log(!!acessible.find(acc => acc === "acessoTotalProsp"));
-
     switch (true) {
       case !!acessible.find(acc => acc === "acessoRestritoProsp"):
         setAccess("acessoRestritoProsp");

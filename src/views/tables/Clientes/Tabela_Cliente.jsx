@@ -59,10 +59,7 @@ export default function Tabela_Cliente() {
   useEffect(() => {
     const { id } = store.getState().auth.user.Colab;
     const { acessible } = store.getState().auth;
-    console.log(id);
-    console.log(acessible);
-    console.log(!!acessible.find(acc => acc === "acessoRestritoCli"));
-    console.log(!!acessible.find(acc => acc === "acessoTotalCli"));
+
     switch (true) {
       case !!acessible.find(acc => acc === "acessoRestritoCli"):
         setAccess("acessoRestritoCli");
@@ -75,143 +72,106 @@ export default function Tabela_Cliente() {
 
     const loadData = async () => {
       const response = await api.get("/cliente/?prospect=false");
-      setData(
-        response.data.map((client, key) => {
-          return {
-            idd: key,
-            id: client.id,
-            CNPJ: normalizeCnpj(client.CNPJ),
-            nomeAbv: client.nomeAbv,
-            contNome: client.CliConts[0].nome,
-            contEmail: client.CliConts[0].email,
-            RepresentanteId: client.RepresentanteId,
-            Representante: client.Representante.nome,
-            EmpresaId: client.EmpresaId,
-            prospect: client.prospect,
-            actions: (
-              // we've added some custom button actions
-              <div className="actions-right">
-                {/* use this button to add a like kind of action */}
-                {/* use this button to add a edit kind of action */}
-                <Link to={`/cliente_update/${client.id}/false`}>
+
+      access === "acessoTotalCli" &&
+        setData(
+          response.data.map((client, key) => {
+            return {
+              idd: key,
+              id: client.id,
+              CNPJ: normalizeCnpj(client.CNPJ),
+              nomeAbv: client.nomeAbv,
+              contNome:
+                client.CliConts[0] === undefined
+                  ? "--"
+                  : client.CliConts[0].nome,
+              contEmail:
+                client.CliConts[0] === undefined
+                  ? "--"
+                  : client.CliConts[0].email,
+              RepresentanteId: client.RepresentanteId,
+              Representante: client.Representante.nome,
+              EmpresaId: client.EmpresaId,
+              prospect: client.prospect,
+              actions: (
+                // we've added some custom button actions
+                <div className="actions-right">
+                  {/* use this button to add a like kind of action */}
+                  {/* use this button to add a edit kind of action */}
+                  <Link to={`/cliente_update/${client.id}/false`}>
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-pencil" />
+                    </Button>
+                  </Link>
+                  {/* use this button to remove the data row */}
                   <Button
-                    color="default"
+                    onClick={() => {
+                      setExcluding(client.id);
+                      setModalMini(!modalMini);
+                    }}
+                    color="danger"
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                   >
-                    <i className="tim-icons icon-pencil" />
-                  </Button>
-                </Link>
-                {/* use this button to remove the data row */}
-                <Button
-                  onClick={() => {
-                    setExcluding(client.id);
-                    setModalMini(!modalMini);
-                  }}
-                  color="danger"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                >
-                  <i className="tim-icons icon-simple-remove" />
-                </Button>{" "}
-              </div>
-            )
-          };
-        })
-      );
-      // access === "acessoTotalCli" &&
-      //   setData(
-      //     response.data.map((client, key) => {
-      //       return {
-      //         idd: key,
-      //         id: client.id,
-      //         CNPJ: normalizeCnpj(client.CNPJ),
-      //         nomeAbv: client.nomeAbv,
-      //         contNome: client.CliConts[0].nome,
-      //         contEmail: client.CliConts[0].email,
-      //         RepresentanteId: client.RepresentanteId,
-      //         Representante: client.Representante.nome,
-      //         EmpresaId: client.EmpresaId,
-      //         prospect: client.prospect,
-      //         actions: (
-      //           // we've added some custom button actions
-      //           <div className="actions-right">
-      //             {/* use this button to add a like kind of action */}
-      //             {/* use this button to add a edit kind of action */}
-      //             <Link to={`/cliente_update/${client.id}/false`}>
-      //               <Button
-      //                 color="default"
-      //                 size="sm"
-      //                 className={classNames("btn-icon btn-link like")}
-      //               >
-      //                 <i className="tim-icons icon-pencil" />
-      //               </Button>
-      //             </Link>
-      //             {/* use this button to remove the data row */}
-      //             <Button
-      //               onClick={() => {
-      //                 setExcluding(client.id);
-      //                 setModalMini(!modalMini);
-      //               }}
-      //               color="danger"
-      //               size="sm"
-      //               className={classNames("btn-icon btn-link like")}
-      //             >
-      //               <i className="tim-icons icon-simple-remove" />
-      //             </Button>{" "}
-      //           </div>
-      //         )
-      //       };
-      //     })
-      //   );
+                    <i className="tim-icons icon-simple-remove" />
+                  </Button>{" "}
+                </div>
+              )
+            };
+          })
+        );
 
-      // access === "acessoRestritoCli" &&
-      //   setData(
-      //     response.data
-      //       .filter(arr => arr.Representante.ColabId === id)
-      //       .map((client, key) => {
-      //         return {
-      //           idd: key,
-      //           id: client.id,
-      //           CNPJ: normalizeCnpj(client.CNPJ),
-      //           nomeAbv: client.nomeAbv,
-      //           contNome: client.CliConts[0].nome,
-      //           contEmail: client.CliConts[0].email,
-      //           RepresentanteId: client.RepresentanteId,
-      //           Representante: client.Representante.nome,
-      //           EmpresaId: client.EmpresaId,
-      //           prospect: client.prospect,
-      //           actions: (
-      //             // we've added some custom button actions
-      //             <div className="actions-right">
-      //               {/* use this button to add a like kind of action */}
-      //               {/* use this button to add a edit kind of action */}
-      //               <Link to={`/cliente_update/${client.id}/false`}>
-      //                 <Button
-      //                   color="default"
-      //                   size="sm"
-      //                   className={classNames("btn-icon btn-link like")}
-      //                 >
-      //                   <i className="tim-icons icon-pencil" />
-      //                 </Button>
-      //               </Link>
-      //               {/* use this button to remove the data row */}
-      //               <Button
-      //                 onClick={() => {
-      //                   setExcluding(client.id);
-      //                   setModalMini(!modalMini);
-      //                 }}
-      //                 color="danger"
-      //                 size="sm"
-      //                 className={classNames("btn-icon btn-link like")}
-      //               >
-      //                 <i className="tim-icons icon-simple-remove" />
-      //               </Button>{" "}
-      //             </div>
-      //           )
-      //         };
-      //       })
-      //   );
+      access === "acessoRestritoCli" &&
+        setData(
+          response.data
+            .filter(arr => arr.Representante.ColabId === id)
+            .map((client, key) => {
+              return {
+                idd: key,
+                id: client.id,
+                CNPJ: normalizeCnpj(client.CNPJ),
+                nomeAbv: client.nomeAbv,
+                contNome: client.CliConts[0].nome,
+                contEmail: client.CliConts[0].email,
+                RepresentanteId: client.RepresentanteId,
+                Representante: client.Representante.nome,
+                EmpresaId: client.EmpresaId,
+                prospect: client.prospect,
+                actions: (
+                  // we've added some custom button actions
+                  <div className="actions-right">
+                    {/* use this button to add a like kind of action */}
+                    {/* use this button to add a edit kind of action */}
+                    <Link to={`/cliente_update/${client.id}/false`}>
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <i className="tim-icons icon-pencil" />
+                      </Button>
+                    </Link>
+                    {/* use this button to remove the data row */}
+                    <Button
+                      onClick={() => {
+                        setExcluding(client.id);
+                        setModalMini(!modalMini);
+                      }}
+                      color="danger"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <i className="tim-icons icon-simple-remove" />
+                    </Button>{" "}
+                  </div>
+                )
+              };
+            })
+        );
     };
     loadData();
   }, [access, modalMini]);
