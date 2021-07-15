@@ -58,16 +58,16 @@ export default function Tabela_Cliente() {
 
   useEffect(() => {
     const { id } = store.getState().auth.user.Colab;
-    const { accessible } = store.getState().auth;
+    const { acessible } = store.getState().auth;
     console.log(id);
-    console.log(accessible);
-    console.log(!!accessible.find(acc => acc === "acessoRestritoCli"));
-    console.log(!!accessible.find(acc => acc === "acessoTotalCli"));
+    console.log(acessible);
+    console.log(!!acessible.find(acc => acc === "acessoRestritoCli"));
+    console.log(!!acessible.find(acc => acc === "acessoTotalCli"));
     switch (true) {
-      case !!accessible.find(acc => acc === "acessoRestritoCli"):
+      case !!acessible.find(acc => acc === "acessoRestritoCli"):
         setAccess("acessoRestritoCli");
         break;
-      case !!accessible.find(acc => acc === "acessoTotalCli"):
+      case !!acessible.find(acc => acc === "acessoTotalCli"):
         setAccess("acessoTotalCli");
         break;
       default:

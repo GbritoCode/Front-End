@@ -47,18 +47,18 @@ export default function ProspectTable() {
 
   useEffect(() => {
     const { id } = store.getState().auth.user.Colab;
-    const { accessible } = store.getState().auth;
+    const { acessible } = store.getState().auth;
 
     console.log(id);
-    console.log(accessible);
-    console.log(!!accessible.find(acc => acc === "acessoRestritoProsp"));
-    console.log(!!accessible.find(acc => acc === "acessoTotalProsp"));
+    console.log(acessible);
+    console.log(!!acessible.find(acc => acc === "acessoRestritoProsp"));
+    console.log(!!acessible.find(acc => acc === "acessoTotalProsp"));
 
     switch (true) {
-      case !!accessible.find(acc => acc === "acessoRestritoProsp"):
+      case !!acessible.find(acc => acc === "acessoRestritoProsp"):
         setAccess("acessoRestritoProsp");
         break;
-      case !!accessible.find(acc => acc === "acessoTotalProsp"):
+      case !!acessible.find(acc => acc === "acessoTotalProsp"):
         setAccess("acessoTotalProsp");
         break;
       default:
