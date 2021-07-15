@@ -59,7 +59,7 @@ export default function Tabela_Cliente() {
   useEffect(() => {
     const { id } = store.getState().auth.user.Colab;
     const { acessible } = store.getState().auth;
-    console.log(!!acessible.find(acc => acc === "acessoRestritoCli"));
+
     switch (true) {
       case !!acessible.find(acc => acc === "acessoRestritoCli"):
         setAccess("acessoRestritoCli");
@@ -72,7 +72,7 @@ export default function Tabela_Cliente() {
 
     const loadData = async () => {
       const response = await api.get("/cliente/?prospect=false");
-      console.log(access);
+
       access === "acessoTotalCli" &&
         setData(
           response.data.map((client, key) => {
@@ -81,8 +81,10 @@ export default function Tabela_Cliente() {
               id: client.id,
               CNPJ: normalizeCnpj(client.CNPJ),
               nomeAbv: client.nomeAbv,
-              contNome: client.CliConts[0].nome,
-              contEmail: client.CliConts[0].email,
+              contNome:
+                client.CliConts.length === 0 ? "--" : client.CliConts[0].nome,
+              contEmail:
+                client.CliConts.length === 0 ? "--" : client.CliConts[0].email,
               RepresentanteId: client.RepresentanteId,
               Representante: client.Representante.nome,
               EmpresaId: client.EmpresaId,
@@ -129,8 +131,12 @@ export default function Tabela_Cliente() {
                 id: client.id,
                 CNPJ: normalizeCnpj(client.CNPJ),
                 nomeAbv: client.nomeAbv,
-                contNome: client.CliConts[0].nome,
-                contEmail: client.CliConts[0].email,
+                contNome:
+                  client.CliConts.length === 0 ? "--" : client.CliConts[0].nome,
+                contEmail:
+                  client.CliConts.length === 0
+                    ? "--"
+                    : client.CliConts[0].email,
                 RepresentanteId: client.RepresentanteId,
                 Representante: client.Representante.nome,
                 EmpresaId: client.EmpresaId,
