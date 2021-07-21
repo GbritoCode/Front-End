@@ -106,6 +106,12 @@ function ProspeccaoTable() {
                         .distanceFromToday
                     : "--"
                 ),
+                daysFromStart:
+                  client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
+                  undefined
+                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+                        .distanceFromToday
+                    : "--",
                 actions: (
                   // we've added some custom button actions
                   <div className="actions-right">
@@ -173,6 +179,15 @@ function ProspeccaoTable() {
                         .distanceFromToday
                     : "--"
                 ),
+                daysFromStart:
+                  client.FollowUps.reverse().find(
+                    arr => arr.CampanhaId === camp.id
+                  ) !== undefined
+                    ? Math.abs(
+                        client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+                          .daysFromStart
+                      )
+                    : "--",
                 actions: (
                   // we've added some custom button actions
                   <div className="actions-right">
@@ -608,6 +623,10 @@ function ProspeccaoTable() {
                         filterable: false,
                         sortable: false,
                         maxWidth: 50
+                      },
+                      {
+                        Header: "Dias",
+                        accessor: "daysFromStart"
                       },
                       {
                         Header: "Ações",

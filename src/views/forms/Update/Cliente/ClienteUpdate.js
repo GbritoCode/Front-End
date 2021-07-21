@@ -37,7 +37,7 @@ import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import { AttachMoney, Contacts } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
@@ -57,12 +57,11 @@ function ClienteUpdatee() {
     rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
-    tipoComiss: { value: "", error: "", message: "" }
+    tipoComiss: { value: "", error: "", message: "", optional: true },
+    fone: { value: "", error: "", message: "", optional: true },
+    site: { value: "", error: "", message: "", optional: true },
+    fantasia: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    fantasia: { value: "", error: "", message: "" }
-  };
-  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -81,12 +80,14 @@ function ClienteUpdatee() {
         cnpj: { value: normalizeCnpj(response.data.CNPJ) },
         nomeAbv: { value: response.data.nomeAbv },
         representante: { value: response.data.RepresentanteId },
-        tipoComiss: { value: response.data.TipoComisseId },
-        rzSoc: { value: response.data.rzSoc }
-      }));
-      setOptional(prevState => ({
-        ...prevState,
-        fantasia: { value: response.data.fantasia }
+        tipoComiss: {
+          value: response.data.TipoComisseId ? response.data.TipoComisseId : "",
+          optional: true
+        },
+        rzSoc: { value: response.data.rzSoc },
+        site: { value: response.data.site, optional: true },
+        fone: { value: normalizeFone(response.data.fone), optional: true },
+        fantasia: { value: response.data.fantasia, optional: true }
       }));
       setIsLoading(false);
     }
@@ -207,9 +208,9 @@ function ClienteUpdatee() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -380,29 +381,34 @@ function ClienteUpdatee() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
+      const foneDb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        ClienteUpdate(
+        ClienteUpdate({
           id,
-          values.nomeAbv.value,
-          values.rzSoc.value,
-          optional.fantasia.value,
-          values.representante.value,
-          values.tipoComiss.value,
-          prospect
-        )
+          nomeAbv: values.nomeAbv.value,
+          rzSoc: values.rzSoc.value,
+          fantasia: values.fantasia.value,
+          RepresentanteId: values.representante.value,
+          TipoComisseId: values.tipoComiss.value,
+          prospect,
+          site: values.site.value,
+          fone: foneDb
+        })
       );
     } else {
       options = {
@@ -509,22 +515,22 @@ function ClienteUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Nome Fanasia</Label>
+                          <Label>Nome Fantasia</Label>
                           <FormGroup
-                            className={`has-label ${optional.fantasia.error}`}
+                            className={`has-label ${values.fantasia.error}`}
                           >
                             <Input
                               disabled
                               onChange={event =>
                                 handleChange(event, "fantasia", "optional")
                               }
-                              value={optional.fantasia.value}
+                              value={values.fantasia.value}
                               name="nomeAbv"
                               type="text"
                             />
-                            {optional.fantasia.error === "has-danger" ? (
+                            {values.fantasia.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.fantasia.message}
+                                {values.fantasia.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -538,7 +544,6 @@ function ClienteUpdatee() {
                             className={`has-label ${values.nomeAbv.error}`}
                           >
                             <Input
-                              disabled
                               name="name_abv"
                               type="text"
                               onChange={event =>
@@ -597,7 +602,7 @@ function ClienteUpdatee() {
                               name="tipoComiss"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "tipoComiss", "text")
+                                handleChange(event, "tipoComiss", "optional")
                               }
                               value={values.tipoComiss.value}
                             >
@@ -619,6 +624,60 @@ function ClienteUpdatee() {
                             {values.tipoComiss.error === "has-danger" ? (
                               <Label className="error">
                                 {values.tipoComiss.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Site</Label>
+                          <FormGroup
+                            className={`has-label ${values.site.error}`}
+                          >
+                            <Input
+                              name="site"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "site", "optional")
+                              }
+                              value={values.site.value}
+                            />
+                            {values.site.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.site.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Telefone</Label>
+                          <FormGroup
+                            className={`has-label ${values.fone.error}`}
+                          >
+                            <Input
+                              minLength={10}
+                              maxLength={11}
+                              name="fone"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "fone", "optional")
+                              }
+                              onBlur={e => {
+                                const { value } = e.target;
+                                setValues(prevState => ({
+                                  ...prevState,
+                                  fone: {
+                                    value: normalizeFone(value),
+                                    optional: true
+                                  }
+                                }));
+                              }}
+                              value={values.fone.value}
+                            />
+                            {values.fone.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.fone.message}
                               </Label>
                             ) : null}
                           </FormGroup>

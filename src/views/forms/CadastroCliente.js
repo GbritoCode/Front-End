@@ -40,7 +40,7 @@ import classNames from "classnames";
 import ReactTable from "react-table-v6";
 import { Tooltip } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
@@ -65,18 +65,18 @@ export default function CadastroCliente() {
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
     tipoComiss: { value: "", error: "", message: "" },
+    fone: { value: "", error: "", message: "", optional: true },
+    site: { value: "", error: "", message: "", optional: true },
     CampanhaIds: {
       value: "",
       error: "",
       message: "",
       array: [],
       optional: true
-    }
-  };
-  const optionalSchema = {
+    },
     fantasia: { value: "", error: "", message: "" }
   };
-  const [optional, setOptional] = useState(optionalSchema);
+
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -200,12 +200,11 @@ export default function CadastroCliente() {
         };
         notify();
       } else {
+        document.getElementById("atvPrincipal").value =
+          response.data.atividade_principal[0].text;
         setValues(prevState => ({
           ...prevState,
-          rzSoc: { value: response.data.nome }
-        }));
-        setOptional(prevState => ({
-          ...prevState,
+          rzSoc: { value: response.data.nome },
           fantasia: { value: response.data.fantasia }
         }));
       }
@@ -353,9 +352,9 @@ export default function CadastroCliente() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -398,17 +397,21 @@ export default function CadastroCliente() {
 
     if (valid && filled) {
       const cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
+      const foneDb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        ClienteRequest(
-          cnpjdb,
-          values.nomeAbv.value,
-          values.rzSoc.value,
-          optional.fantasia.value,
-          values.representante.value,
-          values.tipoComiss.value,
-          values.empresaId.value,
-          prospect
-        )
+        ClienteRequest({
+          CNPJ: cnpjdb,
+          nomeAbv: values.nomeAbv.value,
+          rzSoc: values.rzSoc.value,
+          fantasia: values.fantasia.value,
+          RepresentanteId: values.representante.value,
+          TipoComisseId: values.tipoComiss.value,
+          EmpresaId: values.empresaId.value,
+          prospect,
+          site: values.site.value,
+          fone: foneDb,
+          CampanhaIds: values.CampanhaIds.array
+        })
       );
     } else {
       options = {
@@ -581,20 +584,20 @@ export default function CadastroCliente() {
                     <Col md="4">
                       <Label>Nome Fanasia</Label>
                       <FormGroup
-                        className={`has-label ${optional.fantasia.error}`}
+                        className={`has-label ${values.fantasia.error}`}
                       >
                         <Input
                           disabled
                           onChange={event =>
                             handleChange(event, "fantasia", "optional")
                           }
-                          value={optional.fantasia.value}
+                          value={values.fantasia.value}
                           name="nomeAbv"
                           type="text"
                         />
-                        {optional.fantasia.error === "has-danger" ? (
+                        {values.fantasia.error === "has-danger" ? (
                           <Label className="error">
-                            {optional.fantasia.message}
+                            {values.fantasia.message}
                           </Label>
                         ) : null}
                       </FormGroup>
@@ -689,6 +692,50 @@ export default function CadastroCliente() {
                   </Row>
                   <Row>
                     <Col md="4">
+                      <Label>Site</Label>
+                      <FormGroup className={`has-label ${values.site.error}`}>
+                        <Input
+                          name="site"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "site", "optional")
+                          }
+                          value={values.site.value}
+                        />
+                        {values.site.error === "has-danger" ? (
+                          <Label className="error">{values.site.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Telefone</Label>
+                      <FormGroup className={`has-label ${values.fone.error}`}>
+                        <Input
+                          minLength={10}
+                          maxLength={11}
+                          name="fone"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "fone", "optional")
+                          }
+                          onBlur={e => {
+                            const { value } = e.target;
+                            setValues(prevState => ({
+                              ...prevState,
+                              fone: {
+                                value: normalizeFone(value),
+                                optional: true
+                              }
+                            }));
+                          }}
+                          value={values.fone.value}
+                        />
+                        {values.fone.error === "has-danger" ? (
+                          <Label className="error">{values.fone.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
                       <Label>Campanhas</Label>
                       <FormGroup
                         className={`has-label ${values.CampanhaIds.error}`}
@@ -725,6 +772,19 @@ export default function CadastroCliente() {
                             {values.CampanhaIds.message}
                           </Label>
                         ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Label>Atividade Principal</Label>
+                      <FormGroup className="has-label">
+                        <Input
+                          disabled
+                          name="atvPrincipal"
+                          id="atvPrincipal"
+                          type="textarea"
+                        />
                       </FormGroup>
                     </Col>
                   </Row>

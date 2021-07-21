@@ -46,11 +46,12 @@ export default function CliContUpdatee() {
     nome: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
-    skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    aniver: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" },
-    linkedin: { value: "", error: "", message: "" }
+    cargo: { value: "", error: "", message: "" },
+    skype: { value: "", error: "", message: "", optional: true },
+    linkedin: { value: "", error: "", message: "", optional: true },
+    aniver: { value: null, error: "", message: "", optional: true },
+    ramal: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
   const [data1, setData1] = useState({});
@@ -68,13 +69,14 @@ export default function CliContUpdatee() {
         ...prevState,
         ClienteId: { value: response.data.ClienteId },
         nome: { value: response.data.nome },
-        cel: { value: response.data.cel },
-        fone: { value: response.data.fone },
-        aniver: { value: response.data.aniver },
-        tipoConta: { value: response.data.tipoConta },
-        skype: { value: response.data.skype },
+        cel: { value: normalizeFone(response.data.cel) },
+        fone: { value: normalizeFone(response.data.fone) },
         email: { value: response.data.email },
-        linkedin: { value: response.data.linkedin }
+        aniver: { value: response.data.aniver, optional: true },
+        skype: { value: response.data.skype, optional: true },
+        linkedin: { value: response.data.linkedin, optional: true },
+        cargo: { value: response.data.cargo, optional: true },
+        ramal: { value: response.data.ramal, optional: true }
       }));
       setIsLoading(false);
     }
@@ -189,6 +191,12 @@ export default function CliContUpdatee() {
           }));
         }
         break;
+      case "optional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target, optional: true }
+        }));
+        break;
       case "text":
         setValues(prevState => ({
           ...prevState,
@@ -213,33 +221,38 @@ export default function CliContUpdatee() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
+      var celdb = values.cel.value.replace(/[^\d]+/g, "");
+      var fonedb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        CliContUpdate(
+        CliContUpdate({
           id,
-          values.ClienteId.value,
-          values.nome.value,
-          values.cel.value,
-          values.fone.value,
-          values.skype.value,
-          values.email.value,
-          values.aniver.value,
-          values.tipoConta.value,
+          ClienteId: values.ClienteId.value,
+          nome: values.nome.value,
+          cel: celdb,
+          fone: fonedb,
+          skype: values.skype.value,
+          email: values.email.value,
+          aniver: values.aniver.value === "" ? null : values.aniver.value,
           prospect,
-          values.linkedin.value
-        )
+          linkedin: values.linkedin.value,
+          cargo: values.cargo.value,
+          ramal: values.ramal.value
+        })
       );
     } else {
       options = {
@@ -304,11 +317,33 @@ export default function CliContUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Cargo</Label>
+                          <FormGroup
+                            className={`has-label ${values.cargo.error}`}
+                          >
+                            <Input
+                              name="cargo"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cargo", "text")
+                              }
+                              value={values.cargo.value}
+                            />
+                            {values.cargo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cargo.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Celular</Label>
                           <FormGroup
                             className={`has-label ${values.cel.error}`}
                           >
                             <Input
+                              minLength={10}
+                              maxLength={11}
                               name="cel"
                               type="numeric"
                               onChange={event =>
@@ -330,12 +365,17 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+
+                      <Row>
                         <Col md="4">
                           <Label>Telefone</Label>
                           <FormGroup
                             className={`has-label ${values.fone.error}`}
                           >
                             <Input
+                              minLength={10}
+                              maxLength={11}
                               name="fone"
                               type="numeric"
                               onChange={event =>
@@ -357,77 +397,27 @@ export default function CliContUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
+                          <Label>Ramal</Label>
                           <FormGroup
-                            className={`has-label ${values.aniver.error}`}
-                          >
-                            <Label>Aniversário </Label>
-                            <Input
-                              name="aniver"
-                              type="date"
-                              onChange={event =>
-                                handleChange(event, "aniver", "text")
-                              }
-                              value={values.aniver.value}
-                            />
-                            {values.aniver.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.aniver.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Tipo de Contato</Label>
-                          <FormGroup
-                            className={`has-label ${values.tipoConta.error}`}
+                            className={`has-label ${values.ramal.error}`}
                           >
                             <Input
-                              name="tipoConta"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "tipoConta", "text")
-                              }
-                              value={values.tipoConta.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione o tipo de contato{" "}
-                              </option>
-                              <option value={1}>Normal</option>
-                              <option value={2}>Nota Fiscal</option>
-                            </Input>
-                            {values.tipoConta.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.tipoConta.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Skype</Label>
-                          <FormGroup
-                            className={`has-label ${values.skype.error}`}
-                          >
-                            <Input
-                              name="skype"
+                              name="ramal"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "skype", "text")
+                                handleChange(event, "ramal", "optional")
                               }
-                              value={values.skype.value}
+                              value={values.ramal.value}
                             />
-                            {values.skype.error === "has-danger" ? (
+                            {values.ramal.error === "has-danger" ? (
                               <Label className="error">
-                                {values.skype.message}
+                                {values.ramal.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
+
                         <Col md="4">
                           <Label>Email</Label>
                           <FormGroup
@@ -449,6 +439,26 @@ export default function CliContUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Skype</Label>
+                          <FormGroup
+                            className={`has-label ${values.skype.error}`}
+                          >
+                            <Input
+                              name="skype"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "skype", "optional")
+                              }
+                              value={values.skype.value}
+                            />
+                            {values.skype.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.skype.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Linkedin</Label>
                           <FormGroup
                             className={`has-label ${values.linkedin.error}`}
@@ -457,13 +467,33 @@ export default function CliContUpdatee() {
                               name="linkedin"
                               type="linkedin"
                               onChange={event =>
-                                handleChange(event, "linkedin", "text")
+                                handleChange(event, "linkedin", "optional")
                               }
                               value={values.linkedin.value}
                             />
                             {values.linkedin.error === "has-danger" ? (
                               <Label className="error">
                                 {values.linkedin.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <FormGroup
+                            className={`has-label ${values.aniver.error}`}
+                          >
+                            <Label>Aniversário </Label>
+                            <Input
+                              name="aniver"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "aniver", "optional")
+                              }
+                              value={values.aniver.value}
+                            />
+                            {values.aniver.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.aniver.message}
                               </Label>
                             ) : null}
                           </FormGroup>

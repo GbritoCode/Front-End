@@ -4,55 +4,6 @@ export function signFailure() {
   };
 }
 
-export function ClienteRequest(
-  CNPJ,
-  nomeAbv,
-  rzSoc,
-  fantasia,
-  RepresentanteId,
-  TipoComisseId,
-  EmpresaId,
-  prospect,
-  CampanhaIds
-) {
-  return {
-    type: "@cadastro/CADASTRO_REQUEST",
-    payload: {
-      CNPJ,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      EmpresaId,
-      prospect,
-      CampanhaIds
-    }
-  };
-}
-
-export function ClienteUpdate(
-  id,
-  nomeAbv,
-  rzSoc,
-  fantasia,
-  RepresentanteId,
-  TipoComisseId,
-  prospect
-) {
-  return {
-    type: "@update/CLIENTE_REQUEST",
-    payload: {
-      id,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      prospect
-    }
-  };
-}
 export function ClienteUpdateSuccess(profile) {
   return {
     type: "@update/CLIENTE_REQUEST_SUCCES",
@@ -60,63 +11,31 @@ export function ClienteUpdateSuccess(profile) {
   };
 }
 
-export function CliContRequest(
-  ClienteId,
-  nome,
-  cel,
-  fone,
-  skype,
-  email,
-  aniver,
-  tipoConta,
-  prospect,
-  linkedin
-) {
+export function ClienteRequest(data) {
   return {
-    type: "@cadastro/CADASTRO_CONT_REQUEST",
-    payload: {
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      prospect,
-      linkedin
-    }
+    type: "@cadastro/CADASTRO_REQUEST",
+    payload: data
   };
 }
 
-export function CliContUpdate(
-  id,
-  ClienteId,
-  nome,
-  cel,
-  fone,
-  skype,
-  email,
-  aniver,
-  tipoConta,
-  prospect,
-  linkedin
-) {
+export function ClienteUpdate(data) {
+  return {
+    type: "@update/CLIENTE_REQUEST",
+    payload: data
+  };
+}
+
+export function CliContRequest(data) {
+  return {
+    type: "@cadastro/CADASTRO_CONT_REQUEST",
+    payload: data
+  };
+}
+
+export function CliContUpdate(data) {
   return {
     type: "@update/CONT_REQUEST",
-    payload: {
-      id,
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      prospect,
-      linkedin
-    }
+    payload: data
   };
 }
 
@@ -248,26 +167,10 @@ export function campanhaCadastro(
   };
 }
 
-export function campanhaUpdate(
-  id,
-  cod,
-  desc,
-  ClienteIds,
-  dataInic,
-  dataFim,
-  ColabId
-) {
+export function campanhaUpdate(data) {
   return {
     type: "@update/CAMPANHA_REQUEST",
-    payload: {
-      id,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId
-    }
+    payload: data
   };
 }
 

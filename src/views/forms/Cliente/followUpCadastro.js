@@ -182,10 +182,18 @@ export default function CadastroFollowUps() {
     if (value === "10") {
       setValues(prevState => ({
         ...prevState,
-        ativo: { value: false }
+        ativo: { value: false },
+        dataProxContato: { value: `${year}-${month}-${date}` }
       }));
+      document.getElementsByName("dataProxContato")[0].disabled = true;
       console.log(value);
       setModalMini(true);
+    } else {
+      document.getElementsByName("dataProxContato")[0].disabled = false;
+      setValues(prevState => ({
+        ...prevState,
+        dataProxContato: { value: "" }
+      }));
     }
   };
 

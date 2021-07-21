@@ -145,16 +145,16 @@ export default function UpdateCampanha() {
 
     if (valid && filled) {
       dispatch(
-        campanhaUpdate(
+        campanhaUpdate({
           id,
-          values.empresaId.value,
-          values.cod.value,
-          values.desc.value,
-          values.dataInic.value,
-          values.dataFim.value,
-          values.ColabId.value,
-          values.objetivo.value
-        )
+          EmpresaId: values.empresaId.value,
+          cod: values.cod.value,
+          desc: values.desc.value,
+          dataaInic: values.dataInic.value,
+          dataFim: values.dataFim.value,
+          ColabId: values.ColabId.value,
+          objetivo: values.objetivo.value
+        })
       );
     } else {
       options = {
@@ -307,7 +307,6 @@ export default function UpdateCampanha() {
                             className={`has-label ${values.desc.error}`}
                           >
                             <Input
-                              disabled
                               name="desc"
                               type="text"
                               onChange={event =>
