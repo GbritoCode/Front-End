@@ -57,7 +57,7 @@ function ClienteUpdatee() {
     rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
-    tipoComiss: { value: "", error: "", message: "", optional: true },
+    tipoComiss: { value: null, error: "", message: "", optional: true },
     fone: { value: "", error: "", message: "", optional: true },
     site: { value: "", error: "", message: "", optional: true },
     fantasia: { value: "", error: "", message: "", optional: true }

@@ -14,7 +14,7 @@
 * The above copyright notice and permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
@@ -514,10 +514,12 @@ export default function ComercialDashboard() {
                         onElementsClick={elems => {
                           // if required to build the URL, you can
                           // get datasetIndex and value index from an `elem`:
-                          console.log(elems);
-                          console.log(
-                            `${elems[0]._datasetIndex}, ${elems[0]._index}`
-                          );
+                          if (elems.length > 0) {
+                            console.log(elems);
+                            console.log(
+                              `${elems[0]._datasetIndex}, ${elems[0]._index}`
+                            );
+                          }
                           // and then redirect to the target page:
                           // window.location = "https://example.com";
                         }}

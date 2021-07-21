@@ -159,14 +159,14 @@ export default function CadastroCliente() {
         ...prevState,
         cnpj: {
           error: "has-danger",
-          message: "Insira um CNPJ válido"
+          message: "O CNPJ já existe"
         }
       }));
       options = {
         place: "tr",
         message: (
           <div>
-            <div>O CNPJ já existe</div>
+            <div>O CNPJ informado já existe como prospect ou cliente </div>
           </div>
         ),
         type: "danger",
