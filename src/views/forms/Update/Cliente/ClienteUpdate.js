@@ -210,6 +210,19 @@ function ClienteUpdatee() {
     return false;
   };
 
+  const verifyUrl = value => {
+    const UrlRegex = new RegExp(
+      "(https:[/][/]|http:[/][/])[a-zA-Z0-9-.]+(.[.][a-zA-Z]{2,6})(:[0-9]{1,5})*(/($|[a-zA-Z0-9.,;?'\\+&amp;%$#=~_-]+))*$"
+    );
+    if (value) {
+      if (UrlRegex.test(value)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
+
   const checkDesc = value => {
     switch (value) {
       case "1":
@@ -245,7 +258,24 @@ function ClienteUpdatee() {
           }));
         }
         break;
-
+      case "url":
+        if (verifyUrl(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira uma URL no padrão 'https://www.exemplo.com'",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "cnpj":
         setValues(prevState => ({
           ...prevState,
@@ -771,7 +801,7 @@ function ClienteUpdatee() {
                               name="site"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "site", "optional")
+                                handleChange(event, "site", "url")
                               }
                               value={values.site.value}
                             />

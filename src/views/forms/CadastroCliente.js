@@ -67,6 +67,7 @@ export default function CadastroCliente() {
     tipoComiss: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "", optional: true },
     site: { value: "", error: "", message: "", optional: true },
+    atvPrincipal: { value: "", error: "", message: "" },
     CampanhaIds: {
       value: "",
       error: "",
@@ -205,7 +206,8 @@ export default function CadastroCliente() {
         setValues(prevState => ({
           ...prevState,
           rzSoc: { value: response.data.nome },
-          fantasia: { value: response.data.fantasia }
+          fantasia: { value: response.data.fantasia },
+          atvPrincipal: { value: response.data.atividade_principal[0].text }
         }));
       }
     }
@@ -322,6 +324,18 @@ export default function CadastroCliente() {
     }
     return false;
   };
+  const verifyUrl = value => {
+    const UrlRegex = new RegExp(
+      "(https:[/][/]|http:[/][/])[a-zA-Z0-9-.]+(.[.][a-zA-Z]{2,6})(:[0-9]{1,5})*(/($|[a-zA-Z0-9.,;?'\\+&amp;%$#=~_-]+))*$"
+    );
+    if (value) {
+      if (UrlRegex.test(value)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -344,7 +358,24 @@ export default function CadastroCliente() {
           }));
         }
         break;
-
+      case "url":
+        if (verifyUrl(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira uma URL no padrão 'https://www.exemplo.com'",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "cnpj":
         setValues(prevState => ({
           ...prevState,
@@ -410,6 +441,7 @@ export default function CadastroCliente() {
           prospect,
           site: values.site.value,
           fone: foneDb,
+          atvPrincipal: values.atvPrincipal.value,
           CampanhaIds: values.CampanhaIds.array
         })
       );
@@ -697,9 +729,7 @@ export default function CadastroCliente() {
                         <Input
                           name="site"
                           type="text"
-                          onChange={event =>
-                            handleChange(event, "site", "optional")
-                          }
+                          onChange={event => handleChange(event, "site", "url")}
                           value={values.site.value}
                         />
                         {values.site.error === "has-danger" ? (

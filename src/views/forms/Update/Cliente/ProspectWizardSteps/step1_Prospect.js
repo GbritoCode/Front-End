@@ -69,6 +69,7 @@ const CadastroCliente = forwardRef((props, ref) => {
     tipoComiss: { value: null, error: "", message: "", optional: true },
     fone: { value: "", error: "", message: "", optional: true },
     site: { value: "", error: "", message: "", optional: true },
+    atvPrincipal: { value: "", error: "", message: "" },
     CampanhaIds: {
       value: "",
       error: "",
@@ -230,7 +231,8 @@ const CadastroCliente = forwardRef((props, ref) => {
         setValues(prevState => ({
           ...prevState,
           rzSoc: { value: response.data.nome },
-          fantasia: { value: response.data.fantasia, optional: true }
+          fantasia: { value: response.data.fantasia, optional: true },
+          atvPrincipal: { value: response.data.atividade_principal[0].text }
         }));
       }
     }
@@ -261,6 +263,19 @@ const CadastroCliente = forwardRef((props, ref) => {
     return false;
   };
 
+  const verifyUrl = value => {
+    const UrlRegex = new RegExp(
+      "(https:[/][/]|http:[/][/])[a-zA-Z0-9-.]+(.[.][a-zA-Z]{2,6})(:[0-9]{1,5})*(/($|[a-zA-Z0-9.,;?'\\+&amp;%$#=~_-]+))*$"
+    );
+    if (value) {
+      if (UrlRegex.test(value)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
+
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
@@ -282,7 +297,24 @@ const CadastroCliente = forwardRef((props, ref) => {
           }));
         }
         break;
-
+      case "url":
+        if (verifyUrl(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira uma URL no padrão 'https://www.exemplo.com'",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "cnpj":
         setValues(prevState => ({
           ...prevState,
@@ -366,7 +398,8 @@ const CadastroCliente = forwardRef((props, ref) => {
       prospect: true,
       CampanhaIds: values.CampanhaIds.array,
       site: values.site.value,
-      fone: values.fone.value
+      fone: values.fone.value,
+      atvPrincipal: values.atvPrincipal.value
     }
   }));
 
@@ -740,7 +773,7 @@ const CadastroCliente = forwardRef((props, ref) => {
                               name="site"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "site", "optional")
+                                handleChange(event, "site", "url")
                               }
                               value={values.site.value}
                             />

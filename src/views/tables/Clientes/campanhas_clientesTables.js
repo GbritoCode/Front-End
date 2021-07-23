@@ -97,6 +97,9 @@ export default function CampanhaClienteTable() {
             EmpresaId: client.EmpresaId,
             prospect: checkProsp(client.prospect),
             implantacao: client.createdAt,
+            situacao: client.Campanhas[0].Campanhas_Clientes.ativo
+              ? "Em prospecção"
+              : "Finalizado",
             actions: (
               // we've added some custom button actions
               <div className="actions-right">
@@ -171,6 +174,9 @@ export default function CampanhaClienteTable() {
               EmpresaId: client.EmpresaId,
               prospect: checkProsp(client.prospect),
               implantacao: client.createdAt,
+              situacao: client.Campanhas[0].Campanhas_Clientes.ativo
+                ? "Em prospecção"
+                : "Finalizado",
               actions: (
                 // we've added some custom button actions
                 <div className="actions-right">
@@ -204,7 +210,6 @@ export default function CampanhaClienteTable() {
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };
-  console.log(data);
 
   return (
     <>
@@ -246,11 +251,7 @@ export default function CampanhaClienteTable() {
                     })
                     .then(res => {
                       toast.success(res.data.message);
-                      console.log(
-                        data2.filter(arr =>
-                          values.ClienteIds.array.includes(arr.id)
-                        )
-                      );
+
                       setData(prevState => [
                         ...prevState,
                         data2.filter(arr =>
@@ -309,7 +310,6 @@ export default function CampanhaClienteTable() {
             getTdProps={(state, rowInfo) => {
               return {
                 onClick: () => {
-                  console.log(rowInfo.row);
                   rowInfo.original.clicado = true;
                   // eslint-disable-next-line no-unused-expressions
                   values.ClienteIds.array.findIndex(
@@ -525,6 +525,10 @@ export default function CampanhaClienteTable() {
                   {
                     Header: "Implantação",
                     accessor: "implantacao"
+                  },
+                  {
+                    Header: "Situação",
+                    accessor: "situacao"
                   },
                   {
                     Header: "Ações",

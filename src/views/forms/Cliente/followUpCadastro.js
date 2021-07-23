@@ -52,7 +52,7 @@ import {
 import { Tooltip } from "@material-ui/core";
 import Axios from "axios";
 import jsonpAdapter from "axios-jsonp";
-import { normalizeFone } from "~/normalize";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpCadastro } from "~/store/modules/Cliente/actions";
@@ -75,6 +75,7 @@ export default function CadastroFollowUps() {
   const [data3, setData3] = useState([]);
   const [data4, setData4] = useState([]);
   const [data5, setData5] = useState({});
+  const [data6, setData6] = useState([]);
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
 
@@ -122,14 +123,16 @@ export default function CadastroFollowUps() {
         url: `https://www.receitaws.com.br/v1/cnpj/${response2.data.CNPJ}`,
         adapter: jsonpAdapter
       });
-      setData5({
-        CliAtvPrincipal: response5.data.atividade_principal[0].text,
-        CliEndereco: `${response5.data.logradouro}, ${response5.data.numero}, ${response5.data.bairro}, ${response5.data.municipio} - ${response5.data.uf}`
-      });
+      const response6 = await api.get("/representante");
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
       setData4(response4.data);
+      setData5({
+        CliAtvPrincipal: response5.data.atividade_principal[0].text,
+        CliEndereco: `${response5.data.logradouro}, ${response5.data.numero}, ${response5.data.bairro}, ${response5.data.municipio} - ${response5.data.uf}`
+      });
+      setData6(response6.data);
 
       setMeetingValues(prevState => ({
         ...prevState,
@@ -414,8 +417,6 @@ export default function CadastroFollowUps() {
                           }
                         }
                       }
-                      console.log(meetingValues);
-                      console.log(meetingFilled);
                       if (meetingFilled) {
                         await api.post(`/followUp/meeting/?Cc=${""}`, {
                           meetingValues,
@@ -644,9 +645,6 @@ export default function CadastroFollowUps() {
                   </Button>
                 </Tooltip>{" "}
                 <h3 style={{ marginBottom: 0 }}>Empresa</h3>
-                <p style={{ fontSize: 14 }}>
-                  {data2.nomeAbv} | {data2.rzSoc}
-                </p>{" "}
               </Header>
               <Row>
                 <Col sm="4">
@@ -654,7 +652,7 @@ export default function CadastroFollowUps() {
                   <FormGroup className="has-label">
                     <Input
                       disabled
-                      value={data2.CNPJ}
+                      value={normalizeCnpj(data2.CNPJ)}
                       id="CliCNPJ"
                       name="CliCNPJ"
                       type="text"
@@ -687,6 +685,76 @@ export default function CadastroFollowUps() {
                 </Col>
               </Row>
               <Row>
+                <Col sm="4">
+                  <Label>Site</Label>
+                  <FormGroup className="has-label">
+                    <InputGroup>
+                      <Input
+                        disabled
+                        value={data2.site ? data2.site : "--"}
+                        id="CliSite"
+                        name="CliSite"
+                        type="text"
+                      />
+                      <InputGroupAddon
+                        className="appendCustom"
+                        addonType="append"
+                      >
+                        <Button
+                          className={classNames("btn-icon btn-link like addon")}
+                          onClick={() =>
+                            data2.site
+                              ? window.open(
+                                  `${data2.site}`,
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                )
+                              : null
+                          }
+                        >
+                          <i className="tim-icons icon-world addon" />
+                        </Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Telefone</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.fone ? normalizeFone(data2.fone) : "--"}
+                      id="CliFone"
+                      name="CliFone"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Representante</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.RepresentanteId}
+                      id="CliFone"
+                      name="CliFone"
+                      type="select"
+                    >
+                      <option disabled value="">
+                        {" "}
+                        Representante
+                      </option>
+                      {data6.map((repr, index) => (
+                        <option id={index} value={repr.id}>
+                          {" "}
+                          {repr.nome}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
                 <Col sm="12">
                   <Label>Endereço</Label>
                   <FormGroup className="has-label">
@@ -703,7 +771,7 @@ export default function CadastroFollowUps() {
 
               <Row>
                 <Col sm="12">
-                  <Label>Ativodade Principal</Label>
+                  <Label>Atividade Principal</Label>
                   <FormGroup className="has-label">
                     <Input
                       disabled
@@ -858,12 +926,12 @@ export default function CadastroFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Telefone</Label>
+                          <Label>Celular</Label>
                           <FormGroup className="has-label">
                             <Input
                               disabled
-                              name="telefone"
-                              id="telefone"
+                              name="celular"
+                              id="celular"
                               type="text"
                             />
                           </FormGroup>
@@ -871,12 +939,12 @@ export default function CadastroFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Celular</Label>
+                          <Label>Telefone</Label>
                           <FormGroup className="has-label">
                             <Input
                               disabled
-                              name="celular"
-                              id="celular"
+                              name="telefone"
+                              id="telefone"
                               type="text"
                             />
                           </FormGroup>
