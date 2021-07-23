@@ -39,6 +39,7 @@ import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import {
   Close,
+  FormatListBulleted,
   InsertEmoticon,
   MailOutline,
   Message,
@@ -49,6 +50,8 @@ import {
   Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
+import Axios from "axios";
+import jsonpAdapter from "axios-jsonp";
 import { normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
@@ -66,10 +69,12 @@ export default function CadastroFollowUps() {
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [data4, setData4] = useState([]);
+  const [data5, setData5] = useState({});
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
 
@@ -113,6 +118,14 @@ export default function CadastroFollowUps() {
       const response2 = await api.get(`/cliente/${cliId}`);
       const response3 = await api.get(`/cliente/cont/${response2.data.id}`);
       const response4 = await api.get(`/campanha/${campId}/true`);
+      const response5 = await Axios({
+        url: `https://www.receitaws.com.br/v1/cnpj/${response2.data.CNPJ}`,
+        adapter: jsonpAdapter
+      });
+      setData5({
+        CliAtvPrincipal: response5.data.atividade_principal[0].text,
+        CliEndereco: `${response5.data.logradouro}, ${response5.data.numero}, ${response5.data.bairro}, ${response5.data.municipio} - ${response5.data.uf}`
+      });
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -208,6 +221,8 @@ export default function CadastroFollowUps() {
     document.getElementById("telefone").value = normalizeFone(cont.fone);
     document.getElementById("celular").value = normalizeFone(cont.cel);
     document.getElementById("skype").value = cont.skype;
+    document.getElementById("ramal").value = cont.ramal ? cont.ramal : "--";
+    document.getElementById("cargo").value = cont.cargo ? cont.cargo : "--";
   };
 
   const handleChange = (event, name, type) => {
@@ -603,7 +618,110 @@ export default function CadastroFollowUps() {
               </Row>
               <Footer />
             </ModalLarge>
+            {/*
+            ------------
+            ------------
+            ------------
+            */}
+            <ModalLarge
+              onClose={() => {
+                setIsOpenInfo(!isOpenInfo);
+              }}
+              open={isOpenInfo}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenInfo(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>Empresa</h3>
+                <p style={{ fontSize: 14 }}>
+                  {data2.nomeAbv} | {data2.rzSoc}
+                </p>{" "}
+              </Header>
+              <Row>
+                <Col sm="4">
+                  <Label>CNPJ</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.CNPJ}
+                      id="CliCNPJ"
+                      name="CliCNPJ"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>{" "}
+                <Col sm="4">
+                  <Label>Razão Social</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.rzSoc}
+                      id="CliRzSoc"
+                      name="CliRzSoc"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Nome Abreviado</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.nomeAbv}
+                      id="CliNomeAbv"
+                      name="CliNomeAbv"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="12">
+                  <Label>Endereço</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data5.CliEndereco}
+                      id="CliEndereco"
+                      name="CliEndereco"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
 
+              <Row>
+                <Col sm="12">
+                  <Label>Ativodade Principal</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data5.CliAtvPrincipal}
+                      id="CliAtvPrincipal"
+                      name="CliAtvPrincipal"
+                      type="textarea"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </ModalLarge>
+            {/*
+            ------------
+            ------------
+            ------------
+            */}
             <Row>
               <Col md="12">
                 <Card>
@@ -620,6 +738,17 @@ export default function CadastroFollowUps() {
                         </Button>
                       </Tooltip>
                     </Link>
+                    <Tooltip title="Info" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right"
+                        }}
+                        onClick={() => setIsOpenInfo(true)}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <FormatListBulleted />
+                      </Button>
+                    </Tooltip>
                     <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                     <p style={{ fontSize: 14 }}>
                       {data4.cod} | {data2.nomeAbv}
@@ -707,6 +836,17 @@ export default function CadastroFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
+                          <Label>Cargo</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              name="cargo"
+                              id="cargo"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Email</Label>
                           <FormGroup className="has-label">
                             <Input
@@ -728,6 +868,8 @@ export default function CadastroFollowUps() {
                             />
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Celular</Label>
                           <FormGroup className="has-label">
@@ -739,8 +881,17 @@ export default function CadastroFollowUps() {
                             />
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
+                        <Col md="4">
+                          <Label>Ramal</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              name="ramal"
+                              id="ramal"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
                         <Col md="4">
                           <Label>Skype</Label>
                           <FormGroup className="has-label">
@@ -752,6 +903,8 @@ export default function CadastroFollowUps() {
                             />
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Preferência de Contato</Label>
                           <FormGroup
@@ -887,8 +1040,6 @@ export default function CadastroFollowUps() {
                             </Label>
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Data Próximo Contato</Label>
                           <FormGroup
@@ -909,7 +1060,8 @@ export default function CadastroFollowUps() {
                             ) : null}
                           </FormGroup>
                         </Col>
-
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Ação</Label>
                           <FormGroup

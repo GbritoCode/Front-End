@@ -166,7 +166,8 @@ export default function CampanhaClienteTable() {
               Representante: client.Representante.nome,
               rzSoc: client.rzSoc,
               TipoComisseId: client.TipoComisseId,
-              TipoComiss: client.TipoComisse.desc,
+              TipoComiss:
+                client.TipoComisse === null ? "--" : client.TipoComisse.desc,
               EmpresaId: client.EmpresaId,
               prospect: checkProsp(client.prospect),
               implantacao: client.createdAt,
@@ -455,7 +456,7 @@ export default function CampanhaClienteTable() {
           <Card>
             <CardHeader>
               <CardTitle tag="h4">
-                Clientes - Campanha
+                Empresas - Campanha
                 <Tooltip title="Novo">
                   <Button
                     style={{

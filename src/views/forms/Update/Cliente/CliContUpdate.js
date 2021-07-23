@@ -283,15 +283,11 @@ export default function CliContUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <CardHeader>
-                      <h3 style={{ marginBottom: 0 }}>
-                        {checkProsp(prospect, "title")}
-                      </h3>
-                      <p style={{ fontSize: 11 }}>{data1.rzSoc}</p>
-                      <p style={{ fontSize: 11 }}>
-                        {normalizeCnpj(data1.CNPJ)}
-                      </p>
-                    </CardHeader>
+                    <h3 style={{ marginBottom: 0 }}>
+                      {checkProsp(prospect, "title")}
+                    </h3>
+                    <p style={{ fontSize: 11 }}>{data1.rzSoc}</p>
+                    <p style={{ fontSize: 11 }}>{normalizeCnpj(data1.CNPJ)}</p>
                   </CardHeader>
                   <CardBody>
                     <Form id="RegisterValidation" onSubmit={handleSubmit}>

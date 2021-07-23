@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import ReactTable from "react-table-v6";
 import {
   Button,
   Card,
@@ -36,11 +37,18 @@ import NotificationAlert from "react-notification-alert";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
 import EventNoteIcon from "@material-ui/icons/EventNote";
-import { AttachMoney, Contacts } from "@material-ui/icons";
+import {
+  AttachMoney,
+  Close,
+  Contacts,
+  FormatListBulleted
+} from "@material-ui/icons";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import Modal from "~/components/Modal/modalLarge";
 
 /* eslint-disable eqeqeq */
 function ClienteUpdatee() {
@@ -49,8 +57,10 @@ function ClienteUpdatee() {
   const dispatch = useDispatch();
   const { id, prospect } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
+  const [data4, setData4] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
@@ -74,6 +84,41 @@ function ClienteUpdatee() {
       const response3 = await api.get(`/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
+      console.log(
+        response.data.Campanhas.filter(
+          arr => arr.Campanhas_Clientes.ClienteId === response.data.id
+        )
+      );
+      setData4(
+        response.data.Campanhas.filter(
+          arr => arr.Campanhas_Clientes.ClienteId === response.data.id
+        ).map((camp, key) => {
+          return {
+            idd: key,
+            id: camp.id,
+            cod: camp.cod,
+            desc: camp.desc,
+            colab: camp.Colab.nome,
+            clientes: camp.Clientes,
+            lastFUP:
+              camp.FollowUps.find(arr => arr.ClienteId === response.data.id) !==
+              undefined
+                ? camp.FollowUps.find(arr => arr.ClienteId === response.data.id)
+                    .dataContato
+                : "--",
+            situacao: camp.Campanhas_Clientes.ativo
+              ? "Em Prospecção"
+              : "Finalizado",
+            created:
+              camp.FollowUps.find(arr => arr.ClienteId === response.data.id) !==
+              undefined
+                ? camp.FollowUps.reverse().find(
+                    arr => arr.ClienteId === response.data.id
+                  ).dataContato
+                : "--"
+          };
+        })
+      );
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response3.data.id },
@@ -396,7 +441,9 @@ function ClienteUpdatee() {
     }
 
     if (valid && filled) {
-      const foneDb = values.fone.value.replace(/[^\d]+/g, "");
+      const foneDb = values.fone.value
+        ? values.fone.value.replace(/[^\d]+/g, "")
+        : "";
       dispatch(
         ClienteUpdate({
           id,
@@ -404,7 +451,8 @@ function ClienteUpdatee() {
           rzSoc: values.rzSoc.value,
           fantasia: values.fantasia.value,
           RepresentanteId: values.representante.value,
-          TipoComisseId: values.tipoComiss.value,
+          TipoComisseId:
+            values.tipoComiss.value === "" ? null : values.tipoComiss.value,
           prospect,
           site: values.site.value,
           fone: foneDb
@@ -438,27 +486,111 @@ function ClienteUpdatee() {
             <NotificationAlert ref={notifyElment} />
           </div>
           <div className="content">
+            <Modal
+              onClose={() => {
+                setIsOpen(false);
+              }}
+              open={isOpen}
+            >
+              <Header>
+                {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <h4 className="modalHeader">Campanhas</h4>
+              </Header>
+
+              <ReactTable
+                onFilteredChange={() => {}}
+                data={data4}
+                filterable
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .includes(filter.value.toLowerCase())
+                    : true;
+                }}
+                previousText="Anterior"
+                nextText="Próximo"
+                loadingText="Carregando"
+                noDataText="Dados não encontrados"
+                pageText="Página"
+                ofText="de"
+                rowsText="Linhas"
+                columns={[
+                  {
+                    Header: "Código",
+                    accessor: "cod"
+                  },
+                  {
+                    Header: "Descrição",
+                    accessor: "desc"
+                  },
+                  {
+                    Header: "data Inclusão",
+                    accessor: "created"
+                  },
+                  {
+                    Header: "data Último FUP",
+                    accessor: "lastFUP"
+                  },
+                  {
+                    Header: "situacao",
+                    accessor: "situacao"
+                  }
+                ]}
+                defaultPageSize={6}
+                pageSizeOptions={[6, 10, 50, 100]}
+                className="-striped -highlight"
+              />
+
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {checkProsp(prospect, "icons")}
+                    <CardTitle tag="h4">
+                      {checkProsp(prospect, "icons")}
+                      <Link
+                        to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
+                      >
+                        <Tooltip title="Contato" placement="top" interactive>
+                          <Button
+                            style={{ float: "right" }}
+                            color="default"
+                            size="sm"
+                            className={classNames("btn-icon btn-link like")}
+                          >
+                            <Contacts />
+                          </Button>
+                        </Tooltip>
+                      </Link>
 
-                    <Link
-                      to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
-                    >
-                      <Tooltip title="Contato" placement="top" interactive>
+                      <Tooltip title="Campanhas" placement="top" interactive>
                         <Button
                           style={{ float: "right" }}
                           color="default"
                           size="sm"
                           className={classNames("btn-icon btn-link like")}
+                          onClick={() => setIsOpen(true)}
                         >
-                          <Contacts />
+                          <FormatListBulleted />
                         </Button>
                       </Tooltip>
-                    </Link>
-                    <CardTitle tag="h4">
                       {checkProsp(prospect, "title")}
                     </CardTitle>
                   </CardHeader>

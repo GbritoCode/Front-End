@@ -264,7 +264,7 @@ export default function UpdateCampanha() {
                 <Card>
                   <CardHeader>
                     <Link to={`/tabelas/campanhas/clientes/${data1.id}`}>
-                      <Tooltip title="Clientes" placement="top" interactive>
+                      <Tooltip title="Empresas" placement="top" interactive>
                         <Button
                           style={{
                             float: "right"
