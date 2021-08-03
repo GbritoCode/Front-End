@@ -59,12 +59,8 @@ export default function ComercialDashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [setBigChart] = useState();
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
-  const [chartHrsData, setChartHrsData] = useState();
-  const [chartDespData, setChartDespData] = useState();
-  const [chartRecebData, setChartRecebData] = useState();
   const [miniChartData, setMiniChartData] = useState();
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
@@ -80,208 +76,204 @@ export default function ComercialDashboard() {
     reset: true
   });
 
-  useEffect(() => {
-    const createCharts = () => {
-      const chart_1_2_3_options = {
-        maintainAspectRatio: false,
-        legend: {
-          display: false
-        },
-        tooltips: {
-          backgroundColor: "#f5f5f5",
-          titleFontColor: "#333",
-          bodyFontColor: "#666",
-          bodySpacing: 4,
-          xPadding: 12,
-          mode: "nearest",
-          intersect: 0,
-          position: "nearest"
-        },
-        responsive: true,
-        scales: {
-          yAxes: [
-            {
-              barPercentage: 1.6,
-              gridLines: {
-                drawBorder: false,
-                color: "rgba(29,140,248,0.0)",
-                zeroLineColor: "transparent"
-              },
-              ticks: {
-                suggestedMin: 60,
-                suggestedMax: 125,
-                padding: 20,
-                fontColor: "#9a9a9a"
-              }
-            }
-          ],
-          xAxes: [
-            {
-              barPercentage: 1.6,
-              gridLines: {
-                drawBorder: false,
-                color: "rgba(29,140,248,0.1)",
-                zeroLineColor: "transparent"
-              },
-              ticks: {
-                padding: 20,
-                fontColor: "#9a9a9a"
-              }
-            }
-          ]
-        }
-      };
+  // useEffect(() => {
+  //   const createCharts = () => {
+  //     const chart_1_2_3_options = {
+  //       maintainAspectRatio: false,
+  //       legend: {
+  //         display: false
+  //       },
+  //       tooltips: {
+  //         backgroundColor: "#f5f5f5",
+  //         titleFontColor: "#333",
+  //         bodyFontColor: "#666",
+  //         bodySpacing: 4,
+  //         xPadding: 12,
+  //         mode: "nearest",
+  //         intersect: 0,
+  //         position: "nearest"
+  //       },
+  //       responsive: true,
+  //       scales: {
+  //         yAxes: [
+  //           {
+  //             barPercentage: 1.6,
+  //             gridLines: {
+  //               drawBorder: false,
+  //               color: "rgba(29,140,248,0.0)",
+  //               zeroLineColor: "transparent"
+  //             },
+  //             ticks: {
+  //               suggestedMin: 60,
+  //               suggestedMax: 125,
+  //               padding: 20,
+  //               fontColor: "#9a9a9a"
+  //             }
+  //           }
+  //         ],
+  //         xAxes: [
+  //           {
+  //             barPercentage: 1.6,
+  //             gridLines: {
+  //               drawBorder: false,
+  //               color: "rgba(29,140,248,0.1)",
+  //               zeroLineColor: "transparent"
+  //             },
+  //             ticks: {
+  //               padding: 20,
+  //               fontColor: "#9a9a9a"
+  //             }
+  //           }
+  //         ]
+  //       }
+  //     };
 
-      const chartExample1 = {
-        data1: canvas => {
-          const ctx = canvas.getContext("2d");
+  //     const chartExample1 = {
+  //       data1: canvas => {
+  //         const ctx = canvas.getContext("2d");
 
-          const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  //         const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-          gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-          gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-          gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+  //         gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+  //         gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+  //         gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
 
-          return {
-            labels: [
-              "JAN",
-              "FEV",
-              "MAR",
-              "ABR",
-              "MAI",
-              "JUN",
-              "JUL",
-              "AGO",
-              "SET",
-              "OUT",
-              "NOV",
-              "DEZ"
-            ],
-            datasets: [
-              {
-                label: "Horas",
-                fill: true,
-                backgroundColor: gradientStroke,
-                borderColor: "#1f8ef1",
-                borderWidth: 2,
-                borderDash: [],
-                borderDashOffset: 0.0,
-                pointBackgroundColor: "#1f8ef1",
-                pointBorderColor: "rgba(255,255,255,0)",
-                pointHoverBackgroundColor: "#1f8ef1",
-                pointBorderWidth: 20,
-                pointHoverRadius: 4,
-                pointHoverBorderWidth: 15,
-                pointRadius: 4,
-                data: chartHrsData
-              }
-            ]
-          };
-        },
-        data2: canvas => {
-          const ctx = canvas.getContext("2d");
+  //         return {
+  //           labels: [
+  //             "JAN",
+  //             "FEV",
+  //             "MAR",
+  //             "ABR",
+  //             "MAI",
+  //             "JUN",
+  //             "JUL",
+  //             "AGO",
+  //             "SET",
+  //             "OUT",
+  //             "NOV",
+  //             "DEZ"
+  //           ],
+  //           datasets: [
+  //             {
+  //               label: "Horas",
+  //               fill: true,
+  //               backgroundColor: gradientStroke,
+  //               borderColor: "#1f8ef1",
+  //               borderWidth: 2,
+  //               borderDash: [],
+  //               borderDashOffset: 0.0,
+  //               pointBackgroundColor: "#1f8ef1",
+  //               pointBorderColor: "rgba(255,255,255,0)",
+  //               pointHoverBackgroundColor: "#1f8ef1",
+  //               pointBorderWidth: 20,
+  //               pointHoverRadius: 4,
+  //               pointHoverBorderWidth: 15,
+  //               pointRadius: 4,
+  //               data: chartHrsData
+  //             }
+  //           ]
+  //         };
+  //       },
+  //       data2: canvas => {
+  //         const ctx = canvas.getContext("2d");
 
-          const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  //         const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-          gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-          gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-          gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+  //         gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+  //         gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+  //         gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
 
-          return {
-            labels: [
-              "JAN",
-              "FEV",
-              "MAR",
-              "ABR",
-              "MAI",
-              "JUN",
-              "JUL",
-              "AGO",
-              "SET",
-              "OUT",
-              "NOV",
-              "DEZ"
-            ],
-            datasets: [
-              {
-                label: "Despesas",
-                fill: true,
-                backgroundColor: gradientStroke,
-                borderColor: "#1f8ef1",
-                borderWidth: 2,
-                borderDash: [],
-                borderDashOffset: 0.0,
-                pointBackgroundColor: "#1f8ef1",
-                pointBorderColor: "rgba(255,255,255,0)",
-                pointHoverBackgroundColor: "#1f8ef1",
-                pointBorderWidth: 20,
-                pointHoverRadius: 4,
-                pointHoverBorderWidth: 15,
-                pointRadius: 4,
-                data: chartDespData
-              }
-            ]
-          };
-        },
-        data3: canvas => {
-          const ctx = canvas.getContext("2d");
+  //         return {
+  //           labels: [
+  //             "JAN",
+  //             "FEV",
+  //             "MAR",
+  //             "ABR",
+  //             "MAI",
+  //             "JUN",
+  //             "JUL",
+  //             "AGO",
+  //             "SET",
+  //             "OUT",
+  //             "NOV",
+  //             "DEZ"
+  //           ],
+  //           datasets: [
+  //             {
+  //               label: "Despesas",
+  //               fill: true,
+  //               backgroundColor: gradientStroke,
+  //               borderColor: "#1f8ef1",
+  //               borderWidth: 2,
+  //               borderDash: [],
+  //               borderDashOffset: 0.0,
+  //               pointBackgroundColor: "#1f8ef1",
+  //               pointBorderColor: "rgba(255,255,255,0)",
+  //               pointHoverBackgroundColor: "#1f8ef1",
+  //               pointBorderWidth: 20,
+  //               pointHoverRadius: 4,
+  //               pointHoverBorderWidth: 15,
+  //               pointRadius: 4,
+  //               data: chartDespData
+  //             }
+  //           ]
+  //         };
+  //       },
+  //       data3: canvas => {
+  //         const ctx = canvas.getContext("2d");
 
-          const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  //         const gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-          gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-          gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-          gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
+  //         gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+  //         gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+  //         gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); // blue colors
 
-          return {
-            labels: [
-              "JAN",
-              "FEV",
-              "MAR",
-              "ABR",
-              "MAI",
-              "JUN",
-              "JUL",
-              "AGO",
-              "SET",
-              "OUT",
-              "NOV",
-              "DEZ"
-            ],
-            datasets: [
-              {
-                label: "Recebido",
-                fill: true,
-                backgroundColor: gradientStroke,
-                borderColor: "#1f8ef1",
-                borderWidth: 2,
-                borderDash: [],
-                borderDashOffset: 0.0,
-                pointBackgroundColor: "#1f8ef1",
-                pointBorderColor: "rgba(255,255,255,0)",
-                pointHoverBackgroundColor: "#1f8ef1",
-                pointBorderWidth: 20,
-                pointHoverRadius: 4,
-                pointHoverBorderWidth: 15,
-                pointRadius: 4,
-                data: chartRecebData
-              }
-            ]
-          };
-        },
-        options: chart_1_2_3_options
-      };
-      setBigChart(chartExample1);
-    };
-    createCharts();
-  }, [chartDespData, chartHrsData, chartRecebData, setBigChart]);
+  //         return {
+  //           labels: [
+  //             "JAN",
+  //             "FEV",
+  //             "MAR",
+  //             "ABR",
+  //             "MAI",
+  //             "JUN",
+  //             "JUL",
+  //             "AGO",
+  //             "SET",
+  //             "OUT",
+  //             "NOV",
+  //             "DEZ"
+  //           ],
+  //           datasets: [
+  //             {
+  //               label: "Recebido",
+  //               fill: true,
+  //               backgroundColor: gradientStroke,
+  //               borderColor: "#1f8ef1",
+  //               borderWidth: 2,
+  //               borderDash: [],
+  //               borderDashOffset: 0.0,
+  //               pointBackgroundColor: "#1f8ef1",
+  //               pointBorderColor: "rgba(255,255,255,0)",
+  //               pointHoverBackgroundColor: "#1f8ef1",
+  //               pointBorderWidth: 20,
+  //               pointHoverRadius: 4,
+  //               pointHoverBorderWidth: 15,
+  //               pointRadius: 4,
+  //               data: chartRecebData
+  //             }
+  //           ]
+  //         };
+  //       },
+  //       options: chart_1_2_3_options
+  //     };
+  //     setBigChart(chartExample1);
+  //   };
+  //   createCharts();
+  // }, [chartDespData, chartHrsData, chartRecebData, setBigChart]);
   useEffect(() => {
     const loadData = async () => {
       if (store.getState().auth.user.Colab) {
-        const idColab = store.getState().auth.user.Colab.id;
-
         const response = await api.get("/campanha");
-
-        const resultPeriodo = await api.get(`resultPeriodo/${idColab}`);
 
         let array = [];
 
@@ -306,21 +298,7 @@ export default function ComercialDashboard() {
         setData2(active);
 
         setData(response.data);
-        setChartHrsData(
-          resultPeriodo.data.map(d => {
-            return d.totalHrs / 60;
-          })
-        );
-        setChartDespData(
-          resultPeriodo.data.map(d => {
-            return d.totalDesp / 100;
-          })
-        );
-        setChartRecebData(
-          resultPeriodo.data.map(d => {
-            return d.totalReceb / 100;
-          })
-        );
+
         setIsLoading(false);
       }
     };
