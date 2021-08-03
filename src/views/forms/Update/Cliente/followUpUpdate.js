@@ -104,7 +104,9 @@ export default function UpdateFollowUps() {
         data: { value: response4.data.dataContato },
         dataProxContato: { value: response4.data.dataProxContato },
         detalhes: { value: response4.data.detalhes },
-        reacao: { value: response4.data.reacao }
+        reacao: { value: response4.data.reacao },
+        proxPasso: { value: response4.data.proxPasso },
+        prefContato: { value: response4.data.prefContato }
       }));
       setIsLoading(false);
     }
@@ -131,6 +133,8 @@ export default function UpdateFollowUps() {
     document.getElementById("telefone").value = normalizeFone(cont.fone);
     document.getElementById("celular").value = normalizeFone(cont.cel);
     document.getElementById("skype").value = cont.skype;
+    document.getElementById("ramal").value = cont.ramal ? cont.ramal : "--";
+    document.getElementById("cargo").value = cont.cargo ? cont.cargo : "--";
   };
 
   const handleChange = (event, name, type) => {
@@ -321,6 +325,20 @@ export default function UpdateFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
+                          <Label>Cargo</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={
+                                contato.cargo ? contato.cargo : "--"
+                              }
+                              name="cargo"
+                              id="cargo"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Email</Label>
                           <FormGroup className="has-label">
                             <Input
@@ -328,18 +346,6 @@ export default function UpdateFollowUps() {
                               defaultValue={contato.email}
                               name="email"
                               id="email"
-                              type="text"
-                            />
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Telefone</Label>
-                          <FormGroup className="has-label">
-                            <Input
-                              disabled
-                              defaultValue={normalizeFone(contato.fone)}
-                              name="telefone"
-                              id="telefone"
                               type="text"
                             />
                           </FormGroup>
@@ -360,6 +366,32 @@ export default function UpdateFollowUps() {
                       <Row>
                         {" "}
                         <Col md="4">
+                          <Label>Telefone</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={normalizeFone(contato.fone)}
+                              name="telefone"
+                              id="telefone"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Ramal</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={
+                                contato.ramal ? contato.ramal : "--"
+                              }
+                              name="ramal"
+                              id="ramal"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Skype</Label>
                           <FormGroup className="has-label">
                             <Input
@@ -371,6 +403,8 @@ export default function UpdateFollowUps() {
                             />
                           </FormGroup>
                         </Col>{" "}
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Preferência de Contato</Label>
                           <FormGroup
@@ -535,6 +569,8 @@ export default function UpdateFollowUps() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Ação</Label>
                           <FormGroup
@@ -566,7 +602,6 @@ export default function UpdateFollowUps() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Row />
                       <Row>
                         <Col md="12">
                           <Label>Detalhes</Label>

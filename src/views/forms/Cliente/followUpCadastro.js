@@ -206,10 +206,10 @@ export default function CadastroFollowUps() {
       setModalMini(true);
     } else {
       document.getElementsByName("dataProxContato")[0].disabled = false;
-      setValues(prevState => ({
-        ...prevState,
-        dataProxContato: { value: "" }
-      }));
+      // setValues(prevState => ({
+      //   ...prevState,
+      //   dataProxContato: { value: "" }
+      // }));
     }
   };
 
@@ -802,7 +802,7 @@ export default function CadastroFollowUps() {
                           }}
                           className={classNames("btn-icon btn-link like")}
                         >
-                          <Timeline fontSize="large" />
+                          <Timeline style={{ fontSize: 30 }} />
                         </Button>
                       </Tooltip>
                     </Link>

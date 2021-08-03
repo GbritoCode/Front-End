@@ -128,6 +128,9 @@ export default function CliContCadastro() {
 
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
+    if (value === "") {
+      return true;
+    }
     if (numberRex.test(value)) {
       return true;
     }
@@ -159,6 +162,24 @@ export default function CliContCadastro() {
               value: target,
               error: "has-danger",
               message: "Insira um número válido"
+            }
+          }));
+        }
+        break;
+      case "optionalNumber":
+        if (verifyNumber(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+              optional: true
             }
           }));
         }
@@ -391,7 +412,7 @@ export default function CliContCadastro() {
                               name="ramal"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "ramal", "optional")
+                                handleChange(event, "ramal", "optionalNumber")
                               }
                               value={values.ramal.value}
                             />

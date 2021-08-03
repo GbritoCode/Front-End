@@ -145,6 +145,10 @@ import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
 import ProspectWizard from "~/views/forms/Update/Cliente/prospectWizardMain";
 import ProspeccaoTable from "~/views/tables/comercial/prospeccaoTable";
 import CampanhaClienteTable from "~/views/tables/Clientes/campanhas_clientesTables";
+import ComercialEmpresasIncluidasTable from "~/views/tables/comercial/empresasIncluidasTable";
+import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTable";
+import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
+import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
 
 export default function Routes() {
   return (
@@ -358,6 +362,26 @@ export default function Routes() {
       <Route
         path="/tabelas/campanhas/clientes/:id"
         component={CampanhaClienteTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/comercial/empresas/:campId/:inicDate/:endDate"
+        component={ComercialEmpresasIncluidasTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/comercial/FUPs/:campId/:inicDate/:endDate"
+        component={ComercialFUPsTotalTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/comercial/empresasFinalizadas/:campId/:inicDate/:endDate"
+        component={ComercialEmpresasFimTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/comercial/FUPs/:color"
+        component={ComercialFUPsColorTable}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

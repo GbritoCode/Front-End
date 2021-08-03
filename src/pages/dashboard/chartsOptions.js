@@ -1,5 +1,5 @@
 export const barChart_1 = {
-  data: (label, data) => {
+  data: (label, chartData) => {
     return {
       labels: label,
       datasets: [
@@ -12,7 +12,7 @@ export const barChart_1 = {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data
+          data: chartData
         }
       ]
     };

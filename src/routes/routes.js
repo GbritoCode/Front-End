@@ -179,6 +179,10 @@ import FollowUpTimeline from "~/views/tables/Clientes/followUpTimeline";
 import ProspectWizard from "~/views/forms/Update/Cliente/prospectWizardMain";
 import ProspeccaoTable from "~/views/tables/comercial/prospeccaoTable";
 import CampanhaClienteTable from "~/views/tables/Clientes/campanhas_clientesTables";
+import ComercialEmpresasIncluidasTable from "~/views/tables/comercial/empresasIncluidasTable";
+import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTable";
+import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
+import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
 
 const routes = [
   {
@@ -708,6 +712,55 @@ const routes = [
         namePerfil: "Dados OPT",
         mini: "DOP",
         component: DataOport,
+        layout: "/admin",
+        redirect: true
+      }
+    ]
+  },
+
+  {
+    collapse: true,
+    name: "Comercial",
+    namePerfil: "Comercial",
+    icon: "tim-icons icon-notes",
+    state: "ComercialCollapse",
+    profile: 1,
+    redirect: true,
+    views: [
+      {
+        path: "/tabelas/comercial/empresas/:campId/:inicDate/:endDate",
+        name: "Empresas Incluídas",
+        namePerfil: "Empresas Incluídas Tab",
+        mini: "EMP",
+        component: ComercialEmpresasIncluidasTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/comercial/FUPs/:campId/:inicDate/:endDate",
+        name: "FUPs total",
+        namePerfil: "FUPs total Tab",
+        mini: "FUP",
+        component: ComercialFUPsTotalTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/comercial/FUPs/:color",
+        name: "FUPs total",
+        namePerfil: "FUPs total Tab",
+        mini: "FUP",
+        component: ComercialFUPsColorTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path:
+          "/tabelas/comercial/empresasFinalizadas/:campId/:inicDate/:endDate",
+        name: "Empresas Finalizadas",
+        namePerfil: "Empresas Finalizadas Tab",
+        mini: "EFIM",
+        component: ComercialEmpresasFimTable,
         layout: "/admin",
         redirect: true
       }

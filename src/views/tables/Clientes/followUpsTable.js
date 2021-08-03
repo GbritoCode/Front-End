@@ -206,7 +206,7 @@ class followUpTable extends Component {
                       }}
                       className={classNames("btn-icon btn-link like")}
                     >
-                      <Timeline fontSize="large" />
+                      <Timeline style={{ fontSize: 30 }} />
                     </Button>
                   </Tooltip>
                 </Link>

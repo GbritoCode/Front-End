@@ -39,7 +39,7 @@ import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import ReactTable from "react-table-v6";
 import { Tooltip } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { Check, Close, InfoOutlined } from "@material-ui/icons";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
@@ -55,6 +55,7 @@ export default function CadastroCliente() {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [isOpenCamp, setIsOpenCamp] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -75,7 +76,12 @@ export default function CadastroCliente() {
       array: [],
       optional: true
     },
-    fantasia: { value: "", error: "", message: "" }
+    fantasia: { value: "", error: "", message: "", optional: true },
+    erp: { value: "", error: "", message: "", optional: true },
+    database: { value: "", error: "", message: "", optional: true },
+    ramo: { value: "", error: "", message: "", optional: true },
+    setor: { value: "", error: "", message: "", optional: true },
+    qtdFuncionarios: { value: "", error: "", message: "", optional: true }
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -154,45 +160,21 @@ export default function CadastroCliente() {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
-    if (response1.data) {
-      setValues(prevState => ({
-        ...prevState,
-        cnpj: {
-          error: "has-danger",
-          message: "O CNPJ já existe"
-        }
-      }));
-      options = {
-        place: "tr",
-        message: (
-          <div>
-            <div>O CNPJ informado já existe como prospect ou cliente </div>
-          </div>
-        ),
-        type: "danger",
-        icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7
-      };
-      notify();
-    } else {
-      const response = await axios({
-        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-        adapter: jsonpAdapter
-      });
-      if (response.data.status === "ERROR") {
+    if (validarCNPJ(currentValue)) {
+      const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+      if (response1.data) {
         setValues(prevState => ({
           ...prevState,
           cnpj: {
             error: "has-danger",
-            message: "Insira um CNPJ válido"
+            message: "O CNPJ já existe"
           }
         }));
         options = {
           place: "tr",
           message: (
             <div>
-              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              <div>O CNPJ informado já existe como prospect ou cliente </div>
             </div>
           ),
           type: "danger",
@@ -201,15 +183,61 @@ export default function CadastroCliente() {
         };
         notify();
       } else {
-        document.getElementById("atvPrincipal").value =
-          response.data.atividade_principal[0].text;
-        setValues(prevState => ({
-          ...prevState,
-          rzSoc: { value: response.data.nome },
-          fantasia: { value: response.data.fantasia },
-          atvPrincipal: { value: response.data.atividade_principal[0].text }
-        }));
+        const response = await axios({
+          url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+          adapter: jsonpAdapter
+        });
+        if (response.data.status === "ERROR") {
+          setValues(prevState => ({
+            ...prevState,
+            cnpj: {
+              error: "has-danger",
+              message: "Insira um CNPJ válido"
+            }
+          }));
+          options = {
+            place: "tr",
+            message: (
+              <div>
+                <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              </div>
+            ),
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            autoDismiss: 7
+          };
+          notify();
+        } else {
+          document.getElementById("atvPrincipal").value =
+            response.data.atividade_principal[0].text;
+          setValues(prevState => ({
+            ...prevState,
+            rzSoc: { value: response.data.nome },
+            fantasia: { value: response.data.fantasia, optional: true },
+            atvPrincipal: { value: response.data.atividade_principal[0].text }
+          }));
+        }
       }
+    } else {
+      setValues(prevState => ({
+        ...prevState,
+        cnpj: {
+          error: "has-danger",
+          message: "Insira um CNPJ válido"
+        }
+      }));
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>O CNPJ é inválido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
     }
   }
 
@@ -442,6 +470,11 @@ export default function CadastroCliente() {
           site: values.site.value,
           fone: foneDb,
           atvPrincipal: values.atvPrincipal.value,
+          erp: values.erp.value,
+          database: values.database.value,
+          ramo: values.ramo.value,
+          setor: values.setor.value,
+          qtdFuncionarios: values.qtdFuncionarios.value,
           CampanhaIds: values.CampanhaIds.array
         })
       );
@@ -561,10 +594,144 @@ export default function CadastroCliente() {
           </Footer>
         </Modal>
 
+        <Modal
+          onClose={() => {
+            setIsOpenInfo(!isOpenInfo);
+          }}
+          open={isOpenInfo}
+        >
+          <Header>
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => {
+                  setIsOpenInfo(false);
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Close fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <Tooltip title="Ok">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => setIsOpenInfo(false)}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Check fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <h3 style={{ marginBottom: 0 }}>Dados Opcionais</h3>
+          </Header>
+          <Row>
+            <Col sm="4">
+              <Label>ERP</Label>
+              <FormGroup className={`has-label ${values.erp.error}`}>
+                <Input
+                  onChange={event => handleChange(event, "erp", "optional")}
+                  value={values.erp.value}
+                  id="Clierp"
+                  name="Clierp"
+                  type="text"
+                />
+                {values.erp.error === "has-danger" ? (
+                  <Label className="error">{values.erp.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Banco de Dados</Label>
+              <FormGroup className={`has-label ${values.database.error}`}>
+                <Input
+                  onChange={event =>
+                    handleChange(event, "database", "optional")
+                  }
+                  value={values.database.value}
+                  id="Clidatabase"
+                  name="Clidatabase"
+                  type="text"
+                />
+                {values.database.error === "has-danger" ? (
+                  <Label className="error">{values.database.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Ramo</Label>
+              <FormGroup className={`has-label ${values.ramo.error}`}>
+                <Input
+                  onChange={event => handleChange(event, "ramo", "optional")}
+                  value={values.ramo.value}
+                  id="Cliramo"
+                  name="Cliramo"
+                  type="text"
+                />
+                {values.ramo.error === "has-danger" ? (
+                  <Label className="error">{values.ramo.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="4">
+              <Label>Setor</Label>
+              <FormGroup className={`has-label ${values.setor.error}`}>
+                <Input
+                  onChange={event => handleChange(event, "setor", "optional")}
+                  value={values.setor.value}
+                  id="Clisetor"
+                  name="Clisetor"
+                  type="text"
+                />
+                {values.setor.error === "has-danger" ? (
+                  <Label className="error">{values.setor.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Quantidade de Funcionários</Label>
+              <FormGroup
+                className={`has-label ${values.qtdFuncionarios.error}`}
+              >
+                <Input
+                  onChange={event =>
+                    handleChange(event, "qtdFuncionarios", "optional")
+                  }
+                  value={values.qtdFuncionarios.value}
+                  id="CliqtdFuncionarios"
+                  name="CliqtdFuncionarios"
+                  type="text"
+                />
+                {values.qtdFuncionarios.error === "has-danger" ? (
+                  <Label className="error">
+                    {values.qtdFuncionarios.message}
+                  </Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+          </Row>
+          <Footer />
+        </Modal>
+
         <Row>
           <Col md="12">
             <Card>
               <CardHeader>
+                <Tooltip title="Info" placement="top" interactive>
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenInfo(true)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <InfoOutlined />
+                  </Button>
+                </Tooltip>
                 <CardTitle tag="h4">{checkProsp(prospect, "title")}</CardTitle>
               </CardHeader>
               <CardBody>

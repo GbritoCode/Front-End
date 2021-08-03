@@ -267,7 +267,7 @@ function ProspeccaoTable() {
             }}
           />
         );
-      case days > 0 && days < 4:
+      case days > 0 && days <= 4:
         return (
           <div
             style={{
@@ -278,7 +278,7 @@ function ProspeccaoTable() {
             }}
           />
         );
-      case days > 5:
+      case days >= 5:
         return (
           <div
             style={{

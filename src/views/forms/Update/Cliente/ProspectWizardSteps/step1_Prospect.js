@@ -170,45 +170,21 @@ const CadastroCliente = forwardRef((props, ref) => {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
-    if (response1.data) {
-      setValues(prevState => ({
-        ...prevState,
-        cnpj: {
-          error: "has-danger",
-          message: "O CNPJ já existe"
-        }
-      }));
-      options = {
-        place: "tr",
-        message: (
-          <div>
-            <div>O CNPJ informado já existe como prospect ou cliente </div>
-          </div>
-        ),
-        type: "danger",
-        icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7
-      };
-      notify();
-    } else {
-      const response = await axios({
-        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-        adapter: jsonpAdapter
-      });
-      if (response.data.status === "ERROR") {
+    if (validarCNPJ(currentValue)) {
+      const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+      if (response1.data) {
         setValues(prevState => ({
           ...prevState,
           cnpj: {
             error: "has-danger",
-            message: "Insira um CNPJ válido"
+            message: "O CNPJ já existe"
           }
         }));
         options = {
           place: "tr",
           message: (
             <div>
-              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              <div>O CNPJ informado já existe como prospect ou cliente </div>
             </div>
           ),
           type: "danger",
@@ -217,24 +193,70 @@ const CadastroCliente = forwardRef((props, ref) => {
         };
         notify();
       } else {
-        document.getElementById("atvPrincipal").value =
-          response.data.atividade_principal[0].text;
-        document.getElementById("situacao").value = response.data.situacao;
-        document.getElementById("cep").value = response.data.cep;
-        document.getElementById("rua").value = response.data.logradouro;
-        document.getElementById("numero").value = response.data.numero;
-        document.getElementById("bairro").value = response.data.bairro;
-        document.getElementById("cidade").value = response.data.municipio;
-        document.getElementById("uf").value = response.data.uf;
-        document.getElementById("complemento").value =
-          response.data.complemento;
-        setValues(prevState => ({
-          ...prevState,
-          rzSoc: { value: response.data.nome },
-          fantasia: { value: response.data.fantasia, optional: true },
-          atvPrincipal: { value: response.data.atividade_principal[0].text }
-        }));
+        const response = await axios({
+          url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+          adapter: jsonpAdapter
+        });
+        if (response.data.status === "ERROR") {
+          setValues(prevState => ({
+            ...prevState,
+            cnpj: {
+              error: "has-danger",
+              message: "Insira um CNPJ válido"
+            }
+          }));
+          options = {
+            place: "tr",
+            message: (
+              <div>
+                <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              </div>
+            ),
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            autoDismiss: 7
+          };
+          notify();
+        } else {
+          document.getElementById("atvPrincipal").value =
+            response.data.atividade_principal[0].text;
+          document.getElementById("situacao").value = response.data.situacao;
+          document.getElementById("cep").value = response.data.cep;
+          document.getElementById("rua").value = response.data.logradouro;
+          document.getElementById("numero").value = response.data.numero;
+          document.getElementById("bairro").value = response.data.bairro;
+          document.getElementById("cidade").value = response.data.municipio;
+          document.getElementById("uf").value = response.data.uf;
+          document.getElementById("complemento").value =
+            response.data.complemento;
+          setValues(prevState => ({
+            ...prevState,
+            rzSoc: { value: response.data.nome },
+            fantasia: { value: response.data.fantasia, optional: true },
+            atvPrincipal: { value: response.data.atividade_principal[0].text }
+          }));
+        }
       }
+    } else {
+      setValues(prevState => ({
+        ...prevState,
+        cnpj: {
+          error: "has-danger",
+          message: "Insira um CNPJ válido"
+        }
+      }));
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>O CNPJ é inválido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
     }
   }
 

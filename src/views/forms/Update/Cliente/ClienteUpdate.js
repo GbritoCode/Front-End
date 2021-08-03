@@ -39,9 +39,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import {
   AttachMoney,
+  Check,
   Close,
   Contacts,
-  FormatListBulleted
+  FormatListBulleted,
+  InfoOutlined
 } from "@material-ui/icons";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
@@ -58,6 +60,7 @@ function ClienteUpdatee() {
   const { id, prospect } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
   const [data4, setData4] = useState([]);
@@ -70,7 +73,13 @@ function ClienteUpdatee() {
     tipoComiss: { value: null, error: "", message: "", optional: true },
     fone: { value: "", error: "", message: "", optional: true },
     site: { value: "", error: "", message: "", optional: true },
-    fantasia: { value: "", error: "", message: "", optional: true }
+    fantasia: { value: "", error: "", message: "", optional: true },
+    atvPrincipal: { value: "", error: "", message: "", optional: true },
+    erp: { value: "", error: "", message: "", optional: true },
+    database: { value: "", error: "", message: "", optional: true },
+    ramo: { value: "", error: "", message: "", optional: true },
+    setor: { value: "", error: "", message: "", optional: true },
+    qtdFuncionarios: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -132,7 +141,16 @@ function ClienteUpdatee() {
         rzSoc: { value: response.data.rzSoc },
         site: { value: response.data.site, optional: true },
         fone: { value: normalizeFone(response.data.fone), optional: true },
-        fantasia: { value: response.data.fantasia, optional: true }
+        fantasia: { value: response.data.fantasia, optional: true },
+        atvPrincipal: { value: response.data.atvPrincipal, optional: true },
+        erp: { value: response.data.erp, optional: true },
+        database: { value: response.data.database, optional: true },
+        ramo: { value: response.data.ramo, optional: true },
+        setor: { value: response.data.setor, optional: true },
+        qtdFuncionarios: {
+          value: response.data.qtdFuncionarios,
+          optional: true
+        }
       }));
       setIsLoading(false);
     }
@@ -485,7 +503,12 @@ function ClienteUpdatee() {
             values.tipoComiss.value === "" ? null : values.tipoComiss.value,
           prospect,
           site: values.site.value,
-          fone: foneDb
+          fone: foneDb,
+          erp: values.erp.value,
+          database: values.database.value,
+          ramo: values.ramo.value,
+          setor: values.setor.value,
+          qtdFuncionarios: values.qtdFuncionarios.value
         })
       );
     } else {
@@ -589,6 +612,133 @@ function ClienteUpdatee() {
               <Footer />
             </Modal>
 
+            <Modal
+              onClose={() => {
+                setIsOpenInfo(!isOpenInfo);
+              }}
+              open={isOpenInfo}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenInfo(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenInfo(false)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>Dados Opcionais</h3>
+              </Header>
+              <Row>
+                <Col sm="4">
+                  <Label>ERP</Label>
+                  <FormGroup className={`has-label ${values.erp.error}`}>
+                    <Input
+                      onChange={event => handleChange(event, "erp", "optional")}
+                      value={values.erp.value}
+                      id="Clierp"
+                      name="Clierp"
+                      type="text"
+                    />
+                    {values.erp.error === "has-danger" ? (
+                      <Label className="error">{values.erp.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Banco de Dados</Label>
+                  <FormGroup className={`has-label ${values.database.error}`}>
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "database", "optional")
+                      }
+                      value={values.database.value}
+                      id="Clidatabase"
+                      name="Clidatabase"
+                      type="text"
+                    />
+                    {values.database.error === "has-danger" ? (
+                      <Label className="error">{values.database.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Ramo</Label>
+                  <FormGroup className={`has-label ${values.ramo.error}`}>
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "ramo", "optional")
+                      }
+                      value={values.ramo.value}
+                      id="Cliramo"
+                      name="Cliramo"
+                      type="text"
+                    />
+                    {values.ramo.error === "has-danger" ? (
+                      <Label className="error">{values.ramo.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Setor</Label>
+                  <FormGroup className={`has-label ${values.setor.error}`}>
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "setor", "optional")
+                      }
+                      value={values.setor.value}
+                      id="Clisetor"
+                      name="Clisetor"
+                      type="text"
+                    />
+                    {values.setor.error === "has-danger" ? (
+                      <Label className="error">{values.setor.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Quantidade de Funcionários</Label>
+                  <FormGroup
+                    className={`has-label ${values.qtdFuncionarios.error}`}
+                  >
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "qtdFuncionarios", "optional")
+                      }
+                      value={values.qtdFuncionarios.value}
+                      id="CliqtdFuncionarios"
+                      name="CliqtdFuncionarios"
+                      type="text"
+                    />
+                    {values.qtdFuncionarios.error === "has-danger" ? (
+                      <Label className="error">
+                        {values.qtdFuncionarios.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
@@ -619,6 +769,18 @@ function ClienteUpdatee() {
                           onClick={() => setIsOpen(true)}
                         >
                           <FormatListBulleted />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title="Info" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          size="sm"
+                          onClick={() => setIsOpenInfo(true)}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <InfoOutlined />
                         </Button>
                       </Tooltip>
                       {checkProsp(prospect, "title")}
@@ -840,6 +1002,29 @@ function ClienteUpdatee() {
                             {values.fone.error === "has-danger" ? (
                               <Label className="error">
                                 {values.fone.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Atividade Principal</Label>
+                          <FormGroup
+                            className={`has-label ${values.atvPrincipal.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="atvPrincipal"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "atvPrincipal", "optional")
+                              }
+                              value={values.atvPrincipal.value}
+                            />
+                            {values.atvPrincipal.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.atvPrincipal.message}
                               </Label>
                             ) : null}
                           </FormGroup>
