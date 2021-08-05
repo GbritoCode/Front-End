@@ -39,8 +39,8 @@ import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import ReactTable from "react-table-v6";
 import { Tooltip } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import { Check, Close, InfoOutlined } from "@material-ui/icons";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
@@ -55,6 +55,7 @@ export default function CadastroCliente() {
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
   const [isOpenCamp, setIsOpenCamp] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -65,18 +66,24 @@ export default function CadastroCliente() {
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
     tipoComiss: { value: "", error: "", message: "" },
+    fone: { value: "", error: "", message: "", optional: true },
+    site: { value: "", error: "", message: "", optional: true },
+    atvPrincipal: { value: "", error: "", message: "" },
     CampanhaIds: {
       value: "",
       error: "",
       message: "",
       array: [],
       optional: true
-    }
+    },
+    fantasia: { value: "", error: "", message: "", optional: true },
+    erp: { value: "", error: "", message: "", optional: true },
+    database: { value: "", error: "", message: "", optional: true },
+    ramo: { value: "", error: "", message: "", optional: true },
+    setor: { value: "", error: "", message: "", optional: true },
+    qtdFuncionarios: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    fantasia: { value: "", error: "", message: "" }
-  };
-  const [optional, setOptional] = useState(optionalSchema);
+
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -153,8 +160,65 @@ export default function CadastroCliente() {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
-    if (response1.data) {
+    if (validarCNPJ(currentValue)) {
+      const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+      if (response1.data) {
+        setValues(prevState => ({
+          ...prevState,
+          cnpj: {
+            error: "has-danger",
+            message: "O CNPJ já existe"
+          }
+        }));
+        options = {
+          place: "tr",
+          message: (
+            <div>
+              <div>O CNPJ informado já existe como prospect ou cliente </div>
+            </div>
+          ),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          autoDismiss: 7
+        };
+        notify();
+      } else {
+        const response = await axios({
+          url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+          adapter: jsonpAdapter
+        });
+        if (response.data.status === "ERROR") {
+          setValues(prevState => ({
+            ...prevState,
+            cnpj: {
+              error: "has-danger",
+              message: "Insira um CNPJ válido"
+            }
+          }));
+          options = {
+            place: "tr",
+            message: (
+              <div>
+                <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              </div>
+            ),
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            autoDismiss: 7
+          };
+          notify();
+        } else {
+          document.getElementById("atvPrincipal").value =
+            response.data.atividade_principal[0].text;
+          setValues(prevState => ({
+            ...prevState,
+            rzSoc: { value: response.data.nome },
+            fantasia: { value: response.data.fantasia, optional: true },
+            atvPrincipal: { value: response.data.atividade_principal[0].text }
+          }));
+        }
+      }
+    } else {
       setValues(prevState => ({
         ...prevState,
         cnpj: {
@@ -166,7 +230,7 @@ export default function CadastroCliente() {
         place: "tr",
         message: (
           <div>
-            <div>O CNPJ já existe</div>
+            <div>O CNPJ é inválido</div>
           </div>
         ),
         type: "danger",
@@ -174,41 +238,6 @@ export default function CadastroCliente() {
         autoDismiss: 7
       };
       notify();
-    } else {
-      const response = await axios({
-        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-        adapter: jsonpAdapter
-      });
-      if (response.data.status === "ERROR") {
-        setValues(prevState => ({
-          ...prevState,
-          cnpj: {
-            error: "has-danger",
-            message: "Insira um CNPJ válido"
-          }
-        }));
-        options = {
-          place: "tr",
-          message: (
-            <div>
-              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
-            </div>
-          ),
-          type: "danger",
-          icon: "tim-icons icon-alert-circle-exc",
-          autoDismiss: 7
-        };
-        notify();
-      } else {
-        setValues(prevState => ({
-          ...prevState,
-          rzSoc: { value: response.data.nome }
-        }));
-        setOptional(prevState => ({
-          ...prevState,
-          fantasia: { value: response.data.fantasia }
-        }));
-      }
     }
   }
 
@@ -323,6 +352,18 @@ export default function CadastroCliente() {
     }
     return false;
   };
+  const verifyUrl = value => {
+    const UrlRegex = new RegExp(
+      "(https:[/][/]|http:[/][/])[a-zA-Z0-9-.]+(.[.][a-zA-Z]{2,6})(:[0-9]{1,5})*(/($|[a-zA-Z0-9.,;?'\\+&amp;%$#=~_-]+))*$"
+    );
+    if (value) {
+      if (UrlRegex.test(value)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -345,7 +386,24 @@ export default function CadastroCliente() {
           }));
         }
         break;
-
+      case "url":
+        if (verifyUrl(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira uma URL no padrão 'https://www.exemplo.com'",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "cnpj":
         setValues(prevState => ({
           ...prevState,
@@ -353,9 +411,9 @@ export default function CadastroCliente() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -398,17 +456,27 @@ export default function CadastroCliente() {
 
     if (valid && filled) {
       const cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
+      const foneDb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        ClienteRequest(
-          cnpjdb,
-          values.nomeAbv.value,
-          values.rzSoc.value,
-          optional.fantasia.value,
-          values.representante.value,
-          values.tipoComiss.value,
-          values.empresaId.value,
-          prospect
-        )
+        ClienteRequest({
+          CNPJ: cnpjdb,
+          nomeAbv: values.nomeAbv.value,
+          rzSoc: values.rzSoc.value,
+          fantasia: values.fantasia.value,
+          RepresentanteId: values.representante.value,
+          TipoComisseId: values.tipoComiss.value,
+          EmpresaId: values.empresaId.value,
+          prospect,
+          site: values.site.value,
+          fone: foneDb,
+          atvPrincipal: values.atvPrincipal.value,
+          erp: values.erp.value,
+          database: values.database.value,
+          ramo: values.ramo.value,
+          setor: values.setor.value,
+          qtdFuncionarios: values.qtdFuncionarios.value,
+          CampanhaIds: values.CampanhaIds.array
+        })
       );
     } else {
       options = {
@@ -526,10 +594,144 @@ export default function CadastroCliente() {
           </Footer>
         </Modal>
 
+        <Modal
+          onClose={() => {
+            setIsOpenInfo(!isOpenInfo);
+          }}
+          open={isOpenInfo}
+        >
+          <Header>
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => {
+                  setIsOpenInfo(false);
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Close fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <Tooltip title="Ok">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => setIsOpenInfo(false)}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Check fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <h3 style={{ marginBottom: 0 }}>Dados Opcionais</h3>
+          </Header>
+          <Row>
+            <Col sm="4">
+              <Label>ERP</Label>
+              <FormGroup className={`has-label ${values.erp.error}`}>
+                <Input
+                  onChange={event => handleChange(event, "erp", "optional")}
+                  value={values.erp.value}
+                  id="Clierp"
+                  name="Clierp"
+                  type="text"
+                />
+                {values.erp.error === "has-danger" ? (
+                  <Label className="error">{values.erp.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Banco de Dados</Label>
+              <FormGroup className={`has-label ${values.database.error}`}>
+                <Input
+                  onChange={event =>
+                    handleChange(event, "database", "optional")
+                  }
+                  value={values.database.value}
+                  id="Clidatabase"
+                  name="Clidatabase"
+                  type="text"
+                />
+                {values.database.error === "has-danger" ? (
+                  <Label className="error">{values.database.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Ramo</Label>
+              <FormGroup className={`has-label ${values.ramo.error}`}>
+                <Input
+                  onChange={event => handleChange(event, "ramo", "optional")}
+                  value={values.ramo.value}
+                  id="Cliramo"
+                  name="Cliramo"
+                  type="text"
+                />
+                {values.ramo.error === "has-danger" ? (
+                  <Label className="error">{values.ramo.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="4">
+              <Label>Setor</Label>
+              <FormGroup className={`has-label ${values.setor.error}`}>
+                <Input
+                  onChange={event => handleChange(event, "setor", "optional")}
+                  value={values.setor.value}
+                  id="Clisetor"
+                  name="Clisetor"
+                  type="text"
+                />
+                {values.setor.error === "has-danger" ? (
+                  <Label className="error">{values.setor.message}</Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Quantidade de Funcionários</Label>
+              <FormGroup
+                className={`has-label ${values.qtdFuncionarios.error}`}
+              >
+                <Input
+                  onChange={event =>
+                    handleChange(event, "qtdFuncionarios", "optional")
+                  }
+                  value={values.qtdFuncionarios.value}
+                  id="CliqtdFuncionarios"
+                  name="CliqtdFuncionarios"
+                  type="text"
+                />
+                {values.qtdFuncionarios.error === "has-danger" ? (
+                  <Label className="error">
+                    {values.qtdFuncionarios.message}
+                  </Label>
+                ) : null}
+              </FormGroup>
+            </Col>
+          </Row>
+          <Footer />
+        </Modal>
+
         <Row>
           <Col md="12">
             <Card>
               <CardHeader>
+                <Tooltip title="Info" placement="top" interactive>
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenInfo(true)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <InfoOutlined />
+                  </Button>
+                </Tooltip>
                 <CardTitle tag="h4">{checkProsp(prospect, "title")}</CardTitle>
               </CardHeader>
               <CardBody>
@@ -581,20 +783,20 @@ export default function CadastroCliente() {
                     <Col md="4">
                       <Label>Nome Fanasia</Label>
                       <FormGroup
-                        className={`has-label ${optional.fantasia.error}`}
+                        className={`has-label ${values.fantasia.error}`}
                       >
                         <Input
                           disabled
                           onChange={event =>
                             handleChange(event, "fantasia", "optional")
                           }
-                          value={optional.fantasia.value}
+                          value={values.fantasia.value}
                           name="nomeAbv"
                           type="text"
                         />
-                        {optional.fantasia.error === "has-danger" ? (
+                        {values.fantasia.error === "has-danger" ? (
                           <Label className="error">
-                            {optional.fantasia.message}
+                            {values.fantasia.message}
                           </Label>
                         ) : null}
                       </FormGroup>
@@ -689,6 +891,48 @@ export default function CadastroCliente() {
                   </Row>
                   <Row>
                     <Col md="4">
+                      <Label>Site</Label>
+                      <FormGroup className={`has-label ${values.site.error}`}>
+                        <Input
+                          name="site"
+                          type="text"
+                          onChange={event => handleChange(event, "site", "url")}
+                          value={values.site.value}
+                        />
+                        {values.site.error === "has-danger" ? (
+                          <Label className="error">{values.site.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Telefone</Label>
+                      <FormGroup className={`has-label ${values.fone.error}`}>
+                        <Input
+                          minLength={10}
+                          maxLength={11}
+                          name="fone"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "fone", "optional")
+                          }
+                          onBlur={e => {
+                            const { value } = e.target;
+                            setValues(prevState => ({
+                              ...prevState,
+                              fone: {
+                                value: normalizeFone(value),
+                                optional: true
+                              }
+                            }));
+                          }}
+                          value={values.fone.value}
+                        />
+                        {values.fone.error === "has-danger" ? (
+                          <Label className="error">{values.fone.message}</Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
                       <Label>Campanhas</Label>
                       <FormGroup
                         className={`has-label ${values.CampanhaIds.error}`}
@@ -725,6 +969,19 @@ export default function CadastroCliente() {
                             {values.CampanhaIds.message}
                           </Label>
                         ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <Label>Atividade Principal</Label>
+                      <FormGroup className="has-label">
+                        <Input
+                          disabled
+                          name="atvPrincipal"
+                          id="atvPrincipal"
+                          type="textarea"
+                        />
                       </FormGroup>
                     </Col>
                   </Row>

@@ -39,6 +39,7 @@ import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import {
   Close,
+  FormatListBulleted,
   InsertEmoticon,
   MailOutline,
   Message,
@@ -49,13 +50,17 @@ import {
   Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { normalizeFone } from "~/normalize";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpCadastro } from "~/store/modules/Cliente/actions";
 import ModalLarge from "~/components/Modal/modalLarge";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import TagsInput from "~/components/Tags/TagsInput";
+import {
+  clearFields,
+  FUPCadastroFields
+} from "~/store/modules/keepingFields/actions";
 
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
@@ -63,13 +68,18 @@ export default function CadastroFollowUps() {
 
   const { cliId, campId } = useParams();
   const dispatch = useDispatch();
+  const [timeline, setTimeLine] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [data4, setData4] = useState([]);
+  const [data5, setData5] = useState({});
+  const [data6, setData6] = useState([]);
+  const [data7, setData7] = useState([]);
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
 
@@ -86,7 +96,17 @@ export default function CadastroFollowUps() {
     reacao: { value: "", error: "", message: "" },
     proxPasso: { value: "", error: "", message: "" },
     prefContato: { value: "", error: "", message: "" },
-    ativo: { value: true, error: "", message: "" }
+    ativo: { value: true, error: "", message: "" },
+    motivo: { value: "", error: "", message: "", optional: true }
+  };
+
+  const contSchema = {
+    email: { value: "", error: "", message: "" },
+    cargo: { value: "", error: "", message: "" },
+    fone: { value: "", error: "", message: "" },
+    ramal: { value: "", error: "", message: "" },
+    cel: { value: ``, error: "", message: "" },
+    skype: { value: ``, error: "", message: "" }
   };
 
   const meetingSchema = {
@@ -102,9 +122,11 @@ export default function CadastroFollowUps() {
   };
 
   const [values, setValues] = useState(stateSchema);
+  const [contValues, setContValues] = useState(contSchema);
   const [meetingValues, setMeetingValues] = useState(meetingSchema);
   useEffect(() => {
     const { empresa } = store.getState().auth;
+    const { FUPCadastro } = store.getState().field;
     const idColab = store.getState().auth.user.Colab.id;
 
     async function loadData() {
@@ -113,26 +135,80 @@ export default function CadastroFollowUps() {
       const response2 = await api.get(`/cliente/${cliId}`);
       const response3 = await api.get(`/cliente/cont/${response2.data.id}`);
       const response4 = await api.get(`/campanha/${campId}/true`);
+      const response6 = await api.get("/representante");
+      const response7 = await api.get("/camposDinamicos");
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
       setData4(response4.data);
+      setData5({
+        CliAtvPrincipal: response2.data.atvPrincipal,
+        CliEndereco: `${response2.data.CliComp.rua}, ${response2.data.CliComp.numero}, ${response2.data.CliComp.bairro}, ${response2.data.CliComp.cidade} - ${response2.data.CliComp.uf}`
+      });
+      setData6(response6.data);
+      setData7(response7.data);
 
       setMeetingValues(prevState => ({
         ...prevState,
         organizerName: { value: response1.data.nome },
         organizerEmail: { value: response1.data.email }
       }));
+      if (FUPCadastro.CliContId) {
+        const cont = response3.data.find(
+          arr => arr.id === parseInt(FUPCadastro.CliContId, 10)
+        );
+        setMeetingValues(prevState => ({
+          ...prevState,
+          mainParticipant: { value: cont.email }
+        }));
+        setContValues(prevState => ({
+          ...prevState,
+          email: { value: cont.email },
+          fone: { value: cont.fone },
+          cel: { value: cont.cel },
+          skype: { value: cont.skype },
+          ramal: { value: cont.ramal },
+          cargo: { value: cont.cargo }
+        }));
+      }
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
         ColabId: { value: response1.data.id },
-        ClienteId: { value: response2.data.id }
+        ClienteId: { value: response2.data.id },
+        CliContId: {
+          value: FUPCadastro.CliContId ? FUPCadastro.CliContId : ""
+        },
+        data: {
+          value: FUPCadastro.data
+            ? FUPCadastro.data
+            : `${year}-${month}-${date}`
+        },
+        dataProxContato: {
+          value: FUPCadastro.dataProxContato ? FUPCadastro.dataProxContato : ""
+        },
+        reacao: { value: FUPCadastro.reacao ? FUPCadastro.reacao : "" },
+        detalhes: { value: FUPCadastro.detalhes ? FUPCadastro.detalhes : "" },
+        motivo: {
+          value: FUPCadastro.motivo ? FUPCadastro.motivo : "",
+          optional: true
+        },
+        prefContato: {
+          value: FUPCadastro.prefContato ? FUPCadastro.prefContato : ""
+        },
+        proxPasso: { value: FUPCadastro.proxPasso ? FUPCadastro.proxPasso : "" }
       }));
       setIsLoading(false);
     }
     loadData();
-  }, [campId, cliId]);
+
+    return () => {
+      if (FUPCadastro.timeline) {
+        console.log(timeline);
+        dispatch(clearFields({ field: "FUPCadastro" }));
+      }
+    };
+  }, [campId, cliId, date, dispatch, month, timeline, year]);
 
   var options = {};
   const notifyElment = useRef(null);
@@ -175,6 +251,8 @@ export default function CadastroFollowUps() {
     return false;
   };
 
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+
   const toggleModalMini = () => {
     setModalMini(!modalMini);
   };
@@ -182,13 +260,27 @@ export default function CadastroFollowUps() {
     if (value === "10") {
       setValues(prevState => ({
         ...prevState,
-        ativo: { value: false }
+        ativo: { value: false },
+        dataProxContato: { value: `${year}-${month}-${date}` }
       }));
-      console.log(value);
+      document.getElementsByName("dataProxContato")[0].disabled = true;
+      setValues(prevState => ({
+        ...prevState,
+        motivo: { value: "" }
+      }));
       setModalMini(true);
+    } else {
+      document.getElementsByName("dataProxContato")[0].disabled = false;
+      setValues(prevState => ({
+        ...prevState,
+        motivo: { value: "", optional: true }
+      }));
+      // setValues(prevState => ({
+      //   ...prevState,
+      //   dataProxContato: { value: "" }
+      // }));
     }
   };
-
   const handleContatoChange = idd => {
     const cont = data3.find(arr => arr.id === parseInt(idd, 10));
     setMeetingValues(prevState => ({
@@ -200,6 +292,8 @@ export default function CadastroFollowUps() {
     document.getElementById("telefone").value = normalizeFone(cont.fone);
     document.getElementById("celular").value = normalizeFone(cont.cel);
     document.getElementById("skype").value = cont.skype;
+    document.getElementById("ramal").value = cont.ramal ? cont.ramal : "--";
+    document.getElementById("cargo").value = cont.cargo ? cont.cargo : "--";
   };
 
   const handleChange = (event, name, type) => {
@@ -222,6 +316,12 @@ export default function CadastroFollowUps() {
             }
           }));
         }
+        break;
+      case "optional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target, optional: true }
+        }));
         break;
       case "text":
         setValues(prevState => ({
@@ -268,19 +368,22 @@ export default function CadastroFollowUps() {
 
     if (valid && filled) {
       dispatch(
-        followUpCadastro(
-          values.empresaId.value,
-          values.ColabId.value,
-          values.ClienteId.value,
-          values.CliContId.value,
-          values.data.value,
-          values.dataProxContato.value,
-          values.detalhes.value,
-          values.reacao.value,
-          campId,
-          values.proxPasso.value,
-          values.prefContato.value
-        )
+        followUpCadastro({
+          EmpresaId: values.empresaId.value,
+          ColabId: values.ColabId.value,
+          ClienteId: values.ClienteId.value,
+          CliContId: values.CliContId.value,
+          dataContato: values.data.value,
+          dataProxContato: values.dataProxContato.value,
+          detalhes: values.detalhes.value,
+          reacao: values.reacao.value,
+          CampanhaId: campId,
+          proxPasso: values.proxPasso.value,
+          prefContato: values.prefContato.value,
+          CamposDinamicosProspectId: values.motivo.value
+            ? values.motivo.value
+            : null
+        })
       );
     } else {
       options = {
@@ -391,8 +494,6 @@ export default function CadastroFollowUps() {
                           }
                         }
                       }
-                      console.log(meetingValues);
-                      console.log(meetingFilled);
                       if (meetingFilled) {
                         await api.post(`/followUp/meeting/?Cc=${""}`, {
                           meetingValues,
@@ -595,7 +696,177 @@ export default function CadastroFollowUps() {
               </Row>
               <Footer />
             </ModalLarge>
+            {/*
+            ------------
+            ------------
+            ------------
+            */}
+            <ModalLarge
+              onClose={() => {
+                setIsOpenInfo(!isOpenInfo);
+              }}
+              open={isOpenInfo}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenInfo(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>Empresa</h3>
+              </Header>
+              <Row>
+                <Col sm="4">
+                  <Label>CNPJ</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={normalizeCnpj(data2.CNPJ)}
+                      id="CliCNPJ"
+                      name="CliCNPJ"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>{" "}
+                <Col sm="4">
+                  <Label>Razão Social</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.rzSoc}
+                      id="CliRzSoc"
+                      name="CliRzSoc"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Nome Abreviado</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.nomeAbv}
+                      id="CliNomeAbv"
+                      name="CliNomeAbv"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Site</Label>
+                  <FormGroup className="has-label">
+                    <InputGroup>
+                      <Input
+                        disabled
+                        value={data2.site ? data2.site : "--"}
+                        id="CliSite"
+                        name="CliSite"
+                        type="text"
+                      />
+                      <InputGroupAddon
+                        className="appendCustom"
+                        addonType="append"
+                      >
+                        <Button
+                          className={classNames("btn-icon btn-link like addon")}
+                          onClick={() =>
+                            data2.site
+                              ? window.open(
+                                  `${data2.site}`,
+                                  "_blank",
+                                  "noopener,noreferrer"
+                                )
+                              : null
+                          }
+                        >
+                          <i className="tim-icons icon-world addon" />
+                        </Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Telefone</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.fone ? normalizeFone(data2.fone) : "--"}
+                      id="CliFone"
+                      name="CliFone"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Representante</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data2.RepresentanteId}
+                      id="CliFone"
+                      name="CliFone"
+                      type="select"
+                    >
+                      <option disabled value="">
+                        {" "}
+                        Representante
+                      </option>
+                      {data6.map((repr, index) => (
+                        <option id={index} value={repr.id}>
+                          {" "}
+                          {repr.nome}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="12">
+                  <Label>Endereço</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data5.CliEndereco}
+                      id="CliEndereco"
+                      name="CliEndereco"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
 
+              <Row>
+                <Col sm="12">
+                  <Label>Atividade Principal</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={data5.CliAtvPrincipal}
+                      id="CliAtvPrincipal"
+                      name="CliAtvPrincipal"
+                      type="textarea"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </ModalLarge>
+            {/*
+            ------------
+            ------------
+            ------------
+            */}
             <Row>
               <Col md="12">
                 <Card>
@@ -607,11 +878,39 @@ export default function CadastroFollowUps() {
                             float: "right"
                           }}
                           className={classNames("btn-icon btn-link like")}
+                          onClick={async () => {
+                            await delay(500);
+                            setTimeLine(true);
+                            dispatch(
+                              FUPCadastroFields({
+                                timeline: true,
+                                CliContId: values.CliContId.value,
+                                data: values.data.value,
+                                dataProxContato: values.dataProxContato.value,
+                                detalhes: values.detalhes.value,
+                                reacao: values.reacao.value,
+                                proxPasso: values.proxPasso.value,
+                                prefContato: values.prefContato.value,
+                                motivo: values.motivo.value
+                              })
+                            );
+                          }}
                         >
-                          <Timeline fontSize="large" />
+                          <Timeline style={{ fontSize: 30 }} />
                         </Button>
                       </Tooltip>
                     </Link>
+                    <Tooltip title="Info" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right"
+                        }}
+                        onClick={() => setIsOpenInfo(true)}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <FormatListBulleted />
+                      </Button>
+                    </Tooltip>
                     <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                     <p style={{ fontSize: 14 }}>
                       {data4.cod} | {data2.nomeAbv}
@@ -699,23 +998,25 @@ export default function CadastroFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Email</Label>
+                          <Label>Cargo</Label>
                           <FormGroup className="has-label">
                             <Input
                               disabled
-                              name="email"
-                              id="email"
+                              defaultValue={contValues.cargo.value}
+                              name="cargo"
+                              id="cargo"
                               type="text"
                             />
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Telefone</Label>
+                          <Label>Email</Label>
                           <FormGroup className="has-label">
                             <Input
                               disabled
-                              name="telefone"
-                              id="telefone"
+                              defaultValue={contValues.email.value}
+                              name="email"
+                              id="email"
                               type="text"
                             />
                           </FormGroup>
@@ -725,6 +1026,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.cel.value}
                               name="celular"
                               id="celular"
                               type="text"
@@ -734,16 +1036,43 @@ export default function CadastroFollowUps() {
                       </Row>
                       <Row>
                         <Col md="4">
+                          <Label>Telefone</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={contValues.fone.value}
+                              name="telefone"
+                              id="telefone"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Ramal</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              defaultValue={contValues.ramal.value}
+                              name="ramal"
+                              id="ramal"
+                              type="text"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Skype</Label>
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.skype.value}
                               name="skype"
                               id="skype"
                               type="text"
                             />
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Preferência de Contato</Label>
                           <FormGroup
@@ -879,8 +1208,6 @@ export default function CadastroFollowUps() {
                             </Label>
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Data Próximo Contato</Label>
                           <FormGroup
@@ -901,7 +1228,8 @@ export default function CadastroFollowUps() {
                             ) : null}
                           </FormGroup>
                         </Col>
-
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Ação</Label>
                           <FormGroup
@@ -937,17 +1265,24 @@ export default function CadastroFollowUps() {
                           <Label>Motivo</Label>
                           <FormGroup className="has-label ">
                             <Input
-                              disabled
                               hidden={values.proxPasso.value !== "10"}
                               name="CliContId"
                               type="select"
+                              onChange={event =>
+                                handleChange(event, "motivo", "text")
+                              }
                               placeholder="Selecione o Motivo"
                             >
                               {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione o Motivo{" "}
-                              </option>
+                              <option value=""> Selecione o Motivo </option>
+                              {data7.map((motivo, index) => {
+                                return (
+                                  <option key={index} value={motivo.id}>
+                                    {" "}
+                                    {motivo.nome} - {motivo.valor}{" "}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </FormGroup>
                         </Col>

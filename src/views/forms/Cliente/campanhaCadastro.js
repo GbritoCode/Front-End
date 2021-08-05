@@ -120,7 +120,7 @@ export default function CadastroCampanha() {
               Representante: client.Representante.nome,
               rzSoc: client.rzSoc,
               TipoComisseId: client.TipoComisseId,
-              TipoComiss: checkDesc(client.TipoComisse.desc),
+              TipoComiss: checkDesc(client),
               EmpresaId: client.EmpresaId,
               prospect: checkProsp(client.prospect),
               implantacao: client.createdAt
@@ -140,7 +140,7 @@ export default function CadastroCampanha() {
               Representante: client.Representante.nome,
               rzSoc: client.rzSoc,
               TipoComisseId: client.TipoComisseId,
-              TipoComiss: checkDesc(client.TipoComisse.desc),
+              TipoComiss: checkDesc(client),
               EmpresaId: client.EmpresaId,
               prospect: checkProsp(client.prospect),
               implantacao: client.createdAt
@@ -324,7 +324,7 @@ export default function CadastroCampanha() {
                     <DoneAll fontSize="large" />
                   </Button>
                 </Tooltip>
-                <h4 className="modalHeader">Clientes/Prospects</h4>
+                <h4 className="modalHeader">Empresas</h4>
               </Header>
 
               <ReactTable
@@ -345,7 +345,7 @@ export default function CadastroCampanha() {
                     Representante: client.Representante.nome,
                     rzSoc: client.rzSoc,
                     TipoComisseId: client.TipoComisseId,
-                    TipoComiss: checkDesc(client.TipoComisse.desc),
+                    TipoComiss: checkDesc(client),
                     EmpresaId: client.EmpresaId,
                     prospect: checkProsp(client.prospect),
                     implantacao: client.createdAt

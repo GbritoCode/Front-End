@@ -4,55 +4,6 @@ export function signFailure() {
   };
 }
 
-export function ClienteRequest(
-  CNPJ,
-  nomeAbv,
-  rzSoc,
-  fantasia,
-  RepresentanteId,
-  TipoComisseId,
-  EmpresaId,
-  prospect,
-  CampanhaIds
-) {
-  return {
-    type: "@cadastro/CADASTRO_REQUEST",
-    payload: {
-      CNPJ,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      EmpresaId,
-      prospect,
-      CampanhaIds
-    }
-  };
-}
-
-export function ClienteUpdate(
-  id,
-  nomeAbv,
-  rzSoc,
-  fantasia,
-  RepresentanteId,
-  TipoComisseId,
-  prospect
-) {
-  return {
-    type: "@update/CLIENTE_REQUEST",
-    payload: {
-      id,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      prospect
-    }
-  };
-}
 export function ClienteUpdateSuccess(profile) {
   return {
     type: "@update/CLIENTE_REQUEST_SUCCES",
@@ -60,63 +11,31 @@ export function ClienteUpdateSuccess(profile) {
   };
 }
 
-export function CliContRequest(
-  ClienteId,
-  nome,
-  cel,
-  fone,
-  skype,
-  email,
-  aniver,
-  tipoConta,
-  prospect,
-  linkedin
-) {
+export function ClienteRequest(data) {
   return {
-    type: "@cadastro/CADASTRO_CONT_REQUEST",
-    payload: {
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      prospect,
-      linkedin
-    }
+    type: "@cadastro/CADASTRO_REQUEST",
+    payload: data
   };
 }
 
-export function CliContUpdate(
-  id,
-  ClienteId,
-  nome,
-  cel,
-  fone,
-  skype,
-  email,
-  aniver,
-  tipoConta,
-  prospect,
-  linkedin
-) {
+export function ClienteUpdate(data) {
+  return {
+    type: "@update/CLIENTE_REQUEST",
+    payload: data
+  };
+}
+
+export function CliContRequest(data) {
+  return {
+    type: "@cadastro/CADASTRO_CONT_REQUEST",
+    payload: data
+  };
+}
+
+export function CliContUpdate(data) {
   return {
     type: "@update/CONT_REQUEST",
-    payload: {
-      id,
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      prospect,
-      linkedin
-    }
+    payload: data
   };
 }
 
@@ -248,113 +167,43 @@ export function campanhaCadastro(
   };
 }
 
-export function campanhaUpdate(
-  id,
-  cod,
-  desc,
-  ClienteIds,
-  dataInic,
-  dataFim,
-  ColabId
-) {
+export function campanhaUpdate(data) {
   return {
     type: "@update/CAMPANHA_REQUEST",
-    payload: {
-      id,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId
-    }
+    payload: data
   };
 }
 
 //--------------------------------------
 //--------------------------------------
 
-export function camposDinamicosCadastro(EmpresaId, nome, valor) {
+export function camposDinamicosCadastro(data) {
   return {
     type: "@cadastro/CAMPOS_DINAMICOS_REQUEST",
-    payload: {
-      EmpresaId,
-      nome,
-      valor
-    }
+    payload: data
   };
 }
 
-export function camposDinamicosUpdate(id, nome, valor) {
+export function camposDinamicosUpdate(data) {
   return {
     type: "@update/CAMPOS_DINAMICOS_REQUEST",
-    payload: {
-      id,
-      nome,
-      valor
-    }
+    payload: data
   };
 }
 
 //-----------------------------------
 //-----------------------------------
 
-export function followUpCadastro(
-  EmpresaId,
-  ColabId,
-  ClienteId,
-  CliContId,
-  dataContato,
-  dataProxContato,
-  detalhes,
-  reacao,
-  CampanhaId,
-  proxPasso,
-  prefContato
-) {
+export function followUpCadastro(data) {
   return {
     type: "@cadastro/FOLLOW_UP_REQUEST",
-    payload: {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      CampanhaId,
-      proxPasso,
-      prefContato
-    }
+    payload: data
   };
 }
 
-export function followUpUpdate(
-  id,
-  ColabId,
-  ClienteId,
-  CliContId,
-  dataContato,
-  dataProxContato,
-  detalhes,
-  reacao,
-  proxPasso,
-  prefContato
-) {
+export function followUpUpdate(data) {
   return {
     type: "@update/FOLLOW_UP_REQUEST",
-    payload: {
-      id,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      proxPasso,
-      prefContato
-    }
+    payload: data
   };
 }

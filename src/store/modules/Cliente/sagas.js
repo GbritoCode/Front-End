@@ -8,28 +8,9 @@ import { signFailure, ClienteUpdateSuccess } from "./actions";
 
 export function* clienteCadastro({ payload }) {
   try {
-    const {
-      CNPJ,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      EmpresaId,
-      prospect,
-      CampanhaIds
-    } = payload;
-    yield call(api.post, "cliente", {
-      CNPJ,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      EmpresaId,
-      prospect,
-      CampanhaIds
-    });
+    const { prospect } = payload;
+    const response = yield call(api.post, "cliente", payload);
+    toast.success(response.data.message);
     if (prospect === "true") {
       history.push("/tabelas/cliente/prospect");
       return;
@@ -43,27 +24,10 @@ export function* clienteCadastro({ payload }) {
 
 export function* updateCliente({ payload }) {
   try {
-    const {
-      id,
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      prospect
-    } = payload;
+    const { id, prospect } = payload;
 
-    const Cliente = {
-      nomeAbv,
-      rzSoc,
-      fantasia,
-      RepresentanteId,
-      TipoComisseId,
-      prospect
-    };
-
-    const response = yield call(api.put, `cliente/${id}`, Cliente);
-    toast.success("cliente atualizado");
+    const response = yield call(api.put, `cliente/${id}`, payload);
+    toast.success(response.data.message);
     if (prospect === "true") {
       history.push("/tabelas/cliente/prospect");
       return;
@@ -71,8 +35,7 @@ export function* updateCliente({ payload }) {
     history.push("/tabelas/cliente/cliente");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
-    yield put(signFailure());
+    toast.error(err.response.data.error);
   }
 }
 
@@ -80,72 +43,26 @@ export function* updateCliente({ payload }) {
 //--------------------------------------------------------------------------
 export function* cliContCadastro({ payload }) {
   try {
-    const {
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      prospect,
-      linkedin
-    } = payload;
-    yield call(api.post, "cliente/cont", {
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      linkedin
-    });
+    const { ClienteId, prospect } = payload;
+    const response = yield call(api.post, "cliente/cont", payload);
+    toast.success(response.data.message);
     history.push(`/tabelas/cliente/cont/${ClienteId}/?prospect=${prospect}`);
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
-    yield put(signFailure());
+    toast.error(err.response.data.error);
   }
 }
 
 export function* updateCliCont({ payload }) {
   try {
-    const {
-      id,
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      prospect,
-      linkedin
-    } = payload;
+    const { id, ClienteId, prospect } = payload;
 
-    const Cliente = {
-      ClienteId,
-      nome,
-      cel,
-      fone,
-      skype,
-      email,
-      aniver,
-      tipoConta,
-      linkedin
-    };
+    const response = yield call(api.put, `cliente/cont/${id}`, payload);
 
-    const response = yield call(api.put, `cliente/cont/${id}`, Cliente);
-
+    toast.success(response.data.message);
     history.push(`/tabelas/cliente/cont/${ClienteId}/?prospect=${prospect}`);
-    toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Falha no cadastro, este email já existe");
-    yield put(signFailure());
+    toast.error(err.response.data.error);
   }
 }
 
@@ -317,18 +234,9 @@ export function* campanhaCadastro({ payload }) {
 
 export function* updateCampanha({ payload }) {
   try {
-    const { id, cod, desc, ClienteIds, dataInic, dataFim, ColabId } = payload;
+    const { id } = payload;
 
-    const Cliente = {
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId
-    };
-
-    const response = yield call(api.put, `campanha/${id}`, Cliente);
+    const response = yield call(api.put, `campanha/${id}`, payload);
 
     history.push(`/tabelas/cliente/campanha`);
     toast.success("Campanha Atualizada");
@@ -344,12 +252,7 @@ export function* updateCampanha({ payload }) {
 
 export function* camposDinamicosCadastro({ payload }) {
   try {
-    const { EmpresaId, nome, valor } = payload;
-    yield call(api.post, "camposDinamicos", {
-      EmpresaId,
-      nome,
-      valor
-    });
+    yield call(api.post, "camposDinamicos", payload);
     history.push(`/tabelas/cliente/camposDinamicos/`);
   } catch (err) {
     toast.error(err.response.data.error);
@@ -359,14 +262,9 @@ export function* camposDinamicosCadastro({ payload }) {
 
 export function* updateCamposDinamicos({ payload }) {
   try {
-    const { id, nome, valor } = payload;
+    const { id } = payload;
 
-    const Cliente = {
-      nome,
-      valor
-    };
-
-    const response = yield call(api.put, `camposDinamicos/${id}`, Cliente);
+    const response = yield call(api.put, `camposDinamicos/${id}`, payload);
 
     history.push(`/tabelas/cliente/camposDinamicos`);
     toast.success("Campo Dinâmico Atualizado");
@@ -382,32 +280,8 @@ export function* updateCamposDinamicos({ payload }) {
 
 export function* followUpsCadastro({ payload }) {
   try {
-    const {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      CampanhaId,
-      proxPasso,
-      prefContato
-    } = payload;
-    yield call(api.post, "followUp", {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      CampanhaId,
-      proxPasso,
-      prefContato
-    });
+    const { CampanhaId } = payload;
+    yield call(api.post, "followUp", payload);
     history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
   } catch (err) {
     toast.error(err.response.data.error);
@@ -417,32 +291,9 @@ export function* followUpsCadastro({ payload }) {
 
 export function* updateFollowUps({ payload }) {
   try {
-    const {
-      id,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      proxPasso,
-      prefContato
-    } = payload;
+    const { id } = payload;
 
-    const Cliente = {
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      proxPasso,
-      prefContato
-    };
-
-    const response = yield call(api.put, `followUp/${id}`, Cliente);
+    const response = yield call(api.put, `followUp/${id}`, payload);
 
     history.goBack();
     toast.success("Follow Up Atualizado");

@@ -17,6 +17,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // reactstrap components
+import ReactTable from "react-table-v6";
 import {
   Button,
   Card,
@@ -36,11 +37,20 @@ import NotificationAlert from "react-notification-alert";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
 import EventNoteIcon from "@material-ui/icons/EventNote";
-import { AttachMoney, Contacts } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import {
+  AttachMoney,
+  Check,
+  Close,
+  Contacts,
+  FormatListBulleted,
+  InfoOutlined
+} from "@material-ui/icons";
+import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import Modal from "~/components/Modal/modalLarge";
 
 /* eslint-disable eqeqeq */
 function ClienteUpdatee() {
@@ -49,20 +59,28 @@ function ClienteUpdatee() {
   const dispatch = useDispatch();
   const { id, prospect } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState({});
+  const [data4, setData4] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     cnpj: { value: "", error: "", message: "" },
     rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
-    tipoComiss: { value: "", error: "", message: "" }
+    tipoComiss: { value: null, error: "", message: "", optional: true },
+    fone: { value: "", error: "", message: "", optional: true },
+    site: { value: "", error: "", message: "", optional: true },
+    fantasia: { value: "", error: "", message: "", optional: true },
+    atvPrincipal: { value: "", error: "", message: "", optional: true },
+    erp: { value: "", error: "", message: "", optional: true },
+    database: { value: "", error: "", message: "", optional: true },
+    ramo: { value: "", error: "", message: "", optional: true },
+    setor: { value: "", error: "", message: "", optional: true },
+    qtdFuncionarios: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    fantasia: { value: "", error: "", message: "" }
-  };
-  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -75,18 +93,64 @@ function ClienteUpdatee() {
       const response3 = await api.get(`/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
+      console.log(
+        response.data.Campanhas.filter(
+          arr => arr.Campanhas_Clientes.ClienteId === response.data.id
+        )
+      );
+      setData4(
+        response.data.Campanhas.filter(
+          arr => arr.Campanhas_Clientes.ClienteId === response.data.id
+        ).map((camp, key) => {
+          return {
+            idd: key,
+            id: camp.id,
+            cod: camp.cod,
+            desc: camp.desc,
+            colab: camp.Colab.nome,
+            clientes: camp.Clientes,
+            lastFUP:
+              camp.FollowUps.find(arr => arr.ClienteId === response.data.id) !==
+              undefined
+                ? camp.FollowUps.find(arr => arr.ClienteId === response.data.id)
+                    .dataContato
+                : "--",
+            situacao: camp.Campanhas_Clientes.ativo
+              ? "Em Prospecção"
+              : "Finalizado",
+            created:
+              camp.FollowUps.find(arr => arr.ClienteId === response.data.id) !==
+              undefined
+                ? camp.FollowUps.reverse().find(
+                    arr => arr.ClienteId === response.data.id
+                  ).dataContato
+                : "--"
+          };
+        })
+      );
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response3.data.id },
         cnpj: { value: normalizeCnpj(response.data.CNPJ) },
         nomeAbv: { value: response.data.nomeAbv },
         representante: { value: response.data.RepresentanteId },
-        tipoComiss: { value: response.data.TipoComisseId },
-        rzSoc: { value: response.data.rzSoc }
-      }));
-      setOptional(prevState => ({
-        ...prevState,
-        fantasia: { value: response.data.fantasia }
+        tipoComiss: {
+          value: response.data.TipoComisseId ? response.data.TipoComisseId : "",
+          optional: true
+        },
+        rzSoc: { value: response.data.rzSoc },
+        site: { value: response.data.site, optional: true },
+        fone: { value: normalizeFone(response.data.fone), optional: true },
+        fantasia: { value: response.data.fantasia, optional: true },
+        atvPrincipal: { value: response.data.atvPrincipal, optional: true },
+        erp: { value: response.data.erp, optional: true },
+        database: { value: response.data.database, optional: true },
+        ramo: { value: response.data.ramo, optional: true },
+        setor: { value: response.data.setor, optional: true },
+        qtdFuncionarios: {
+          value: response.data.qtdFuncionarios,
+          optional: true
+        }
       }));
       setIsLoading(false);
     }
@@ -164,6 +228,19 @@ function ClienteUpdatee() {
     return false;
   };
 
+  const verifyUrl = value => {
+    const UrlRegex = new RegExp(
+      "(https:[/][/]|http:[/][/])[a-zA-Z0-9-.]+(.[.][a-zA-Z]{2,6})(:[0-9]{1,5})*(/($|[a-zA-Z0-9.,;?'\\+&amp;%$#=~_-]+))*$"
+    );
+    if (value) {
+      if (UrlRegex.test(value)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
+
   const checkDesc = value => {
     switch (value) {
       case "1":
@@ -199,7 +276,24 @@ function ClienteUpdatee() {
           }));
         }
         break;
-
+      case "url":
+        if (verifyUrl(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira uma URL no padrão 'https://www.exemplo.com'",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "cnpj":
         setValues(prevState => ({
           ...prevState,
@@ -207,9 +301,9 @@ function ClienteUpdatee() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -380,29 +474,42 @@ function ClienteUpdatee() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
+      const foneDb = values.fone.value
+        ? values.fone.value.replace(/[^\d]+/g, "")
+        : "";
       dispatch(
-        ClienteUpdate(
+        ClienteUpdate({
           id,
-          values.nomeAbv.value,
-          values.rzSoc.value,
-          optional.fantasia.value,
-          values.representante.value,
-          values.tipoComiss.value,
-          prospect
-        )
+          nomeAbv: values.nomeAbv.value,
+          rzSoc: values.rzSoc.value,
+          fantasia: values.fantasia.value,
+          RepresentanteId: values.representante.value,
+          TipoComisseId:
+            values.tipoComiss.value === "" ? null : values.tipoComiss.value,
+          prospect,
+          site: values.site.value,
+          fone: foneDb,
+          erp: values.erp.value,
+          database: values.database.value,
+          ramo: values.ramo.value,
+          setor: values.setor.value,
+          qtdFuncionarios: values.qtdFuncionarios.value
+        })
       );
     } else {
       options = {
@@ -432,27 +539,250 @@ function ClienteUpdatee() {
             <NotificationAlert ref={notifyElment} />
           </div>
           <div className="content">
+            <Modal
+              onClose={() => {
+                setIsOpen(false);
+              }}
+              open={isOpen}
+            >
+              <Header>
+                {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <h4 className="modalHeader">Campanhas</h4>
+              </Header>
+
+              <ReactTable
+                onFilteredChange={() => {}}
+                data={data4}
+                filterable
+                defaultFilterMethod={(filter, row) => {
+                  const id = filter.pivotId || filter.id;
+                  return row[id] !== undefined
+                    ? String(row[id])
+                        .toLowerCase()
+                        .includes(filter.value.toLowerCase())
+                    : true;
+                }}
+                previousText="Anterior"
+                nextText="Próximo"
+                loadingText="Carregando"
+                noDataText="Dados não encontrados"
+                pageText="Página"
+                ofText="de"
+                rowsText="Linhas"
+                columns={[
+                  {
+                    Header: "Código",
+                    accessor: "cod"
+                  },
+                  {
+                    Header: "Descrição",
+                    accessor: "desc"
+                  },
+                  {
+                    Header: "data Inclusão",
+                    accessor: "created"
+                  },
+                  {
+                    Header: "data Último FUP",
+                    accessor: "lastFUP"
+                  },
+                  {
+                    Header: "situacao",
+                    accessor: "situacao"
+                  }
+                ]}
+                defaultPageSize={6}
+                pageSizeOptions={[6, 10, 50, 100]}
+                className="-striped -highlight"
+              />
+
+              <Footer />
+            </Modal>
+
+            <Modal
+              onClose={() => {
+                setIsOpenInfo(!isOpenInfo);
+              }}
+              open={isOpenInfo}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenInfo(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenInfo(false)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>Dados Opcionais</h3>
+              </Header>
+              <Row>
+                <Col sm="4">
+                  <Label>ERP</Label>
+                  <FormGroup className={`has-label ${values.erp.error}`}>
+                    <Input
+                      onChange={event => handleChange(event, "erp", "optional")}
+                      value={values.erp.value}
+                      id="Clierp"
+                      name="Clierp"
+                      type="text"
+                    />
+                    {values.erp.error === "has-danger" ? (
+                      <Label className="error">{values.erp.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Banco de Dados</Label>
+                  <FormGroup className={`has-label ${values.database.error}`}>
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "database", "optional")
+                      }
+                      value={values.database.value}
+                      id="Clidatabase"
+                      name="Clidatabase"
+                      type="text"
+                    />
+                    {values.database.error === "has-danger" ? (
+                      <Label className="error">{values.database.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Ramo</Label>
+                  <FormGroup className={`has-label ${values.ramo.error}`}>
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "ramo", "optional")
+                      }
+                      value={values.ramo.value}
+                      id="Cliramo"
+                      name="Cliramo"
+                      type="text"
+                    />
+                    {values.ramo.error === "has-danger" ? (
+                      <Label className="error">{values.ramo.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Setor</Label>
+                  <FormGroup className={`has-label ${values.setor.error}`}>
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "setor", "optional")
+                      }
+                      value={values.setor.value}
+                      id="Clisetor"
+                      name="Clisetor"
+                      type="text"
+                    />
+                    {values.setor.error === "has-danger" ? (
+                      <Label className="error">{values.setor.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Quantidade de Funcionários</Label>
+                  <FormGroup
+                    className={`has-label ${values.qtdFuncionarios.error}`}
+                  >
+                    <Input
+                      onChange={event =>
+                        handleChange(event, "qtdFuncionarios", "optional")
+                      }
+                      value={values.qtdFuncionarios.value}
+                      id="CliqtdFuncionarios"
+                      name="CliqtdFuncionarios"
+                      type="text"
+                    />
+                    {values.qtdFuncionarios.error === "has-danger" ? (
+                      <Label className="error">
+                        {values.qtdFuncionarios.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {checkProsp(prospect, "icons")}
+                    <CardTitle tag="h4">
+                      {checkProsp(prospect, "icons")}
+                      <Link
+                        to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
+                      >
+                        <Tooltip title="Contato" placement="top" interactive>
+                          <Button
+                            style={{ float: "right" }}
+                            color="default"
+                            size="sm"
+                            className={classNames("btn-icon btn-link like")}
+                          >
+                            <Contacts />
+                          </Button>
+                        </Tooltip>
+                      </Link>
 
-                    <Link
-                      to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
-                    >
-                      <Tooltip title="Contato" placement="top" interactive>
+                      <Tooltip title="Campanhas" placement="top" interactive>
                         <Button
                           style={{ float: "right" }}
                           color="default"
                           size="sm"
                           className={classNames("btn-icon btn-link like")}
+                          onClick={() => setIsOpen(true)}
                         >
-                          <Contacts />
+                          <FormatListBulleted />
                         </Button>
                       </Tooltip>
-                    </Link>
-                    <CardTitle tag="h4">
+                      <Tooltip title="Info" placement="top" interactive>
+                        <Button
+                          style={{
+                            float: "right"
+                          }}
+                          size="sm"
+                          onClick={() => setIsOpenInfo(true)}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <InfoOutlined />
+                        </Button>
+                      </Tooltip>
                       {checkProsp(prospect, "title")}
                     </CardTitle>
                   </CardHeader>
@@ -509,22 +839,22 @@ function ClienteUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Nome Fanasia</Label>
+                          <Label>Nome Fantasia</Label>
                           <FormGroup
-                            className={`has-label ${optional.fantasia.error}`}
+                            className={`has-label ${values.fantasia.error}`}
                           >
                             <Input
                               disabled
                               onChange={event =>
                                 handleChange(event, "fantasia", "optional")
                               }
-                              value={optional.fantasia.value}
+                              value={values.fantasia.value}
                               name="nomeAbv"
                               type="text"
                             />
-                            {optional.fantasia.error === "has-danger" ? (
+                            {values.fantasia.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.fantasia.message}
+                                {values.fantasia.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -538,7 +868,6 @@ function ClienteUpdatee() {
                             className={`has-label ${values.nomeAbv.error}`}
                           >
                             <Input
-                              disabled
                               name="name_abv"
                               type="text"
                               onChange={event =>
@@ -597,7 +926,7 @@ function ClienteUpdatee() {
                               name="tipoComiss"
                               type="select"
                               onChange={event =>
-                                handleChange(event, "tipoComiss", "text")
+                                handleChange(event, "tipoComiss", "optional")
                               }
                               value={values.tipoComiss.value}
                             >
@@ -619,6 +948,83 @@ function ClienteUpdatee() {
                             {values.tipoComiss.error === "has-danger" ? (
                               <Label className="error">
                                 {values.tipoComiss.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Site</Label>
+                          <FormGroup
+                            className={`has-label ${values.site.error}`}
+                          >
+                            <Input
+                              name="site"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "site", "url")
+                              }
+                              value={values.site.value}
+                            />
+                            {values.site.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.site.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Telefone</Label>
+                          <FormGroup
+                            className={`has-label ${values.fone.error}`}
+                          >
+                            <Input
+                              minLength={10}
+                              maxLength={11}
+                              name="fone"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "fone", "optional")
+                              }
+                              onBlur={e => {
+                                const { value } = e.target;
+                                setValues(prevState => ({
+                                  ...prevState,
+                                  fone: {
+                                    value: normalizeFone(value),
+                                    optional: true
+                                  }
+                                }));
+                              }}
+                              value={values.fone.value}
+                            />
+                            {values.fone.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.fone.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Atividade Principal</Label>
+                          <FormGroup
+                            className={`has-label ${values.atvPrincipal.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="atvPrincipal"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "atvPrincipal", "optional")
+                              }
+                              value={values.atvPrincipal.value}
+                            />
+                            {values.atvPrincipal.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.atvPrincipal.message}
                               </Label>
                             ) : null}
                           </FormGroup>

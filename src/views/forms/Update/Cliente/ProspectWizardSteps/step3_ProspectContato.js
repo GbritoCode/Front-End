@@ -45,17 +45,16 @@ const CliContCadastro = forwardRef((props, ref) => {
     nome: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
-    skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" },
-    linkedin: { value: "", error: "", message: "" }
+    cargo: { value: "", error: "", message: "" },
+    skype: { value: "", error: "", message: "", optional: true },
+    linkedin: { value: "", error: "", message: "", optional: true },
+    aniver: { value: null, error: "", message: "", optional: true },
+    ramal: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    aniver: { value: null, error: "", message: "" }
-  };
+
   const [values, setValues] = useState(stateSchema);
   const [finalState, setFinalState] = useState();
-  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     async function loadData() {
@@ -73,6 +72,9 @@ const CliContCadastro = forwardRef((props, ref) => {
 
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
+    if (value === "") {
+      return true;
+    }
     if (numberRex.test(value)) {
       return true;
     }
@@ -108,6 +110,24 @@ const CliContCadastro = forwardRef((props, ref) => {
           }));
         }
         break;
+      case "optionalNumber":
+        if (verifyNumber(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "email":
         if (verifyEmail(target)) {
           setValues(prevState => ({
@@ -126,9 +146,9 @@ const CliContCadastro = forwardRef((props, ref) => {
         }
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -140,7 +160,7 @@ const CliContCadastro = forwardRef((props, ref) => {
       default:
     }
   };
-
+  console.log(values);
   const isValidated = () => {
     const aux = Object.entries(values);
     const tamanho = aux.length;
@@ -154,15 +174,17 @@ const CliContCadastro = forwardRef((props, ref) => {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -175,9 +197,10 @@ const CliContCadastro = forwardRef((props, ref) => {
         fone: values.fone.value,
         skype: values.skype.value,
         email: values.email.value,
-        tipoConta: values.tipoConta.value,
-        aniver: optional.aniver.value,
-        linkedin: optional.aniver.value
+        aniver: values.aniver.value,
+        linkedin: values.linkedin.value,
+        cargo: values.cargo.value,
+        ramal: values.ramal.value
       });
       return true;
     }
@@ -241,6 +264,26 @@ const CliContCadastro = forwardRef((props, ref) => {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Cargo</Label>
+                          <FormGroup
+                            className={`has-label ${values.cargo.error}`}
+                          >
+                            <Input
+                              name="cargo"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cargo", "text")
+                              }
+                              value={values.cargo.value}
+                            />
+                            {values.cargo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cargo.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Celular</Label>
                           <FormGroup
                             className={`has-label ${values.cel.error}`}
@@ -269,6 +312,9 @@ const CliContCadastro = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+
+                      <Row>
                         <Col md="4">
                           <Label>Telefone</Label>
                           <FormGroup
@@ -298,78 +344,27 @@ const CliContCadastro = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-
-                      <Row>
                         <Col md="4">
+                          <Label>Ramal</Label>
                           <FormGroup
-                            className={`has-label ${optional.aniver.error}`}
-                          >
-                            <Label>Aniversário </Label>
-                            <Input
-                              name="aniver"
-                              type="date"
-                              onChange={event =>
-                                handleChange(event, "aniver", "optional")
-                              }
-                              value={optional.aniver.value}
-                            />
-                            {optional.aniver.error === "has-danger" ? (
-                              <Label className="error">
-                                {optional.aniver.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Tipo de Contato</Label>
-                          <FormGroup
-                            className={`has-label ${values.tipoConta.error}`}
+                            className={`has-label ${values.ramal.error}`}
                           >
                             <Input
-                              name="tipoConta"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "tipoConta", "text")
-                              }
-                              value={values.tipoConta.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione o tipo de contato{" "}
-                              </option>
-                              <option value={1}>Normal</option>
-                              <option value={2}>Nota Fiscal</option>
-                            </Input>
-                            {values.tipoConta.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.tipoConta.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Skype</Label>
-                          <FormGroup
-                            className={`has-label ${values.skype.error}`}
-                          >
-                            <Input
-                              name="skype"
+                              name="ramal"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "skype", "text")
+                                handleChange(event, "ramal", "optionalNumber")
                               }
-                              value={values.skype.value}
+                              value={values.ramal.value}
                             />
-                            {values.skype.error === "has-danger" ? (
+                            {values.ramal.error === "has-danger" ? (
                               <Label className="error">
-                                {values.skype.message}
+                                {values.ramal.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
+
                         <Col md="4">
                           <Label>Email</Label>
                           <FormGroup
@@ -391,6 +386,26 @@ const CliContCadastro = forwardRef((props, ref) => {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Skype</Label>
+                          <FormGroup
+                            className={`has-label ${values.skype.error}`}
+                          >
+                            <Input
+                              name="skype"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "skype", "optional")
+                              }
+                              value={values.skype.value}
+                            />
+                            {values.skype.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.skype.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Linkedin</Label>
                           <FormGroup
                             className={`has-label ${values.linkedin.error}`}
@@ -399,13 +414,33 @@ const CliContCadastro = forwardRef((props, ref) => {
                               name="linkedin"
                               type="linkedin"
                               onChange={event =>
-                                handleChange(event, "linkedin", "text")
+                                handleChange(event, "linkedin", "optional")
                               }
                               value={values.linkedin.value}
                             />
                             {values.linkedin.error === "has-danger" ? (
                               <Label className="error">
                                 {values.linkedin.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <FormGroup
+                            className={`has-label ${values.aniver.error}`}
+                          >
+                            <Label>Aniversário </Label>
+                            <Input
+                              name="aniver"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "aniver", "optional")
+                              }
+                              value={values.aniver.value}
+                            />
+                            {values.aniver.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.aniver.message}
                               </Label>
                             ) : null}
                           </FormGroup>

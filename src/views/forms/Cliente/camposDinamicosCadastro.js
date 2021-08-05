@@ -110,11 +110,11 @@ export default function CadastroCamposDinamicos() {
 
     if (valid && filled) {
       dispatch(
-        camposDinamicosCadastro(
-          values.empresaId.value,
-          values.nome.value,
-          values.valor.value
-        )
+        camposDinamicosCadastro({
+          EmpresaId: values.empresaId.value,
+          nome: values.nome.value,
+          valor: values.valor.value
+        })
       );
     } else {
       options = {
@@ -141,15 +141,16 @@ export default function CadastroCamposDinamicos() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Campos Dinâmicos</CardTitle>
+                <CardTitle tag="h4">Motivo</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
-                      <Label>Nome</Label>
+                      <Label>Código</Label>
                       <FormGroup className={`has-label ${values.nome.error}`}>
                         <Input
+                          maxLength={8}
                           name="nome"
                           type="text"
                           onChange={event =>
@@ -163,7 +164,7 @@ export default function CadastroCamposDinamicos() {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <Label>Valor</Label>
+                      <Label>Motivo</Label>
                       <FormGroup className={`has-label ${values.valor.error}`}>
                         <Input
                           name="valor"

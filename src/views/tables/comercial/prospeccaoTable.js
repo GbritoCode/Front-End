@@ -89,7 +89,8 @@ function ProspeccaoTable() {
                 RepresentanteId: client.RepresentanteId,
                 Representante: client.Representante.nome,
                 TipoComisseId: client.TipoComisseId,
-                TipoComiss: client.TipoComisse.desc,
+                TipoComiss:
+                  client.TipoComisse === null ? "--" : client.TipoComisse.desc,
                 EmpresaId: client.EmpresaId,
                 prospect: client.prospect,
                 created: client.createdAt,
@@ -106,6 +107,15 @@ function ProspeccaoTable() {
                         .distanceFromToday
                     : "--"
                 ),
+                daysFromStart:
+                  client.FollowUps.reverse().find(
+                    arr => arr.CampanhaId === camp.id
+                  ) !== undefined
+                    ? Math.abs(
+                        client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+                          .daysFromStart
+                      )
+                    : "--",
                 actions: (
                   // we've added some custom button actions
                   <div className="actions-right">
@@ -155,8 +165,8 @@ function ProspeccaoTable() {
                 rzSoc: client.rzSoc,
                 RepresentanteId: client.RepresentanteId,
                 Representante: client.Representante.nome,
-                TipoComisseId: client.TipoComisseId,
-                TipoComiss: client.TipoComisse.desc,
+                TipoComiss:
+                  client.TipoComisse === null ? "--" : client.TipoComisse.desc,
                 EmpresaId: client.EmpresaId,
                 prospect: client.prospect,
                 created: client.createdAt,
@@ -173,6 +183,15 @@ function ProspeccaoTable() {
                         .distanceFromToday
                     : "--"
                 ),
+                daysFromStart:
+                  client.FollowUps.reverse().find(
+                    arr => arr.CampanhaId === camp.id
+                  ) !== undefined
+                    ? Math.abs(
+                        client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+                          .daysFromStart
+                      )
+                    : "--",
                 actions: (
                   // we've added some custom button actions
                   <div className="actions-right">
@@ -210,7 +229,6 @@ function ProspeccaoTable() {
             })
           );
       }
-      console.log(response.data[0].Clientes[0].Campanhas_Clientes.ativo);
 
       setData(
         response.data
@@ -249,7 +267,7 @@ function ProspeccaoTable() {
             }}
           />
         );
-      case days > 0 && days < 4:
+      case days > 0 && days <= 4:
         return (
           <div
             style={{
@@ -260,7 +278,7 @@ function ProspeccaoTable() {
             }}
           />
         );
-      case days > 5:
+      case days >= 5:
         return (
           <div
             style={{
@@ -334,7 +352,10 @@ function ProspeccaoTable() {
                                 RepresentanteId: client.RepresentanteId,
                                 Representante: client.Representante.nome,
                                 TipoComisseId: client.TipoComisseId,
-                                TipoComiss: client.TipoComisse.desc,
+                                TipoComiss:
+                                  client.TipoComisse === null
+                                    ? "--"
+                                    : client.TipoComisse.desc,
                                 EmpresaId: client.EmpresaId,
                                 prospect: client.prospect,
                                 created: client.createdAt,
@@ -359,6 +380,19 @@ function ProspeccaoTable() {
                                       ).distanceFromToday
                                     : "--"
                                 ),
+                                daysFromStart:
+                                  client.FollowUps.reverse().find(
+                                    arr =>
+                                      arr.CampanhaId === rowInfo.original.id
+                                  ) !== undefined
+                                    ? Math.abs(
+                                        client.FollowUps.find(
+                                          arr =>
+                                            arr.CampanhaId ===
+                                            rowInfo.original.id
+                                        ).daysFromStart
+                                      )
+                                    : "--",
                                 actions: (
                                   // we've added some custom button actions
                                   <div className="actions-right">
@@ -415,7 +449,10 @@ function ProspeccaoTable() {
                                 RepresentanteId: client.RepresentanteId,
                                 Representante: client.Representante.nome,
                                 TipoComisseId: client.TipoComisseId,
-                                TipoComiss: client.TipoComisse.desc,
+                                TipoComiss:
+                                  client.TipoComisse === null
+                                    ? "--"
+                                    : client.TipoComisse.desc,
                                 EmpresaId: client.EmpresaId,
                                 prospect: client.prospect,
                                 created: client.createdAt,
@@ -440,6 +477,19 @@ function ProspeccaoTable() {
                                       ).distanceFromToday
                                     : "--"
                                 ),
+                                daysFromStart:
+                                  client.FollowUps.reverse().find(
+                                    arr =>
+                                      arr.CampanhaId === rowInfo.original.id
+                                  ) !== undefined
+                                    ? Math.abs(
+                                        client.FollowUps.find(
+                                          arr =>
+                                            arr.CampanhaId ===
+                                            rowInfo.original.id
+                                        ).daysFromStart
+                                      )
+                                    : "--",
                                 actions: (
                                   // we've added some custom button actions
                                   <div className="actions-right">
@@ -578,7 +628,7 @@ function ProspeccaoTable() {
                       {
                         Header: "Retorno",
                         accessor: "retorno",
-                        sortType: (a, b, desc) => {
+                        sortMethod: (a, b, desc) => {
                           // force null and undefined to the bottom
                           a = a === null || a === undefined ? -Infinity : a;
                           b = b === null || b === undefined ? -Infinity : b;
@@ -588,9 +638,10 @@ function ProspeccaoTable() {
                           // Return either 1 or -1 to indicate a sort priority
                           const aSplitted = a.split("/");
                           const bSplitted = b.split("/");
-
+                          console.log(aSplitted);
                           a = `${aSplitted[2]}-${aSplitted[1]}-${aSplitted[0]}`;
                           b = `${bSplitted[2]}-${bSplitted[1]}-${bSplitted[0]}`;
+                          console.log(a);
 
                           if (a > b) {
                             return 1;
@@ -601,6 +652,10 @@ function ProspeccaoTable() {
                           // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
                           return 0;
                         }
+                      },
+                      {
+                        Header: "Dias",
+                        accessor: "daysFromStart"
                       },
                       {
                         Header: "sla",

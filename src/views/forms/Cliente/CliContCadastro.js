@@ -49,16 +49,14 @@ export default function CliContCadastro() {
     nome: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
-    skype: { value: "", error: "", message: "" },
     email: { value: "", error: "", message: "" },
-    tipoConta: { value: "", error: "", message: "" },
-    linkedin: { value: "", error: "", message: "" }
-  };
-  const optionalSchema = {
-    aniver: { value: null, error: "", message: "" }
+    cargo: { value: "", error: "", message: "" },
+    skype: { value: "", error: "", message: "", optional: true },
+    linkedin: { value: "", error: "", message: "", optional: true },
+    aniver: { value: null, error: "", message: "", optional: true },
+    ramal: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
-  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     async function loadData() {
@@ -130,6 +128,9 @@ export default function CliContCadastro() {
 
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
+    if (value === "") {
+      return true;
+    }
     if (numberRex.test(value)) {
       return true;
     }
@@ -165,6 +166,24 @@ export default function CliContCadastro() {
           }));
         }
         break;
+      case "optionalNumber":
+        if (verifyNumber(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira um número válido",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "email":
         if (verifyEmail(target)) {
           setValues(prevState => ({
@@ -183,9 +202,9 @@ export default function CliContCadastro() {
         }
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -212,33 +231,36 @@ export default function CliContCadastro() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
     if (valid && filled) {
       var celdb = values.cel.value.replace(/[^\d]+/g, "");
       var fonedb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        CliContRequest(
-          values.ClienteId.value,
-          values.nome.value,
-          celdb,
-          fonedb,
-          values.skype.value,
-          values.email.value,
-          optional.aniver.value,
-          values.tipoConta.value,
+        CliContRequest({
+          ClienteId: values.ClienteId.value,
+          nome: values.nome.value,
+          cel: celdb,
+          fone: fonedb,
+          skype: values.skype.value,
+          email: values.email.value,
+          aniver: values.aniver.value === "" ? null : values.aniver.value,
           prospect,
-          values.linkedin.value
-        )
+          linkedin: values.linkedin.value,
+          cargo: values.cargo.value,
+          ramal: values.ramal.value
+        })
       );
     } else {
       options = {
@@ -301,6 +323,26 @@ export default function CliContCadastro() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Cargo</Label>
+                          <FormGroup
+                            className={`has-label ${values.cargo.error}`}
+                          >
+                            <Input
+                              name="cargo"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cargo", "text")
+                              }
+                              value={values.cargo.value}
+                            />
+                            {values.cargo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cargo.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Celular</Label>
                           <FormGroup
                             className={`has-label ${values.cel.error}`}
@@ -329,6 +371,9 @@ export default function CliContCadastro() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+
+                      <Row>
                         <Col md="4">
                           <Label>Telefone</Label>
                           <FormGroup
@@ -358,78 +403,27 @@ export default function CliContCadastro() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-
-                      <Row>
                         <Col md="4">
+                          <Label>Ramal</Label>
                           <FormGroup
-                            className={`has-label ${optional.aniver.error}`}
-                          >
-                            <Label>Aniversário </Label>
-                            <Input
-                              name="aniver"
-                              type="date"
-                              onChange={event =>
-                                handleChange(event, "aniver", "optional")
-                              }
-                              value={optional.aniver.value}
-                            />
-                            {optional.aniver.error === "has-danger" ? (
-                              <Label className="error">
-                                {optional.aniver.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Tipo de Contato</Label>
-                          <FormGroup
-                            className={`has-label ${values.tipoConta.error}`}
+                            className={`has-label ${values.ramal.error}`}
                           >
                             <Input
-                              name="tipoConta"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "tipoConta", "text")
-                              }
-                              value={values.tipoConta.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione o tipo de contato{" "}
-                              </option>
-                              <option value={1}>Normal</option>
-                              <option value={2}>Nota Fiscal</option>
-                            </Input>
-                            {values.tipoConta.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.tipoConta.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
-                          <Label>Skype</Label>
-                          <FormGroup
-                            className={`has-label ${values.skype.error}`}
-                          >
-                            <Input
-                              name="skype"
+                              name="ramal"
                               type="text"
                               onChange={event =>
-                                handleChange(event, "skype", "text")
+                                handleChange(event, "ramal", "optionalNumber")
                               }
-                              value={values.skype.value}
+                              value={values.ramal.value}
                             />
-                            {values.skype.error === "has-danger" ? (
+                            {values.ramal.error === "has-danger" ? (
                               <Label className="error">
-                                {values.skype.message}
+                                {values.ramal.message}
                               </Label>
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
+
                         <Col md="4">
                           <Label>Email</Label>
                           <FormGroup
@@ -451,6 +445,26 @@ export default function CliContCadastro() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Skype</Label>
+                          <FormGroup
+                            className={`has-label ${values.skype.error}`}
+                          >
+                            <Input
+                              name="skype"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "skype", "optional")
+                              }
+                              value={values.skype.value}
+                            />
+                            {values.skype.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.skype.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Linkedin</Label>
                           <FormGroup
                             className={`has-label ${values.linkedin.error}`}
@@ -459,13 +473,33 @@ export default function CliContCadastro() {
                               name="linkedin"
                               type="linkedin"
                               onChange={event =>
-                                handleChange(event, "linkedin", "text")
+                                handleChange(event, "linkedin", "optional")
                               }
                               value={values.linkedin.value}
                             />
                             {values.linkedin.error === "has-danger" ? (
                               <Label className="error">
                                 {values.linkedin.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <FormGroup
+                            className={`has-label ${values.aniver.error}`}
+                          >
+                            <Label>Aniversário </Label>
+                            <Input
+                              name="aniver"
+                              type="date"
+                              onChange={event =>
+                                handleChange(event, "aniver", "optional")
+                              }
+                              value={values.aniver.value}
+                            />
+                            {values.aniver.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.aniver.message}
                               </Label>
                             ) : null}
                           </FormGroup>

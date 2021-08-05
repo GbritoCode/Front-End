@@ -42,7 +42,7 @@ import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import { Tooltip } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
-import { normalizeCnpj, normalizeCurrency } from "~/normalize";
+import { normalizeCnpj, normalizeCurrency, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import Modal from "~/components/Modal/modalLarge";
@@ -58,7 +58,6 @@ const CadastroCliente = forwardRef((props, ref) => {
   const [isLoading, setIsLoading] = useState(true);
   const jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
-  const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const stateSchema = {
@@ -67,19 +66,19 @@ const CadastroCliente = forwardRef((props, ref) => {
     rzSoc: { value: "", error: "", message: "" },
     nomeAbv: { value: "", error: "", message: "" },
     representante: { value: "", error: "", message: "" },
-    tipoComiss: { value: "", error: "", message: "" },
+    tipoComiss: { value: null, error: "", message: "", optional: true },
+    fone: { value: "", error: "", message: "", optional: true },
+    site: { value: "", error: "", message: "", optional: true },
+    atvPrincipal: { value: "", error: "", message: "" },
     CampanhaIds: {
       value: "",
       error: "",
       message: "",
       array: [],
       optional: true
-    }
+    },
+    fantasia: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    fantasia: { value: "", error: "", message: "" }
-  };
-  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
@@ -97,10 +96,8 @@ const CadastroCliente = forwardRef((props, ref) => {
     }
     async function loadData() {
       const response = await api.get(`empresa/${empresa}`);
-      const response1 = await api.get(`tipoComiss/`);
       const response2 = await api.get(`representante/`);
       const response3 = await api.get(`campanha/`);
-      setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
       setValues(prevState => ({
@@ -173,45 +170,21 @@ const CadastroCliente = forwardRef((props, ref) => {
 
   async function cnpjRequest(value) {
     const currentValue = value.replace(/[^\d]/g, "");
-    const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
-    if (response1.data) {
-      setValues(prevState => ({
-        ...prevState,
-        cnpj: {
-          error: "has-danger",
-          message: "O CNPJ já existe"
-        }
-      }));
-      options = {
-        place: "tr",
-        message: (
-          <div>
-            <div>O CNPJ informado já existe como prospect ou cliente </div>
-          </div>
-        ),
-        type: "danger",
-        icon: "tim-icons icon-alert-circle-exc",
-        autoDismiss: 7
-      };
-      notify();
-    } else {
-      const response = await axios({
-        url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
-        adapter: jsonpAdapter
-      });
-      if (response.data.status === "ERROR") {
+    if (validarCNPJ(currentValue)) {
+      const response1 = await api.get(`/cliente/?cnpj=${currentValue}`);
+      if (response1.data) {
         setValues(prevState => ({
           ...prevState,
           cnpj: {
             error: "has-danger",
-            message: "Insira um CNPJ válido"
+            message: "O CNPJ já existe"
           }
         }));
         options = {
           place: "tr",
           message: (
             <div>
-              <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              <div>O CNPJ informado já existe como prospect ou cliente </div>
             </div>
           ),
           type: "danger",
@@ -220,24 +193,70 @@ const CadastroCliente = forwardRef((props, ref) => {
         };
         notify();
       } else {
-        document.getElementById("situacao").value = response.data.situacao;
-        document.getElementById("cep").value = response.data.cep;
-        document.getElementById("rua").value = response.data.logradouro;
-        document.getElementById("numero").value = response.data.numero;
-        document.getElementById("bairro").value = response.data.bairro;
-        document.getElementById("cidade").value = response.data.municipio;
-        document.getElementById("uf").value = response.data.uf;
-        document.getElementById("complemento").value =
-          response.data.complemento;
-        setValues(prevState => ({
-          ...prevState,
-          rzSoc: { value: response.data.nome }
-        }));
-        setOptional(prevState => ({
-          ...prevState,
-          fantasia: { value: response.data.fantasia }
-        }));
+        const response = await axios({
+          url: `https://www.receitaws.com.br/v1/cnpj/${currentValue}`,
+          adapter: jsonpAdapter
+        });
+        if (response.data.status === "ERROR") {
+          setValues(prevState => ({
+            ...prevState,
+            cnpj: {
+              error: "has-danger",
+              message: "Insira um CNPJ válido"
+            }
+          }));
+          options = {
+            place: "tr",
+            message: (
+              <div>
+                <div>O CNPJ é inválido e foi recusado pela receita federal</div>
+              </div>
+            ),
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            autoDismiss: 7
+          };
+          notify();
+        } else {
+          document.getElementById("atvPrincipal").value =
+            response.data.atividade_principal[0].text;
+          document.getElementById("situacao").value = response.data.situacao;
+          document.getElementById("cep").value = response.data.cep;
+          document.getElementById("rua").value = response.data.logradouro;
+          document.getElementById("numero").value = response.data.numero;
+          document.getElementById("bairro").value = response.data.bairro;
+          document.getElementById("cidade").value = response.data.municipio;
+          document.getElementById("uf").value = response.data.uf;
+          document.getElementById("complemento").value =
+            response.data.complemento;
+          setValues(prevState => ({
+            ...prevState,
+            rzSoc: { value: response.data.nome },
+            fantasia: { value: response.data.fantasia, optional: true },
+            atvPrincipal: { value: response.data.atividade_principal[0].text }
+          }));
+        }
       }
+    } else {
+      setValues(prevState => ({
+        ...prevState,
+        cnpj: {
+          error: "has-danger",
+          message: "Insira um CNPJ válido"
+        }
+      }));
+      options = {
+        place: "tr",
+        message: (
+          <div>
+            <div>O CNPJ é inválido</div>
+          </div>
+        ),
+        type: "danger",
+        icon: "tim-icons icon-alert-circle-exc",
+        autoDismiss: 7
+      };
+      notify();
     }
   }
 
@@ -258,26 +277,25 @@ const CadastroCliente = forwardRef((props, ref) => {
     }
   };
 
-  const checkDesc = value => {
-    switch (value) {
-      case "1":
-        return "Indicação";
-      case "2":
-        return "Representação";
-      case "3":
-        return "Prospecção";
-      case "4":
-        return "Interna";
-      default:
-    }
-  };
-
   const verifyNumber = value => {
     const numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
       return true;
     }
     return false;
+  };
+
+  const verifyUrl = value => {
+    const UrlRegex = new RegExp(
+      "(https:[/][/]|http:[/][/])[a-zA-Z0-9-.]+(.[.][a-zA-Z]{2,6})(:[0-9]{1,5})*(/($|[a-zA-Z0-9.,;?'\\+&amp;%$#=~_-]+))*$"
+    );
+    if (value) {
+      if (UrlRegex.test(value)) {
+        return true;
+      }
+      return false;
+    }
+    return true;
   };
 
   const handleChange = (event, name, type) => {
@@ -301,7 +319,24 @@ const CadastroCliente = forwardRef((props, ref) => {
           }));
         }
         break;
-
+      case "url":
+        if (verifyUrl(target)) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, error: "has-success", optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message: "Insira uma URL no padrão 'https://www.exemplo.com'",
+              optional: true
+            }
+          }));
+        }
+        break;
       case "cnpj":
         setValues(prevState => ({
           ...prevState,
@@ -309,9 +344,9 @@ const CadastroCliente = forwardRef((props, ref) => {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -353,6 +388,7 @@ const CadastroCliente = forwardRef((props, ref) => {
 
     if (valid && filled) {
       values.cnpj.value = values.cnpj.value.replace(/[^\d]+/g, "");
+      values.fone.value = values.fone.value.replace(/[^\d]+/g, "");
       return true;
     }
     options = {
@@ -377,11 +413,15 @@ const CadastroCliente = forwardRef((props, ref) => {
       EmpresaId: values.empresaId.value,
       CNPJ: values.cnpj.value,
       rzSoc: values.rzSoc.value,
+      fantasia: values.fantasia.value,
       nomeAbv: values.nomeAbv.value,
       RepresentanteId: values.representante.value,
       TipoComisseId: values.tipoComiss.value,
       prospect: true,
-      CampanhaIds: values.CampanhaIds.array
+      CampanhaIds: values.CampanhaIds.array,
+      site: values.site.value,
+      fone: values.fone.value,
+      atvPrincipal: values.atvPrincipal.value
     }
   }));
 
@@ -649,20 +689,20 @@ const CadastroCliente = forwardRef((props, ref) => {
                         <Col md="4">
                           <Label>Nome Fantasia</Label>
                           <FormGroup
-                            className={`has-label ${optional.fantasia.error}`}
+                            className={`has-label ${values.fantasia.error}`}
                           >
                             <Input
                               disabled
                               onChange={event =>
                                 handleChange(event, "fantasia", "optional")
                               }
-                              value={optional.fantasia.value}
+                              value={values.fantasia.value}
                               name="nomeAbv"
                               type="text"
                             />
-                            {optional.fantasia.error === "has-danger" ? (
+                            {values.fantasia.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.fantasia.message}
+                                {values.fantasia.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -747,30 +787,55 @@ const CadastroCliente = forwardRef((props, ref) => {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Tipo Comissão</Label>
+                          <Label>Site</Label>
                           <FormGroup
-                            className={`has-label ${values.tipoComiss.error}`}
+                            className={`has-label ${values.site.error}`}
                           >
                             <Input
-                              name="tipoComiss"
-                              type="select"
+                              name="site"
+                              type="text"
                               onChange={event =>
-                                handleChange(event, "tipoComiss", "text")
+                                handleChange(event, "site", "url")
                               }
-                              value={values.tipoComiss.value}
-                            >
-                              {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione o tipo de comissão{" "}
-                              </option>
-                              {data1.map(tipoComiss => (
-                                <option value={tipoComiss.id}>
-                                  {" "}
-                                  {tipoComiss.id} - {checkDesc(tipoComiss.desc)}{" "}
-                                </option>
-                              ))}
-                            </Input>
+                              value={values.site.value}
+                            />
+                            {values.site.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.site.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Telefone</Label>
+                          <FormGroup
+                            className={`has-label ${values.fone.error}`}
+                          >
+                            <Input
+                              minLength={10}
+                              maxLength={11}
+                              name="fone"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "fone", "optional")
+                              }
+                              onBlur={e => {
+                                const { value } = e.target;
+                                setValues(prevState => ({
+                                  ...prevState,
+                                  fone: {
+                                    value: normalizeFone(value),
+                                    optional: true
+                                  }
+                                }));
+                              }}
+                              value={values.fone.value}
+                            />
+                            {values.fone.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.fone.message}
+                              </Label>
+                            ) : null}
                           </FormGroup>
                         </Col>
                         <Col md="4">
@@ -810,6 +875,19 @@ const CadastroCliente = forwardRef((props, ref) => {
                                 {values.CampanhaIds.message}
                               </Label>
                             ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <Label>Atividade Principal</Label>
+                          <FormGroup className="has-label">
+                            <Input
+                              disabled
+                              name="atvPrincipal"
+                              id="atvPrincipal"
+                              type="textarea"
+                            />
                           </FormGroup>
                         </Col>
                       </Row>
