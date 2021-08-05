@@ -607,7 +607,7 @@ export default function ComercialDashboard() {
                           </Button>
                         </Tooltip>
 
-                        <CardTitle style={{ marginBottom: 0 }} tag="h2">
+                        <CardTitle style={{ marginBottom: 0 }} tag="h3">
                           {campData.desc ? campData.desc : "--"}
                         </CardTitle>
                         {/* <p style={{ fontSize: 14 }}>
