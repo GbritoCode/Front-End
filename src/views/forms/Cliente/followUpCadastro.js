@@ -50,8 +50,6 @@ import {
   Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import Axios from "axios";
-import jsonpAdapter from "axios-jsonp";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
@@ -59,6 +57,10 @@ import { followUpCadastro } from "~/store/modules/Cliente/actions";
 import ModalLarge from "~/components/Modal/modalLarge";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import TagsInput from "~/components/Tags/TagsInput";
+import {
+  clearFields,
+  FUPCadastroFields
+} from "~/store/modules/keepingFields/actions";
 
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
@@ -66,6 +68,7 @@ export default function CadastroFollowUps() {
 
   const { cliId, campId } = useParams();
   const dispatch = useDispatch();
+  const [timeline, setTimeLine] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -97,6 +100,15 @@ export default function CadastroFollowUps() {
     motivo: { value: "", error: "", message: "", optional: true }
   };
 
+  const contSchema = {
+    email: { value: "", error: "", message: "" },
+    cargo: { value: "", error: "", message: "" },
+    fone: { value: "", error: "", message: "" },
+    ramal: { value: "", error: "", message: "" },
+    cel: { value: ``, error: "", message: "" },
+    skype: { value: ``, error: "", message: "" }
+  };
+
   const meetingSchema = {
     title: { value: "", error: "", message: "" },
     date: { value: "", error: "", message: "" },
@@ -110,9 +122,11 @@ export default function CadastroFollowUps() {
   };
 
   const [values, setValues] = useState(stateSchema);
+  const [contValues, setContValues] = useState(contSchema);
   const [meetingValues, setMeetingValues] = useState(meetingSchema);
   useEffect(() => {
     const { empresa } = store.getState().auth;
+    const { FUPCadastro } = store.getState().field;
     const idColab = store.getState().auth.user.Colab.id;
 
     async function loadData() {
@@ -121,10 +135,6 @@ export default function CadastroFollowUps() {
       const response2 = await api.get(`/cliente/${cliId}`);
       const response3 = await api.get(`/cliente/cont/${response2.data.id}`);
       const response4 = await api.get(`/campanha/${campId}/true`);
-      const response5 = await Axios({
-        url: `https://www.receitaws.com.br/v1/cnpj/${response2.data.CNPJ}`,
-        adapter: jsonpAdapter
-      });
       const response6 = await api.get("/representante");
       const response7 = await api.get("/camposDinamicos");
       setData1(response1.data);
@@ -132,8 +142,8 @@ export default function CadastroFollowUps() {
       setData3(response3.data);
       setData4(response4.data);
       setData5({
-        CliAtvPrincipal: response5.data.atividade_principal[0].text,
-        CliEndereco: `${response5.data.logradouro}, ${response5.data.numero}, ${response5.data.bairro}, ${response5.data.municipio} - ${response5.data.uf}`
+        CliAtvPrincipal: response2.data.atvPrincipal,
+        CliEndereco: `${response2.data.CliComp.rua}, ${response2.data.CliComp.numero}, ${response2.data.CliComp.bairro}, ${response2.data.CliComp.cidade} - ${response2.data.CliComp.uf}`
       });
       setData6(response6.data);
       setData7(response7.data);
@@ -143,16 +153,59 @@ export default function CadastroFollowUps() {
         organizerName: { value: response1.data.nome },
         organizerEmail: { value: response1.data.email }
       }));
+      if (FUPCadastro.CliContId) {
+        const cont = response3.data.find(
+          arr => arr.id === parseInt(FUPCadastro.CliContId, 10)
+        );
+        setMeetingValues(prevState => ({
+          ...prevState,
+          mainParticipant: { value: cont.email }
+        }));
+        setContValues(prevState => ({
+          ...prevState,
+          email: { value: cont.email },
+          fone: { value: cont.fone },
+          cel: { value: cont.cel },
+          skype: { value: cont.skype },
+          ramal: { value: cont.ramal },
+          cargo: { value: cont.cargo }
+        }));
+      }
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
         ColabId: { value: response1.data.id },
-        ClienteId: { value: response2.data.id }
+        ClienteId: { value: response2.data.id },
+        CliContId: {
+          value: FUPCadastro.CliContId ? FUPCadastro.CliContId : ""
+        },
+        data: {
+          value: FUPCadastro.data
+            ? FUPCadastro.data
+            : `${year}-${month}-${date}`
+        },
+        dataProxContato: {
+          value: FUPCadastro.dataProxContato ? FUPCadastro.dataProxContato : ""
+        },
+        reacao: { value: FUPCadastro.reacao ? FUPCadastro.reacao : "" },
+        detalhes: { value: FUPCadastro.detalhes ? FUPCadastro.detalhes : "" },
+        motivo: { value: FUPCadastro.motivo ? FUPCadastro.motivo : "" },
+        prefContato: {
+          value: FUPCadastro.prefContato ? FUPCadastro.prefContato : ""
+        },
+        proxPasso: { value: FUPCadastro.proxPasso ? FUPCadastro.proxPasso : "" }
       }));
       setIsLoading(false);
     }
     loadData();
-  }, [campId, cliId]);
+
+    return () => {
+      if (FUPCadastro.timeline) {
+        console.log(timeline);
+        dispatch(clearFields({ field: "FUPCadastro" }));
+      }
+    };
+  }, [campId, cliId, date, dispatch, month, timeline, year]);
 
   var options = {};
   const notifyElment = useRef(null);
@@ -194,6 +247,8 @@ export default function CadastroFollowUps() {
     }
     return false;
   };
+
+  const delay = ms => new Promise(res => setTimeout(res, ms));
 
   const toggleModalMini = () => {
     setModalMini(!modalMini);
@@ -820,6 +875,23 @@ export default function CadastroFollowUps() {
                             float: "right"
                           }}
                           className={classNames("btn-icon btn-link like")}
+                          onClick={async () => {
+                            await delay(500);
+                            setTimeLine(true);
+                            dispatch(
+                              FUPCadastroFields({
+                                timeline: true,
+                                CliContId: values.CliContId.value,
+                                data: values.data.value,
+                                dataProxContato: values.dataProxContato.value,
+                                detalhes: values.detalhes.value,
+                                reacao: values.reacao.value,
+                                proxPasso: values.proxPasso.value,
+                                prefContato: values.prefContato.value,
+                                motivo: values.motivo.value
+                              })
+                            );
+                          }}
                         >
                           <Timeline style={{ fontSize: 30 }} />
                         </Button>
@@ -927,6 +999,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.cargo.value}
                               name="cargo"
                               id="cargo"
                               type="text"
@@ -938,6 +1011,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.email.value}
                               name="email"
                               id="email"
                               type="text"
@@ -949,6 +1023,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.cel.value}
                               name="celular"
                               id="celular"
                               type="text"
@@ -962,6 +1037,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.fone.value}
                               name="telefone"
                               id="telefone"
                               type="text"
@@ -973,6 +1049,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.ramal.value}
                               name="ramal"
                               id="ramal"
                               type="text"
@@ -984,6 +1061,7 @@ export default function CadastroFollowUps() {
                           <FormGroup className="has-label">
                             <Input
                               disabled
+                              defaultValue={contValues.skype.value}
                               name="skype"
                               id="skype"
                               type="text"

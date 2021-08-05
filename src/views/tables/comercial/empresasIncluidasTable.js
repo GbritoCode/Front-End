@@ -167,7 +167,7 @@ function ComercialEmpresasIncluidasTable() {
                     rowsText="Linhas"
                     columns={[
                       {
-                        Header: "Cliente",
+                        Header: "Empresa",
                         accessor: "rzSoc",
                         minWidth: 300
                       },

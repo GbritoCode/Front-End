@@ -1,7 +1,8 @@
 import produce from "immer";
 
 const INITIAL_STATE = {
-  comercialDash: {}
+  comercialDash: {},
+  FUPCadastro: {}
 };
 
 export default function field(state = INITIAL_STATE, action) {
@@ -15,7 +16,15 @@ export default function field(state = INITIAL_STATE, action) {
         };
         break;
       }
-
+      case "@field/FUP_CADASTRO_FIELDS": {
+        draft.FUPCadastro = action.payload;
+        break;
+      }
+      case "@field/CLEAR_FIELDS": {
+        console.log(action.payload);
+        draft[action.payload.field] = {};
+        break;
+      }
       default:
     }
   });

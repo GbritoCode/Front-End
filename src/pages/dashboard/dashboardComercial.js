@@ -56,7 +56,7 @@ import history from "~/services/history";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
 import { normalizeDate } from "~/normalize";
-import { comercialDashFilter } from "~/store/modules/keepingFields/actions";
+import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
 export default function ComercialDashboard() {
   document.body.classList.add("white-content");
@@ -364,7 +364,7 @@ export default function ComercialDashboard() {
       dataFim
     });
     dispatch(
-      comercialDashFilter({
+      comercialDashFilterFields({
         camp: aux[0].id,
         inicDate: dataInic,
         endDate: dataFim
@@ -608,12 +608,11 @@ export default function ComercialDashboard() {
                         </Tooltip>
 
                         <CardTitle style={{ marginBottom: 0 }} tag="h2">
-                          Comercial
-                        </CardTitle>
-                        <p style={{ fontSize: 14 }}>
                           {campData.desc ? campData.desc : "--"}
-                        </p>
-                        <p style={{ fontSize: 11 }}>
+                        </CardTitle>
+                        {/* <p style={{ fontSize: 14 }}>
+                        </p> */}
+                        <p style={{ fontSize: 14 }}>
                           {campData.dataInic
                             ? normalizeDate(campData.dataInic)
                             : "--"}{" "}
@@ -763,9 +762,7 @@ export default function ComercialDashboard() {
               <Col lg="4">
                 <Card className=" /*card-chart">
                   <CardHeader>
-                    <Link to="tabelas/parcela/pendentes/?fromDash=true">
-                      FUPs do dia
-                    </Link>
+                    FUPS
                     <CardTitle
                       tag="h4"
                       style={{ color: "orange", fontSize: 20 }}
@@ -778,7 +775,7 @@ export default function ComercialDashboard() {
                     <div className="chart-area">
                       <Bar
                         data={barChart_1.data(
-                          ["red", "yellow", "green"],
+                          ["Urgente", "Em Breve", "Distante"],
                           [
                             dataForGraph.red,
                             dataForGraph.yellow,
