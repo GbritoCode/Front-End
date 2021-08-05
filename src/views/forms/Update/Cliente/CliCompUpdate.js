@@ -44,7 +44,7 @@ export default function CliCompUpdatee() {
   const [isLoading, setIsLoading] = useState(true);
 
   const stateSchema = {
-    ClienteId: { value: "", error: "", message: "" },
+    id: { value: "", error: "", message: "" },
     CondPgmtoId: { value: "", error: "", message: "" },
     cep: { value: "", error: "", message: "" },
     rua: { value: "", error: "", message: "" },
@@ -72,6 +72,7 @@ export default function CliCompUpdatee() {
       setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
+        id: { value: response.data.id },
         ClienteId: { value: response.data.ClienteId },
         CondPgmtoId: { value: response.data.CondPgmtoId },
         cep: { value: response.data.cep },
@@ -172,7 +173,7 @@ export default function CliCompUpdatee() {
     if (valid && filled) {
       dispatch(
         CliCompUpdate(
-          id,
+          values.id.value,
           values.ClienteId.value,
           values.CondPgmtoId.value,
           values.cep.value,
