@@ -124,7 +124,7 @@ function ComercialEmpresasFimTable() {
                       onClick={async () => {
                         await api
                           .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true`,
+                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=false`,
                             {
                               responseType: "blob"
                             }
@@ -132,7 +132,7 @@ function ComercialEmpresasFimTable() {
                           .then(response =>
                             fileDownload(
                               response.data,
-                              "Relatório Empresas Incluídas.xlsx"
+                              "Relatório Empresas Finalizadas.xlsx"
                             )
                           );
                       }}

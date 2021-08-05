@@ -141,7 +141,7 @@ export default function CadastroCamposDinamicos() {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Campos Dinâmicos</CardTitle>
+                <CardTitle tag="h4">Motivo</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={handleSubmit}>

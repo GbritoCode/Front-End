@@ -124,7 +124,7 @@ function ComercialEmpresasIncluidasTable() {
                       onClick={async () => {
                         await api
                           .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false`,
+                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`,
                             {
                               responseType: "blob"
                             }

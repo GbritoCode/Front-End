@@ -26,8 +26,10 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ArrowBackIos } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
+import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
+import iconExcel from "~/assets/img/iconExcel.png";
 
 /* eslint-disable eqeqeq */
 function ComercialFUPsTotalTable() {
@@ -138,6 +140,30 @@ function ComercialFUPsTotalTable() {
                       </Button>
                     </Tooltip>
                   </Link>
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    <Tooltip
+                      title="Exportar para excel"
+                      placement="top"
+                      interactive
+                      onClick={async () => {
+                        await api
+                          .get(
+                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`,
+                            {
+                              responseType: "blob"
+                            }
+                          )
+                          .then(response =>
+                            fileDownload(
+                              response.data,
+                              "Relatório Follow Ups.xlsx"
+                            )
+                          );
+                      }}
+                    >
+                      <img alt="Exportar para excel" src={iconExcel} />
+                    </Tooltip>
+                  </div>
                   <h3 style={{ marginBottom: 0 }}>Follow Ups</h3>
                   <p style={{ fontSize: 14 }}>
                     {campData.cod} | {campData.desc}

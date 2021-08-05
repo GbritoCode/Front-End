@@ -486,7 +486,7 @@ export default function ComercialDashboard() {
                             <DateRangeOutlined />
                           </Button>
                         </Tooltip>
-                        <CardTitle tag="h2">Histórico</CardTitle>
+                        <CardTitle tag="h2">Comercial</CardTitle>
                       </Col>
                     </Row>
                   </CardHeader>

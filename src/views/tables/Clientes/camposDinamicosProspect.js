@@ -166,7 +166,7 @@ class CamposDinamicosTable extends Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">
-                  Campos Dinâmicos
+                  Motivos
                   <Link to="/cadastro/cliente/camposDinamicos">
                     <Tooltip title="Novo" placement="top" interactive>
                       <Button
