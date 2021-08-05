@@ -124,7 +124,7 @@ function ComercialEmpresasFimTable() {
                       onClick={async () => {
                         await api
                           .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=false`,
+                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=true`,
                             {
                               responseType: "blob"
                             }
