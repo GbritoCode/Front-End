@@ -36,14 +36,16 @@ import {
 
 import { Link } from "react-router-dom";
 import {
-  AttachMoney,
+  Business,
   Check,
   Close,
   DateRangeOutlined,
-  Schedule
+  DomainDisabled,
+  HeadsetMic
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import { getDaysInMonth } from "date-fns";
+import { useDispatch } from "react-redux";
 import { store } from "~/store";
 
 // core components
@@ -53,12 +55,16 @@ import { barChart_1 } from "./chartsOptions";
 import history from "~/services/history";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
+import { normalizeDate } from "~/normalize";
+import { comercialDashFilter } from "~/store/modules/keepingFields/actions";
 
 export default function ComercialDashboard() {
   document.body.classList.add("white-content");
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [campData, setCampData] = useState([]);
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
   const [miniChartData, setMiniChartData] = useState();
@@ -69,7 +75,7 @@ export default function ComercialDashboard() {
     inicDate: `${year}-${month}-01`,
     endDate: `${year}-${month}-${lastDayMonth}`
   });
-  const [dataForGraph] = useState({
+  const [dataForGraph, setDataForGraph] = useState({
     red: 0,
     yellow: 0,
     green: 0,
@@ -272,8 +278,10 @@ export default function ComercialDashboard() {
   // }, [chartDespData, chartHrsData, chartRecebData, setBigChart]);
   useEffect(() => {
     const loadData = async () => {
-      if (store.getState().auth.user.Colab) {
+      const { Colab } = store.getState().auth.user;
+      if (Colab) {
         const response = await api.get("/campanha");
+        setData(response.data);
 
         let array = [];
 
@@ -297,18 +305,49 @@ export default function ComercialDashboard() {
         }
         setData2(active);
 
-        setData(response.data);
+        // if (comercialDash.camp) {
+        //   const aux = response.data.filter(
+        //     arr => arr.id === parseInt(comercialDash.camp, 10)
+        //   );
+        //   setCampData({
+        //     cod: aux[0].cod,
+        //     desc: aux[0].desc,
+        //     dataInic: comercialDash.inicDate,
+        //     dataFim: comercialDash.endDate
+        //   });
+
+        //   for (let j = 0; j < active.length; j += 1) {
+        //     if (active[j].camp === parseInt(comercialDash.camp, 10)) {
+        //       for (let i = 0; i < active[j].data.length; i += 1) {
+        //         console.log(active[j].data[i].distanceFromToday);
+        //         switch (true) {
+        //           case active[j].data[i].distanceFromToday <= 0:
+        //             dataForGraph.red += 1;
+        //             dataForGraph.reset = false;
+        //             break;
+        //           case active[j].data[i].distanceFromToday > 0 &&
+        //             active[j].data[i].distanceFromToday <= 4:
+        //             dataForGraph.yellow += 1;
+        //             dataForGraph.reset = false;
+        //             break;
+        //           case active[j].data[i].distanceFromToday >= 5:
+        //             dataForGraph.green += 1;
+        //             dataForGraph.reset = false;
+        //             break;
+        //           case active[j].data[i].distanceFromToday === "--":
+        //             return "--";
+        //           default:
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
 
         setIsLoading(false);
       }
     };
     loadData();
-  }, [dataForTable.campId]);
-
-  // const setBgChartData = name => {
-  //   setBigChartData(name);
-  // };
-
+  }, []);
   const handleFilterChange = async (camp, dataInic, dataFim) => {
     if (!dataForGraph.reset) {
       dataForGraph.red = 0;
@@ -316,6 +355,21 @@ export default function ComercialDashboard() {
       dataForGraph.green = 0;
       dataForGraph.reset = false;
     }
+    const aux = data.filter(arr => arr.id === parseInt(camp, 10));
+
+    setCampData({
+      cod: aux[0].cod,
+      desc: aux[0].desc,
+      dataInic,
+      dataFim
+    });
+    dispatch(
+      comercialDashFilter({
+        camp: aux[0].id,
+        inicDate: dataInic,
+        endDate: dataFim
+      })
+    );
     for (let j = 0; j < data2.length; j += 1) {
       if (data2[j].camp === parseInt(camp, 10)) {
         for (let i = 0; i < data2[j].data.length; i += 1) {
@@ -348,7 +402,72 @@ export default function ComercialDashboard() {
       )
       .then(result => setMiniChartData(result.data));
   };
-  console.log(dataForGraph);
+
+  useEffect(() => {
+    async function teste() {
+      const { comercialDash } = store.getState().field;
+      if (comercialDash.camp) {
+        const aux = data.filter(arr => arr.id === comercialDash.camp);
+        console.log(aux);
+        setCampData({
+          cod: aux.length > 0 ? aux[0].cod : null,
+          desc: aux.length > 0 ? aux[0].desc : null,
+          dataInic: comercialDash.inicDate,
+          dataFim: comercialDash.endDate
+        });
+
+        for (let j = 0; j < data2.length; j += 1) {
+          if (data2[j].camp === parseInt(comercialDash.camp, 10)) {
+            for (let i = 0; i < data2[j].data.length; i += 1) {
+              console.log(data2[j].data[i].distanceFromToday);
+              switch (true) {
+                case data2[j].data[i].distanceFromToday <= 0:
+                  setDataForGraph(prevState => ({
+                    ...prevState,
+                    red: prevState.red + 1,
+                    reset: false
+                  }));
+                  break;
+                case data2[j].data[i].distanceFromToday > 0 &&
+                  data2[j].data[i].distanceFromToday <= 4:
+                  setDataForGraph(prevState => ({
+                    ...prevState,
+                    yellow: prevState.yellow + 1,
+                    reset: false
+                  }));
+                  break;
+                case data2[j].data[i].distanceFromToday >= 5:
+                  setDataForGraph(prevState => ({
+                    ...prevState,
+                    green: prevState.green + 1,
+                    reset: false
+                  }));
+                  break;
+                case data2[j].data[i].distanceFromToday === "--":
+                  return "--";
+                default:
+              }
+            }
+          }
+        }
+        setDataForTable({
+          campId: comercialDash.camp,
+          inicDate: comercialDash.inicDate,
+          endDate: comercialDash.endDate
+        });
+        await api
+          .get(
+            `comercialDash/?camp=${comercialDash.camp}&dataInic=${comercialDash.inicDate}&dataFim=${comercialDash.endDate}`
+          )
+          .then(result => setMiniChartData(result.data));
+      }
+    }
+    teste();
+  }, [data, data2]);
+  // const setBgChartData = name => {
+  //   setBigChartData(name);
+  // };
+
   return (
     <>
       {isLoading ? (
@@ -401,6 +520,7 @@ export default function ComercialDashboard() {
                   <Input
                     type="select"
                     id="camp"
+                    defaultValue={dataForTable.campId}
                     onChangeCapture={e => {
                       handleFilterChange(
                         e.target.value,
@@ -486,7 +606,22 @@ export default function ComercialDashboard() {
                             <DateRangeOutlined />
                           </Button>
                         </Tooltip>
-                        <CardTitle tag="h2">Comercial</CardTitle>
+
+                        <CardTitle style={{ marginBottom: 0 }} tag="h2">
+                          Comercial
+                        </CardTitle>
+                        <p style={{ fontSize: 14 }}>
+                          {campData.desc ? campData.desc : "--"}
+                        </p>
+                        <p style={{ fontSize: 11 }}>
+                          {campData.dataInic
+                            ? normalizeDate(campData.dataInic)
+                            : "--"}{" "}
+                          -{" "}
+                          {campData.dataFim
+                            ? normalizeDate(campData.dataFim)
+                            : "--"}
+                        </p>
                       </Col>
                     </Row>
                   </CardHeader>
@@ -506,7 +641,10 @@ export default function ComercialDashboard() {
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-warning">
-                          <Schedule style={{ marginTop: 7 }} fontSize="large" />
+                          <Business
+                            style={{ marginTop: 7, color: "white" }}
+                            fontSize="large"
+                          />
                         </div>
                       </Col>
                       <Col xs="7">
@@ -519,7 +657,7 @@ export default function ComercialDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? miniChartData.cliJoinedCamp.count
+                              ? miniChartData.cliJoinedCamp.rows.length
                               : 0}
                           </CardTitle>
                         </div>
@@ -544,8 +682,8 @@ export default function ComercialDashboard() {
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-primary">
-                          <AttachMoney
-                            style={{ marginTop: 7 }}
+                          <HeadsetMic
+                            style={{ marginTop: 7, color: "white" }}
                             fontSize="large"
                           />
                         </div>
@@ -559,7 +697,7 @@ export default function ComercialDashboard() {
                             Follow Ups
                           </p>
                           <CardTitle tag="h3">
-                            {miniChartData ? miniChartData.Fups.count : 0}
+                            {miniChartData ? miniChartData.Fups.rows.length : 0}
                           </CardTitle>
                         </div>
                       </Col>
@@ -583,8 +721,11 @@ export default function ComercialDashboard() {
                   <CardBody>
                     <Row>
                       <Col xs="5">
-                        <div className="info-icon text-center icon-success">
-                          <i className="tim-icons icon-single-02" />
+                        <div className="info-icon text-center icon-info">
+                          <DomainDisabled
+                            style={{ marginTop: 7, color: "white" }}
+                            fontSize="large"
+                          />
                         </div>
                       </Col>
                       <Col xs="7">
@@ -598,7 +739,7 @@ export default function ComercialDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? miniChartData.finalizedFups.count
+                              ? miniChartData.finalizedFups.rows.length
                               : 0}
                           </CardTitle>
                         </div>

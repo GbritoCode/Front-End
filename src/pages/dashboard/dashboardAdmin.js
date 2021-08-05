@@ -34,7 +34,7 @@ import {
   Col
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import { AttachMoney, Schedule } from "@material-ui/icons";
+import { AttachFileOutlined, AttachMoney, Schedule } from "@material-ui/icons";
 
 import { store } from "~/store";
 
@@ -400,7 +400,7 @@ class AdminDashboard extends React.Component {
                         <Col xs="5">
                           <div className="info-icon text-center icon-warning">
                             <Schedule
-                              style={{ marginTop: 7 }}
+                              style={{ marginTop: 7, color: "white" }}
                               fontSize="large"
                             />
                           </div>
@@ -434,8 +434,8 @@ class AdminDashboard extends React.Component {
                       <Row>
                         <Col xs="5">
                           <div className="info-icon text-center icon-primary">
-                            <AttachMoney
-                              style={{ marginTop: 7 }}
+                            <AttachFileOutlined
+                              style={{ marginTop: 7, color: "white" }}
                               fontSize="large"
                             />
                           </div>
@@ -471,8 +471,11 @@ class AdminDashboard extends React.Component {
                     <CardBody>
                       <Row>
                         <Col xs="5">
-                          <div className="info-icon text-center icon-success">
-                            <i className="tim-icons icon-single-02" />
+                          <div className="info-icon text-center icon-info">
+                            <AttachMoney
+                              style={{ marginTop: 7, color: "white" }}
+                              fontSize="large"
+                            />{" "}
                           </div>
                         </Col>
                         <Col xs="7">

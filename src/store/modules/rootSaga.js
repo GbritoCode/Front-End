@@ -6,7 +6,8 @@ import geral from "./general/sagas";
 import cliente from "./Cliente/sagas";
 import colab from "./Colab/sagas";
 import oport from "./oportunidades/sagas";
+import field from "./keepingFields/sagas";
 
 export default function* rootSaga() {
-  return yield all([auth, user, colab, geral, cliente, oport]);
+  return yield all([auth, user, colab, geral, cliente, oport, field]);
 }
