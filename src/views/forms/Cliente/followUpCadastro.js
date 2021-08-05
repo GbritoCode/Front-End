@@ -76,6 +76,7 @@ export default function CadastroFollowUps() {
   const [data4, setData4] = useState([]);
   const [data5, setData5] = useState({});
   const [data6, setData6] = useState([]);
+  const [data7, setData7] = useState([]);
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
 
@@ -92,7 +93,8 @@ export default function CadastroFollowUps() {
     reacao: { value: "", error: "", message: "" },
     proxPasso: { value: "", error: "", message: "" },
     prefContato: { value: "", error: "", message: "" },
-    ativo: { value: true, error: "", message: "" }
+    ativo: { value: true, error: "", message: "" },
+    motivo: { value: "", error: "", message: "", optional: true }
   };
 
   const meetingSchema = {
@@ -124,6 +126,7 @@ export default function CadastroFollowUps() {
         adapter: jsonpAdapter
       });
       const response6 = await api.get("/representante");
+      const response7 = await api.get("/camposDinamicos");
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -133,6 +136,7 @@ export default function CadastroFollowUps() {
         CliEndereco: `${response5.data.logradouro}, ${response5.data.numero}, ${response5.data.bairro}, ${response5.data.municipio} - ${response5.data.uf}`
       });
       setData6(response6.data);
+      setData7(response7.data);
 
       setMeetingValues(prevState => ({
         ...prevState,
@@ -202,17 +206,23 @@ export default function CadastroFollowUps() {
         dataProxContato: { value: `${year}-${month}-${date}` }
       }));
       document.getElementsByName("dataProxContato")[0].disabled = true;
-      console.log(value);
+      setValues(prevState => ({
+        ...prevState,
+        motivo: { value: "" }
+      }));
       setModalMini(true);
     } else {
       document.getElementsByName("dataProxContato")[0].disabled = false;
+      setValues(prevState => ({
+        ...prevState,
+        motivo: { value: "", optional: true }
+      }));
       // setValues(prevState => ({
       //   ...prevState,
       //   dataProxContato: { value: "" }
       // }));
     }
   };
-
   const handleContatoChange = idd => {
     const cont = data3.find(arr => arr.id === parseInt(idd, 10));
     setMeetingValues(prevState => ({
@@ -248,6 +258,12 @@ export default function CadastroFollowUps() {
             }
           }));
         }
+        break;
+      case "optional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target, optional: true }
+        }));
         break;
       case "text":
         setValues(prevState => ({
@@ -294,19 +310,22 @@ export default function CadastroFollowUps() {
 
     if (valid && filled) {
       dispatch(
-        followUpCadastro(
-          values.empresaId.value,
-          values.ColabId.value,
-          values.ClienteId.value,
-          values.CliContId.value,
-          values.data.value,
-          values.dataProxContato.value,
-          values.detalhes.value,
-          values.reacao.value,
-          campId,
-          values.proxPasso.value,
-          values.prefContato.value
-        )
+        followUpCadastro({
+          EmpresaId: values.empresaId.value,
+          ColabId: values.ColabId.value,
+          ClienteId: values.ClienteId.value,
+          CliContId: values.CliContId.value,
+          dataContato: values.data.value,
+          dataProxContato: values.dataProxContato.value,
+          detalhes: values.detalhes.value,
+          reacao: values.reacao.value,
+          CampanhaId: campId,
+          proxPasso: values.proxPasso.value,
+          prefContato: values.prefContato.value,
+          CamposDinamicosProspectId: values.motivo.value
+            ? values.motivo.value
+            : null
+        })
       );
     } else {
       options = {
@@ -1165,17 +1184,24 @@ export default function CadastroFollowUps() {
                           <Label>Motivo</Label>
                           <FormGroup className="has-label ">
                             <Input
-                              disabled
                               hidden={values.proxPasso.value !== "10"}
                               name="CliContId"
                               type="select"
+                              onChange={event =>
+                                handleChange(event, "motivo", "text")
+                              }
                               placeholder="Selecione o Motivo"
                             >
                               {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione o Motivo{" "}
-                              </option>
+                              <option value=""> Selecione o Motivo </option>
+                              {data7.map((motivo, index) => {
+                                return (
+                                  <option key={index} value={motivo.id}>
+                                    {" "}
+                                    {motivo.nome} - {motivo.valor}{" "}
+                                  </option>
+                                );
+                              })}
                             </Input>
                           </FormGroup>
                         </Col>

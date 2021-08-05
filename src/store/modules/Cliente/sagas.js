@@ -252,12 +252,7 @@ export function* updateCampanha({ payload }) {
 
 export function* camposDinamicosCadastro({ payload }) {
   try {
-    const { EmpresaId, nome, valor } = payload;
-    yield call(api.post, "camposDinamicos", {
-      EmpresaId,
-      nome,
-      valor
-    });
+    yield call(api.post, "camposDinamicos", payload);
     history.push(`/tabelas/cliente/camposDinamicos/`);
   } catch (err) {
     toast.error(err.response.data.error);
@@ -267,14 +262,9 @@ export function* camposDinamicosCadastro({ payload }) {
 
 export function* updateCamposDinamicos({ payload }) {
   try {
-    const { id, nome, valor } = payload;
+    const { id } = payload;
 
-    const Cliente = {
-      nome,
-      valor
-    };
-
-    const response = yield call(api.put, `camposDinamicos/${id}`, Cliente);
+    const response = yield call(api.put, `camposDinamicos/${id}`, payload);
 
     history.push(`/tabelas/cliente/camposDinamicos`);
     toast.success("Campo Dinâmico Atualizado");
@@ -290,32 +280,8 @@ export function* updateCamposDinamicos({ payload }) {
 
 export function* followUpsCadastro({ payload }) {
   try {
-    const {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      CampanhaId,
-      proxPasso,
-      prefContato
-    } = payload;
-    yield call(api.post, "followUp", {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      CampanhaId,
-      proxPasso,
-      prefContato
-    });
+    const { CampanhaId } = payload;
+    yield call(api.post, "followUp", payload);
     history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
   } catch (err) {
     toast.error(err.response.data.error);
@@ -325,32 +291,9 @@ export function* followUpsCadastro({ payload }) {
 
 export function* updateFollowUps({ payload }) {
   try {
-    const {
-      id,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      proxPasso,
-      prefContato
-    } = payload;
+    const { id } = payload;
 
-    const Cliente = {
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      proxPasso,
-      prefContato
-    };
-
-    const response = yield call(api.put, `followUp/${id}`, Cliente);
+    const response = yield call(api.put, `followUp/${id}`, payload);
 
     history.goBack();
     toast.success("Follow Up Atualizado");

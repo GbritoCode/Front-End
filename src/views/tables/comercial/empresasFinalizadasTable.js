@@ -26,8 +26,11 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ArrowBackIos } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
+import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
+import { normalizeDate } from "~/normalize";
+import iconExcel from "~/assets/img/iconExcel.png";
 
 /* eslint-disable eqeqeq */
 function ComercialEmpresasFimTable() {
@@ -36,6 +39,7 @@ function ComercialEmpresasFimTable() {
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
 
+  const [campData, setCampData] = useState();
   const [data, setData] = useState([]);
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
@@ -59,14 +63,29 @@ function ComercialEmpresasFimTable() {
         `comercialDash/?camp=${campId}&dataInic=${inicDate}&dataFim=${endDate}`
       );
 
+      const response1 = await api.get(`/campanha/${campId}/true`);
+      setCampData({
+        cod: response1.data.cod,
+        desc: response1.data.desc
+      });
+
       setData(
-        response.data.finalizedFups.rows.map((camp, key) => {
+        response.data.finalizedFups.rows.map((fup, key) => {
           return {
             idd: key,
-            id: camp.id,
-            campanhaDesc: camp.Campanha.desc,
-            clienteNomeAbv: camp.Cliente.nomeAbv,
-            data: camp.createdAt
+            id: fup.id,
+            campanhaDesc: fup.Campanha.desc,
+            Cliente: fup.Cliente.rzSoc,
+            cidade: fup.Cliente.CliComp.cidade,
+            uf: fup.Cliente.CliComp.uf,
+            ramo: fup.Cliente.ramo,
+            contato: fup.CliCont.nome,
+            cargoCont: fup.CliCont.cargo ? fup.CliCont.cargo : "--",
+            motivo: fup.CamposDinamicosProspect
+              ? fup.CamposDinamicosProspect.valor
+              : "--",
+            dataFim: normalizeDate(fup.dataContato),
+            data: fup.createdAt
           };
         })
       );
@@ -97,7 +116,34 @@ function ComercialEmpresasFimTable() {
                       </Button>
                     </Tooltip>
                   </Link>
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    <Tooltip
+                      title="Exportar para excel"
+                      placement="top"
+                      interactive
+                      onClick={async () => {
+                        await api
+                          .get(
+                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true`,
+                            {
+                              responseType: "blob"
+                            }
+                          )
+                          .then(response =>
+                            fileDownload(
+                              response.data,
+                              "Relatório Empresas Incluídas.xlsx"
+                            )
+                          );
+                      }}
+                    >
+                      <img alt="Exportar para excel" src={iconExcel} />
+                    </Tooltip>
+                  </div>
                   <h3 style={{ marginBottom: 0 }}>Empresas Finalizadas</h3>
+                  <p style={{ fontSize: 14 }}>
+                    {campData.cod} | {campData.desc}
+                  </p>
                 </CardHeader>
                 <CardBody>
                   <ReactTable
@@ -122,13 +168,36 @@ function ComercialEmpresasFimTable() {
                     columns={[
                       {
                         Header: "Cliente",
-                        accessor: "clienteNomeAbv",
+                        accessor: "Cliente",
                         minWidth: 120
                       },
                       {
-                        Header: "Campanha",
-                        accessor: "campanhaDesc",
-                        minWidth: 300
+                        Header: "Cidade",
+                        accessor: "cidade"
+                      },
+                      {
+                        Header: "UF",
+                        accessor: "uf"
+                      },
+                      {
+                        Header: "Ramo",
+                        accessor: "ramo"
+                      },
+                      {
+                        Header: "Contato",
+                        accessor: "contato"
+                      },
+                      {
+                        Header: "Cargo",
+                        accessor: "cargo"
+                      },
+                      {
+                        Header: "Motivo",
+                        accessor: "motivo"
+                      },
+                      {
+                        Header: "DataFim",
+                        accessor: "dataFim"
                       },
                       {
                         Header: "Data",

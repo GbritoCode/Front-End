@@ -36,6 +36,8 @@ function ComercialFUPsTotalTable() {
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
 
+  const [campData, setCampData] = useState();
+  const [clientes] = useState([]);
   const [data, setData] = useState();
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
@@ -73,9 +75,20 @@ function ComercialFUPsTotalTable() {
       const response = await api.get(
         `comercialDash/?camp=${campId}&dataInic=${inicDate}&dataFim=${endDate}`
       );
-
+      const response1 = await api.get(`/campanha/${campId}/true`);
+      setCampData({
+        cod: response1.data.cod,
+        desc: response1.data.desc
+      });
       setData(
         response.data.Fups.rows.map((fup, key) => {
+          // console.log(
+          //   response.data.Fups.rows.reverse().find(arr => {
+          //     !clientes.includes(arr.ClienteId);
+          //     clientes.push(arr.ClienteId);
+          //     return true;
+          //   }).distanceFromToday
+          // );
           return {
             idd: key,
             id: fup.id,
@@ -87,15 +100,21 @@ function ComercialFUPsTotalTable() {
             dataProxContato: fup.dataProxContato,
             detalhes: fup.detalhes,
             reacao: fup.reacao,
-            Cliente: fup.Cliente.nomeAbv,
+            Cliente: fup.Cliente.rzSoc,
             Campanha: fup.Campanha.cod
+            // dias: response.data.Fups.rows.reverse().find(arr => {
+            //   if(clientes.includes(arr.ClienteId)){
+            //     return true;
+            //   }
+            //   clientes.push(arr.ClienteId);
+            // }).distanceFromToday
           };
         })
       );
       setIsLoading(false);
     }
     loadData();
-  }, [Colab, access, campId, dispatch, endDate, history, inicDate]);
+  }, [Colab, access, campId, clientes, dispatch, endDate, history, inicDate]);
 
   return (
     <>
@@ -120,6 +139,9 @@ function ComercialFUPsTotalTable() {
                     </Tooltip>
                   </Link>
                   <h3 style={{ marginBottom: 0 }}>Follow Ups</h3>
+                  <p style={{ fontSize: 14 }}>
+                    {campData.cod} | {campData.desc}
+                  </p>
                 </CardHeader>
                 <CardBody>
                   <ReactTable
@@ -144,11 +166,8 @@ function ComercialFUPsTotalTable() {
                     columns={[
                       {
                         Header: "Cliente",
-                        accessor: "Cliente"
-                      },
-                      {
-                        Header: "Campanha",
-                        accessor: "Campanha"
+                        accessor: "Cliente",
+                        minWidth: 250
                       },
                       {
                         Header: "Nome Contato",
@@ -167,7 +186,11 @@ function ComercialFUPsTotalTable() {
                         accessor: "acao"
                       },
                       {
-                        Header: "Data Próximo Contato",
+                        Header: "Dias",
+                        accessor: "dias"
+                      },
+                      {
+                        Header: "Próximo Contato",
                         accessor: "dataProxContato"
                       }
                     ]}

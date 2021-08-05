@@ -177,87 +177,33 @@ export function campanhaUpdate(data) {
 //--------------------------------------
 //--------------------------------------
 
-export function camposDinamicosCadastro(EmpresaId, nome, valor) {
+export function camposDinamicosCadastro(data) {
   return {
     type: "@cadastro/CAMPOS_DINAMICOS_REQUEST",
-    payload: {
-      EmpresaId,
-      nome,
-      valor
-    }
+    payload: data
   };
 }
 
-export function camposDinamicosUpdate(id, nome, valor) {
+export function camposDinamicosUpdate(data) {
   return {
     type: "@update/CAMPOS_DINAMICOS_REQUEST",
-    payload: {
-      id,
-      nome,
-      valor
-    }
+    payload: data
   };
 }
 
 //-----------------------------------
 //-----------------------------------
 
-export function followUpCadastro(
-  EmpresaId,
-  ColabId,
-  ClienteId,
-  CliContId,
-  dataContato,
-  dataProxContato,
-  detalhes,
-  reacao,
-  CampanhaId,
-  proxPasso,
-  prefContato
-) {
+export function followUpCadastro(data) {
   return {
     type: "@cadastro/FOLLOW_UP_REQUEST",
-    payload: {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      CampanhaId,
-      proxPasso,
-      prefContato
-    }
+    payload: data
   };
 }
 
-export function followUpUpdate(
-  id,
-  ColabId,
-  ClienteId,
-  CliContId,
-  dataContato,
-  dataProxContato,
-  detalhes,
-  reacao,
-  proxPasso,
-  prefContato
-) {
+export function followUpUpdate(data) {
   return {
     type: "@update/FOLLOW_UP_REQUEST",
-    payload: {
-      id,
-      ColabId,
-      ClienteId,
-      CliContId,
-      dataContato,
-      dataProxContato,
-      detalhes,
-      reacao,
-      proxPasso,
-      prefContato
-    }
+    payload: data
   };
 }

@@ -446,7 +446,7 @@ const routes = [
       },
       {
         path: "/tabelas/cliente/camposDinamicos",
-        name: "Campos Dinâmicos",
+        name: "Motivo",
         namePerfil: "Campos Dinâmicos Tab",
         mini: "CPD",
         component: CamposDinamicosTable,

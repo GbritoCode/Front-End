@@ -26,9 +26,11 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ArrowBackIos } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
+import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
 
+import iconExcel from "~/assets/img/iconExcel.png";
 /* eslint-disable eqeqeq */
 function ComercialEmpresasIncluidasTable() {
   // --------- colocando no modo claro do template
@@ -36,6 +38,7 @@ function ComercialEmpresasIncluidasTable() {
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
 
+  const [campData, setCampData] = useState();
   const [data, setData] = useState();
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
@@ -58,14 +61,30 @@ function ComercialEmpresasIncluidasTable() {
       const response = await api.get(
         `comercialDash/?camp=${campId}&dataInic=${inicDate}&dataFim=${endDate}`
       );
-
+      const response1 = await api.get(`/campanha/${campId}/true`);
+      setCampData({
+        cod: response1.data.cod,
+        desc: response1.data.desc
+      });
       setData(
         response.data.cliJoinedCamp.rows.map((camp, key) => {
           return {
             idd: key,
             id: camp.id,
             campanhaDesc: camp.Campanha.desc,
-            clienteNomeAbv: camp.Cliente.nomeAbv,
+            rzSoc: camp.Cliente.rzSoc,
+            cidade: camp.Cliente.CliComp.cidade,
+            uf: camp.Cliente.CliComp.uf,
+            ramo: camp.Cliente.ramo ? camp.Cliente.ramo : "--",
+            contNome: camp.Cliente.CliConts[0]
+              ? camp.Cliente.CliConts[0].nome
+              : "--",
+            // eslint-disable-next-line no-nested-ternary
+            contCargo: camp.Cliente.CliConts[0]
+              ? camp.Cliente.CliConts[0].cargo
+                ? camp.Cliente.CliConts[0].cargo
+                : "--"
+              : "--",
             data: camp.createdAt
           };
         })
@@ -97,7 +116,34 @@ function ComercialEmpresasIncluidasTable() {
                       </Button>
                     </Tooltip>
                   </Link>
+                  <div style={{ marginTop: 10, float: "right" }}>
+                    <Tooltip
+                      title="Exportar para excel"
+                      placement="top"
+                      interactive
+                      onClick={async () => {
+                        await api
+                          .get(
+                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false`,
+                            {
+                              responseType: "blob"
+                            }
+                          )
+                          .then(response =>
+                            fileDownload(
+                              response.data,
+                              "Relatório Empresas Incluídas.xlsx"
+                            )
+                          );
+                      }}
+                    >
+                      <img alt="Exportar para excel" src={iconExcel} />
+                    </Tooltip>
+                  </div>
                   <h3 style={{ marginBottom: 0 }}>Empresas Incluídas</h3>
+                  <p style={{ fontSize: 14 }}>
+                    {campData.cod} | {campData.desc}
+                  </p>
                 </CardHeader>
                 <CardBody>
                   <ReactTable
@@ -122,18 +168,34 @@ function ComercialEmpresasIncluidasTable() {
                     columns={[
                       {
                         Header: "Cliente",
-                        accessor: "clienteNomeAbv",
-                        minWidth: 120
+                        accessor: "rzSoc",
+                        minWidth: 300
                       },
                       {
-                        Header: "Campanha",
-                        accessor: "campanhaDesc",
-                        minWidth: 300
+                        Header: "Cidade",
+                        accessor: "cidade"
+                      },
+                      {
+                        Header: "UF",
+                        accessor: "uf",
+                        maxWidth: 50
+                      },
+                      {
+                        Header: "Ramo",
+                        accessor: "ramo"
+                      },
+                      {
+                        Header: "Contato",
+                        accessor: "contNome"
+                      },
+                      {
+                        Header: "Cargo",
+                        accessor: "contCargo"
                       },
                       {
                         Header: "Data",
                         accessor: "data",
-                        minWidth: 150,
+                        // minWidth: 100,
                         sortMethod: (a, b) => {
                           // force null and undefined to the bottom
                           a = a === null || a === undefined ? -Infinity : a;
