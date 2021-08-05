@@ -189,7 +189,10 @@ export default function CadastroFollowUps() {
         },
         reacao: { value: FUPCadastro.reacao ? FUPCadastro.reacao : "" },
         detalhes: { value: FUPCadastro.detalhes ? FUPCadastro.detalhes : "" },
-        motivo: { value: FUPCadastro.motivo ? FUPCadastro.motivo : "" },
+        motivo: {
+          value: FUPCadastro.motivo ? FUPCadastro.motivo : "",
+          optional: true
+        },
         prefContato: {
           value: FUPCadastro.prefContato ? FUPCadastro.prefContato : ""
         },
