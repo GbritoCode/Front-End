@@ -35,6 +35,7 @@ export function* updateCliente({ payload }) {
     history.push("/tabelas/cliente/cliente");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
+    console.log(err.response);
     toast.error(err.response.data.error);
   }
 }
