@@ -195,18 +195,18 @@ export default function UpdateFollowUps() {
 
     if (valid && filled) {
       dispatch(
-        followUpUpdate(
+        followUpUpdate({
           id,
-          values.ColabId.value,
-          values.ClienteId.value,
-          values.CliContId.value,
-          values.data.value,
-          values.dataProxContato.value,
-          values.detalhes.value,
-          values.reacao.value,
-          values.proxPasso.value,
-          values.prefContato.value
-        )
+          ColabId: values.ColabId.value,
+          ClienteId: values.ClienteId.value,
+          CliContId: values.CliContId.value,
+          data: values.data.value,
+          dataProxContato: values.dataProxContato.value,
+          detalhes: values.detalhes.value,
+          reacao: values.reacao.value,
+          proxPasso: values.proxPasso.value,
+          prefContato: values.prefContato.value
+        })
       );
     } else {
       options = {
