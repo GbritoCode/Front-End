@@ -75,10 +75,11 @@ function ComercialEmpresasFimTable() {
             idd: key,
             id: fup.id,
             campanhaDesc: fup.Campanha.desc,
-            Cliente: fup.Cliente.rzSoc,
+            Cliente: fup.Cliente.nomeAbv,
             cidade: fup.Cliente.CliComp.cidade,
             uf: fup.Cliente.CliComp.uf,
-            ramo: fup.Cliente.ramo,
+            ramo: fup.Cliente.ramo ? fup.Cliente.ramo : "--",
+            setor: fup.Cliente.setor ? fup.Cliente.setor : "--",
             contato: fup.CliCont.nome,
             cargoCont: fup.CliCont.cargo ? fup.CliCont.cargo : "--",
             motivo: fup.CamposDinamicosProspect
@@ -182,6 +183,10 @@ function ComercialEmpresasFimTable() {
                       {
                         Header: "Ramo",
                         accessor: "ramo"
+                      },
+                      {
+                        Header: "Setor",
+                        accessor: "setor"
                       },
                       {
                         Header: "Contato",

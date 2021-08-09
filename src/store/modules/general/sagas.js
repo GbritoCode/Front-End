@@ -489,11 +489,9 @@ export function* representanteCadastro({ payload }) {
 }
 export function* updateRepresentante({ payload }) {
   try {
-    const { id, EmpresaId, nome, TipoComisseId, vlrFixMens } = payload;
+    const { id } = payload;
 
-    const Colab = { EmpresaId, nome, TipoComisseId, vlrFixMens };
-
-    const response = yield call(api.put, `representante/${id}`, Colab);
+    const response = yield call(api.put, `representante/${id}`, payload);
 
     history.push("/tabelas/general/representante");
     toast.success("Atualizado com Sucesso");

@@ -32,7 +32,8 @@ import {
   InputGroup,
   InputGroupAddon,
   Modal,
-  ModalBody
+  ModalBody,
+  CardTitle
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
@@ -429,12 +430,14 @@ export default function CadastroFollowUps() {
                 <div>
                   <Message fontSize="large" />
                 </div>
+                <CardTitle tag="h3">Alerta</CardTitle>
               </div>
               <ModalBody className="text-center">
                 <p>
                   {" "}
-                  Ao clicar em enviar, a prospecção para {data2.nomeAbv} será
-                  encerrado na campanha {data4.cod}{" "}
+                  Ao selecionar "Finalizar Prospecção" a empresa{" "}
+                  <strong> {data2.nomeAbv}</strong> será encerrada na campanha{" "}
+                  <strong>{data4.cod}</strong>.
                 </p>
               </ModalBody>
               <div className="modal-footer">
@@ -1249,6 +1252,7 @@ export default function CadastroFollowUps() {
                                 {" "}
                                 Selecione a ação{" "}
                               </option>
+                              <option value={4}>Iniciar Contato</option>
                               <option value={1}>Retornar Contato</option>
                               <option value={2}>Agendar Reunião</option>
                               <option value={3}>Solicitar Orçamento</option>

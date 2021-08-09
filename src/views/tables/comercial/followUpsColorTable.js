@@ -50,6 +50,8 @@ function ComercialFUPsColorTable() {
         return "Agendar Reunião";
       case 3:
         return "Solicitar Orçamento";
+      case 4:
+        return "Iniciar Contato";
       case 10:
         return "Finalizar";
       default:

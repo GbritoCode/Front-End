@@ -72,7 +72,8 @@ function ComercialEmpresasIncluidasTable() {
             idd: key,
             id: camp.id,
             campanhaDesc: camp.Campanha.desc,
-            rzSoc: camp.Cliente.rzSoc,
+            Cliente: camp.Cliente.nomeAbv,
+            setor: camp.Cliente.setor ? camp.Cliente.setor : "--",
             cidade: camp.Cliente.CliComp.cidade,
             uf: camp.Cliente.CliComp.uf,
             ramo: camp.Cliente.ramo ? camp.Cliente.ramo : "--",
@@ -168,8 +169,7 @@ function ComercialEmpresasIncluidasTable() {
                     columns={[
                       {
                         Header: "Empresa",
-                        accessor: "rzSoc",
-                        minWidth: 300
+                        accessor: "Cliente"
                       },
                       {
                         Header: "Cidade",
@@ -183,6 +183,10 @@ function ComercialEmpresasIncluidasTable() {
                       {
                         Header: "Ramo",
                         accessor: "ramo"
+                      },
+                      {
+                        Header: "Setor",
+                        accessor: "setor"
                       },
                       {
                         Header: "Contato",

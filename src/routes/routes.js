@@ -332,7 +332,7 @@ const routes = [
     collapse: true,
     name: "Vendas",
     namePerfil: "Vendas",
-    icon: "tim-icons icon-molecule-40",
+    icon: "tim-icons icon-cart",
     state: "VendasCollapse",
     views: [
       {
@@ -349,7 +349,7 @@ const routes = [
     collapse: true,
     name: "Cadastros",
     namePerfil: "Cadastros",
-    icon: "tim-icons icon-puzzle-10",
+    icon: "tim-icons icon-settings",
     state: "tablesCollapse",
     profile: 2,
     views: [
