@@ -54,6 +54,8 @@ function ComercialFUPsTotalTable() {
         return "Agendar Reunião";
       case 3:
         return "Solicitar Orçamento";
+      case 4:
+        return "Iniciar Contato";
       case 10:
         return "Finalizar";
       default:
@@ -102,7 +104,7 @@ function ComercialFUPsTotalTable() {
             dataProxContato: fup.dataProxContato,
             detalhes: fup.detalhes,
             reacao: fup.reacao,
-            Cliente: fup.Cliente.rzSoc,
+            Cliente: fup.Cliente.nomeAbv,
             Campanha: fup.Campanha.cod
             // dias: response.data.Fups.rows.reverse().find(arr => {
             //   if(clientes.includes(arr.ClienteId)){
@@ -192,8 +194,7 @@ function ComercialFUPsTotalTable() {
                     columns={[
                       {
                         Header: "Empresa",
-                        accessor: "Cliente",
-                        minWidth: 250
+                        accessor: "Cliente"
                       },
                       {
                         Header: "Nome Contato",

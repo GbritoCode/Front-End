@@ -374,24 +374,10 @@ export function representanteRequest(
     }
   };
 }
-export function RepresentanteUpdate(
-  id,
-  EmpresaId,
-  nome,
-  TipoComisseId,
-  vlrFixMens,
-  ColabId
-) {
+export function RepresentanteUpdate(data) {
   return {
     type: "@update/REPRESENTANTE_REQUEST",
-    payload: {
-      id,
-      EmpresaId,
-      nome,
-      TipoComisseId,
-      vlrFixMens,
-      ColabId
-    }
+    payload: data
   };
 }
 //----------------------------------------------------

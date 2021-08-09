@@ -589,10 +589,10 @@ export default function UpdateFollowUps() {
                                 {" "}
                                 Selecione a ação{" "}
                               </option>
+                              <option value={4}>Iniciar Contato</option>
                               <option value={1}>Retornar Contato</option>
                               <option value={2}>Reunião Agendada</option>
                               <option value={3}>Solicitado Orçamento</option>
-                              <option value={10}>Finalizar</option>
                             </Input>
                             {values.proxPasso.error === "has-danger" ? (
                               <Label className="error">
