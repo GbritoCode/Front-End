@@ -746,7 +746,7 @@ const routes = [
         redirect: true
       },
       {
-        path: "/tabelas/comercial/FUPs/:color",
+        path: "/tabelas/comercial/FUPs/:campId/:color",
         name: "FUPs total",
         namePerfil: "FUPs total Tab",
         mini: "FUP",

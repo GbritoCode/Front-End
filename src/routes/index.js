@@ -380,7 +380,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/comercial/FUPs/:color"
+        path="/tabelas/comercial/FUPs/:campId/:color"
         component={ComercialFUPsColorTable}
         isPrivate
       />

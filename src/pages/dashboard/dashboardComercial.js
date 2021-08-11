@@ -71,7 +71,7 @@ export default function ComercialDashboard() {
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
   const [dataForTable, setDataForTable] = useState({
-    campId: 0,
+    campId: "",
     inicDate: `${year}-${month}-01`,
     endDate: `${year}-${month}-${lastDayMonth}`
   });
@@ -373,18 +373,20 @@ export default function ComercialDashboard() {
     for (let j = 0; j < data2.length; j += 1) {
       if (data2[j].camp === parseInt(camp, 10)) {
         for (let i = 0; i < data2[j].data.length; i += 1) {
-          console.log(data2[j].data[i].distanceFromToday);
           switch (true) {
-            case data2[j].data[i].distanceFromToday <= 0:
+            case data2[j].data[i].distanceFromToday <= 0 &&
+              data2[j].data[i].proxPasso !== 10:
               dataForGraph.red += 1;
               dataForGraph.reset = false;
               break;
             case data2[j].data[i].distanceFromToday > 0 &&
-              data2[j].data[i].distanceFromToday <= 4:
+              data2[j].data[i].distanceFromToday <= 4 &&
+              data2[j].data[i].proxPasso !== 10:
               dataForGraph.yellow += 1;
               dataForGraph.reset = false;
               break;
-            case data2[j].data[i].distanceFromToday >= 5:
+            case data2[j].data[i].distanceFromToday >= 5 &&
+              data2[j].data[i].proxPasso !== 10:
               dataForGraph.green += 1;
               dataForGraph.reset = false;
               break;
@@ -419,9 +421,9 @@ export default function ComercialDashboard() {
         for (let j = 0; j < data2.length; j += 1) {
           if (data2[j].camp === parseInt(comercialDash.camp, 10)) {
             for (let i = 0; i < data2[j].data.length; i += 1) {
-              console.log(data2[j].data[i].distanceFromToday);
               switch (true) {
-                case data2[j].data[i].distanceFromToday <= 0:
+                case data2[j].data[i].distanceFromToday <= 0 &&
+                  data2[j].data[i].proxPasso !== 10:
                   setDataForGraph(prevState => ({
                     ...prevState,
                     red: prevState.red + 1,
@@ -429,14 +431,16 @@ export default function ComercialDashboard() {
                   }));
                   break;
                 case data2[j].data[i].distanceFromToday > 0 &&
-                  data2[j].data[i].distanceFromToday <= 4:
+                  data2[j].data[i].distanceFromToday <= 4 &&
+                  data2[j].data[i].proxPasso !== 10:
                   setDataForGraph(prevState => ({
                     ...prevState,
                     yellow: prevState.yellow + 1,
                     reset: false
                   }));
                   break;
-                case data2[j].data[i].distanceFromToday >= 5:
+                case data2[j].data[i].distanceFromToday >= 5 &&
+                  data2[j].data[i].proxPasso !== 10:
                   setDataForGraph(prevState => ({
                     ...prevState,
                     green: prevState.green + 1,
@@ -553,11 +557,11 @@ export default function ComercialDashboard() {
                       handleFilterChange(
                         document.getElementById("camp").value
                           ? document.getElementById("camp").value
-                          : 1,
+                          : dataForTable.campId,
                         e.target.value,
                         document.getElementById("dataFim").value
                           ? document.getElementById("dataFim").value
-                          : "2030-12-31"
+                          : dataForTable.endDate
                       );
                     }}
                   />
@@ -571,10 +575,10 @@ export default function ComercialDashboard() {
                       handleFilterChange(
                         document.getElementById("camp").value
                           ? document.getElementById("camp").value
-                          : 1,
+                          : dataForTable.campId,
                         document.getElementById("dataInic").value
                           ? document.getElementById("dataInic").value
-                          : "1969-01-01",
+                          : dataForTable.inicDate,
                         e.target.value
                       );
                     }}
@@ -789,7 +793,7 @@ export default function ComercialDashboard() {
                           if (elems.length > 0) {
                             console.log(elems[0]._model.label);
                             return history.push(
-                              `/tabelas/comercial/FUPs/${elems[0]._model.label}`
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
                             );
                           }
                           // and then redirect to the target page:

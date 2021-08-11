@@ -20,16 +20,37 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Button,
+  Row,
+  Label,
+  FormGroup,
+  Input
+} from "reactstrap";
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ArrowBackIos } from "@material-ui/icons";
+import {
+  ArrowBackIos,
+  Close,
+  InsertEmoticon,
+  SentimentDissatisfied,
+  SentimentSatisfiedAltSharp,
+  SentimentVeryDissatisfied,
+  SentimentVeryDissatisfiedSharp
+} from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
 import iconExcel from "~/assets/img/iconExcel.png";
+import Modal from "~/components/Modal/modalLarge";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import { normalizeFone } from "~/normalize";
 
 /* eslint-disable eqeqeq */
 function ComercialFUPsTotalTable() {
@@ -37,14 +58,32 @@ function ComercialFUPsTotalTable() {
   document.body.classList.add("white-content");
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
+  const history = useHistory();
 
+  const [isOpen, setIsOpen] = useState();
   const [campData, setCampData] = useState();
   const [clientes] = useState([]);
+  const [clientesFlag] = useState({});
   const [data, setData] = useState();
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const history = useHistory();
+
+  const stateSchema = {
+    empresaId: "",
+    ColabId: "",
+    ClienteId: "",
+    CliContId: "",
+    data: ``,
+    dataProxContato: "",
+    detalhes: "",
+    reacao: "",
+    proxPasso: "",
+    prefContato: "",
+    ativo: "",
+    motivo: ""
+  };
+  const [values, setValues] = useState(stateSchema);
 
   const checkAcao = value => {
     switch (value) {
@@ -84,15 +123,22 @@ function ComercialFUPsTotalTable() {
         cod: response1.data.cod,
         desc: response1.data.desc
       });
+      response.data.Fups.rows.reverse().map(arr => {
+        console.log(arr);
+        if (!clientesFlag[arr.ClienteId]) {
+          clientesFlag[arr.ClienteId] = true;
+          console.log(clientesFlag);
+          clientes.push({
+            ClienteId: arr.ClienteId,
+            distanceFromToday: -1 * arr.distanceFromToday
+          });
+        }
+        return false;
+      });
+
       setData(
         response.data.Fups.rows.map((fup, key) => {
-          // console.log(
-          //   response.data.Fups.rows.reverse().find(arr => {
-          //     !clientes.includes(arr.ClienteId);
-          //     clientes.push(arr.ClienteId);
-          //     return true;
-          //   }).distanceFromToday
-          // );
+          console.log(clientes.find(arr => arr.ClienteId === fup.ClienteId));
           return {
             idd: key,
             id: fup.id,
@@ -105,20 +151,70 @@ function ComercialFUPsTotalTable() {
             detalhes: fup.detalhes,
             reacao: fup.reacao,
             Cliente: fup.Cliente.nomeAbv,
-            Campanha: fup.Campanha.cod
-            // dias: response.data.Fups.rows.reverse().find(arr => {
-            //   if(clientes.includes(arr.ClienteId)){
-            //     return true;
-            //   }
-            //   clientes.push(arr.ClienteId);
-            // }).distanceFromToday
+            Campanha: fup.Campanha.cod,
+            dias:
+              clientes.find(arr => arr.ClienteId === fup.ClienteId) ===
+              undefined
+                ? "--"
+                : clientes.find(arr => arr.ClienteId === fup.ClienteId)
+                    .distanceFromToday,
+            actions: (
+              // we've added some custom button actions
+              <>
+                <div className="actions-right">
+                  <Tooltip title="Visualizar">
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        setIsOpen(true);
+                        setValues({
+                          empresaId: fup.EmpresaId,
+                          ClienteId: fup.Cliente.nomeAbv,
+                          ClienteRzSoc: fup.Cliente.rzSoc,
+                          ColabId: fup.Colab.nome,
+                          CliContId: fup.CliCont.nome,
+                          contCargo: fup.CliCont.cargo,
+                          contEmail: fup.CliCont.email,
+                          contFone: normalizeFone(fup.CliCont.fone),
+                          contCel: normalizeFone(fup.CliCont.cel),
+                          contRamal: fup.CliCont.ramal,
+                          contSkype: fup.CliCont.skype,
+                          data: fup.dataContato,
+                          dataProxContato: fup.dataProxContato,
+                          detalhes: fup.detalhes,
+                          reacao: fup.reacao,
+                          proxPasso: fup.proxPasso,
+                          prefContato: fup.prefContato
+                        });
+                      }}
+                    >
+                      <i className="tim-icons icon-zoom-split" />
+                    </Button>
+                  </Tooltip>
+
+                  {/* use this button to remove the data row */}
+                </div>
+              </>
+            )
           };
         })
       );
       setIsLoading(false);
     }
     loadData();
-  }, [Colab, access, campId, clientes, dispatch, endDate, history, inicDate]);
+  }, [
+    Colab,
+    access,
+    campId,
+    clientes,
+    clientesFlag,
+    dispatch,
+    endDate,
+    history,
+    inicDate
+  ]);
 
   return (
     <>
@@ -127,6 +223,308 @@ function ComercialFUPsTotalTable() {
       ) : (
         <>
           <div className="content">
+            <Modal
+              onClose={() => {
+                setIsOpen(!isOpen);
+              }}
+              open={isOpen}
+            >
+              <Header>
+                {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h4 className="modalHeader">
+                  {values.ClienteId} | {values.ClienteRzSoc}
+                </h4>
+              </Header>
+              <Row>
+                <Col sm="4">
+                  <Label>Colaborador</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="ColabId"
+                      type="text"
+                      value={values.ColabId}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Data</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="name_abv"
+                      type="text"
+                      value={values.data}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Contato</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="CliContId"
+                      type="text"
+                      value={values.CliContId}
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Cargo</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={values.contCargo}
+                      name="cargo"
+                      id="cargo"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Email</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={values.contEmail}
+                      name="email"
+                      id="email"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Celular</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={values.contCel}
+                      name="celular"
+                      id="celular"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Telefone</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={values.contFone}
+                      name="telefone"
+                      id="telefone"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Ramal</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={values.contRamal}
+                      name="ramal"
+                      id="ramal"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Skype</Label>
+                  <FormGroup className="has-label">
+                    <Input
+                      disabled
+                      value={values.contSkype}
+                      name="skype"
+                      id="skype"
+                      type="text"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Preferência de Contato</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="prefContato"
+                      type="select"
+                      value={values.prefContato}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione o contato{" "}
+                      </option>
+                      <option value={1}>Email </option>
+                      <option value={2}>Telefone </option>
+                      <option value={3}>Whatsapp </option>
+                      <option value={4}>Skype </option>
+                    </Input>
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Reação</Label>
+                  <FormGroup check>
+                    <Label check>
+                      <Input
+                        disabled
+                        hidden
+                        name="reacao"
+                        type="radio"
+                        value="pessima"
+                      />{" "}
+                      <Tooltip title="Péssima">
+                        <SentimentVeryDissatisfiedSharp
+                          color={
+                            values.reacao === "pessima" ? "null" : "disabled"
+                          }
+                        />
+                      </Tooltip>
+                    </Label>
+                    <Label check>
+                      <Input
+                        disabled
+                        hidden
+                        name="reacao"
+                        type="radio"
+                        value="ruim"
+                      />{" "}
+                      <Tooltip title="Ruim">
+                        <SentimentVeryDissatisfied
+                          color={values.reacao === "ruim" ? "null" : "disabled"}
+                        />
+                      </Tooltip>
+                    </Label>
+                    <Label check>
+                      <Input
+                        disabled
+                        hidden
+                        name="reacao"
+                        type="radio"
+                        value="neutra"
+                      />{" "}
+                      <Tooltip title="Sem Reação">
+                        <SentimentDissatisfied
+                          color={
+                            values.reacao === "neutra" ? "null" : "disabled"
+                          }
+                        />
+                      </Tooltip>
+                    </Label>
+                    <Label check>
+                      <Input
+                        disabled
+                        hidden
+                        name="reacao"
+                        type="radio"
+                        value="boa"
+                      />
+                      <Tooltip title="Boa">
+                        <SentimentSatisfiedAltSharp
+                          color={values.reacao === "boa" ? "null" : "disabled"}
+                        />
+                      </Tooltip>
+                    </Label>
+                    <Label check>
+                      <Input
+                        disabled
+                        hidden
+                        name="reacao"
+                        type="radio"
+                        value="otima"
+                      />
+                      <Tooltip title="Ótima">
+                        <InsertEmoticon
+                          color={
+                            values.reacao === "otima" ? "null" : "disabled"
+                          }
+                        />
+                      </Tooltip>
+                    </Label>
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Data Próximo Contato</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="dataProxContato"
+                      type="text"
+                      value={values.dataProxContato}
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Ação</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="proxPasso"
+                      type="select"
+                      value={values.proxPasso}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione a ação{" "}
+                      </option>
+                      <option value={4}>Iniciar Contato</option>
+                      <option value={1}>Retornar Contato</option>
+                      <option value={2}>Agendar Reunião</option>
+                      <option value={3}>Solicitar Orçamento</option>
+                      <option value={10}>Finalizar Prospecção</option>
+                    </Input>
+                  </FormGroup>
+                </Col>
+                <Col hidden={values.proxPasso.value !== "10"} md="4">
+                  <Label>Motivo</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      hidden={values.proxPasso.value !== "10"}
+                      name="CliContId"
+                      placeholder="Selecione o Motivo"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="12">
+                  <Label>Detalhes</Label>
+                  <FormGroup className="has-label ">
+                    <Input
+                      disabled
+                      name="detalhes"
+                      type="textarea"
+                      value={values.detalhes}
+                    />{" "}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </Modal>
+
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
@@ -212,10 +610,10 @@ function ComercialFUPsTotalTable() {
                         Header: "Ação",
                         accessor: "acao"
                       },
-                      // {
-                      //   Header: "Dias",
-                      //   accessor: "dias"
-                      // },
+                      {
+                        Header: "Dias",
+                        accessor: "dias"
+                      },
                       {
                         Header: "Próximo Contato",
                         accessor: "dataProxContato",
@@ -243,6 +641,12 @@ function ComercialFUPsTotalTable() {
                           // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
                           return 0;
                         }
+                      },
+                      {
+                        Header: "Ações",
+                        accessor: "actions",
+                        sortable: false,
+                        filterable: false
                       }
                     ]}
                     defaultPageSize={10}
