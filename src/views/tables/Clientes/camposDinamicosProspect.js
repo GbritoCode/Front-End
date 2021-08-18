@@ -203,11 +203,11 @@ class CamposDinamicosTable extends Component {
                   rowsText="Linhas"
                   columns={[
                     {
-                      Header: "Nome",
+                      Header: "Código",
                       accessor: "nome"
                     },
                     {
-                      Header: "Valor",
+                      Header: "Descrição",
                       accessor: "valor"
                     },
                     {
