@@ -81,7 +81,7 @@ export default function ComercialDashboard() {
     green: 0,
     reset: true
   });
-  const [dataForDoughnut, setDataForDoughnut] = useState({
+  const [dataForDoughnut] = useState({
     reset: true
   });
 
@@ -308,44 +308,6 @@ export default function ComercialDashboard() {
         }
         setData2(active);
 
-        // if (comercialDash.camp) {
-        //   const aux = response.data.filter(
-        //     arr => arr.id === parseInt(comercialDash.camp, 10)
-        //   );
-        //   setCampData({
-        //     cod: aux[0].cod,
-        //     desc: aux[0].desc,
-        //     dataInic: comercialDash.inicDate,
-        //     dataFim: comercialDash.endDate
-        //   });
-
-        //   for (let j = 0; j < active.length; j += 1) {
-        //     if (active[j].camp === parseInt(comercialDash.camp, 10)) {
-        //       for (let i = 0; i < active[j].data.length; i += 1) {
-        //         console.log(active[j].data[i].distanceFromToday);
-        //         switch (true) {
-        //           case active[j].data[i].distanceFromToday <= 0:
-        //             dataForGraph.red += 1;
-        //             dataForGraph.reset = false;
-        //             break;
-        //           case active[j].data[i].distanceFromToday > 0 &&
-        //             active[j].data[i].distanceFromToday <= 4:
-        //             dataForGraph.yellow += 1;
-        //             dataForGraph.reset = false;
-        //             break;
-        //           case active[j].data[i].distanceFromToday >= 5:
-        //             dataForGraph.green += 1;
-        //             dataForGraph.reset = false;
-        //             break;
-        //           case active[j].data[i].distanceFromToday === "--":
-        //             return "--";
-        //           default:
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-
         setIsLoading(false);
       }
     };
@@ -424,28 +386,21 @@ export default function ComercialDashboard() {
                 result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
               ]
             ) {
-              setDataForDoughnut(prevState => ({
-                ...prevState,
-                [result.data.finalizedFups.rows[i].CamposDinamicosProspect
-                  .valor]: 1,
-                reset: false
-              }));
+              dataForDoughnut[
+                result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
+              ] = 1;
+              dataForDoughnut.reset = false;
             } else {
-              setDataForDoughnut(prevState => ({
-                ...prevState,
-                [result.data.finalizedFups.rows[i].CamposDinamicosProspect
-                  .valor]:
-                  dataForDoughnut[
-                    result.data.finalizedFups.rows[i].CamposDinamicosProspect
-                      .valor
-                  ] + 1,
-                reset: false
-              }));
+              dataForDoughnut[
+                result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
+              ] += 1;
+              dataForDoughnut.reset = false;
             }
           }
         }
       });
   };
+
   useEffect(() => {
     async function teste() {
       const { comercialDash } = store.getState().field;
