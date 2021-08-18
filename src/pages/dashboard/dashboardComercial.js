@@ -84,7 +84,7 @@ export default function ComercialDashboard() {
   const [dataForDoughnut] = useState({
     reset: true
   });
-
+  console.log(dataForDoughnut);
   // useEffect(() => {
   //   const createCharts = () => {
   //     const chart_1_2_3_options = {
@@ -378,7 +378,6 @@ export default function ComercialDashboard() {
         `comercialDash/?camp=${camp}&dataInic=${dataInic}&dataFim=${dataFim}`
       )
       .then(result => {
-        setMiniChartData(result.data);
         for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
           if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
             if (
@@ -398,6 +397,7 @@ export default function ComercialDashboard() {
             }
           }
         }
+        setMiniChartData(result.data);
       });
   };
 
@@ -458,11 +458,37 @@ export default function ComercialDashboard() {
           .get(
             `comercialDash/?camp=${comercialDash.camp}&dataInic=${comercialDash.inicDate}&dataFim=${comercialDash.endDate}`
           )
-          .then(result => setMiniChartData(result.data));
+          .then(result => {
+            setMiniChartData(result.data);
+            for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
+              if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
+                if (
+                  !dataForDoughnut[
+                    result.data.finalizedFups.rows[i].CamposDinamicosProspect
+                      .valor
+                  ]
+                ) {
+                  dataForDoughnut[
+                    result.data.finalizedFups.rows[
+                      i
+                    ].CamposDinamicosProspect.valor
+                  ] = 1;
+                  dataForDoughnut.reset = false;
+                } else {
+                  dataForDoughnut[
+                    result.data.finalizedFups.rows[
+                      i
+                    ].CamposDinamicosProspect.valor
+                  ] += 1;
+                  dataForDoughnut.reset = false;
+                }
+              }
+            }
+          });
       }
     }
     teste();
-  }, [data, data2]);
+  }, [data, data2, dataForDoughnut]);
   // const setBgChartData = name => {
   //   setBigChartData(name);
   // };
@@ -761,7 +787,9 @@ export default function ComercialDashboard() {
               <Col lg="4">
                 <Card className=" /*card-chart">
                   <CardHeader>
-                    FUPS
+                    <p style={{ color: "#808080" }} className="card-category">
+                      FUPs
+                    </p>
                     <CardTitle
                       tag="h4"
                       style={{ color: "orange", fontSize: 20 }}
@@ -803,7 +831,9 @@ export default function ComercialDashboard() {
               <Col lg="4">
                 <Card className=" /*card-chart">
                   <CardHeader>
-                    Finalizados Por Motivo
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Finalizados Por Motivo
+                    </p>
                     <CardTitle
                       tag="h4"
                       style={{ color: "orange", fontSize: 20 }}
@@ -824,18 +854,6 @@ export default function ComercialDashboard() {
                           )
                         )}
                         options={doughnutChart_1.options}
-                        onElementsClick={elems => {
-                          // if required to build the URL, you can
-                          // get datasetIndex and value index from an `elem`:
-                          if (elems.length > 0) {
-                            console.log(elems[0]._model.label);
-                            return history.push(
-                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
-                            );
-                          }
-                          // and then redirect to the target page:
-                          // window.location = "https://example.com";
-                        }}
                       />
                     </div>
                   </CardBody>
