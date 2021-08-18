@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
-import { Bar } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 // react plugin for creating vector maps
 
 // reactstrap components
@@ -51,7 +51,7 @@ import { store } from "~/store";
 // core components
 // import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
-import { barChart_1 } from "./chartsOptions";
+import { barChart_1, doughnutChart_1 } from "./chartsOptions";
 import history from "~/services/history";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
@@ -71,7 +71,7 @@ export default function ComercialDashboard() {
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
   const [dataForTable, setDataForTable] = useState({
-    campId: 0,
+    campId: "",
     inicDate: `${year}-${month}-01`,
     endDate: `${year}-${month}-${lastDayMonth}`
   });
@@ -79,6 +79,9 @@ export default function ComercialDashboard() {
     red: 0,
     yellow: 0,
     green: 0,
+    reset: true
+  });
+  const [dataForDoughnut, setDataForDoughnut] = useState({
     reset: true
   });
 
@@ -348,12 +351,22 @@ export default function ComercialDashboard() {
     };
     loadData();
   }, []);
+
   const handleFilterChange = async (camp, dataInic, dataFim) => {
     if (!dataForGraph.reset) {
       dataForGraph.red = 0;
       dataForGraph.yellow = 0;
       dataForGraph.green = 0;
       dataForGraph.reset = false;
+    }
+    if (!dataForDoughnut.reset) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in dataForDoughnut) {
+        if (dataForDoughnut.hasOwnProperty(key)) {
+          delete dataForDoughnut[key];
+        }
+      }
+      dataForDoughnut.reset = true;
     }
     const aux = data.filter(arr => arr.id === parseInt(camp, 10));
 
@@ -373,18 +386,20 @@ export default function ComercialDashboard() {
     for (let j = 0; j < data2.length; j += 1) {
       if (data2[j].camp === parseInt(camp, 10)) {
         for (let i = 0; i < data2[j].data.length; i += 1) {
-          console.log(data2[j].data[i].distanceFromToday);
           switch (true) {
-            case data2[j].data[i].distanceFromToday <= 0:
+            case data2[j].data[i].distanceFromToday <= 0 &&
+              data2[j].data[i].proxPasso !== 10:
               dataForGraph.red += 1;
               dataForGraph.reset = false;
               break;
             case data2[j].data[i].distanceFromToday > 0 &&
-              data2[j].data[i].distanceFromToday <= 4:
+              data2[j].data[i].distanceFromToday <= 4 &&
+              data2[j].data[i].proxPasso !== 10:
               dataForGraph.yellow += 1;
               dataForGraph.reset = false;
               break;
-            case data2[j].data[i].distanceFromToday >= 5:
+            case data2[j].data[i].distanceFromToday >= 5 &&
+              data2[j].data[i].proxPasso !== 10:
               dataForGraph.green += 1;
               dataForGraph.reset = false;
               break;
@@ -400,15 +415,42 @@ export default function ComercialDashboard() {
       .get(
         `comercialDash/?camp=${camp}&dataInic=${dataInic}&dataFim=${dataFim}`
       )
-      .then(result => setMiniChartData(result.data));
+      .then(result => {
+        setMiniChartData(result.data);
+        for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
+          if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
+            if (
+              !dataForDoughnut[
+                result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
+              ]
+            ) {
+              setDataForDoughnut(prevState => ({
+                ...prevState,
+                [result.data.finalizedFups.rows[i].CamposDinamicosProspect
+                  .valor]: 1,
+                reset: false
+              }));
+            } else {
+              setDataForDoughnut(prevState => ({
+                ...prevState,
+                [result.data.finalizedFups.rows[i].CamposDinamicosProspect
+                  .valor]:
+                  dataForDoughnut[
+                    result.data.finalizedFups.rows[i].CamposDinamicosProspect
+                      .valor
+                  ] + 1,
+                reset: false
+              }));
+            }
+          }
+        }
+      });
   };
-
   useEffect(() => {
     async function teste() {
       const { comercialDash } = store.getState().field;
       if (comercialDash.camp) {
         const aux = data.filter(arr => arr.id === comercialDash.camp);
-        console.log(aux);
         setCampData({
           cod: aux.length > 0 ? aux[0].cod : null,
           desc: aux.length > 0 ? aux[0].desc : null,
@@ -419,9 +461,9 @@ export default function ComercialDashboard() {
         for (let j = 0; j < data2.length; j += 1) {
           if (data2[j].camp === parseInt(comercialDash.camp, 10)) {
             for (let i = 0; i < data2[j].data.length; i += 1) {
-              console.log(data2[j].data[i].distanceFromToday);
               switch (true) {
-                case data2[j].data[i].distanceFromToday <= 0:
+                case data2[j].data[i].distanceFromToday <= 0 &&
+                  data2[j].data[i].proxPasso !== 10:
                   setDataForGraph(prevState => ({
                     ...prevState,
                     red: prevState.red + 1,
@@ -429,14 +471,16 @@ export default function ComercialDashboard() {
                   }));
                   break;
                 case data2[j].data[i].distanceFromToday > 0 &&
-                  data2[j].data[i].distanceFromToday <= 4:
+                  data2[j].data[i].distanceFromToday <= 4 &&
+                  data2[j].data[i].proxPasso !== 10:
                   setDataForGraph(prevState => ({
                     ...prevState,
                     yellow: prevState.yellow + 1,
                     reset: false
                   }));
                   break;
-                case data2[j].data[i].distanceFromToday >= 5:
+                case data2[j].data[i].distanceFromToday >= 5 &&
+                  data2[j].data[i].proxPasso !== 10:
                   setDataForGraph(prevState => ({
                     ...prevState,
                     green: prevState.green + 1,
@@ -553,11 +597,11 @@ export default function ComercialDashboard() {
                       handleFilterChange(
                         document.getElementById("camp").value
                           ? document.getElementById("camp").value
-                          : 1,
+                          : dataForTable.campId,
                         e.target.value,
                         document.getElementById("dataFim").value
                           ? document.getElementById("dataFim").value
-                          : "2030-12-31"
+                          : dataForTable.endDate
                       );
                     }}
                   />
@@ -571,10 +615,10 @@ export default function ComercialDashboard() {
                       handleFilterChange(
                         document.getElementById("camp").value
                           ? document.getElementById("camp").value
-                          : 1,
+                          : dataForTable.campId,
                         document.getElementById("dataInic").value
                           ? document.getElementById("dataInic").value
-                          : "1969-01-01",
+                          : dataForTable.inicDate,
                         e.target.value
                       );
                     }}
@@ -789,7 +833,49 @@ export default function ComercialDashboard() {
                           if (elems.length > 0) {
                             console.log(elems[0]._model.label);
                             return history.push(
-                              `/tabelas/comercial/FUPs/${elems[0]._model.label}`
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                            );
+                          }
+                          // and then redirect to the target page:
+                          // window.location = "https://example.com";
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg="4" />
+              <Col lg="4">
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    Finalizados Por Motivo
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-simple-remove text-info" />{" "}
+                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Doughnut
+                        data={doughnutChart_1.data(
+                          Object.keys(dataForDoughnut).filter(
+                            arr => arr !== "reset"
+                          ),
+                          Object.values(dataForDoughnut).filter(
+                            arr => arr !== false && arr !== true
+                          )
+                        )}
+                        options={doughnutChart_1.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
                             );
                           }
                           // and then redirect to the target page:
