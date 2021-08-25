@@ -32,13 +32,14 @@ import {
   Row,
   Col,
   InputGroup,
-  InputGroupAddon
+  InputGroupAddon,
+  CustomInput
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { List } from "@material-ui/icons";
+import { Check, Close, InfoOutlined, List } from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaUpdate } from "~/store/modules/Cliente/actions";
@@ -61,12 +62,21 @@ export default function UpdateCampanha() {
     ColabId: { value: "", error: "", message: "" },
     objetivo: { value: "", error: "", message: "" }
   };
+  const [isOpenFields, setIsOpenFields] = useState(false);
   const [values, setValues] = useState(stateSchema);
   const [isLoading, setIsLoading] = useState(true);
   const [data2, setData2] = useState([]);
   const [data1, setData1] = useState([]);
   const [isOpenColab, setIsOpenColab] = useState(false);
   const [colabNome, setColabNome] = useState("");
+  const [dashFields] = useState({
+    StatusCli: "Funil De Vendas",
+    FupsTot: "Follow Ups",
+    EmpFin: "Empresas Finalizadas",
+    FupsProx: "Follow Ups em Aberto",
+    FinsMotivo: "Finalizações por Motivo"
+  });
+  const [string, setString] = useState("");
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
@@ -87,6 +97,7 @@ export default function UpdateCampanha() {
         objetivo: { value: response1.data.objetivo }
       }));
 
+      setString(response1.data.dashFields);
       setColabNome(
         response2.data.find(arr => arr.id === response1.data.ColabId).nome
       );
@@ -95,13 +106,21 @@ export default function UpdateCampanha() {
     }
     loadData();
   }, [id]);
-
   var options = {};
 
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
   }
+
+  const handleSwitchChange = (checked, field) => {
+    if (checked && dashFields.some(arr => arr === field)) {
+      setString(`${string}${field},`);
+    }
+    if (!checked && dashFields.some(arr => arr === field)) {
+      setString(string.replace(`${field},`, ""));
+    }
+  };
 
   const handleChange = (event, name, type) => {
     event.persist();
@@ -153,7 +172,8 @@ export default function UpdateCampanha() {
           dataaInic: values.dataInic.value,
           dataFim: values.dataFim.value,
           ColabId: values.ColabId.value,
-          objetivo: values.objetivo.value
+          objetivo: values.objetivo.value,
+          dashFields: string
         })
       );
     } else {
@@ -259,10 +279,79 @@ export default function UpdateCampanha() {
               <Footer />
             </Modal>
 
+            <Modal
+              onClose={() => {
+                setIsOpenFields(!isOpenFields);
+              }}
+              open={isOpenFields}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenFields(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenFields(false)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>
+                  Indicadores Dashboard Comercial
+                </h3>
+              </Header>
+              <Row>
+                {Object.keys(dashFields).map((field, index) => {
+                  return (
+                    <>
+                      <Col sm="4" key={index}>
+                        <CustomInput
+                          defaultChecked={string.search(field) > -1}
+                          key={index}
+                          id={field}
+                          type="switch"
+                          label={dashFields[field]}
+                          onChange={e =>
+                            handleSwitchChange(e.target.checked, field)
+                          }
+                        />
+                      </Col>
+                    </>
+                  );
+                })}
+              </Row>
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Tooltip title="Info" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right"
+                        }}
+                        onClick={() => setIsOpenFields(true)}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <InfoOutlined />
+                      </Button>
+                    </Tooltip>
                     <Link to={`/tabelas/campanhas/clientes/${data1.id}`}>
                       <Tooltip title="Empresas" placement="top" interactive>
                         <Button

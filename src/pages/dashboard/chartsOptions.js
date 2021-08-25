@@ -8,7 +8,7 @@ export const barChart_1 = {
           fill: true,
           backgroundColor: "rgba(72,72,176,0.0)",
           hoverBackgroundColor: "rgba(72,72,176,0.1)",
-          borderColor: ["red", "#ff6600", "#4ede6b"],
+          borderColor: ["red", "#ff6600", "#4ede6b", "yellow"],
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,

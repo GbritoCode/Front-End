@@ -203,29 +203,21 @@ export function* updateCliRecDesp({ payload }) {
 
 //---------------------------------------------
 //---------------------------------------------
-
+// {
+//    id: int (updateOnly)
+//    EmpresaId: int,
+//    cod: str,
+//    desc: str,
+//    ClientesIds: arr(int),
+//    dataInic: dateOnly,
+//    dataFim: dateOnly,
+//    ColabId: int,
+//    Objetivo: str,
+//    dashFields: str,
+// }
 export function* campanhaCadastro({ payload }) {
   try {
-    const {
-      EmpresaId,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId,
-      objetivo
-    } = payload;
-    yield call(api.post, "campanha", {
-      EmpresaId,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId,
-      objetivo
-    });
+    yield call(api.post, "campanha", payload);
     history.push(`/tabelas/cliente/campanha`);
   } catch (err) {
     toast.error(err.response.data.error);

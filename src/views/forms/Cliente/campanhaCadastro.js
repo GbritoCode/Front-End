@@ -31,13 +31,14 @@ import {
   Row,
   Col,
   InputGroup,
-  InputGroupAddon
+  InputGroupAddon,
+  CustomInput
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Check, Close, DoneAll, List } from "@material-ui/icons";
+import { Check, Close, DoneAll, InfoOutlined, List } from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaCadastro } from "~/store/modules/Cliente/actions";
@@ -67,8 +68,18 @@ export default function CadastroCampanha() {
     objetivo: { value: "", error: "", message: "" }
   };
   let reactTable = useRef(null);
+  const [dashFields] = useState({
+    StatusCli: "Funil De Vendas",
+    FupsTot: "Follow Ups",
+    EmpFin: "Empresas Finalizadas",
+    FupsProx: "Follow Ups em Aberto",
+    FinsMotivo: "Finalizações por Motivo"
+  });
+  let string = "EmpIncluida,FupsTot,EmpFin,FupsProx,StatusCli,FinsMotivo,";
+
   const [values, setValues] = useState(stateSchema);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenFields, setIsOpenFields] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [defaultFilteredData, setDefaultFilteredData] = useState([]);
   const [isOpenColab, setIsOpenColab] = useState(false);
@@ -172,6 +183,15 @@ export default function CadastroCampanha() {
   };
   checker();
 
+  const handleSwitchChange = (checked, field) => {
+    if (checked && string.search(field) === -1) {
+      string += `${field},`;
+    }
+    if (!checked && string.search(field) > -1) {
+      string = string.replace(`${field},`, "");
+    }
+  };
+
   const handleChange = (event, name, type) => {
     event.persist();
     const target = event.target.value;
@@ -216,16 +236,17 @@ export default function CadastroCampanha() {
 
     if (valid && filled) {
       dispatch(
-        campanhaCadastro(
-          values.empresaId.value,
-          values.cod.value,
-          values.desc.value,
-          values.ClienteIds.array,
-          values.dataInic.value,
-          values.dataFim.value,
-          values.ColabId.value,
-          values.objetivo.value
-        )
+        campanhaCadastro({
+          EmpresaId: values.empresaId.value,
+          cod: values.cod.value,
+          desc: values.desc.value,
+          ClientesIds: values.ClienteIds.array,
+          dataInic: values.dataInic.value,
+          dataFim: values.dataFim.value,
+          ColabId: values.ColabId.value,
+          Objetivo: values.objetivo.value,
+          dashFields: string
+        })
       );
     } else {
       options = {
@@ -519,10 +540,79 @@ export default function CadastroCampanha() {
               <Footer />
             </Modal>
 
+            <Modal
+              onClose={() => {
+                setIsOpenFields(!isOpenFields);
+              }}
+              open={isOpenFields}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenFields(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenFields(false)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>
+                  Indicadores Dashboard Comercial
+                </h3>
+              </Header>
+              <Row>
+                {Object.keys(dashFields).map((field, index) => {
+                  return (
+                    <>
+                      <Col sm="4" key={index}>
+                        <CustomInput
+                          defaultChecked
+                          key={index}
+                          id={dashFields[field]}
+                          type="switch"
+                          label={dashFields[field]}
+                          onChange={e =>
+                            handleSwitchChange(e.target.checked, field)
+                          }
+                        />
+                      </Col>
+                    </>
+                  );
+                })}
+              </Row>
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
+                    <Tooltip title="Info" placement="top" interactive>
+                      <Button
+                        style={{
+                          float: "right"
+                        }}
+                        onClick={() => setIsOpenFields(true)}
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <InfoOutlined />
+                      </Button>
+                    </Tooltip>
                     <Tooltip
                       title="Relacionamentos Campanha"
                       placement="top"

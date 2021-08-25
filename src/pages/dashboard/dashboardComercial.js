@@ -36,7 +36,6 @@ import {
 
 import { Link } from "react-router-dom";
 import {
-  Business,
   Check,
   Close,
   DateRangeOutlined,
@@ -65,6 +64,7 @@ export default function ComercialDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [campData, setCampData] = useState([]);
+  const [dashFields, setDashFields] = useState({});
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
   const [miniChartData, setMiniChartData] = useState();
@@ -81,10 +81,15 @@ export default function ComercialDashboard() {
     green: 0,
     reset: true
   });
-  const [dataForDoughnut] = useState({
+  const [cliStatusGraph, setCliStatusGraph] = useState({
+    reuniao: 0,
+    orcamento: 0,
+    efetiv: 0,
     reset: true
   });
-  console.log(dataForDoughnut);
+  const [dataForDoughnut, setDataForDoughnut] = useState({
+    reset: true
+  });
   // useEffect(() => {
   //   const createCharts = () => {
   //     const chart_1_2_3_options = {
@@ -285,7 +290,7 @@ export default function ComercialDashboard() {
       if (Colab) {
         const response = await api.get("/campanha");
         setData(response.data);
-
+        const dashFieldsAux = {};
         let array = [];
 
         const active = [];
@@ -294,6 +299,7 @@ export default function ComercialDashboard() {
             data: response.data[i].FollowUps,
             camp: response.data[i].id
           };
+          dashFieldsAux[response.data[i].id] = response.data[i].dashFields;
         }
         for (let k = 0; k < active.length; k += 1) {
           // eslint-disable-next-line no-loop-func
@@ -307,13 +313,12 @@ export default function ComercialDashboard() {
           array = [];
         }
         setData2(active);
-
+        setDashFields({ ...dashFieldsAux });
         setIsLoading(false);
       }
     };
     loadData();
   }, []);
-
   const handleFilterChange = async (camp, dataInic, dataFim) => {
     if (!dataForGraph.reset) {
       dataForGraph.red = 0;
@@ -325,10 +330,17 @@ export default function ComercialDashboard() {
       // eslint-disable-next-line no-restricted-syntax
       for (const key in dataForDoughnut) {
         if (dataForDoughnut.hasOwnProperty(key)) {
+          console.log(dataForDoughnut[key]);
           delete dataForDoughnut[key];
         }
       }
       dataForDoughnut.reset = true;
+    }
+    if (!cliStatusGraph.reset) {
+      cliStatusGraph.reuniao = 0;
+      cliStatusGraph.orcamento = 0;
+      cliStatusGraph.efetiv = 0;
+      cliStatusGraph.reset = false;
     }
     const aux = data.filter(arr => arr.id === parseInt(camp, 10));
 
@@ -338,13 +350,7 @@ export default function ComercialDashboard() {
       dataInic,
       dataFim
     });
-    dispatch(
-      comercialDashFilterFields({
-        camp: aux[0].id,
-        inicDate: dataInic,
-        endDate: dataFim
-      })
-    );
+
     for (let j = 0; j < data2.length; j += 1) {
       if (data2[j].camp === parseInt(camp, 10)) {
         for (let i = 0; i < data2[j].data.length; i += 1) {
@@ -397,8 +403,51 @@ export default function ComercialDashboard() {
             }
           }
         }
+        const newDataInic = new Date(dataInic);
+        const newDataFim = new Date(dataFim);
+        for (let i = 0; i < result.data.cliStatusPassing.rows.length; i += 1) {
+          if (result.data.cliStatusPassing.rows[i].reuniaoAgend !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].reuniaoAgend) <=
+              newDataFim
+            ) {
+              cliStatusGraph.reuniao += 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+          if (result.data.cliStatusPassing.rows[i].orcamentoSolict !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].orcamentoSolict) <=
+              newDataFim
+            ) {
+              cliStatusGraph.orcamento += 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+          if (result.data.cliStatusPassing.rows[i].efetivacao !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].efetivacao) <=
+              newDataFim
+            ) {
+              cliStatusGraph.efetiv = 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+        }
         setMiniChartData(result.data);
       });
+    dispatch(
+      comercialDashFilterFields({
+        camp: aux[0].id,
+        inicDate: dataInic,
+        endDate: dataFim,
+        dataForDoughnut: { ...dataForDoughnut },
+        cliStatusGraph: { ...cliStatusGraph }
+      })
+    );
   };
 
   useEffect(() => {
@@ -454,41 +503,19 @@ export default function ComercialDashboard() {
           inicDate: comercialDash.inicDate,
           endDate: comercialDash.endDate
         });
+        setDataForDoughnut({ ...comercialDash.dataForDoughnut });
+        setCliStatusGraph({ ...comercialDash.cliStatusGraph });
         await api
           .get(
             `comercialDash/?camp=${comercialDash.camp}&dataInic=${comercialDash.inicDate}&dataFim=${comercialDash.endDate}`
           )
           .then(result => {
             setMiniChartData(result.data);
-            for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
-              if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
-                if (
-                  !dataForDoughnut[
-                    result.data.finalizedFups.rows[i].CamposDinamicosProspect
-                      .valor
-                  ]
-                ) {
-                  dataForDoughnut[
-                    result.data.finalizedFups.rows[
-                      i
-                    ].CamposDinamicosProspect.valor
-                  ] = 1;
-                  dataForDoughnut.reset = false;
-                } else {
-                  dataForDoughnut[
-                    result.data.finalizedFups.rows[
-                      i
-                    ].CamposDinamicosProspect.valor
-                  ] += 1;
-                  dataForDoughnut.reset = false;
-                }
-              }
-            }
           });
       }
     }
     teste();
-  }, [data, data2, dataForDoughnut]);
+  }, [data, data2]);
   // const setBgChartData = name => {
   //   setBigChartData(name);
   // };
@@ -659,7 +686,73 @@ export default function ComercialDashboard() {
                   </CardBody> */}
                 </Card>
               </Col>
-              <Col lg="4" md="6">
+            </Row>
+            <Row>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
+                    : false
+                }
+                lg="8"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Status
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-send text-info" />{" "}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={barChart_1.data(
+                          [
+                            "Qualificados",
+                            "Informados",
+                            "Ativados",
+                            "Efetivados"
+                          ],
+                          [
+                            miniChartData
+                              ? miniChartData.cliJoinedCamp.rows.length
+                              : 0,
+                            cliStatusGraph.reuniao,
+                            cliStatusGraph.orcamento,
+                            cliStatusGraph.efetiv
+                          ]
+                        )}
+                        options={barChart_1.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              {/* <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("EmpIncluida") ===
+                      -1
+                    : false
+                }
+                lg="4"
+                md="6"
+              >
                 <Card className="card-stats">
                   <CardBody>
                     <Row>
@@ -699,10 +792,18 @@ export default function ComercialDashboard() {
                     </div>
                   </CardFooter>
                 </Card>
-              </Col>
-              <Col lg="4" md="6">
-                <Card className="card-stats">
-                  <CardBody>
+              </Col> */}
+              <Col md="4" sm="6">
+                <Card
+                  hidden={
+                    dashFields[dataForTable.campId]
+                      ? dashFields[dataForTable.campId].search("FupsTot") === -1
+                      : false
+                  }
+                  className="card-stats"
+                  style={{ marginBottom: "5px" }}
+                >
+                  <CardBody style={{ paddingBottom: "6px" }}>
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-primary">
@@ -739,10 +840,15 @@ export default function ComercialDashboard() {
                     </div>
                   </CardFooter>
                 </Card>
-              </Col>
-              <Col lg="4" md="6">
-                <Card className="card-stats">
-                  <CardBody>
+                <Card
+                  hidden={
+                    dashFields[dataForTable.campId]
+                      ? dashFields[dataForTable.campId].search("EmpFin") === -1
+                      : false
+                  }
+                  className="card-stats"
+                >
+                  <CardBody style={{ paddingBottom: "6px" }}>
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-info">
@@ -784,7 +890,14 @@ export default function ComercialDashboard() {
               </Col>
             </Row>
             <Row>
-              <Col lg="4">
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FupsProx") === -1
+                    : false
+                }
+                lg="4"
+              >
                 <Card className=" /*card-chart">
                   <CardHeader>
                     <p style={{ color: "#808080" }} className="card-category">
@@ -827,8 +940,62 @@ export default function ComercialDashboard() {
                   </CardBody>
                 </Card>
               </Col>
-              <Col lg="4" />
-              <Col lg="4">
+              {/* <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
+                    : false
+                }
+                lg="4"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Status
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-send text-info" />{" "}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={barChart_1.data(
+                          ["Reunião Agendada", "Orçamento", "Efetivado"],
+                          [
+                            cliStatusGraph.reuniao,
+                            cliStatusGraph.orcamento,
+                            cliStatusGraph.efetiv
+                          ]
+                        )}
+                        options={barChart_1.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col> */}
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FinsMotivo") ===
+                      -1
+                    : false
+                }
+                lg="4"
+              >
                 <Card className=" /*card-chart">
                   <CardHeader>
                     <p style={{ color: "#808080" }} className="card-category">

@@ -141,29 +141,22 @@ export function cliRecDespUpdate(
 
 //--------------------------------------------------------
 //--------------------------------------------------------
-
-export function campanhaCadastro(
-  EmpresaId,
-  cod,
-  desc,
-  ClienteIds,
-  dataInic,
-  dataFim,
-  ColabId,
-  objetivo
-) {
+// {
+//    id: int (updateOnly)
+//    EmpresaId: int,
+//    cod: str,
+//    desc: str,
+//    ClientesIds: arr(int),
+//    dataInic: dateOnly,
+//    dataFim: dateOnly,
+//    ColabId: int,
+//    Objetivo: str,
+//    dashFields: str,
+// }
+export function campanhaCadastro(data) {
   return {
     type: "@cadastro/CAMPANHA_REQUEST",
-    payload: {
-      EmpresaId,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId,
-      objetivo
-    }
+    payload: data
   };
 }
 
