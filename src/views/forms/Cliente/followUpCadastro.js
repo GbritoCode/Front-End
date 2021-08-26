@@ -39,6 +39,7 @@ import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import {
+  Check,
   Close,
   FormatListBulleted,
   InfoOutlined,
@@ -74,7 +75,7 @@ export default function CadastroFollowUps() {
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenOport, setIsOpenOport] = useState(true);
+  const [isOpenOport, setIsOpenOport] = useState(false);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
@@ -188,20 +189,6 @@ export default function CadastroFollowUps() {
         organizerEmail: { value: response1.data.email }
       }));
 
-      setOportValues(prevState => ({
-        ...prevState,
-        empresaId: { value: response.data.id },
-        ClienteId: { value: cliId },
-        CampanhaId: { value: campId },
-        ColabId: { value: response1.data.id },
-        RepresentanteId: { value: response2.data.RepresentanteId },
-        cod: {
-          value: `A${JSON.stringify(codAux.getYear()).slice(
-            -2
-          )}${`0${codAux.getMonth() + 1}`.slice(-2)}-${zerofilled}`
-        }
-      }));
-
       if (FUPCadastro.CliContId) {
         const cont = response3.data.find(
           arr => arr.id === parseInt(FUPCadastro.CliContId, 10)
@@ -221,10 +208,49 @@ export default function CadastroFollowUps() {
         }));
       }
 
+      if (FUPCadastro.UndNegId) {
+        await api
+          .get(`/segmento/?idUndNeg=${FUPCadastro.UndNegId}`)
+          .then(result => {
+            setData10(result.data);
+          });
+      }
+
       setOportValues(prevState => ({
         ...prevState,
+        empresaId: { value: response.data.id },
+        ClienteId: { value: cliId },
+        CampanhaId: { value: campId },
+        ColabId: { value: response1.data.id },
+        RepresentanteId: { value: response2.data.RepresentanteId },
+        cod: {
+          value: `A${JSON.stringify(codAux.getYear()).slice(
+            -2
+          )}${`0${codAux.getMonth() + 1}`.slice(-2)}-${zerofilled}`
+        },
         contato: {
           value: FUPCadastro.CliContId ? FUPCadastro.CliContId : ""
+        },
+        RecDespId: {
+          value: FUPCadastro.RecDespId ? FUPCadastro.RecDespId : ""
+        },
+        UndNegId: {
+          value: FUPCadastro.UndNegId ? FUPCadastro.UndNegId : ""
+        },
+        segmetId: {
+          value: FUPCadastro.SegmentoId ? FUPCadastro.SegmentoId : ""
+        },
+        data: {
+          value: FUPCadastro.dataOport ? FUPCadastro.dataOport : ""
+        },
+        desc: {
+          value: FUPCadastro.desc ? FUPCadastro.desc : ""
+        },
+        fase: {
+          value: FUPCadastro.fase ? FUPCadastro.fase : ""
+        },
+        narrativa: {
+          value: FUPCadastro.narrativa ? FUPCadastro.narrativa : ""
         }
       }));
 
@@ -986,7 +1012,20 @@ export default function CadastroFollowUps() {
                     <Close fontSize="large" />
                   </Button>
                 </Tooltip>{" "}
-                <h3 style={{ marginBottom: 0 }}>Empresa</h3>
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenOport(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <h3 style={{ marginBottom: 0 }}>Oportunidade</h3>
               </Header>
               <Row>
                 <Col sm="4">
@@ -1277,7 +1316,7 @@ export default function CadastroFollowUps() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <Tooltip title="Info" placement="top" interactive>
+                    <Tooltip title="Oportunidade" placement="top" interactive>
                       <Button
                         style={{
                           float: "right"
@@ -1308,7 +1347,14 @@ export default function CadastroFollowUps() {
                                 reacao: values.reacao.value,
                                 proxPasso: values.proxPasso.value,
                                 prefContato: values.prefContato.value,
-                                motivo: values.motivo.value
+                                motivo: values.motivo.value,
+                                UndNegId: oportValues.UndNegId.value,
+                                RecDespId: oportValues.RecDespId.value,
+                                SegmentoId: oportValues.segmetId.value,
+                                dataOport: oportValues.data.value,
+                                fase: oportValues.fase.value,
+                                desc: oportValues.desc.value,
+                                narrativa: oportValues.narrativa.value
                               })
                             );
                           }}

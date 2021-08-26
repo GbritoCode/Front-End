@@ -60,17 +60,16 @@ export default function CadastroOport() {
     RecDespId: { value: "", error: "", message: "" },
     segmetId: { value: "", error: "", message: "" },
     RepresentanteId: { value: "", error: "", message: "" },
+    CampanhaId: { value: "", error: "", message: "", optional: true },
     contato: { value: "", error: "", message: "" },
     data: { value: `${year}-${month}-${date}`, error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
     cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" }
+    desc: { value: "", error: "", message: "" },
+    narrativa: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    narrativa: { value: "", error: "", message: "" }
-  };
+
   const [values, setValues] = useState(stateSchema);
-  const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     const codAux = new Date();
     const { empresa } = store.getState().auth;
@@ -176,9 +175,9 @@ export default function CadastroOport() {
         }
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -204,35 +203,38 @@ export default function CadastroOport() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
       dispatch(
-        oportRequest(
-          values.empresaId.value,
-          values.ColabId.value,
-          values.ClienteId.value,
-          values.UndNegId.value,
-          values.RecDespId.value,
-          values.segmetId.value,
-          values.RepresentanteId.value,
-          values.contato.value,
-          values.data.value,
-          values.fase.value,
-          values.cod.value,
-          values.desc.value,
-          optional.narrativa.value
-        )
+        oportRequest({
+          EmpresaId: values.empresaId.value,
+          ColabId: values.ColabId.value,
+          ClienteId: values.ClienteId.value,
+          UndNegId: values.UndNegId.value,
+          RecDespId: values.RecDespId.value,
+          SegmentoId: values.segmetId.value,
+          RepresentanteId: values.RepresentanteId.value,
+          CampanhaId: values.CampanhaId.value,
+          contato: values.contato.value,
+          data: values.data.value,
+          fase: values.fase.value,
+          cod: values.cod.value,
+          desc: values.desc.value,
+          narrativa: values.narrativa.value
+        })
       );
     } else {
       options = {
@@ -556,7 +558,7 @@ export default function CadastroOport() {
                     <Col>
                       <Label>Narrativa</Label>
                       <FormGroup
-                        className={`has-label ${optional.narrativa.error}`}
+                        className={`has-label ${values.narrativa.error}`}
                       >
                         <Input
                           name="narrativa"
@@ -564,11 +566,11 @@ export default function CadastroOport() {
                           onChange={event =>
                             handleChange(event, "narrativa", "optional")
                           }
-                          value={optional.narrativa.value}
+                          value={values.narrativa.value}
                         />{" "}
-                        {optional.narrativa.error === "has-danger" ? (
+                        {values.narrativa.error === "has-danger" ? (
                           <Label className="error">
-                            {optional.narrativa.message}
+                            {values.narrativa.message}
                           </Label>
                         ) : null}
                       </FormGroup>
