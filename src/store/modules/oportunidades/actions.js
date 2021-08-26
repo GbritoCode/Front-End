@@ -10,38 +10,26 @@ export function UpdateSuccess(profile) {
   };
 }
 
-export function oportRequest(
-  EmpresaId,
-  ColabId,
-  ClienteId,
-  UndNegId,
-  RecDespId,
-  SegmentoId,
-  RepresentanteId,
-  contato,
-  data,
-  fase,
-  cod,
-  desc,
-  narrativa
-) {
+//  {
+//   EmpresaId: int,
+//   ColabId: int,
+//   ClienteId: int,
+//   UndNegId: int,
+//   RecDespId: int,
+//   SegmentoId: int,
+//   RepresentanteId: int,
+//   CampanhaId: int,
+//   contato: int,
+//   data: dataOnly,
+//   fase: int,
+//   cod: str,
+//   desc: str,
+//   narrativa: str
+//  }
+export function oportRequest(data) {
   return {
     type: "@cadastro/OPORT_REQUEST",
-    payload: {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      UndNegId,
-      RecDespId,
-      SegmentoId,
-      RepresentanteId,
-      contato,
-      data,
-      fase,
-      cod,
-      desc,
-      narrativa
-    }
+    payload: data
   };
 }
 

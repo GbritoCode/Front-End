@@ -49,6 +49,7 @@ export default function CadastroOport() {
   const [data5, setData5] = useState([]);
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
+  const [data9, setData9] = useState([]);
 
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
 
@@ -116,6 +117,7 @@ export default function CadastroOport() {
           ...prevState,
           RepresentanteId: { value: result.data.RepresentanteId }
         }));
+        setData9(result.data.Campanhas);
       });
     }
     if (undNeg) {
@@ -124,21 +126,6 @@ export default function CadastroOport() {
       });
     }
   }
-
-  const checkFase = value => {
-    if (value === "1") {
-      return "Aberta";
-    }
-    if (value === "2") {
-      return "Em Cotação";
-    }
-    if (value === "3") {
-      return "Cotada";
-    }
-    if (value === "4") {
-      return "Aprovada";
-    }
-  };
 
   var options = {};
   const notifyElment = useRef(null);
@@ -227,7 +214,8 @@ export default function CadastroOport() {
           RecDespId: values.RecDespId.value,
           SegmentoId: values.segmetId.value,
           RepresentanteId: values.RepresentanteId.value,
-          CampanhaId: values.CampanhaId.value,
+          CampanhaId:
+            values.CampanhaId.value === "" ? null : values.CampanhaId.value,
           contato: values.contato.value,
           data: values.data.value,
           fase: values.fase.value,
@@ -267,6 +255,42 @@ export default function CadastroOport() {
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
+                      <Label>Cliente</Label>
+                      <FormGroup
+                        className={`has-label ${values.ClienteId.error}`}
+                      >
+                        <Input
+                          name="ClienteId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "ClienteId", "text")
+                          }
+                          value={values.ClienteId.value}
+                          onChangeCapture={e => {
+                            getDynamicData(e.target.value, null);
+                          }}
+                        >
+                          {" "}
+                          <option disabled value="">
+                            {" "}
+                            Selecione o cliente{" "}
+                          </option>
+                          {data2.map(ClienteId => (
+                            <option value={ClienteId.id}>
+                              {" "}
+                              {ClienteId.nomeAbv} -{" "}
+                              {normalizeCnpj(ClienteId.CNPJ)}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.ClienteId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.ClienteId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
                       <Label>Colaborador</Label>
                       <FormGroup
                         className={`has-label ${values.ColabId.error}`}
@@ -303,58 +327,8 @@ export default function CadastroOport() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="4">
-                      <p
-                        style={{
-                          paddingTop: 27,
-                          paddingLeft: 47,
-                          marginRight: 5,
-                          fontSize: 30,
-                          float: "right",
-                          fontStyle: "sans-serif"
-                        }}
-                      >
-                        {checkFase(values.fase.value)}
-                      </p>
-                    </Col>
                   </Row>
                   <Row>
-                    <Col md="4">
-                      <Label>Cliente</Label>
-                      <FormGroup
-                        className={`has-label ${values.ClienteId.error}`}
-                      >
-                        <Input
-                          name="ClienteId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ClienteId", "text")
-                          }
-                          value={values.ClienteId.value}
-                          onChangeCapture={e => {
-                            getDynamicData(e.target.value, null);
-                          }}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o cliente{" "}
-                          </option>
-                          {data2.map(ClienteId => (
-                            <option value={ClienteId.id}>
-                              {" "}
-                              {ClienteId.nomeAbv} -{" "}
-                              {normalizeCnpj(ClienteId.CNPJ)}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.ClienteId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ClienteId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
                     <Col md="4">
                       <Label>Contato</Label>
                       <FormGroup
@@ -409,6 +383,35 @@ export default function CadastroOport() {
                             <option value={RepresentanteId.id}>
                               {" "}
                               {RepresentanteId.id} - {RepresentanteId.nome}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.RepresentanteId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.RepresentanteId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Campanha</Label>
+                      <FormGroup
+                        className={`has-label ${values.CampanhaId.error}`}
+                      >
+                        <Input
+                          name="CampanhaId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "CampanhaId", "optional")
+                          }
+                          value={values.CampanhaId.value}
+                        >
+                          {" "}
+                          <option value=""> Selecione a Campanha </option>
+                          {data9.map(camp => (
+                            <option value={camp.id}>
+                              {" "}
+                              {camp.cod} - {camp.desc}{" "}
                             </option>
                           ))}
                         </Input>
