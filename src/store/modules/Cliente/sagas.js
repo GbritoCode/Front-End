@@ -273,8 +273,9 @@ export function* updateCamposDinamicos({ payload }) {
 
 export function* followUpsCadastro({ payload }) {
   try {
-    const { CampanhaId } = payload;
-    yield call(api.post, "followUp", payload);
+    const { CampanhaId } = payload.Follow;
+    yield call(api.post, "followUp", payload.Follow);
+    yield call(api.post, "oportunidade", payload.Oport);
     history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
   } catch (err) {
     toast.error(err.response.data.error);
