@@ -249,9 +249,6 @@ export default function CadastroFollowUps() {
         desc: {
           value: FUPCadastro.desc ? FUPCadastro.desc : ""
         },
-        fase: {
-          value: FUPCadastro.fase ? FUPCadastro.fase : ""
-        },
         narrativa: {
           value: FUPCadastro.narrativa ? FUPCadastro.narrativa : ""
         }
