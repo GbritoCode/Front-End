@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classnames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-
+import ReactLoading from "react-loading";
 import {
   Button,
   Card,
@@ -18,48 +18,33 @@ import {
   Col
 } from "reactstrap";
 
-import { signInRequest } from "~/store/modules/auth/actions";
 import { useInput } from "~/hooks";
-import { forgotPassFail } from "~/store/modules/user/actions";
+import history from "~/services/history";
+import { forgotPass } from "~/store/modules/user/actions";
 
 // reactstrap components
 
-export default function SignIn() {
+export default function ForgotPass() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
-
+  const status1 = useSelector(state => state.user.status);
   const dispatch = useDispatch();
   const [emailFocus, setEmailFocus] = useState("");
-  const [passFocus, setPassFocus] = useState("");
+  const [status, setStatus] = useState(status1);
   const { value: email, bind: bindEmail } = useInput("");
-  const { value: password, bind: bindPassword } = useInput("");
 
   useEffect(() => {
-    dispatch(forgotPassFail());
-  }, [dispatch]);
+    setStatus(status1);
+  }, [dispatch, status1]);
 
   const loading = useSelector(state => state.auth.loading);
-
-  const errorCheckAux = [bindEmail, bindPassword];
 
   const handleSubmit = evt => {
     evt.preventDefault();
 
-    var tamanho = errorCheckAux.length;
-    for (var j = 0; j < tamanho; j++) {
-      if (
-        !(errorCheckAux[j].valueerror === "has-danger") &&
-        !(errorCheckAux[j].value === "")
-      ) {
-        var valid = true;
-      } else {
-        valid = false;
-        break;
-      }
-    }
-    if (valid) {
-      dispatch(signInRequest(email, password));
-    }
+    dispatch(forgotPass({ email }));
+    setStatus(status1);
+    console.log(status1);
   };
 
   return (
@@ -67,11 +52,58 @@ export default function SignIn() {
       <div className="content">
         <Container>
           <Col className="ml-auto mr-auto" lg="4" md="6">
-            <Form className="form" onSubmit={handleSubmit}>
+            <Card hidden={status !== "sent"} className="card-login card-white">
+              <CardHeader>
+                <img alt="..." src={require("assets/img/card-info.png")} />
+                <CardTitle tag="h1">Recuperar Senha</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  Enviamos um E-mail para {email} com uma nova senha para o seu
+                  acesso
+                </p>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  type="submit"
+                  block
+                  className="mb-3"
+                  color="info"
+                  size="lg"
+                  onClick={() => history.push("/login")}
+                >
+                  Ok
+                </Button>
+              </CardFooter>
+            </Card>
+            <Card
+              hidden={status !== "loading"}
+              className="card-login card-white"
+            >
+              <CardHeader>
+                <img alt="..." src={require("assets/img/card-info.png")} />
+                <CardTitle tag="h1">Recuperar Senha</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <ReactLoading
+                  // style={{ "margin-left": "5%" }}
+                  type="balls"
+                  color="grey"
+                  height="20%"
+                  width="20%"
+                />
+              </CardBody>
+              <CardFooter />
+            </Card>
+            <Form
+              hidden={status !== "default"}
+              className="form"
+              onSubmit={handleSubmit}
+            >
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle tag="h1">Conta</CardTitle>
+                  <CardTitle tag="h1">Recuperar Senha</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <InputGroup
@@ -97,37 +129,14 @@ export default function SignIn() {
                       {...bindEmail}
                     />
                   </InputGroup>
-                  <InputGroup
-                    className={classnames({
-                      "input-group-focus": passFocus
-                    })}
-                  >
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="tim-icons icon-lock-circle" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      onBlur={() => {
-                        setPassFocus(false);
-                      }}
-                      onFocus={() => {
-                        setPassFocus(true);
-                      }}
-                      name="password"
-                      type="password"
-                      placeholder="Senha"
-                      {...bindPassword}
-                    />
-                  </InputGroup>
                   <div className="pull-right">
                     <h6>
                       <a
                         style={{ color: "blue", fontSize: "9px" }}
                         className="link footer-link"
-                        href="/forgotPass"
+                        href="/login"
                       >
-                        Esqueci minha Senha
+                        Ir para Login
                       </a>
                     </h6>
                   </div>
@@ -140,7 +149,7 @@ export default function SignIn() {
                     color="info"
                     size="lg"
                   >
-                    {loading ? "Carregando..." : "Acessar"}
+                    {loading ? "Carregando..." : "Enviar"}
                   </Button>
                 </CardFooter>
               </Card>

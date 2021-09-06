@@ -50,6 +50,7 @@ import {
   InsertEmoticon,
   MailOutline,
   Message,
+  PostAdd,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
@@ -1324,26 +1325,26 @@ export default function CadastroFollowUps() {
                         nav
                         onClick={e => e.preventDefault()}
                       >
-                        <InfoOutlined fontSize="small" />
+                        <PostAdd />
                         <div className="photo" />
                         {/* <b className="caret d-none d-lg-block d-xl-block" /> */}
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-navbar" right tag="ul">
                         <NavLink onClick={() => setIsOpenOport(true)} tag="li">
-                          <DropdownItem className="nav-item">
-                            <Tooltip
-                              title="Oportunidade"
-                              placement="top"
-                              interactive
-                            >
-                              {/* <Button
+                          <DropdownItem
+                            style={{ paddingLeft: "5px" }}
+                            className="nav-item"
+                          >
+                            {/* <Button
                                 onClick={() => setIsOpenOport(true)}
                                 className={classNames("btn-icon btn-link like")}
                               >
-                                <InfoOutlined fontSize="small" />
-                              </Button> */}
-                              <p>Oportunidade</p>
-                            </Tooltip>
+                            </Button> */}
+                            <InfoOutlined
+                              style={{ float: "left", marginRight: "5px" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2px" }}>Oportunidade</p>
                           </DropdownItem>
                         </NavLink>
                         <NavLink

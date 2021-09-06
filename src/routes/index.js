@@ -149,11 +149,13 @@ import ComercialEmpresasIncluidasTable from "~/views/tables/comercial/empresasIn
 import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTable";
 import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
 import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
+import ForgotPass from "~/views/login/forgoPass";
 
 export default function Routes() {
   return (
     <Switch>
       <Route path="/login" exact component={signIn} />
+      <Route path="/forgotPass" exact component={ForgotPass} />
       <Route path="/register" component={singUp} />
       <Route path="/dashboardPessoal" component={Dashboard} isPrivate />
       <Route
