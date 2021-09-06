@@ -21,6 +21,7 @@ import {
 import { useInput } from "~/hooks";
 import history from "~/services/history";
 import { forgotPass } from "~/store/modules/user/actions";
+import { ReactLoadingContainer } from "~/components/DIvs/reacLoadingContainer";
 
 // reactstrap components
 
@@ -55,7 +56,7 @@ export default function ForgotPass() {
             <Card hidden={status !== "sent"} className="card-login card-white">
               <CardHeader>
                 <img alt="..." src={require("assets/img/card-info.png")} />
-                <CardTitle tag="h1">Recuperar Senha</CardTitle>
+                <CardTitle tag="h2">Recuperar Senha</CardTitle>
               </CardHeader>
               <CardBody>
                 <p>
@@ -82,16 +83,17 @@ export default function ForgotPass() {
             >
               <CardHeader>
                 <img alt="..." src={require("assets/img/card-info.png")} />
-                <CardTitle tag="h1">Recuperar Senha</CardTitle>
+                <CardTitle tag="h2">Recuperar Senha</CardTitle>
               </CardHeader>
               <CardBody>
-                <ReactLoading
-                  // style={{ "margin-left": "5%" }}
-                  type="balls"
-                  color="grey"
-                  height="20%"
-                  width="20%"
-                />
+                <ReactLoadingContainer>
+                  <ReactLoading
+                    type="spin"
+                    color="grey"
+                    height="19%"
+                    width="19%"
+                  />
+                </ReactLoadingContainer>
               </CardBody>
               <CardFooter />
             </Card>
@@ -103,7 +105,7 @@ export default function ForgotPass() {
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle tag="h1">Recuperar Senha</CardTitle>
+                  <CardTitle tag="h2">Recuperar Senha</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <InputGroup

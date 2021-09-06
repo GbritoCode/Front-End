@@ -1,7 +1,7 @@
 import produce from "immer";
 
 const INITIAL_STATE = {
-  status: "default"
+  status: "loading"
 };
 
 export default function cadastro(state = INITIAL_STATE, action) {
