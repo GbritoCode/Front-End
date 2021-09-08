@@ -46,6 +46,7 @@ import { Link, useParams } from "react-router-dom";
 import {
   Check,
   Close,
+  FormatListBulleted,
   InfoOutlined,
   InsertEmoticon,
   MailOutline,
@@ -54,7 +55,8 @@ import {
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
-  SentimentVeryDissatisfiedSharp
+  SentimentVeryDissatisfiedSharp,
+  Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
@@ -1327,24 +1329,18 @@ export default function CadastroFollowUps() {
                       >
                         <PostAdd />
                         <div className="photo" />
-                        {/* <b className="caret d-none d-lg-block d-xl-block" /> */}
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-navbar" right tag="ul">
                         <NavLink onClick={() => setIsOpenOport(true)} tag="li">
                           <DropdownItem
-                            style={{ paddingLeft: "5px" }}
+                            style={{ paddingLeft: "3%" }}
                             className="nav-item"
                           >
-                            {/* <Button
-                                onClick={() => setIsOpenOport(true)}
-                                className={classNames("btn-icon btn-link like")}
-                              >
-                            </Button> */}
                             <InfoOutlined
-                              style={{ float: "left", marginRight: "5px" }}
+                              style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
-                            <p style={{ paddingTop: "2px" }}>Oportunidade</p>
+                            <p style={{ paddingTop: "0.5%" }}>Oportunidade</p>
                           </DropdownItem>
                         </NavLink>
                         <NavLink
@@ -1374,74 +1370,31 @@ export default function CadastroFollowUps() {
                           }}
                           tag="li"
                         >
-                          <DropdownItem className="nav-item">
-                            <Link
-                              to={`/timeline/cliente/followUps/${cliId}/${campId}`}
+                          <Link
+                            to={`/timeline/cliente/followUps/${cliId}/${campId}`}
+                          >
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
                             >
-                              <Tooltip
-                                title="TimeLine"
-                                placement="top"
-                                interactive
-                              >
-                                {/* <Button
-                                  className={classNames(
-                                    "btn-icon btn-link like"
-                                  )}
-                                  onClick={async () => {
-                                    await delay(500);
-                                    setTimeLine(true);
-                                    dispatch(
-                                      FUPCadastroFields({
-                                        timeline: true,
-                                        CliContId: values.CliContId.value,
-                                        data: values.data.value,
-                                        dataProxContato:
-                                          values.dataProxContato.value,
-                                        detalhes: values.detalhes.value,
-                                        reacao: values.reacao.value,
-                                        proxPasso: values.proxPasso.value,
-                                        prefContato: values.prefContato.value,
-                                        motivo: values.motivo.value,
-                                        UndNegId: oportValues.UndNegId.value,
-                                        RecDespId: oportValues.RecDespId.value,
-                                        SegmentoId: oportValues.segmetId.value,
-                                        dataOport: oportValues.data.value,
-                                        fase: oportValues.fase.value,
-                                        desc: oportValues.desc.value,
-                                        narrativa: oportValues.narrativa.value
-                                      })
-                                    );
-                                  }}
-                                >
-                                  <Timeline style={{ fontSize: 30 }} />
-                                </Button> */}
-                                <p>Timeline</p>
-                              </Tooltip>
-                            </Link>{" "}
-                          </DropdownItem>
+                              <Timeline
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Timeline</p>
+                            </DropdownItem>
+                          </Link>{" "}
                         </NavLink>
                         <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
-                          <DropdownItem className="nav-item">
-                            <Tooltip
-                              title="Oportunidade"
-                              placement="top"
-                              interactive
-                            >
-                              <Tooltip title="Info" placement="top" interactive>
-                                {/* <Button
-                                  style={{
-                                    float: "right"
-                                  }}
-                                  onClick={() => setIsOpenInfo(true)}
-                                  className={classNames(
-                                    "btn-icon btn-link like"
-                                  )}
-                                >
-                                  <FormatListBulleted />
-                                </Button> */}
-                                <p>Informações</p>
-                              </Tooltip>
-                            </Tooltip>
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <FormatListBulleted
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "0.5%" }}>Informações</p>
                           </DropdownItem>
                         </NavLink>
                       </DropdownMenu>

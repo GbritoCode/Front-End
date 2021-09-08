@@ -29,7 +29,12 @@ import {
   Input,
   Label,
   Row,
-  Col
+  Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  NavLink
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
@@ -43,7 +48,8 @@ import {
   Close,
   Contacts,
   FormatListBulleted,
-  InfoOutlined
+  InfoOutlined,
+  PostAdd
 } from "@material-ui/icons";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
@@ -93,11 +99,6 @@ function ClienteUpdatee() {
       const response3 = await api.get(`/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
-      console.log(
-        response.data.Campanhas.filter(
-          arr => arr.Campanhas_Clientes.ClienteId === response.data.id
-        )
-      );
       setData4(
         response.data.Campanhas.filter(
           arr => arr.Campanhas_Clientes.ClienteId === response.data.id
@@ -323,68 +324,11 @@ function ClienteUpdatee() {
   }
 
   function checkProsp(param, aux) {
-    if (param == "false" && aux === "icons") {
-      return (
-        <>
-          <Link to={`/cliente/comp_update/${id}`}>
-            <Tooltip title="Complemento" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <EventNoteIcon />
-              </Button>
-            </Tooltip>
-          </Link>
-          <Link to={`/tabelas/cliente/rec_desp/${id}`}>
-            <Tooltip title="Receita" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <AttachMoney />
-              </Button>
-            </Tooltip>
-          </Link>
-        </>
-      );
-    }
     switch (aux) {
-      case "icon":
+      case "icons":
         switch (param) {
           case "false":
-            return (
-              <>
-                <Link to={`/cliente/comp_update/${id}`}>
-                  <Tooltip title="Complemento" placement="top" interactive>
-                    <Button
-                      style={{ float: "right" }}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <EventNoteIcon />
-                    </Button>
-                  </Tooltip>
-                </Link>
-                <Link to={`/tabelas/cliente/rec_desp/${id}`}>
-                  <Tooltip title="Receita" placement="top" interactive>
-                    <Button
-                      style={{ float: "right" }}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AttachMoney />
-                    </Button>
-                  </Tooltip>
-                </Link>
-              </>
-            );
+            return <></>;
 
           default:
             break;
@@ -744,45 +688,96 @@ function ClienteUpdatee() {
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4">
-                      {checkProsp(prospect, "icons")}
-                      <Link
-                        to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
-                      >
-                        <Tooltip title="Contato" placement="top" interactive>
-                          <Button
-                            style={{ float: "right" }}
-                            color="default"
-                            size="sm"
-                            className={classNames("btn-icon btn-link like")}
-                          >
-                            <Contacts />
-                          </Button>
-                        </Tooltip>
-                      </Link>
-
-                      <Tooltip title="Campanhas" placement="top" interactive>
-                        <Button
-                          style={{ float: "right" }}
+                      <UncontrolledDropdown style={{ float: "right" }}>
+                        <DropdownToggle
+                          caret
                           color="default"
-                          size="sm"
-                          className={classNames("btn-icon btn-link like")}
-                          onClick={() => setIsOpen(true)}
+                          data-toggle="dropdown"
+                          nav
+                          onClick={e => e.preventDefault()}
                         >
-                          <FormatListBulleted />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip title="Info" placement="top" interactive>
-                        <Button
-                          style={{
-                            float: "right"
-                          }}
-                          size="sm"
-                          onClick={() => setIsOpenInfo(true)}
-                          className={classNames("btn-icon btn-link like")}
+                          <PostAdd />
+                          <div className="photo" />
+                        </DropdownToggle>
+                        <DropdownMenu
+                          className="dropdown-navbar"
+                          right
+                          tag="ul"
                         >
-                          <InfoOutlined />
-                        </Button>
-                      </Tooltip>
+                          <NavLink tag="li">
+                            <Link to={`/cliente/comp_update/${id}`}>
+                              <DropdownItem
+                                style={{ paddingLeft: "3%" }}
+                                className="nav-item"
+                              >
+                                <EventNoteIcon
+                                  style={{ float: "left", marginRight: "3%" }}
+                                  fontSize="small"
+                                />
+                                <p style={{ paddingTop: "0.5%" }}>
+                                  Complemento
+                                </p>
+                              </DropdownItem>
+                            </Link>
+                          </NavLink>
+                          <NavLink hidden={prospect === "true"} tag="li">
+                            <Link to={`/tabelas/cliente/rec_desp/${id}`}>
+                              <DropdownItem
+                                style={{ paddingLeft: "3%" }}
+                                className="nav-item"
+                              >
+                                <AttachMoney
+                                  style={{ float: "left", marginRight: "3%" }}
+                                  fontSize="small"
+                                />
+                                <p style={{ paddingTop: "0.5%" }}>
+                                  Receita/Despesa
+                                </p>
+                              </DropdownItem>
+                            </Link>
+                          </NavLink>
+                          <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
+                            <Link
+                              to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
+                            >
+                              <DropdownItem
+                                style={{ paddingLeft: "3%" }}
+                                className="nav-item"
+                              >
+                                <Contacts
+                                  style={{ float: "left", marginRight: "3%" }}
+                                  fontSize="small"
+                                />
+                                <p style={{ paddingTop: "0.5%" }}>Contato</p>
+                              </DropdownItem>
+                            </Link>
+                          </NavLink>
+                          <NavLink onClick={() => setIsOpen(true)} tag="li">
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <FormatListBulleted
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Campanhas</p>
+                            </DropdownItem>
+                          </NavLink>
+                          <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <InfoOutlined
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Informações</p>
+                            </DropdownItem>
+                          </NavLink>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
                       {checkProsp(prospect, "title")}
                     </CardTitle>
                   </CardHeader>

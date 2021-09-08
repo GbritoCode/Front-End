@@ -27,17 +27,21 @@ import {
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  NavLink
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
-import classNames from "classnames";
-import Tooltip from "@material-ui/core/Tooltip";
 import {
   AssignmentInd,
   CreditCard,
   LocalOffer,
+  PostAdd,
   Timeline
 } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
@@ -211,52 +215,6 @@ export default function UpdateOport() {
     }
   };
 
-  function checkAprovada(fase) {
-    if ((fase == 4 || fase >= 5) && firstRender.current) {
-      return (
-        <>
-          <Link to={`/tabelas/oportunidade/recurso/${id}`}>
-            <Tooltip title="Recurso" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <AssignmentInd />
-              </Button>
-            </Tooltip>
-          </Link>
-
-          <Link to={`/tabelas/oportunidade/parcela/${id}`}>
-            <Tooltip title="Parcelas" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <CreditCard />
-              </Button>
-            </Tooltip>
-          </Link>
-          <Link to={`/view/oportunidade/dados/${id}`}>
-            <Tooltip title="Resultados" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <Timeline />
-              </Button>
-            </Tooltip>
-          </Link>
-        </>
-      );
-    }
-  }
-
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -335,19 +293,105 @@ export default function UpdateOport() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {checkAprovada(values.fase.value)}
-                    <Link to={`/tabelas/oportunidade/cotacao/${id}`}>
-                      <Tooltip title="Cotação" placement="top" interactive>
-                        <Button
-                          style={{ float: "right" }}
-                          color="default"
-                          size="sm"
-                          className={classNames("btn-icon btn-link like")}
+                    <UncontrolledDropdown style={{ float: "right" }}>
+                      <DropdownToggle
+                        caret
+                        color="default"
+                        data-toggle="dropdown"
+                        nav
+                        onClick={e => e.preventDefault()}
+                      >
+                        <PostAdd />
+                        <div className="photo" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-navbar" right tag="ul">
+                        <NavLink tag="li">
+                          <Link to={`/tabelas/oportunidade/cotacao/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <LocalOffer
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Cotação </p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+                        <NavLink
+                          hidden={
+                            !(
+                              (values.fase.value == 4 ||
+                                values.fase.value >= 5) &&
+                              firstRender.current
+                            )
+                          }
+                          tag="li"
                         >
-                          <LocalOffer />
-                        </Button>
-                      </Tooltip>
-                    </Link>
+                          <Link to={`/tabelas/oportunidade/recurso/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <AssignmentInd
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Recursos</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+
+                        <NavLink
+                          hidden={
+                            !(
+                              (values.fase.value == 4 ||
+                                values.fase.value >= 5) &&
+                              firstRender.current
+                            )
+                          }
+                          tag="li"
+                        >
+                          <Link to={`/tabelas/oportunidade/parcela/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <CreditCard
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Parcelas</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+
+                        <NavLink
+                          hidden={
+                            !(
+                              (values.fase.value == 4 ||
+                                values.fase.value >= 5) &&
+                              firstRender.current
+                            )
+                          }
+                          tag="li"
+                        >
+                          <Link to={`/view/oportunidade/dados/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <Timeline
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "0.5%" }}>Resultados</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                     <h3 style={{ marginBottom: 0 }}>Oportunidade</h3>
                     <p style={{ fontSize: 14 }}>
                       {checkFase(values.fase.value)}

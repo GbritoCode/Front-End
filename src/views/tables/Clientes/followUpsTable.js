@@ -26,9 +26,20 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownItem,
+  NavLink,
+  DropdownMenu
 } from "reactstrap";
-import { ArrowBackIos, Close, Message, Timeline } from "@material-ui/icons";
+import {
+  ArrowBackIos,
+  Close,
+  Message,
+  PostAdd,
+  Timeline
+} from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -97,7 +108,6 @@ class followUpTable extends Component {
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
-              {/* use this button to add a edit kind of action */}
               <Link to={`/update/cliente/followUps/${followUp.id}`}>
                 <Button
                   color="default"
@@ -188,39 +198,64 @@ class followUpTable extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <Link to={`/cadastro/cliente/followUps/${cliId}/${campId}`}>
-                  <Tooltip title="Novo" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AddIcon fontSize="large" />
-                    </Button>
-                  </Tooltip>
-                </Link>
-                <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
-                  <Tooltip title="TimeLine" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <Timeline style={{ fontSize: 30 }} />
-                    </Button>
-                  </Tooltip>
-                </Link>
+                <UncontrolledDropdown style={{ float: "right" }}>
+                  <DropdownToggle
+                    style={{ paddingLeft: "0px" }}
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    nav
+                    onClick={e => e.preventDefault()}
+                  >
+                    <PostAdd />
+                    <div className="photo" />
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-navbar" right tag="ul">
+                    <NavLink tag="li">
+                      <Link
+                        to={`/timeline/cliente/followUps/${cliId}/${campId}`}
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <Timeline
+                            style={{ float: "left", marginRight: "3%" }}
+                            fontSize="small"
+                          />
+                          <p style={{ paddingTop: "0.5%" }}>Oportunidade</p>
+                        </DropdownItem>
+                      </Link>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <Link
+                        to={`/cadastro/cliente/followUps/${cliId}/${campId}`}
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <AddIcon
+                            style={{ float: "left", marginRight: "3%" }}
+                            fontSize="small"
+                          />
+                          <p style={{ paddingTop: "0.5%" }}>Informações</p>
+                        </DropdownItem>
+                      </Link>
+                    </NavLink>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+
                 <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
                   <Tooltip title="Voltar">
                     <Button
                       style={{
-                        float: "right"
+                        float: "right",
+                        paddingBottom: "0.2%"
                       }}
                       className={classNames("btn-icon btn-link like")}
                     >
-                      <ArrowBackIos />
+                      <ArrowBackIos fontSize="small" />
                     </Button>
                   </Tooltip>
                 </Link>
