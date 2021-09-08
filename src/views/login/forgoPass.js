@@ -59,9 +59,8 @@ export default function ForgotPass() {
                 <CardTitle tag="h2">Recuperar Senha</CardTitle>
               </CardHeader>
               <CardBody>
-                <p>
-                  Enviamos um E-mail para {email} com uma nova senha para o seu
-                  acesso
+                <p style={{ justifyContent: "center", textAlign: "center" }}>
+                  Verifique o email {email} para visualizar os dados de acesso
                 </p>
               </CardBody>
               <CardFooter>

@@ -801,9 +801,9 @@ export default function ComercialDashboard() {
                       : false
                   }
                   className="card-stats"
-                  style={{ marginBottom: "5px" }}
+                  style={{ marginBottom: "2%" }}
                 >
-                  <CardBody style={{ paddingBottom: "6px" }}>
+                  <CardBody style={{ paddingBottom: "1.5%" }}>
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-primary">
@@ -848,7 +848,7 @@ export default function ComercialDashboard() {
                   }
                   className="card-stats"
                 >
-                  <CardBody style={{ paddingBottom: "6px" }}>
+                  <CardBody style={{ paddingBottom: "1.5%" }}>
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-info">
