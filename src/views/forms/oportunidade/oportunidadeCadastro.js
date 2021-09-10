@@ -33,7 +33,8 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
-import { normalizeCnpj } from "~/normalize";
+import { isAfter, isBefore, isToday, parseISO } from "date-fns";
+import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import { store } from "~/store";
 import { oportRequest } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -117,7 +118,17 @@ export default function CadastroOport() {
           ...prevState,
           RepresentanteId: { value: result.data.RepresentanteId }
         }));
-        setData9(result.data.Campanhas);
+        setData9(
+          result.data.Campanhas.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+          )
+        );
       });
     }
     if (undNeg) {

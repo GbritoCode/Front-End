@@ -247,7 +247,9 @@ export default function CadastroFollowUps() {
           value: FUPCadastro.SegmentoId ? FUPCadastro.SegmentoId : ""
         },
         data: {
-          value: FUPCadastro.dataOport ? FUPCadastro.dataOport : ""
+          value: FUPCadastro.dataOport
+            ? FUPCadastro.dataOport
+            : `${year}-${month}-${date}`
         },
         desc: {
           value: FUPCadastro.desc ? FUPCadastro.desc : ""
@@ -443,31 +445,63 @@ export default function CadastroFollowUps() {
   };
   const handleSubmit = evt => {
     evt.preventDefault();
-    var aux = Object.entries(values);
-    const tamanho = aux.length;
+    var auxValues = Object.entries(values);
+    var auxOport = Object.entries(oportValues);
+    const tamanhoValues = auxValues.length;
+    const tamanhoOport = auxValues.length;
 
-    for (let i = 0; i < tamanho; i++) {
-      if (!(aux[i][1].error === "has-danger")) {
+    for (let i = 0; i < tamanhoValues; i++) {
+      if (!(auxValues[i][1].error === "has-danger")) {
         var valid = true;
       } else {
         valid = false;
         break;
       }
     }
-    for (let j = 0; j < tamanho; j++) {
-      if (!aux[j][1].optional === true) {
-        if (aux[j][1].value !== "") {
+    for (let i = 0; i < tamanhoOport; i++) {
+      if (!(auxOport[i][1].error === "has-danger")) {
+        var validOport = true;
+      } else {
+        validOport = false;
+        break;
+      }
+    }
+    for (let j = 0; j < tamanhoOport; j++) {
+      if (!auxValues[j][1].optional === true) {
+        if (auxValues[j][1].value !== "") {
           var filled = true;
         } else {
           filled = false;
-          setValues(prevState => ({
+          setOportValues(prevState => ({
             ...prevState,
-            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+            [auxOport[j][0]]: {
+              error: "has-danger",
+              message: "Campo obrigatório"
+            }
           }));
           break;
         }
       }
     }
+    for (let j = 0; j < tamanhoOport; j++) {
+      if (!auxOport[j][1].optional === true) {
+        if (auxOport[j][1].value !== "") {
+          var filledOport = true;
+        } else {
+          filledOport = false;
+          setOportValues(prevState => ({
+            ...prevState,
+            [auxOport[j][0]]: {
+              error: "has-danger",
+              message: "Campo obrigatório"
+            }
+          }));
+          break;
+        }
+      }
+    }
+    console.log(validOport);
+    console.log(filledOport);
 
     if (valid && filled) {
       dispatch(
@@ -488,22 +522,25 @@ export default function CadastroFollowUps() {
               ? values.motivo.value
               : null
           },
-          Oport: {
-            EmpresaId: values.empresaId.value,
-            ColabId: values.ColabId.value,
-            ClienteId: values.ClienteId.value,
-            contato: values.CliContId.value,
-            UndNegId: oportValues.UndNegId.value,
-            RecDespId: oportValues.RecDespId.value,
-            SegmentoId: oportValues.segmetId.value,
-            RepresentanteId: oportValues.RepresentanteId.value,
-            CampanhaId: campId,
-            data: oportValues.data.value,
-            fase: oportValues.fase.value,
-            cod: oportValues.cod.value,
-            desc: oportValues.desc.value,
-            narrativa: oportValues.narrativa.value
-          }
+          Oport:
+            validOport && filledOport
+              ? {
+                  EmpresaId: values.empresaId.value,
+                  ColabId: values.ColabId.value,
+                  ClienteId: values.ClienteId.value,
+                  contato: values.CliContId.value,
+                  UndNegId: oportValues.UndNegId.value,
+                  RecDespId: oportValues.RecDespId.value,
+                  SegmentoId: oportValues.segmetId.value,
+                  RepresentanteId: oportValues.RepresentanteId.value,
+                  CampanhaId: campId,
+                  data: oportValues.data.value,
+                  fase: oportValues.fase.value,
+                  cod: oportValues.cod.value,
+                  desc: oportValues.desc.value,
+                  narrativa: oportValues.narrativa.value
+                }
+              : null
         })
       );
     } else {

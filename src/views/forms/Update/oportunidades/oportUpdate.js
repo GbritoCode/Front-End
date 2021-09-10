@@ -44,7 +44,8 @@ import {
   PostAdd,
   Timeline
 } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import { isAfter, isBefore, isToday, parseISO } from "date-fns";
+import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
@@ -106,8 +107,17 @@ export default function UpdateOport() {
       setData7(response7.data);
       setData8(response8.data);
       setData9(
-        response2.data.find(arr => arr.id === response8.data.ClienteId)
-          .Campanhas
+        response2.data
+          .find(arr => arr.id === response8.data.ClienteId)
+          .Campanhas.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+          )
       );
       setValues(prevState => ({
         ...prevState,

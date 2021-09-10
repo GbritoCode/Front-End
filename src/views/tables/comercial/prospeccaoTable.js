@@ -28,7 +28,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { FilterList, Close } from "@material-ui/icons";
 import { isAfter, isBefore, isToday, parseISO } from "date-fns";
 import Modal from "~/components/Modal/modalLarge";
-import { normalizeCnpj } from "~/normalize";
+import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import api from "~/services/api";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import { store } from "~/store";
@@ -229,14 +229,17 @@ function ProspeccaoTable() {
             })
           );
       }
-
+      console.log(pt_brDateToEUADate(response.data[0].dataInic));
       setData(
         response.data
           .filter(
             arr =>
-              (!isAfter(new Date(), parseISO(arr.dataFim)) ||
-                isToday(parseISO(arr.dataFim))) &&
-              !isBefore(new Date(), parseISO(arr.dataInic))
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
           )
           .map((camp, key) => {
             return {
