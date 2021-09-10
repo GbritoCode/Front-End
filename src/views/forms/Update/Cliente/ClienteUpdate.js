@@ -714,9 +714,7 @@ function ClienteUpdatee() {
                                   style={{ float: "left", marginRight: "3%" }}
                                   fontSize="small"
                                 />
-                                <p style={{ paddingTop: "0.5%" }}>
-                                  Complemento
-                                </p>
+                                <p style={{ paddingTop: "2%" }}>Complemento</p>
                               </DropdownItem>
                             </Link>
                           </NavLink>
@@ -730,7 +728,7 @@ function ClienteUpdatee() {
                                   style={{ float: "left", marginRight: "3%" }}
                                   fontSize="small"
                                 />
-                                <p style={{ paddingTop: "0.5%" }}>
+                                <p style={{ paddingTop: "2%" }}>
                                   Receita/Despesa
                                 </p>
                               </DropdownItem>
@@ -748,7 +746,7 @@ function ClienteUpdatee() {
                                   style={{ float: "left", marginRight: "3%" }}
                                   fontSize="small"
                                 />
-                                <p style={{ paddingTop: "0.5%" }}>Contato</p>
+                                <p style={{ paddingTop: "2%" }}>Contato</p>
                               </DropdownItem>
                             </Link>
                           </NavLink>
@@ -761,7 +759,7 @@ function ClienteUpdatee() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Campanhas</p>
+                              <p style={{ paddingTop: "2%" }}>Campanhas</p>
                             </DropdownItem>
                           </NavLink>
                           <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
@@ -773,7 +771,7 @@ function ClienteUpdatee() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Informações</p>
+                              <p style={{ paddingTop: "2%" }}>Informações</p>
                             </DropdownItem>
                           </NavLink>
                         </DropdownMenu>

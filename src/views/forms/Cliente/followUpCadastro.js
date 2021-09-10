@@ -44,6 +44,7 @@ import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import {
+  Call,
   Check,
   Close,
   FormatListBulleted,
@@ -1377,7 +1378,7 @@ export default function CadastroFollowUps() {
                               style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
-                            <p style={{ paddingTop: "0.5%" }}>Oportunidade</p>
+                            <p style={{ paddingTop: "2%" }}>Oportunidade</p>
                           </DropdownItem>
                         </NavLink>
                         <NavLink
@@ -1418,7 +1419,7 @@ export default function CadastroFollowUps() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Timeline</p>
+                              <p style={{ paddingTop: "2%" }}>Timeline</p>
                             </DropdownItem>
                           </Link>{" "}
                         </NavLink>
@@ -1431,7 +1432,19 @@ export default function CadastroFollowUps() {
                               style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
-                            <p style={{ paddingTop: "0.5%" }}>Informações</p>
+                            <p style={{ paddingTop: "2%" }}>Informações</p>
+                          </DropdownItem>
+                        </NavLink>
+                        <NavLink onClick={() => setIsOpen(!isOpen)} tag="li">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <Call
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>Agendar Reunião</p>
                           </DropdownItem>
                         </NavLink>
                       </DropdownMenu>
@@ -1813,7 +1826,7 @@ export default function CadastroFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Agendar Reunião</Label>
+                          <Label>Reunião</Label>
                           <FormGroup className="has-label">
                             <InputGroup>
                               <Input
@@ -1825,23 +1838,10 @@ export default function CadastroFollowUps() {
                                 }
                                 placeholder={
                                   meetingValues.date.value === ""
-                                    ? "Agendar Reunião"
+                                    ? "Reunião"
                                     : `${meetingValues.date.value} | ${meetingValues.startTime.value} |${meetingValues.endTime.value}`
                                 }
                               />
-                              <InputGroupAddon
-                                className="appendCustom"
-                                addonType="append"
-                              >
-                                <Button
-                                  className={classNames(
-                                    "btn-icon btn-link like addon"
-                                  )}
-                                  onClick={() => setIsOpen(!isOpen)}
-                                >
-                                  <i className="tim-icons icon-email-85 addon" />
-                                </Button>
-                              </InputGroupAddon>
                             </InputGroup>
                           </FormGroup>
                         </Col>

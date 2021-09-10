@@ -223,7 +223,7 @@ class followUpTable extends Component {
                             style={{ float: "left", marginRight: "3%" }}
                             fontSize="small"
                           />
-                          <p style={{ paddingTop: "0.5%" }}>Oportunidade</p>
+                          <p style={{ paddingTop: "2%" }}>Oportunidade</p>
                         </DropdownItem>
                       </Link>
                     </NavLink>
@@ -239,7 +239,7 @@ class followUpTable extends Component {
                             style={{ float: "left", marginRight: "3%" }}
                             fontSize="small"
                           />
-                          <p style={{ paddingTop: "0.5%" }}>Informações</p>
+                          <p style={{ paddingTop: "2%" }}>Informações</p>
                         </DropdownItem>
                       </Link>
                     </NavLink>

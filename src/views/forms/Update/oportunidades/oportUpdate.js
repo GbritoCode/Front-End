@@ -325,7 +325,7 @@ export default function UpdateOport() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Cotação </p>
+                              <p style={{ paddingTop: "2%" }}>Cotação </p>
                             </DropdownItem>
                           </Link>
                         </NavLink>
@@ -348,7 +348,7 @@ export default function UpdateOport() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Recursos</p>
+                              <p style={{ paddingTop: "2%" }}>Recursos</p>
                             </DropdownItem>
                           </Link>
                         </NavLink>
@@ -372,7 +372,7 @@ export default function UpdateOport() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Parcelas</p>
+                              <p style={{ paddingTop: "2%" }}>Parcelas</p>
                             </DropdownItem>
                           </Link>
                         </NavLink>
@@ -396,7 +396,7 @@ export default function UpdateOport() {
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />
-                              <p style={{ paddingTop: "0.5%" }}>Resultados</p>
+                              <p style={{ paddingTop: "2%" }}>Resultados</p>
                             </DropdownItem>
                           </Link>
                         </NavLink>
