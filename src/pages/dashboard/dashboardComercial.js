@@ -718,7 +718,7 @@ export default function ComercialDashboard() {
                       <i className="tim-icons icon-send text-info" />{" "}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody style={{ padding: "1.35%" }}>
+                  <CardBody style={{ padding: "1.45%" }}>
                     <div className="chart-area">
                       <Bar
                         data={barChart_1.data(
