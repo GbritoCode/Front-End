@@ -42,7 +42,6 @@ import {
 } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
 
@@ -223,7 +222,7 @@ class followUpTable extends Component {
                             style={{ float: "left", marginRight: "3%" }}
                             fontSize="small"
                           />
-                          <p style={{ paddingTop: "2%" }}>Oportunidade</p>
+                          <p style={{ paddingTop: "2%" }}>TimeLine</p>
                         </DropdownItem>
                       </Link>
                     </NavLink>
@@ -239,14 +238,28 @@ class followUpTable extends Component {
                             style={{ float: "left", marginRight: "3%" }}
                             fontSize="small"
                           />
-                          <p style={{ paddingTop: "2%" }}>Informações</p>
+                          <p style={{ paddingTop: "2%" }}>Novo</p>
+                        </DropdownItem>
+                      </Link>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <ArrowBackIos
+                            style={{ float: "left", marginRight: "3%" }}
+                            fontSize="small"
+                          />
+                          <p style={{ paddingTop: "2%" }}>Novo</p>
                         </DropdownItem>
                       </Link>
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>
 
-                <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
+                {/* <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
                   <Tooltip title="Voltar">
                     <Button
                       style={{
@@ -258,7 +271,7 @@ class followUpTable extends Component {
                       <ArrowBackIos fontSize="small" />
                     </Button>
                   </Tooltip>
-                </Link>
+                </Link> */}
                 <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                 <p style={{ fontSize: 14 }}>
                   {this.state.cli === undefined ? "" : this.state.cli.nomeAbv}

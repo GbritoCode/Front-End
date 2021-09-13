@@ -43,7 +43,7 @@ import {
   HeadsetMic
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { getDaysInMonth } from "date-fns";
+import { getDaysInMonth, isAfter, isBefore, isToday, parseISO } from "date-fns";
 import { useDispatch } from "react-redux";
 import { store } from "~/store";
 
@@ -54,7 +54,7 @@ import { barChart_1, doughnutChart_1 } from "./chartsOptions";
 import history from "~/services/history";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
-import { normalizeDate } from "~/normalize";
+import { normalizeDate, pt_brDateToEUADate } from "~/normalize";
 import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
 export default function ComercialDashboard() {
@@ -289,7 +289,17 @@ export default function ComercialDashboard() {
       const { Colab } = store.getState().auth.user;
       if (Colab) {
         const response = await api.get("/campanha");
-        setData(response.data);
+        setData(
+          response.data.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+          )
+        );
         const dashFieldsAux = {};
         let array = [];
 
@@ -699,7 +709,7 @@ export default function ComercialDashboard() {
                 <Card className=" /*card-chart">
                   <CardHeader>
                     <p style={{ color: "#808080" }} className="card-category">
-                      Status
+                      Evolução Funil
                     </p>
                     <CardTitle
                       tag="h4"
@@ -708,7 +718,7 @@ export default function ComercialDashboard() {
                       <i className="tim-icons icon-send text-info" />{" "}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody>
+                  <CardBody style={{ paddingBottom: "2.5%" }}>
                     <div className="chart-area">
                       <Bar
                         data={barChart_1.data(

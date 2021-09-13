@@ -1374,7 +1374,7 @@ export default function CadastroFollowUps() {
                             style={{ paddingLeft: "3%" }}
                             className="nav-item"
                           >
-                            <InfoOutlined
+                            <FormatListBulleted
                               style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
@@ -1428,7 +1428,7 @@ export default function CadastroFollowUps() {
                             style={{ paddingLeft: "3%" }}
                             className="nav-item"
                           >
-                            <FormatListBulleted
+                            <InfoOutlined
                               style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
