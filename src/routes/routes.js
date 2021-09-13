@@ -738,7 +738,7 @@ const routes = [
     redirect: true,
     views: [
       {
-        path: "/tabelas/comercial/empresas/:campId/:inicDate/:endDate",
+        path: "/tabelas/comercial/empresas/:campId/:inicDate/:endDate/:type",
         name: "Empresas Incluídas",
         namePerfil: "Empresas Incluídas Tab",
         mini: "EMP",

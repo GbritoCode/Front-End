@@ -367,7 +367,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/tabelas/comercial/empresas/:campId/:inicDate/:endDate"
+        path="/tabelas/comercial/empresas/:campId/:inicDate/:endDate/:type"
         component={ComercialEmpresasIncluidasTable}
         isPrivate
       />

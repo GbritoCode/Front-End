@@ -36,6 +36,7 @@ import {
 
 import { Link } from "react-router-dom";
 import {
+  Business,
   Check,
   Close,
   DateRangeOutlined,
@@ -50,7 +51,7 @@ import { store } from "~/store";
 // core components
 // import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
-import { barChart_1, doughnutChart_1 } from "./chartsOptions";
+import { barChart_1, CliStatusChart, doughnutChart_1 } from "./chartsOptions";
 import history from "~/services/history";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
@@ -718,10 +719,10 @@ export default function ComercialDashboard() {
                       <i className="tim-icons icon-send text-info" />{" "}
                     </CardTitle>
                   </CardHeader>
-                  <CardBody style={{ padding: "1.45%" }}>
+                  <CardBody>
                     <div className="chart-area">
                       <Bar
-                        data={barChart_1.data(
+                        data={CliStatusChart.data(
                           [
                             "Qualificados",
                             "Informados",
@@ -737,14 +738,14 @@ export default function ComercialDashboard() {
                             cliStatusGraph.efetiv
                           ]
                         )}
-                        options={barChart_1.options}
+                        options={CliStatusChart.options}
                         onElementsClick={elems => {
                           // if required to build the URL, you can
                           // get datasetIndex and value index from an `elem`:
                           if (elems.length > 0) {
                             console.log(elems[0]._model.label);
                             return history.push(
-                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                              `tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/campCli`
                             );
                           }
                         }}
@@ -753,7 +754,48 @@ export default function ComercialDashboard() {
                   </CardBody>
                 </Card>
               </Col>
-              {/* <Col
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FinsMotivo") ===
+                      -1
+                    : false
+                }
+                lg="4"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Finalizados Por Motivo
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-simple-remove text-info" />{" "}
+                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Doughnut
+                        data={doughnutChart_1.data(
+                          Object.keys(dataForDoughnut).filter(
+                            arr => arr !== "reset"
+                          ),
+                          Object.values(dataForDoughnut).filter(
+                            arr => arr !== false && arr !== true
+                          )
+                        )}
+                        options={doughnutChart_1.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col
                 hidden={
                   dashFields[dataForTable.campId]
                     ? dashFields[dataForTable.campId].search("EmpIncluida") ===
@@ -784,7 +826,7 @@ export default function ComercialDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? miniChartData.cliJoinedCamp.rows.length
+                              ? miniChartData.createdCli.rows.length
                               : 0}
                           </CardTitle>
                         </div>
@@ -795,15 +837,15 @@ export default function ComercialDashboard() {
                     <hr />
                     <div className="stats">
                       <Link
-                        to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
+                        to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/created`}
                       >
                         <i className="tim-icons icon-refresh-01" /> Ver Empresas
                       </Link>
                     </div>
                   </CardFooter>
                 </Card>
-              </Col> */}
-              <Col md="4" sm="6">
+              </Col>
+              <Col lg="4" md="6">
                 <Card
                   hidden={
                     dashFields[dataForTable.campId]
@@ -811,9 +853,8 @@ export default function ComercialDashboard() {
                       : false
                   }
                   className="card-stats"
-                  style={{ marginBottom: "2%" }}
                 >
-                  <CardBody style={{ paddingBottom: "1.5%" }}>
+                  <CardBody>
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-primary">
@@ -850,6 +891,8 @@ export default function ComercialDashboard() {
                     </div>
                   </CardFooter>
                 </Card>
+              </Col>
+              <Col lg="4" md="6">
                 <Card
                   hidden={
                     dashFields[dataForTable.campId]
@@ -858,7 +901,7 @@ export default function ComercialDashboard() {
                   }
                   className="card-stats"
                 >
-                  <CardBody style={{ paddingBottom: "1.5%" }}>
+                  <CardBody>
                     <Row>
                       <Col xs="5">
                         <div className="info-icon text-center icon-info">
@@ -997,45 +1040,6 @@ export default function ComercialDashboard() {
                   </CardBody>
                 </Card>
               </Col> */}
-              <Col
-                hidden={
-                  dashFields[dataForTable.campId]
-                    ? dashFields[dataForTable.campId].search("FinsMotivo") ===
-                      -1
-                    : false
-                }
-                lg="4"
-              >
-                <Card className=" /*card-chart">
-                  <CardHeader>
-                    <p style={{ color: "#808080" }} className="card-category">
-                      Finalizados Por Motivo
-                    </p>
-                    <CardTitle
-                      tag="h4"
-                      style={{ color: "orange", fontSize: 20 }}
-                    >
-                      <i className="tim-icons icon-simple-remove text-info" />{" "}
-                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <div className="chart-area">
-                      <Doughnut
-                        data={doughnutChart_1.data(
-                          Object.keys(dataForDoughnut).filter(
-                            arr => arr !== "reset"
-                          ),
-                          Object.values(dataForDoughnut).filter(
-                            arr => arr !== false && arr !== true
-                          )
-                        )}
-                        options={doughnutChart_1.options}
-                      />
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
             </Row>
           </div>
         </>
