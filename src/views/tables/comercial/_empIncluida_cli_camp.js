@@ -32,7 +32,7 @@ import {
   FormGroup
 } from "reactstrap";
 
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ArrowBackIos, Close } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
@@ -50,7 +50,8 @@ function EmpresasIncluidasCliCamp() {
   document.body.classList.add("white-content");
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
-
+  const { search } = useLocation();
+  const status = new URLSearchParams(search).get("status");
   const [isOpen, setIsOpen] = useState();
   const [campData, setCampData] = useState();
   const [data, setData] = useState();
@@ -79,6 +80,25 @@ function EmpresasIncluidasCliCamp() {
 
   const history = useHistory();
   useEffect(() => {
+    var situation;
+    switch (status) {
+      case "Qualificadas":
+        situation = "createdAt";
+        break;
+      case "Informadas":
+        situation = "reuniaoAgend";
+        break;
+      case "Ativadas":
+        situation = "orcamentoSolict";
+        break;
+      case "Efetivadas":
+        situation = "efetivacao";
+        break;
+
+      default:
+        break;
+    }
+
     const { acessible } = store.getState().auth;
     const { id } = store.getState().auth.user.Colab;
     setColab(id);
@@ -101,64 +121,79 @@ function EmpresasIncluidasCliCamp() {
         desc: response1.data.desc
       });
       setData(
-        response.data.cliJoinedCamp.rows.map((camp, key) => {
-          return {
-            idd: key,
-            id: camp.id,
-            campanhaDesc: camp.Campanha.desc,
-            Cliente: camp.Cliente.nomeAbv,
-            setor: camp.Cliente.setor ? camp.Cliente.setor : "--",
-            cidade: camp.Cliente.CliComp.cidade,
-            uf: camp.Cliente.CliComp.uf,
-            ramo: camp.Cliente.ramo ? camp.Cliente.ramo : "--",
-            contNome: camp.Cliente.CliConts[0]
-              ? camp.Cliente.CliConts[0].nome
-              : "--",
-            // eslint-disable-next-line no-nested-ternary
-            contCargo: camp.Cliente.CliConts[0]
-              ? camp.Cliente.CliConts[0].cargo
-                ? camp.Cliente.CliConts[0].cargo
-                : "--"
-              : "--",
-            data: camp.createdAt,
-            actions: (
-              // we've added some custom button actions
-              <>
-                <div className="actions-right">
-                  <Tooltip title="Visualizar">
-                    <Button
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        setIsOpen(true);
-                        setValues({
-                          cnpj: normalizeCnpj(camp.Cliente.CNPJ),
-                          fantasia: camp.Cliente.fantasia,
-                          rzSoc: camp.Cliente.rzSoc,
-                          nomeAbv: camp.Cliente.nomeAbv,
-                          representante: camp.Cliente.Representante.nome,
-                          site: camp.Cliente.site,
-                          fone: normalizeFone(camp.Cliente.fone),
-                          atvPrincipal: camp.Cliente.atvPrincipal
-                        });
-                      }}
-                    >
-                      <i className="tim-icons icon-zoom-split" />
-                    </Button>
-                  </Tooltip>
+        situation !== ""
+          ? response.data.cliStatusPassing.rows
+              .filter(arr => {
+                const newDataInic = new Date(inicDate);
+                const newDataFim = new Date(endDate);
+                // if (newDataInic <= new Date(arr[situation]) <= newDataFim) {
+                //   return true;
+                // }
+                // return false;
+                return (
+                  newDataInic <= new Date(arr[situation]) &&
+                  new Date(arr[situation]) <= newDataFim
+                );
+              })
+              .map((camp, key) => {
+                return {
+                  idd: key,
+                  id: camp.id,
+                  campanhaDesc: camp.Campanha.desc,
+                  Cliente: camp.Cliente.nomeAbv,
+                  setor: camp.Cliente.setor ? camp.Cliente.setor : "--",
+                  cidade: camp.Cliente.CliComp.cidade,
+                  uf: camp.Cliente.CliComp.uf,
+                  ramo: camp.Cliente.ramo ? camp.Cliente.ramo : "--",
+                  contNome: camp.Cliente.CliConts[0]
+                    ? camp.Cliente.CliConts[0].nome
+                    : "--",
+                  // eslint-disable-next-line no-nested-ternary
+                  contCargo: camp.Cliente.CliConts[0]
+                    ? camp.Cliente.CliConts[0].cargo
+                      ? camp.Cliente.CliConts[0].cargo
+                      : "--"
+                    : "--",
+                  data: camp.createdAt,
+                  actions: (
+                    // we've added some custom button actions
+                    <>
+                      <div className="actions-right">
+                        <Tooltip title="Visualizar">
+                          <Button
+                            color="default"
+                            size="sm"
+                            className={classNames("btn-icon btn-link like")}
+                            onClick={() => {
+                              setIsOpen(true);
+                              setValues({
+                                cnpj: normalizeCnpj(camp.Cliente.CNPJ),
+                                fantasia: camp.Cliente.fantasia,
+                                rzSoc: camp.Cliente.rzSoc,
+                                nomeAbv: camp.Cliente.nomeAbv,
+                                representante: camp.Cliente.Representante.nome,
+                                site: camp.Cliente.site,
+                                fone: normalizeFone(camp.Cliente.fone),
+                                atvPrincipal: camp.Cliente.atvPrincipal
+                              });
+                            }}
+                          >
+                            <i className="tim-icons icon-zoom-split" />
+                          </Button>
+                        </Tooltip>
 
-                  {/* use this button to remove the data row */}
-                </div>
-              </>
-            )
-          };
-        })
+                        {/* use this button to remove the data row */}
+                      </div>
+                    </>
+                  )
+                };
+              })
+          : null
       );
       setIsLoading(false);
     }
     loadData();
-  }, [Colab, access, campId, dispatch, endDate, history, inicDate]);
+  }, [Colab, access, campId, dispatch, endDate, history, inicDate, status]);
 
   return (
     <>
@@ -309,7 +344,7 @@ function EmpresasIncluidasCliCamp() {
                       <img alt="Exportar para excel" src={iconExcel} />
                     </Tooltip>
                   </div>
-                  <h3 style={{ marginBottom: 0 }}>Empresas Qualificadas</h3>
+                  <h3 style={{ marginBottom: 0 }}>Empresas {status}</h3>
                   <p style={{ fontSize: 14 }}>
                     {campData.cod} | {campData.desc}
                   </p>

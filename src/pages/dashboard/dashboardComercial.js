@@ -724,10 +724,10 @@ export default function ComercialDashboard() {
                       <Bar
                         data={CliStatusChart.data(
                           [
-                            "Qualificados",
-                            "Informados",
-                            "Ativados",
-                            "Efetivados"
+                            "Qualificadas",
+                            "Informadas",
+                            "Ativadas",
+                            "Efetivadas"
                           ],
                           [
                             miniChartData
@@ -745,7 +745,7 @@ export default function ComercialDashboard() {
                           if (elems.length > 0) {
                             console.log(elems[0]._model.label);
                             return history.push(
-                              `tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/campCli`
+                              `tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/campCli/?status=${elems[0]._model.label}`
                             );
                           }
                         }}
