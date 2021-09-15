@@ -28,7 +28,16 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 // reactstrap components
-import { Badge, Card, CardBody, Row, Col, Button } from "reactstrap";
+import {
+  Badge,
+  Card,
+  CardBody,
+  Row,
+  Col,
+  Button,
+  CardHeader,
+  CardTitle
+} from "reactstrap";
 import { normalizeFone } from "~/normalize";
 import api from "~/services/api";
 import history from "~/services/history";
@@ -94,20 +103,35 @@ export default function FollowUpTimeline() {
       ) : (
         <>
           <div className="content">
-            <div style={{ marginBottom: "0px" }} className="header text-center">
+            {/* <div style={{ marginBottom: "0px" }} className="header text-center">
               <h3 className="title">Timeline</h3>
-              <Tooltip title="Voltar">
-                <Button
-                  style={{
-                    textAlign: "center"
-                  }}
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => history.goBack()}
-                >
-                  <ArrowBackIos />
-                </Button>
-              </Tooltip>
-            </div>
+
+            </div> */}
+            <Card className="card-chart">
+              <CardHeader>
+                <Row>
+                  <Col className="text-left" sm="12">
+                    <Tooltip title="Voltar">
+                      <Button
+                        style={{
+                          float: "right"
+                        }}
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => history.goBack()}
+                      >
+                        <ArrowBackIos />
+                      </Button>
+                    </Tooltip>
+
+                    <CardTitle style={{ marginBottom: 0 }} tag="h3">
+                      Timeline{" "}
+                    </CardTitle>
+                    {/* <p style={{ fontSize: 14 }}>
+                        </p> */}
+                  </Col>
+                </Row>
+              </CardHeader>
+            </Card>
             <Row>
               <Col md="12">
                 <Card className="card-timeline card-plain">
