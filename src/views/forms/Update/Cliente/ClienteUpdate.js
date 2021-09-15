@@ -51,6 +51,7 @@ import {
   InfoOutlined,
   PostAdd
 } from "@material-ui/icons";
+import { isBefore } from "date-fns";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
@@ -103,6 +104,13 @@ function ClienteUpdatee() {
         response.data.Campanhas.filter(
           arr => arr.Campanhas_Clientes.ClienteId === response.data.id
         ).map((camp, key) => {
+          let situation = true;
+          if (
+            isBefore(new Date(camp.dataFim), new Date()) ||
+            !camp.Campanhas_Clientes.ativo
+          ) {
+            situation = false;
+          }
           return {
             idd: key,
             id: camp.id,
@@ -116,9 +124,7 @@ function ClienteUpdatee() {
                 ? camp.FollowUps.find(arr => arr.ClienteId === response.data.id)
                     .dataContato
                 : "--",
-            situacao: camp.Campanhas_Clientes.ativo
-              ? "Em Prospecção"
-              : "Finalizado",
+            situacao: situation ? "Em Prospecção" : "Finalizado",
             created:
               camp.FollowUps.find(arr => arr.ClienteId === response.data.id) !==
               undefined

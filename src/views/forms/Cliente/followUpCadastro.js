@@ -60,7 +60,7 @@ import {
   Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeCnpj, normalizeDate, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpCadastro } from "~/store/modules/Cliente/actions";
@@ -1839,7 +1839,11 @@ export default function CadastroFollowUps() {
                                 placeholder={
                                   meetingValues.date.value === ""
                                     ? "Reunião"
-                                    : `${meetingValues.date.value} | ${meetingValues.startTime.value} |${meetingValues.endTime.value}`
+                                    : `${normalizeDate(
+                                        meetingValues.date.value
+                                      )} | ${meetingValues.startTime.value} |${
+                                        meetingValues.endTime.value
+                                      }`
                                 }
                               />
                             </InputGroup>

@@ -126,10 +126,6 @@ function EmpresasIncluidasCliCamp() {
               .filter(arr => {
                 const newDataInic = new Date(inicDate);
                 const newDataFim = new Date(endDate);
-                // if (newDataInic <= new Date(arr[situation]) <= newDataFim) {
-                //   return true;
-                // }
-                // return false;
                 return (
                   newDataInic <= new Date(arr[situation]) &&
                   new Date(arr[situation]) <= newDataFim
