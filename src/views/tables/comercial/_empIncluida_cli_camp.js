@@ -38,7 +38,7 @@ import { ArrowBackIos, Close } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import fileDownload from "js-file-download";
 import api from "~/services/api";
-import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeCnpj, normalizeDatetime, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 
 import iconExcel from "~/assets/img/iconExcel.png";
@@ -82,16 +82,16 @@ function EmpresasIncluidasCliCamp() {
   useEffect(() => {
     var situation;
     switch (status) {
-      case "Qualificadas":
-        situation = "createdAt";
+      case "Atraídas":
+        situation = "atraida";
         break;
-      case "Informadas":
+      case "Convertidas":
         situation = "reuniaoAgend";
         break;
       case "Ativadas":
         situation = "orcamentoSolict";
         break;
-      case "Efetivadas":
+      case "Alcançadas":
         situation = "efetivacao";
         break;
 
@@ -150,7 +150,7 @@ function EmpresasIncluidasCliCamp() {
                       ? camp.Cliente.CliConts[0].cargo
                       : "--"
                     : "--",
-                  data: camp.createdAt,
+                  data: normalizeDatetime(camp.createdAt),
                   actions: (
                     // we've added some custom button actions
                     <>

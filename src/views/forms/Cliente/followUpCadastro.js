@@ -75,7 +75,7 @@ import {
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
-
+  const [oportDisable, setOportDisable] = useState(true);
   const { cliId, campId } = useParams();
   const dispatch = useDispatch();
   const [timeline, setTimeLine] = useState(false);
@@ -155,6 +155,7 @@ export default function CadastroFollowUps() {
   const [contValues, setContValues] = useState(contSchema);
   const [meetingValues, setMeetingValues] = useState(meetingSchema);
   const [oportValues, setOportValues] = useState(oportSchema);
+
   useEffect(() => {
     const { empresa } = store.getState().auth;
     const { FUPCadastro } = store.getState().field;
@@ -331,7 +332,6 @@ export default function CadastroFollowUps() {
       notify();
     }
   };
-  console.log(oportValues);
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -365,7 +365,13 @@ export default function CadastroFollowUps() {
         motivo: { value: "", optional: true }
       }));
     }
+    if (value === "3") {
+      setOportDisable(false);
+    } else {
+      setOportDisable(true);
+    }
   };
+  console.log(oportDisable);
   const handleContatoChange = idd => {
     const cont = data3.find(arr => arr.id === parseInt(idd, 10));
     setMeetingValues(prevState => ({
@@ -524,7 +530,7 @@ export default function CadastroFollowUps() {
               : null
           },
           Oport:
-            validOport && filledOport
+            validOport && filledOport && !oportDisable
               ? {
                   EmpresaId: values.empresaId.value,
                   ColabId: values.ColabId.value,
@@ -1369,7 +1375,13 @@ export default function CadastroFollowUps() {
                         <div className="photo" />
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-navbar" right tag="ul">
-                        <NavLink onClick={() => setIsOpenOport(true)} tag="li">
+                        <NavLink
+                          id="oportLink"
+                          name="oportLink"
+                          disabled={oportDisable}
+                          onClick={() => setIsOpenOport(true)}
+                          tag="li"
+                        >
                           <DropdownItem
                             style={{ paddingLeft: "3%" }}
                             className="nav-item"
@@ -1791,6 +1803,7 @@ export default function CadastroFollowUps() {
                               <option value={1}>Retornar Contato</option>
                               <option value={2}>Agendar Reunião</option>
                               <option value={3}>Solicitar Orçamento</option>
+                              <option value={5}>Analisar Reuniao</option>
                               <option value={10}>Finalizar Prospecção</option>
                             </Input>
                             {values.proxPasso.error === "has-danger" ? (

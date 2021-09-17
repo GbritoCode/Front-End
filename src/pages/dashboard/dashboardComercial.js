@@ -83,6 +83,7 @@ export default function ComercialDashboard() {
     reset: true
   });
   const [cliStatusGraph, setCliStatusGraph] = useState({
+    atraiad: 0,
     reuniao: 0,
     orcamento: 0,
     efetiv: 0,
@@ -348,6 +349,7 @@ export default function ComercialDashboard() {
       dataForDoughnut.reset = true;
     }
     if (!cliStatusGraph.reset) {
+      cliStatusGraph.atraida = 0;
       cliStatusGraph.reuniao = 0;
       cliStatusGraph.orcamento = 0;
       cliStatusGraph.efetiv = 0;
@@ -417,6 +419,16 @@ export default function ComercialDashboard() {
         const newDataInic = new Date(dataInic);
         const newDataFim = new Date(dataFim);
         for (let i = 0; i < result.data.cliStatusPassing.rows.length; i += 1) {
+          if (result.data.cliStatusPassing.rows[i].atraida !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].atraida) <=
+              newDataFim
+            ) {
+              cliStatusGraph.atraida += 1;
+              cliStatusGraph.reset = false;
+            }
+          }
           if (result.data.cliStatusPassing.rows[i].reuniaoAgend !== null) {
             if (
               newDataInic <=
@@ -723,16 +735,9 @@ export default function ComercialDashboard() {
                     <div className="chart-area">
                       <Bar
                         data={CliStatusChart.data(
+                          ["Atraídas", "Convertidas", "Ativadas", "Alcançadas"],
                           [
-                            "Qualificadas",
-                            "Informadas",
-                            "Ativadas",
-                            "Efetivadas"
-                          ],
-                          [
-                            miniChartData
-                              ? miniChartData.cliJoinedCamp.rows.length
-                              : 0,
+                            cliStatusGraph.atraida,
                             cliStatusGraph.reuniao,
                             cliStatusGraph.orcamento,
                             cliStatusGraph.efetiv

@@ -80,7 +80,7 @@ export default function CadastroOport() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
-      const response2 = await api.get(`/cliente/?prospect=false`);
+      const response2 = await api.get(`/cliente/`);
       const response4 = await api.get(`/und_neg/`);
       const response5 = await api.get(`/rec_desp/?rec=true`);
       const response7 = await api.get(`/representante/`);
@@ -126,7 +126,8 @@ export default function CadastroOport() {
                 parseISO(pt_brDateToEUADate(arr.dataInic))
               ) ||
                 isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
-              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim))) &&
+              arr.Campanhas_Clientes.ativo
           )
         );
       });
@@ -138,6 +139,7 @@ export default function CadastroOport() {
     }
   }
 
+  console.log(data9);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -177,6 +179,49 @@ export default function CadastroOport() {
           ...prevState,
           [name]: { value: target, optional: true }
         }));
+        break;
+      case "campanha":
+        // eslint-disable-next-line no-case-declarations
+        const camp = data9.find(arr => arr.id === parseInt(target, 10));
+        if (
+          camp.FollowUps.some(
+            arr =>
+              arr.ClienteId === parseInt(values.ClienteId.value, 10) &&
+              arr.CampanhaId === camp.id &&
+              arr.proxPasso === 3
+          )
+        ) {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, optional: true }
+          }));
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: {
+              value: target,
+              error: "has-danger",
+              message:
+                "Esse Cliente não solicitou um orçamento nessa campanha, crie um FUP com essa ação",
+              optional: true
+            }
+          }));
+          options = {
+            place: "tr",
+            message: (
+              <div>
+                <div>
+                  Esse Cliente não Solicitou um Orçamento, crie um FUP com essa
+                  ação
+                </div>
+              </div>
+            ),
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            autoDismiss: 7
+          };
+          notify();
+        }
         break;
       case "text":
         setValues(prevState => ({
@@ -413,7 +458,7 @@ export default function CadastroOport() {
                           name="CampanhaId"
                           type="select"
                           onChange={event =>
-                            handleChange(event, "CampanhaId", "optional")
+                            handleChange(event, "CampanhaId", "campanha")
                           }
                           value={values.CampanhaId.value}
                         >

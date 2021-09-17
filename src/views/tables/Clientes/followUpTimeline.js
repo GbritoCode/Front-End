@@ -114,7 +114,8 @@ export default function FollowUpTimeline() {
                     <Tooltip title="Voltar">
                       <Button
                         style={{
-                          float: "right"
+                          float: "right",
+                          paddingBottom: "2%"
                         }}
                         className={classNames("btn-icon btn-link like")}
                         onClick={() => history.goBack()}

@@ -20,29 +20,17 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Button,
-  Input,
-  Label,
-  Row,
-  FormGroup
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ArrowBackIos, Close } from "@material-ui/icons";
+import { ArrowBackIos } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
-import { normalizeDate, normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeDate } from "~/normalize";
 import iconExcel from "~/assets/img/iconExcel.png";
-import { Footer, Header } from "~/components/Modal/modalStyles";
-import Modal from "~/components/Modal/modalLarge";
 
 /* eslint-disable eqeqeq */
 function ComercialEmpresasFimTable() {
@@ -51,31 +39,11 @@ function ComercialEmpresasFimTable() {
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
 
-  const [isOpen, setIsOpen] = useState();
   const [campData, setCampData] = useState();
   const [data, setData] = useState([]);
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
-  const stateSchema = {
-    empresaId: "",
-    cnpj: "",
-    rzSoc: "",
-    nomeAbv: "",
-    representante: "",
-    tipoComiss: "",
-    fone: "",
-    site: "",
-    atvPrincipal: "",
-    fantasia: "",
-    erp: "",
-    database: "",
-    ramo: "",
-    setor: "",
-    qtdFuncionarios: ""
-  };
-  const [values, setValues] = useState(stateSchema);
 
   const history = useHistory();
   useEffect(() => {
@@ -124,28 +92,19 @@ function ComercialEmpresasFimTable() {
               // we've added some custom button actions
               <>
                 <div className="actions-right">
-                  <Tooltip title="Visualizar">
-                    <Button
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        setIsOpen(true);
-                        setValues({
-                          cnpj: normalizeCnpj(fup.Cliente.CNPJ),
-                          fantasia: fup.Cliente.fantasia,
-                          rzSoc: fup.Cliente.rzSoc,
-                          nomeAbv: fup.Cliente.nomeAbv,
-                          representante: fup.Cliente.Representante.nome,
-                          site: fup.Cliente.site,
-                          fone: normalizeFone(fup.Cliente.fone),
-                          atvPrincipal: fup.Cliente.atvPrincipal
-                        });
-                      }}
-                    >
-                      <i className="tim-icons icon-zoom-split" />
-                    </Button>
-                  </Tooltip>
+                  <Link
+                    to={`/timeline/cliente/followUps/${fup.Cliente.id}/${campId}`}
+                  >
+                    <Tooltip title="Visualizar">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <i className="tim-icons icon-zoom-split" />
+                      </Button>
+                    </Tooltip>
+                  </Link>
 
                   {/* use this button to remove the data row */}
                 </div>
@@ -166,7 +125,7 @@ function ComercialEmpresasFimTable() {
       ) : (
         <>
           <div className="content">
-            <Modal
+            {/* <Modal
               onClose={() => {
                 setIsOpen(!isOpen);
               }}
@@ -268,7 +227,7 @@ function ComercialEmpresasFimTable() {
                 </Col>
               </Row>
               <Footer />
-            </Modal>
+            </Modal> */}
 
             <Col xs={12} md={12}>
               <Card>

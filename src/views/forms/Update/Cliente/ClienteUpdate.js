@@ -593,7 +593,7 @@ function ClienteUpdatee() {
                     <Check fontSize="large" />
                   </Button>
                 </Tooltip>{" "}
-                <h3 style={{ marginBottom: 0 }}>Dados Opcionais</h3>
+                <h3 style={{ marginBottom: 0 }}>Informações Opcionais</h3>
               </Header>
               <Row>
                 <Col sm="4">

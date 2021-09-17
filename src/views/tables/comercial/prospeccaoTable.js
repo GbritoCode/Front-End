@@ -133,6 +133,20 @@ function ProspeccaoTable() {
                         <i className="tim-icons icon-simple-add" />
                       </Button>
                     </Tooltip>
+                    <Tooltip title="Timeline">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.push(
+                            `/timeline/cliente/followUps/${client.id}/${camp.id}`
+                          );
+                        }}
+                      >
+                        <i className="tim-icons icon-zoom-split" />
+                      </Button>
+                    </Tooltip>
                     <Tooltip title="Ver Follow Ups">
                       <Button
                         color="default"
@@ -207,6 +221,20 @@ function ProspeccaoTable() {
                         }}
                       >
                         <i className="tim-icons icon-simple-add" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Timeline">
+                      <Button
+                        color="default"
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                        onClick={() => {
+                          history.push(
+                            `/timeline/cliente/followUps/${client.id}/${camp.id}`
+                          );
+                        }}
+                      >
+                        <i className="tim-icons icon-zoom-split" />
                       </Button>
                     </Tooltip>
                     <Tooltip title="Ver Follow Ups">
@@ -415,6 +443,22 @@ function ProspeccaoTable() {
                                         <i className="tim-icons icon-simple-add" />
                                       </Button>
                                     </Tooltip>
+                                    <Tooltip title="Timeline">
+                                      <Button
+                                        color="default"
+                                        size="sm"
+                                        className={classNames(
+                                          "btn-icon btn-link like"
+                                        )}
+                                        onClick={() => {
+                                          history.push(
+                                            `/timeline/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                          );
+                                        }}
+                                      >
+                                        <i className="tim-icons icon-zoom-split" />
+                                      </Button>
+                                    </Tooltip>
                                     <Tooltip title="Ver Follow Ups">
                                       <Button
                                         color="default"
@@ -510,6 +554,22 @@ function ProspeccaoTable() {
                                         }}
                                       >
                                         <i className="tim-icons icon-simple-add" />
+                                      </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Timeline">
+                                      <Button
+                                        color="default"
+                                        size="sm"
+                                        className={classNames(
+                                          "btn-icon btn-link like"
+                                        )}
+                                        onClick={() => {
+                                          history.push(
+                                            `/timeline/cliente/followUps/${client.id}/${rowInfo.original.id}`
+                                          );
+                                        }}
+                                      >
+                                        <i className="tim-icons icon-zoom-split" />
                                       </Button>
                                     </Tooltip>
                                     <Tooltip title="Ver Follow Ups">
