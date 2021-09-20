@@ -361,6 +361,11 @@ function ProspeccaoTable() {
                 getTdProps={(state, rowInfo) => {
                   return {
                     onClick: () => {
+                      window.history.pushState(
+                        "",
+                        "",
+                        `/tabelas/prospeccao/campanha/${rowInfo.original.id}`
+                      );
                       setCampanha({
                         cod: rowInfo.original.cod,
                         desc: rowInfo.original.desc

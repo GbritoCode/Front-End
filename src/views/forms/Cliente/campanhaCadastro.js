@@ -32,13 +32,25 @@ import {
   Col,
   InputGroup,
   InputGroupAddon,
-  CustomInput
+  CustomInput,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Check, Close, DoneAll, InfoOutlined, List } from "@material-ui/icons";
+import {
+  Check,
+  Close,
+  DoneAll,
+  InfoOutlined,
+  List,
+  PostAdd
+} from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaCadastro } from "~/store/modules/Cliente/actions";
@@ -602,32 +614,48 @@ export default function CadastroCampanha() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <Tooltip title="Info" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        onClick={() => setIsOpenFields(true)}
-                        className={classNames("btn-icon btn-link like")}
+                    <UncontrolledDropdown style={{ float: "right" }}>
+                      <DropdownToggle
+                        style={{ paddingLeft: "0px" }}
+                        caret
+                        color="default"
+                        data-toggle="dropdown"
+                        nav
+                        onClick={e => e.preventDefault()}
                       >
-                        <InfoOutlined />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip
-                      title="Relacionamentos Campanha"
-                      placement="top"
-                      interactive
-                    >
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                        onClick={() => setIsOpen(!isOpen)}
-                      >
-                        <List fontSize="large" />
-                      </Button>
-                    </Tooltip>
+                        <PostAdd />
+                        <div className="photo" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-navbar" right tag="ul">
+                        <NavLink onClick={() => setIsOpenFields(true)} tag="li">
+                          {" "}
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <InfoOutlined
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>
+                              Indicadores Dashboard
+                            </p>
+                          </DropdownItem>
+                        </NavLink>
+                        <NavLink onClick={() => setIsOpen(!isOpen)} tag="li">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <List
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>Empresas</p>
+                          </DropdownItem>
+                        </NavLink>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                     <CardTitle tag="h4">Campanha</CardTitle>
                   </CardHeader>
                   <CardBody>

@@ -29,15 +29,20 @@ import {
   Row,
   Label,
   FormGroup,
-  Input
+  Input,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
-  ArrowBackIos,
   Close,
   InsertEmoticon,
+  PostAdd,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
@@ -528,42 +533,69 @@ function ComercialFUPsTotalTable() {
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
-                  <Link to="/dashboardComercial">
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    <Tooltip
-                      title="Exportar para excel"
-                      placement="top"
-                      interactive
-                      onClick={async () => {
-                        await api
-                          .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`,
-                            {
-                              responseType: "blob"
-                            }
-                          )
-                          .then(response =>
-                            fileDownload(
-                              response.data,
-                              "Relatório Follow Ups.xlsx"
-                            )
-                          );
-                      }}
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
                     >
-                      <img alt="Exportar para excel" src={iconExcel} />
-                    </Tooltip>
-                  </div>
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      <NavLink
+                        onClick={async () => {
+                          await api
+                            .get(
+                              `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`,
+                              {
+                                responseType: "blob"
+                              }
+                            )
+                            .then(response =>
+                              fileDownload(
+                                response.data,
+                                "Relatório Follow Ups.xlsx"
+                              )
+                            );
+                        }}
+                        tag="li"
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <div style={{ float: "left", marginRight: "3%" }}>
+                            <img alt="Exportar para excel" src={iconExcel} />
+                          </div>
+                          <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+                        </DropdownItem>
+                      </NavLink>
+                      <NavLink tag="li">
+                        <Link to="/dashboardComercial">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <span
+                              style={{
+                                float: "left",
+                                marginRight: "3%",
+                                fontSize: "1.25rem"
+                              }}
+                              className="material-icons"
+                            >
+                              logout
+                            </span>
+                            <p style={{ paddingTop: "2%" }}>Voltar</p>
+                          </DropdownItem>
+                        </Link>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                   <h3 style={{ marginBottom: 0 }}>Follow Ups</h3>
                   <p style={{ fontSize: 14 }}>
                     {campData.cod} | {campData.desc}

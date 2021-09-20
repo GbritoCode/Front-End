@@ -27,12 +27,16 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
-import { Close, Message, ArrowBackIos } from "@material-ui/icons";
+import { Close, Message, PostAdd } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { Tooltip } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
@@ -79,7 +83,11 @@ class RecursoTable extends Component {
   loadData = async () => {
     const { id } = this.props.match.params;
     const response = await api.get(`/recurso/${id}`);
-    this.setState({ hiddenButton: response.data[0].Oportunidade.fase >= 5 });
+    this.setState({
+      hiddenButton: response.data[0]
+        ? response.data[0].Oportunidade.fase >= 5
+        : false
+    });
     this.setState({
       data: response.data.map((recurso, key) => {
         return {
@@ -203,34 +211,60 @@ class RecursoTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Recursos
-                  {this.state.hiddenButton ? (
-                    <></>
-                  ) : (
-                    <Link to={`/cadastro/oportunidade/recurso/${id}`}>
-                      <Tooltip title="Novo" placement="top" interactive>
-                        <Button
-                          style={{
-                            float: "right"
-                          }}
-                          className={classNames("btn-icon btn-link like")}
-                        >
-                          <AddIcon fontSize="large" />
-                        </Button>
-                      </Tooltip>
-                    </Link>
-                  )}
-                  <Link to={`/update/oportunidade/oport/${id}`}>
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
+                    >
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      {this.state.hiddenButton ? (
+                        <></>
+                      ) : (
+                        <NavLink tag="li">
+                          <Link to={`/cadastro/oportunidade/recurso/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <AddIcon
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Novo</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+                      )}
+
+                      <NavLink tag="li">
+                        <Link to={`/update/oportunidade/oport/${id}`}>
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <span
+                              style={{
+                                float: "left",
+                                marginRight: "3%",
+                                fontSize: "1.25rem"
+                              }}
+                              className="material-icons"
+                            >
+                              logout
+                            </span>
+                            <p style={{ paddingTop: "2%" }}>Voltar</p>
+                          </DropdownItem>
+                        </Link>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                 </CardTitle>
               </CardHeader>
               <CardBody>

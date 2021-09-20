@@ -20,11 +20,22 @@ import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Button,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
+} from "reactstrap";
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ArrowBackIos } from "@material-ui/icons";
+import { PostAdd } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import fileDownload from "js-file-download";
 import api from "~/services/api";
@@ -232,42 +243,70 @@ function ComercialEmpresasFimTable() {
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
-                  <Link to="/dashboardComercial">
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    <Tooltip
-                      title="Exportar para excel"
-                      placement="top"
-                      interactive
-                      onClick={async () => {
-                        await api
-                          .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=true`,
-                            {
-                              responseType: "blob"
-                            }
-                          )
-                          .then(response =>
-                            fileDownload(
-                              response.data,
-                              "Relatório Empresas Finalizadas.xlsx"
-                            )
-                          );
-                      }}
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
                     >
-                      <img alt="Exportar para excel" src={iconExcel} />
-                    </Tooltip>
-                  </div>
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      <NavLink
+                        onClick={async () => {
+                          await api
+                            .get(
+                              `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=true`,
+                              {
+                                responseType: "blob"
+                              }
+                            )
+                            .then(response =>
+                              fileDownload(
+                                response.data,
+                                "Relatório Empresas Finalizadas.xlsx"
+                              )
+                            );
+                        }}
+                        tag="li"
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <div style={{ float: "left", marginRight: "3%" }}>
+                            <img alt="Exportar para excel" src={iconExcel} />
+                          </div>
+                          <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+                        </DropdownItem>
+                      </NavLink>
+                      <NavLink tag="li">
+                        <Link to="/dashboardComercial">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <span
+                              style={{
+                                float: "left",
+                                marginRight: "3%",
+                                fontSize: "1.25rem"
+                              }}
+                              className="material-icons"
+                            >
+                              logout
+                            </span>
+                            <p style={{ paddingTop: "2%" }}>Voltar</p>
+                          </DropdownItem>
+                        </Link>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+
                   <h3 style={{ marginBottom: 0 }}>Empresas Finalizadas</h3>
                   <p style={{ fontSize: 14 }}>
                     {campData.cod} | {campData.desc}

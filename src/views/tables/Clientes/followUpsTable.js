@@ -33,13 +33,7 @@ import {
   NavLink,
   DropdownMenu
 } from "reactstrap";
-import {
-  ArrowBackIos,
-  Close,
-  Message,
-  PostAdd,
-  Timeline
-} from "@material-ui/icons";
+import { Close, Message, PostAdd, Timeline } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import AddIcon from "@material-ui/icons/Add";
@@ -248,11 +242,17 @@ class followUpTable extends Component {
                           style={{ paddingLeft: "3%" }}
                           className="nav-item"
                         >
-                          <ArrowBackIos
-                            style={{ float: "left", marginRight: "3%" }}
-                            fontSize="small"
-                          />
-                          <p style={{ paddingTop: "2%" }}>Novo</p>
+                          <span
+                            style={{
+                              float: "left",
+                              marginRight: "3%",
+                              fontSize: "1.25rem"
+                            }}
+                            className="material-icons"
+                          >
+                            logout
+                          </span>
+                          <p style={{ paddingTop: "2%" }}>Voltar</p>
                         </DropdownItem>
                       </Link>
                     </NavLink>

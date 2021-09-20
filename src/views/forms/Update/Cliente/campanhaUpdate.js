@@ -33,13 +33,18 @@ import {
   Col,
   InputGroup,
   InputGroupAddon,
-  CustomInput
+  CustomInput,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
-import { Check, Close, InfoOutlined, List } from "@material-ui/icons";
+import { Check, Close, InfoOutlined, List, PostAdd } from "@material-ui/icons";
 import { store } from "~/store";
 import api from "~/services/api";
 import { campanhaUpdate } from "~/store/modules/Cliente/actions";
@@ -341,29 +346,51 @@ export default function UpdateCampanha() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <Tooltip title="Info" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        onClick={() => setIsOpenFields(true)}
-                        className={classNames("btn-icon btn-link like")}
+                    <UncontrolledDropdown style={{ float: "right" }}>
+                      <DropdownToggle
+                        style={{ paddingLeft: "0px" }}
+                        caret
+                        color="default"
+                        data-toggle="dropdown"
+                        nav
+                        onClick={e => e.preventDefault()}
                       >
-                        <InfoOutlined />
-                      </Button>
-                    </Tooltip>
-                    <Link to={`/tabelas/campanhas/clientes/${data1.id}`}>
-                      <Tooltip title="Empresas" placement="top" interactive>
-                        <Button
-                          style={{
-                            float: "right"
-                          }}
-                          className={classNames("btn-icon btn-link like")}
-                        >
-                          <List fontSize="large" />
-                        </Button>
-                      </Tooltip>
-                    </Link>
+                        <PostAdd />
+                        <div className="photo" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-navbar" right tag="ul">
+                        <NavLink onClick={() => setIsOpenFields(true)} tag="li">
+                          {" "}
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <InfoOutlined
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>
+                              Indicadores Dashboard
+                            </p>
+                          </DropdownItem>
+                        </NavLink>
+                        <NavLink tag="li">
+                          <Link to={`/tabelas/campanhas/clientes/${data1.id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <List
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Empresas</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+
                     <CardTitle tag="h4">Campanha</CardTitle>
                   </CardHeader>
                   <CardBody>

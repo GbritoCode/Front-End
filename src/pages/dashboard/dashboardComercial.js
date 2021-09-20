@@ -83,7 +83,7 @@ export default function ComercialDashboard() {
     reset: true
   });
   const [cliStatusGraph, setCliStatusGraph] = useState({
-    atraiad: 0,
+    atraida: 0,
     reuniao: 0,
     orcamento: 0,
     efetiv: 0,
@@ -831,7 +831,7 @@ export default function ComercialDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? miniChartData.createdCli.rows.length
+                              ? miniChartData.cliJoinedCamp.rows.length
                               : 0}
                           </CardTitle>
                         </div>

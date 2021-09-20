@@ -29,12 +29,17 @@ import {
   Input,
   Label,
   Row,
-  FormGroup
+  FormGroup,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ArrowBackIos, Close } from "@material-ui/icons";
+import { Close, PostAdd } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import fileDownload from "js-file-download";
 import api from "~/services/api";
@@ -96,24 +101,26 @@ function EmpresasIncluidasCreatedCli() {
       );
 
       setData(
-        response.data.createdCli.rows.map((cli, key) => {
+        response.data.cliJoinedCamp.rows.map((campCli, key) => {
           return {
             idd: key,
-            id: cli.id,
-            campanhaDesc: cli.Campanhas.desc,
-            Cliente: cli.nomeAbv,
-            setor: cli.setor ? cli.setor : "--",
-            cidade: cli.CliComp.cidade,
-            uf: cli.CliComp.uf,
-            ramo: cli.ramo ? cli.ramo : "--",
-            contNome: cli.CliConts[0] ? cli.CliConts[0].nome : "--",
+            id: campCli.Cliente.id,
+            campanhaDesc: campCli.Campanha.desc,
+            Cliente: campCli.Cliente.nomeAbv,
+            setor: campCli.Cliente.setor ? campCli.Cliente.setor : "--",
+            cidade: campCli.Cliente.CliComp.cidade,
+            uf: campCli.Cliente.CliComp.uf,
+            ramo: campCli.Cliente.ramo ? campCli.Cliente.ramo : "--",
+            contNome: campCli.Cliente.CliConts[0]
+              ? campCli.Cliente.CliConts[0].nome
+              : "--",
             // eslint-disable-next-line no-nested-ternary
-            contCargo: cli.CliConts[0]
-              ? cli.CliConts[0].cargo
-                ? cli.CliConts[0].cargo
+            contCargo: campCli.Cliente.CliConts[0]
+              ? campCli.Cliente.CliConts[0].cargo
+                ? campCli.Cliente.CliConts[0].cargo
                 : "--"
               : "--",
-            data: normalizeDatetime(cli.createdAt),
+            data: normalizeDatetime(campCli.Cliente.createdAt),
             actions: (
               // we've added some custom button actions
               <>
@@ -126,14 +133,14 @@ function EmpresasIncluidasCreatedCli() {
                       onClick={() => {
                         setIsOpen(true);
                         setValues({
-                          cnpj: normalizeCnpj(cli.CNPJ),
-                          fantasia: cli.fantasia,
-                          rzSoc: cli.rzSoc,
-                          nomeAbv: cli.nomeAbv,
-                          representante: cli.Representante.nome,
-                          site: cli.site,
-                          fone: normalizeFone(cli.fone),
-                          atvPrincipal: cli.atvPrincipal
+                          cnpj: normalizeCnpj(campCli.Cliente.CNPJ),
+                          fantasia: campCli.Cliente.fantasia,
+                          rzSoc: campCli.Cliente.rzSoc,
+                          nomeAbv: campCli.Cliente.nomeAbv,
+                          representante: campCli.Cliente.Representante.nome,
+                          site: campCli.Cliente.site,
+                          fone: normalizeFone(campCli.Cliente.fone),
+                          atvPrincipal: campCli.Cliente.atvPrincipal
                         });
                       }}
                     >
@@ -266,42 +273,70 @@ function EmpresasIncluidasCreatedCli() {
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
-                  <Link to="/dashboardComercial">
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    <Tooltip
-                      title="Exportar para excel"
-                      placement="top"
-                      interactive
-                      onClick={async () => {
-                        await api
-                          .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`,
-                            {
-                              responseType: "blob"
-                            }
-                          )
-                          .then(response =>
-                            fileDownload(
-                              response.data,
-                              "Relatório Empresas Incluídas.xlsx"
-                            )
-                          );
-                      }}
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
                     >
-                      <img alt="Exportar para excel" src={iconExcel} />
-                    </Tooltip>
-                  </div>
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      <NavLink
+                        onClick={async () => {
+                          await api
+                            .get(
+                              `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`,
+                              {
+                                responseType: "blob"
+                              }
+                            )
+                            .then(response =>
+                              fileDownload(
+                                response.data,
+                                "Relatório Empresas Incluídas.xlsx"
+                              )
+                            );
+                        }}
+                        tag="li"
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <div style={{ float: "left", marginRight: "3%" }}>
+                            <img alt="Exportar para excel" src={iconExcel} />
+                          </div>
+                          <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+                        </DropdownItem>
+                      </NavLink>
+                      <NavLink tag="li">
+                        <Link to="/dashboardComercial">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <span
+                              style={{
+                                float: "left",
+                                marginRight: "3%",
+                                fontSize: "1.25rem"
+                              }}
+                              className="material-icons"
+                            >
+                              logout
+                            </span>
+                            <p style={{ paddingTop: "2%" }}>Voltar</p>
+                          </DropdownItem>
+                        </Link>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+
                   <h3 style={{ marginBottom: 0 }}>Empresas Incluídas</h3>
                 </CardHeader>
                 <CardBody>

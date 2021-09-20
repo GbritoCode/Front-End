@@ -454,8 +454,28 @@ export default function CadastroFollowUps() {
     evt.preventDefault();
     var auxValues = Object.entries(values);
     var auxOport = Object.entries(oportValues);
+    var auxMeeting = Object.entries(meetingValues);
     const tamanhoValues = auxValues.length;
     const tamanhoOport = auxValues.length;
+    const tamanhoMeeting = auxMeeting.length;
+
+    for (let j = 0; j < tamanhoMeeting; j++) {
+      if (!auxMeeting[j][1].optional === true) {
+        if (auxMeeting[j][1].value !== "") {
+          var meetingFilled = true;
+        } else {
+          meetingFilled = false;
+          setMeetingValues(prevState => ({
+            ...prevState,
+            [auxMeeting[j][0]]: {
+              error: "has-danger",
+              message: "Campo obrigatório"
+            }
+          }));
+          break;
+        }
+      }
+    }
 
     for (let i = 0; i < tamanhoValues; i++) {
       if (!(auxValues[i][1].error === "has-danger")) {
@@ -507,9 +527,13 @@ export default function CadastroFollowUps() {
         }
       }
     }
-    console.log(validOport);
-    console.log(filledOport);
-
+    if (meetingFilled) {
+      // await api.post(`/followUp/meeting/?Cc=${""}`, {
+      //   meetingValues,
+      //   string,
+      //   tagsinput
+      // });
+    }
     if (valid && filled) {
       dispatch(
         followUpCadastro({
@@ -547,7 +571,14 @@ export default function CadastroFollowUps() {
                   desc: oportValues.desc.value,
                   narrativa: oportValues.narrativa.value
                 }
-              : null
+              : null,
+          Meeting: meetingFilled
+            ? {
+                meetingValues,
+                string,
+                tagsinput
+              }
+            : null
         })
       );
     } else {
@@ -642,33 +673,7 @@ export default function CadastroFollowUps() {
                       float: "right"
                     }}
                     onClick={async () => {
-                      var aux = Object.entries(meetingValues);
-                      const tamanho = aux.length;
-                      for (let j = 0; j < tamanho; j++) {
-                        if (!aux[j][1].optional === true) {
-                          if (aux[j][1].value !== "") {
-                            var meetingFilled = true;
-                          } else {
-                            meetingFilled = false;
-                            setMeetingValues(prevState => ({
-                              ...prevState,
-                              [aux[j][0]]: {
-                                error: "has-danger",
-                                message: "Campo obrigatório"
-                              }
-                            }));
-                            break;
-                          }
-                        }
-                      }
-                      if (meetingFilled) {
-                        await api.post(`/followUp/meeting/?Cc=${""}`, {
-                          meetingValues,
-                          string,
-                          tagsinput
-                        });
-                        setIsOpen(false);
-                      }
+                      setIsOpen(false);
                     }}
                     className={classNames("btn-icon btn-link like")}
                   >

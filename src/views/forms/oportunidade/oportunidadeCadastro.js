@@ -182,45 +182,52 @@ export default function CadastroOport() {
         break;
       case "campanha":
         // eslint-disable-next-line no-case-declarations
-        const camp = data9.find(arr => arr.id === parseInt(target, 10));
-        if (
-          camp.FollowUps.some(
-            arr =>
-              arr.ClienteId === parseInt(values.ClienteId.value, 10) &&
-              arr.CampanhaId === camp.id &&
-              arr.proxPasso === 3
-          )
-        ) {
+        if (target !== "") {
+          const camp = data9.find(arr => arr.id === parseInt(target, 10));
+          if (
+            camp.FollowUps.some(
+              arr =>
+                arr.ClienteId === parseInt(values.ClienteId.value, 10) &&
+                arr.CampanhaId === camp.id &&
+                arr.proxPasso === 3
+            )
+          ) {
+            setValues(prevState => ({
+              ...prevState,
+              [name]: { value: target, optional: true }
+            }));
+          } else {
+            setValues(prevState => ({
+              ...prevState,
+              [name]: {
+                value: target,
+                error: "has-danger",
+                message:
+                  "Esse Cliente não solicitou um orçamento nessa campanha, crie um FUP com essa ação",
+                optional: true
+              }
+            }));
+            options = {
+              place: "tr",
+              message: (
+                <div>
+                  <div>
+                    Esse Cliente não Solicitou um Orçamento, crie um FUP com
+                    essa ação
+                  </div>
+                </div>
+              ),
+              type: "danger",
+              icon: "tim-icons icon-alert-circle-exc",
+              autoDismiss: 7
+            };
+            notify();
+          }
+        } else {
           setValues(prevState => ({
             ...prevState,
             [name]: { value: target, optional: true }
           }));
-        } else {
-          setValues(prevState => ({
-            ...prevState,
-            [name]: {
-              value: target,
-              error: "has-danger",
-              message:
-                "Esse Cliente não solicitou um orçamento nessa campanha, crie um FUP com essa ação",
-              optional: true
-            }
-          }));
-          options = {
-            place: "tr",
-            message: (
-              <div>
-                <div>
-                  Esse Cliente não Solicitou um Orçamento, crie um FUP com essa
-                  ação
-                </div>
-              </div>
-            ),
-            type: "danger",
-            icon: "tim-icons icon-alert-circle-exc",
-            autoDismiss: 7
-          };
-          notify();
         }
         break;
       case "text":

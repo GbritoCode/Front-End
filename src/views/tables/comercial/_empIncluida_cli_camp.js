@@ -34,14 +34,12 @@ import {
 
 import { Link, useHistory, useParams, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ArrowBackIos, Close } from "@material-ui/icons";
+import { Close } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { normalizeCnpj, normalizeDatetime, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 
-import iconExcel from "~/assets/img/iconExcel.png";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
 /* eslint-disable eqeqeq */
@@ -312,34 +310,11 @@ function EmpresasIncluidasCliCamp() {
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos />
+                        <span className="material-icons">logout</span>{" "}
                       </Button>
                     </Tooltip>
                   </Link>
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    <Tooltip
-                      title="Exportar para excel"
-                      placement="top"
-                      interactive
-                      onClick={async () => {
-                        await api
-                          .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`,
-                            {
-                              responseType: "blob"
-                            }
-                          )
-                          .then(response =>
-                            fileDownload(
-                              response.data,
-                              "Relatório Empresas Incluídas.xlsx"
-                            )
-                          );
-                      }}
-                    >
-                      <img alt="Exportar para excel" src={iconExcel} />
-                    </Tooltip>
-                  </div>
+
                   <h3 style={{ marginBottom: 0 }}>Empresas {status}</h3>
                   <p style={{ fontSize: 14 }}>
                     {campData.cod} | {campData.desc}
