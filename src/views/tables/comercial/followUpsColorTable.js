@@ -170,20 +170,19 @@ function ProspeccaoTable() {
         );
       access === "acessoTotal" &&
         setData2(
-          camp.Clientes.filter(
-            arr =>
+          camp.Clientes.filter(arr => {
+            console.log(arr);
+            console.log(arr.FollowUps);
+
+            console.log("------");
+            console.log("------");
+            console.log("------");
+            return (
               arr.Campanhas_Clientes.ativo === true &&
               arr.FollowUps[0].distanceFromToday <= maxDays &&
               arr.FollowUps[0].distanceFromToday >= minDays
-          ).map((client, key) => {
-            console.log(client);
-            console.log(client.FollowUps);
-            console.log(
-              client.FollowUps.find(arr => arr.CampanhaId === camp.id)
             );
-            console.log("------");
-            console.log("------");
-            console.log("------");
+          }).map((client, key) => {
             return {
               idd: key,
               id: client.id,
