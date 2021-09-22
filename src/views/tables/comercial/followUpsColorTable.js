@@ -176,10 +176,11 @@ function ProspeccaoTable() {
               arr.FollowUps[0].distanceFromToday <= maxDays &&
               arr.FollowUps[0].distanceFromToday >= minDays
           ).map((client, key) => {
+            console.log(client);
+            console.log(client.FollowUps);
             console.log(
               client.FollowUps.find(arr => arr.CampanhaId === camp.id)
             );
-            console.log(client);
             console.log("------");
             console.log("------");
             console.log("------");
