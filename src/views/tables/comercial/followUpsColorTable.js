@@ -176,6 +176,13 @@ function ProspeccaoTable() {
               arr.FollowUps[0].distanceFromToday <= maxDays &&
               arr.FollowUps[0].distanceFromToday >= minDays
           ).map((client, key) => {
+            console.log(
+              client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+            );
+            console.log(client);
+            console.log("------");
+            console.log("------");
+            console.log("------");
             return {
               idd: key,
               id: client.id,
@@ -198,11 +205,8 @@ function ProspeccaoTable() {
               situacao: checkSituacao(
                 client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
                   undefined
-                  ? client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
-                    undefined
-                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
-                        .distanceFromToday
-                    : "--"
+                  ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+                      .distanceFromToday
                   : "--"
               ),
               daysFromStart:

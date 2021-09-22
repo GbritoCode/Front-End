@@ -107,7 +107,7 @@ export default function CadastroOport() {
             RepresentanteId: client.RepresentanteId,
             Representante: client.Representante.nome,
             EmpresaId: client.EmpresaId,
-            prospect: client.prospect
+            prospect: client.prospect ? "Prospect" : "Cliente"
           };
         })
       );
@@ -341,7 +341,7 @@ export default function CadastroOport() {
         >
           <Header>
             {" "}
-            <h4 className="modalHeader">Responsável</h4>
+            <h4 className="modalHeader">Empresa</h4>
           </Header>
 
           <ReactTable
@@ -398,6 +398,10 @@ export default function CadastroOport() {
               {
                 Header: "Representante",
                 accessor: "Representante"
+              },
+              {
+                Header: "Tipo",
+                accessor: "prospect"
               }
             ]}
             defaultPageSize={5}
@@ -424,7 +428,7 @@ export default function CadastroOport() {
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md="4">
-                      <Label>Cliente</Label>
+                      <Label>Empresa</Label>
                       <FormGroup
                         className={`has-label ${values.ClienteId.error}`}
                       >
@@ -436,7 +440,7 @@ export default function CadastroOport() {
                             onChange={event =>
                               handleChange(event, "ColabId", "text")
                             }
-                            placeholder="Selecione o Responsável"
+                            placeholder="Selecione a Empresa"
                           />
                           <InputGroupAddon
                             className="appendCustom"

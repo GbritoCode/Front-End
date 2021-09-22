@@ -60,7 +60,9 @@ export default function ForgotPass() {
               </CardHeader>
               <CardBody>
                 <p style={{ justifyContent: "center", textAlign: "center" }}>
-                  Verifique o email {email} para visualizar os dados de acesso
+                  Um e-mail foi enviado para o seu endereço de e-mail com sua
+                  nova credencial de acesso!
+                  {/* Verifique o email {email} para visualizar os dados de acesso */}
                 </p>
               </CardBody>
               <CardFooter>
@@ -107,6 +109,17 @@ export default function ForgotPass() {
                   <CardTitle tag="h2">Recuperar Senha</CardTitle>
                 </CardHeader>
                 <CardBody>
+                  <p
+                    style={{
+                      justifyContent: "center",
+                      textAlign: "center",
+                      marginBottom: "1rem"
+                    }}
+                  >
+                    Informe o e-mail utilizado para acesso para receber uma nova
+                    credencial!
+                    {/* Verifique o email {email} para visualizar os dados de acesso */}
+                  </p>
                   <InputGroup
                     className={classnames({
                       "input-group-focus": emailFocus
