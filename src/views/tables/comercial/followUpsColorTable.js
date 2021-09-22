@@ -198,8 +198,11 @@ function ProspeccaoTable() {
               situacao: checkSituacao(
                 client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
                   undefined
-                  ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
-                      .distanceFromToday
+                  ? client.FollowUps.find(arr => arr.CampanhaId === camp.id) !==
+                    undefined
+                    ? client.FollowUps.find(arr => arr.CampanhaId === camp.id)
+                        .distanceFromToday
+                    : "--"
                   : "--"
               ),
               daysFromStart:
