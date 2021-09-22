@@ -172,112 +172,129 @@ function SegmentoUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>Unidade de Negócio</Label>
-                      <FormGroup
-                        className={`has-label ${values.UndNegId.error}`}
-                      >
-                        <Input
-                          name="UndNegId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "UndNegId", "text")
-                          }
-                          value={values.UndNegId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione a unidade de negócio{" "}
-                          </option>
-                          {data1.map(undNeg => (
-                            <option value={undNeg.id}>
+                      <Row>
+                        <Col md="4">
+                          <Label>Unidade de Negócio</Label>
+                          <FormGroup
+                            className={`has-label ${values.UndNegId.error}`}
+                          >
+                            <Input
+                              name="UndNegId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "UndNegId", "text")
+                              }
+                              value={values.UndNegId.value}
+                            >
                               {" "}
-                              {undNeg.descUndNeg}{" "}
-                            </option>
-                          ))}
-                        </Input>{" "}
-                        {values.UndNegId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.UndNegId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
-                      <Label>Produto</Label>
-                      <FormGroup
-                        className={`has-label ${values.ProdutoId.error}`}
-                      >
-                        <Input
-                          name="ProdutoId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ProdutoId", "text")
-                          }
-                          value={values.ProdutoId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o produto{" "}
-                          </option>
-                          {data2.map(prodt => (
-                            <option value={prodt.id}>
+                              <option disabled value="">
+                                {" "}
+                                Selecione a unidade de negócio{" "}
+                              </option>
+                              {data1.map(undNeg => (
+                                <option value={undNeg.id}>
+                                  {" "}
+                                  {undNeg.descUndNeg}{" "}
+                                </option>
+                              ))}
+                            </Input>{" "}
+                            {values.UndNegId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.UndNegId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Produto</Label>
+                          <FormGroup
+                            className={`has-label ${values.ProdutoId.error}`}
+                          >
+                            <Input
+                              name="ProdutoId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "ProdutoId", "text")
+                              }
+                              value={values.ProdutoId.value}
+                            >
                               {" "}
-                              {prodt.descProdt}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.ProdutoId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ProdutoId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
+                              <option disabled value="">
+                                {" "}
+                                Selecione o produto{" "}
+                              </option>
+                              {data2.map(prodt => (
+                                <option value={prodt.id}>
+                                  {" "}
+                                  {prodt.descProdt}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.ProdutoId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ProdutoId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Área</Label>
+                          <FormGroup
+                            className={`has-label ${values.AreaId.error}`}
+                          >
+                            <Input
+                              name="AreaId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "AreaId", "text")
+                              }
+                              value={values.AreaId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a área{" "}
+                              </option>
+                              {data3.map(area => (
+                                <option value={area.id}>
+                                  {" "}
+                                  {area.descArea}{" "}
+                                </option>
+                              ))}
+                            </Input>{" "}
+                            {values.AreaId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.AreaId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Descrição do Segmento</Label>
+                          <FormGroup
+                            className={`has-label ${values.descSegmt.error}`}
+                          >
+                            <Input
+                              name="descSegmt"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "descSegmt", "text")
+                              }
+                              value={values.descSegmt.value}
+                            />{" "}
+                            {values.descSegmt.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.descSegmt.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4" />
+                        <Col md="4" />
+                      </Row>
 
-                      <Label>Área</Label>
-                      <FormGroup className={`has-label ${values.AreaId.error}`}>
-                        <Input
-                          name="AreaId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "AreaId", "text")
-                          }
-                          value={values.AreaId.value}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione a área{" "}
-                          </option>
-                          {data3.map(area => (
-                            <option value={area.id}> {area.descArea} </option>
-                          ))}
-                        </Input>{" "}
-                        {values.AreaId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.AreaId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-
-                      <Label>Descrição do Segmento</Label>
-                      <FormGroup
-                        className={`has-label ${values.descSegmt.error}`}
-                      >
-                        <Input
-                          name="descSegmt"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "descSegmt", "text")
-                          }
-                          value={values.descSegmt.value}
-                        />{" "}
-                        {values.descSegmt.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.descSegmt.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
                       <Link to="/tabelas/general/segmento">
                         <Button
                           style={{

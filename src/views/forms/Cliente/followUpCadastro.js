@@ -71,6 +71,7 @@ import {
   clearFields,
   FUPCadastroFields
 } from "~/store/modules/keepingFields/actions";
+import history from "~/services/history";
 
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
@@ -1909,31 +1910,34 @@ export default function CadastroFollowUps() {
                           size="large"
                         />
                       </Button>
-                      <Link
+                      {/* <Link
                         to={`/tabelas/cliente/followUps/${cliId}/${campId}`}
+                      > */}
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33,
+                          float: "left"
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => {
+                          history.goBack();
+                        }}
                       >
-                        <Button
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33,
+                            paddingBottom: 4,
+                            paddingRight: 1,
                             float: "left"
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1,
-                              float: "left"
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
+                      {/* </Link> */}
                     </Form>
                   </CardBody>
                 </Card>

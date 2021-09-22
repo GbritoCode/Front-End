@@ -25,7 +25,6 @@ import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
-import { ArrowBackIos } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 import { store } from "~/store";
@@ -313,7 +312,7 @@ function ProspeccaoTable() {
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos />
+                        <span className="material-icons">logout</span>{" "}
                       </Button>
                     </Tooltip>
                   </Link>

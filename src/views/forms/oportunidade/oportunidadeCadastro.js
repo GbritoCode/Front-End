@@ -16,6 +16,8 @@
 */
 import React, { useRef, useEffect, useState } from "react";
 
+import classNames from "classnames";
+import ReactTable from "react-table-v6";
 // reactstrap components
 import {
   Button,
@@ -28,7 +30,9 @@ import {
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  InputGroup,
+  InputGroupAddon
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
@@ -38,11 +42,14 @@ import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import { store } from "~/store";
 import { oportRequest } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
+import Modal from "~/components/Modal/modalLarge";
+import { Footer, Header } from "~/components/Modal/modalStyles";
 
 export default function CadastroOport() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -86,10 +93,28 @@ export default function CadastroOport() {
       const response7 = await api.get(`/representante/`);
       const response8 = await api.get(`/oportunidade/?one=true`);
       setData1(response1.data);
-      setData2(response2.data);
+      setData2(
+        response2.data.map((client, key) => {
+          return {
+            idd: key,
+            id: client.id,
+            CNPJ: normalizeCnpj(client.CNPJ),
+            nomeAbv: client.nomeAbv,
+            contNome:
+              client.CliConts.length === 0 ? "--" : client.CliConts[0].nome,
+            contEmail:
+              client.CliConts.length === 0 ? "--" : client.CliConts[0].email,
+            RepresentanteId: client.RepresentanteId,
+            Representante: client.Representante.nome,
+            EmpresaId: client.EmpresaId,
+            prospect: client.prospect
+          };
+        })
+      );
       setData4(response4.data);
       setData5(response5.data);
       setData7(response7.data);
+
       if (response8.data.length !== 0) {
         var zerofilled = `0000${response8.data[0].id + 1}`.slice(-4);
       } else {
@@ -308,6 +333,87 @@ export default function CadastroOport() {
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
+        <Modal
+          onClose={() => {
+            setIsOpen(false);
+          }}
+          open={isOpen}
+        >
+          <Header>
+            {" "}
+            <h4 className="modalHeader">Responsável</h4>
+          </Header>
+
+          <ReactTable
+            data={data2}
+            getTdProps={(state, rowInfo) => {
+              return {
+                onClick: () => {
+                  setValues(prevState => ({
+                    ...prevState,
+                    ClienteId: {
+                      value: rowInfo.original.id
+                    }
+                  }));
+                  document.getElementsByName("Cliente")[0].value =
+                    rowInfo.original.nomeAbv;
+                  getDynamicData(rowInfo.original.id, null);
+                  setIsOpen(false);
+                }
+              };
+            }}
+            filterable
+            defaultFilterMethod={(filter, row) => {
+              const id = filter.pivotId || filter.id;
+              return row[id] !== undefined
+                ? String(row[id])
+                    .toLowerCase()
+                    .includes(filter.value.toLowerCase())
+                : true;
+            }}
+            previousText="Anterior"
+            nextText="Próximo"
+            loadingText="Carregando"
+            noDataText="Dados não encontrados"
+            pageText="Página"
+            ofText="de"
+            rowsText="Linhas"
+            columns={[
+              {
+                Header: "CNPJ",
+                accessor: "CNPJ"
+              },
+              {
+                Header: "Nome Abreviado",
+                accessor: "nomeAbv"
+              },
+              {
+                Header: "Contato",
+                accessor: "contNome"
+              },
+              {
+                Header: "Email",
+                accessor: "contEmail"
+              },
+              {
+                Header: "Representante",
+                accessor: "Representante"
+              }
+            ]}
+            defaultPageSize={5}
+            className="-striped -highlight"
+          />
+
+          <Footer />
+        </Modal>
+
+        {/*
+  --------------------------
+  --------------------------
+  --------------------------
+  --------------------------
+            */}
+
         <Row>
           <Col md="12">
             <Card>
@@ -322,30 +428,30 @@ export default function CadastroOport() {
                       <FormGroup
                         className={`has-label ${values.ClienteId.error}`}
                       >
-                        <Input
-                          name="ClienteId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ClienteId", "text")
-                          }
-                          value={values.ClienteId.value}
-                          onChangeCapture={e => {
-                            getDynamicData(e.target.value, null);
-                          }}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o cliente{" "}
-                          </option>
-                          {data2.map(ClienteId => (
-                            <option value={ClienteId.id}>
-                              {" "}
-                              {ClienteId.nomeAbv} -{" "}
-                              {normalizeCnpj(ClienteId.CNPJ)}{" "}
-                            </option>
-                          ))}
-                        </Input>
+                        <InputGroup>
+                          <Input
+                            disabled
+                            name="Cliente"
+                            type="text"
+                            onChange={event =>
+                              handleChange(event, "ColabId", "text")
+                            }
+                            placeholder="Selecione o Responsável"
+                          />
+                          <InputGroupAddon
+                            className="appendCustom"
+                            addonType="append"
+                          >
+                            <Button
+                              className={classNames(
+                                "btn-icon btn-link like addon"
+                              )}
+                              onClick={() => setIsOpen(!isOpen)}
+                            >
+                              <i className="tim-icons icon-zoom-split addon" />
+                            </Button>
+                          </InputGroupAddon>
+                        </InputGroup>
                         {values.ClienteId.error === "has-danger" ? (
                           <Label className="error">
                             {values.ClienteId.message}

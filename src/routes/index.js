@@ -447,7 +447,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/cliente/comp_update/:id"
+        path="/cliente/comp_update/:id/:prospect"
         component={CliCompUpdate}
         isPrivate
       />

@@ -685,8 +685,6 @@ export default function ComercialDashboard() {
                         <CardTitle style={{ marginBottom: 0 }} tag="h3">
                           {campData.desc ? campData.desc : "--"}
                         </CardTitle>
-                        {/* <p style={{ fontSize: 14 }}>
-                        </p> */}
                         <p style={{ fontSize: 14 }}>
                           {campData.dataInic
                             ? normalizeDate(campData.dataInic)

@@ -17,7 +17,6 @@
 import { Tooltip } from "@material-ui/core";
 import classNames from "classnames";
 import {
-  ArrowBackIos,
   MoodSharp,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
@@ -47,13 +46,39 @@ export default function FollowUpTimeline() {
   const { cliId, campId } = useParams();
 
   const [data, setData] = useState([]);
+  const [title, setTitle] = useState({
+    camp: "",
+    cli: ""
+  });
   const [isLoading, setIsLoading] = useState(true);
-
+  const checkAcao = value => {
+    switch (value) {
+      case 1:
+        return "Retornar Contato";
+      case 2:
+        return "Agendar Reunião";
+      case 3:
+        return "Solicitar Orçamento";
+      case 4:
+        return "Iniciar Contato";
+      case 5:
+        return "Analisar Reunião";
+      case 10:
+        return "Finalizar";
+      default:
+    }
+  };
   useEffect(() => {
     async function loadData() {
       const response = await api.get(
         `/followUp/${cliId}/false/?ClienteId=${cliId}&CampanhaId=${campId}`
       );
+      const response2 = await api.get("/cliente");
+      const response3 = await api.get("/campanha");
+      setTitle({
+        cli: response2.data.find(arr => arr.id === parseInt(cliId, 10)).nomeAbv,
+        camp: response3.data.find(arr => arr.id === parseInt(campId, 10)).desc
+      });
       setData(response.data);
       setIsLoading(false);
     }
@@ -120,15 +145,16 @@ export default function FollowUpTimeline() {
                         className={classNames("btn-icon btn-link like")}
                         onClick={() => history.goBack()}
                       >
-                        <ArrowBackIos />
+                        <span className="material-icons">logout</span>{" "}
                       </Button>
                     </Tooltip>
 
                     <CardTitle style={{ marginBottom: 0 }} tag="h3">
-                      Timeline{" "}
+                      {title.camp ? title.camp : "--"}
                     </CardTitle>
-                    {/* <p style={{ fontSize: 14 }}>
-                        </p> */}
+                    <p style={{ fontSize: 14 }}>
+                      {title.cli ? title.cli : "--"}{" "}
+                    </p>
                   </Col>
                 </Row>
               </CardHeader>
@@ -203,6 +229,21 @@ export default function FollowUpTimeline() {
                                     <h6 style={{ color: "grey", marginTop: 0 }}>
                                       <i className="ti-time" />
                                       {followUp.dataProxContato}
+                                    </h6>
+                                  </Col>
+                                  <Col md="4">
+                                    <h5
+                                      style={{
+                                        color: "#1d8cf8",
+                                        marginBottom: 0,
+                                        marginTop: 10
+                                      }}
+                                    >
+                                      Ação
+                                    </h5>
+                                    <h6 style={{ color: "grey", marginTop: 0 }}>
+                                      <i className="ti-time" />
+                                      {checkAcao(followUp.proxPasso)}
                                     </h6>
                                   </Col>
                                 </Row>

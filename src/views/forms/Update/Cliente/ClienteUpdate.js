@@ -711,7 +711,7 @@ function ClienteUpdatee() {
                           tag="ul"
                         >
                           <NavLink tag="li">
-                            <Link to={`/cliente/comp_update/${id}`}>
+                            <Link to={`/cliente/comp_update/${id}/${prospect}`}>
                               <DropdownItem
                                 style={{ paddingLeft: "3%" }}
                                 className="nav-item"

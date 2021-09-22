@@ -100,6 +100,8 @@ function ComercialFUPsTotalTable() {
         return "Solicitar Orçamento";
       case 4:
         return "Iniciar Contato";
+      case 5:
+        return "Analisar Reunião";
       case 10:
         return "Finalizar";
       default:

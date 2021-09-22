@@ -62,7 +62,7 @@ export default function CliCompUpdatee() {
   const [optional, setOptional] = useState(optionalSchema);
 
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id, prospect } = useParams();
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/cliente/complem/1/${id}`);
@@ -217,7 +217,11 @@ export default function CliCompUpdatee() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <h3 style={{ marginBottom: 0 }}>Complemento de Cliente</h3>
+                    <h3 style={{ marginBottom: 0 }}>
+                      {prospect === "true"
+                        ? "Complemento de Prospect"
+                        : "Complemento de Cliente"}
+                    </h3>
                     <p style={{ fontSize: 11 }}>{data2.rzSoc}</p>
                     <p style={{ fontSize: 11 }}>{normalizeCnpj(data2.CNPJ)}</p>
                   </CardHeader>
@@ -469,7 +473,7 @@ export default function CliCompUpdatee() {
                         />
                       </Button>
                       <Link
-                        to={`/cliente_update/${values.ClienteId.value}/false`}
+                        to={`/cliente_update/${values.ClienteId.value}/${prospect}`}
                       >
                         <Button
                           style={{

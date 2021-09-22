@@ -119,10 +119,10 @@ export default function UpdateCampanha() {
   }
 
   const handleSwitchChange = (checked, field) => {
-    if (checked && dashFields.some(arr => arr === field)) {
+    if (checked && dashFields[field]) {
       setString(`${string}${field},`);
     }
-    if (!checked && dashFields.some(arr => arr === field)) {
+    if (!checked && dashFields[field]) {
       setString(string.replace(`${field},`, ""));
     }
   };
@@ -369,9 +369,7 @@ export default function UpdateCampanha() {
                               style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
-                            <p style={{ paddingTop: "2%" }}>
-                              Indicadores Dashboard
-                            </p>
+                            <p style={{ paddingTop: "2%" }}>Dashboard</p>
                           </DropdownItem>
                         </NavLink>
                         <NavLink tag="li">

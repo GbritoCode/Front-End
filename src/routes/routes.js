@@ -876,7 +876,7 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/cliente/comp_update/:id",
+        path: "/cliente/comp_update/:id/:prospect",
         name: "Atualizar Complemento do Cliente",
         namePerfil: "Atualizar Complemento do Cliente Cad",
         mini: "RF",

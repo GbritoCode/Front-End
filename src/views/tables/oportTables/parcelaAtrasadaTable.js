@@ -21,11 +21,15 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
-import { Close, Message, ArrowBackIos } from "@material-ui/icons";
+import { Close, Message, PostAdd } from "@material-ui/icons";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 
 import { Tooltip } from "@material-ui/core";
 import ReactExport from "react-export-excel";
@@ -245,21 +249,50 @@ class ParcelaAtrasadaTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Parcelas Atrasadas
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    {this.checkData()}
-                  </div>{" "}
-                  <Link to="/dashboardGerencial">
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
+                    >
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      <NavLink tag="li">
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <div style={{ float: "left", marginRight: "3%" }}>
+                            {this.checkData()}
+                          </div>
+                          <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+                        </DropdownItem>
+                      </NavLink>
+                      <NavLink onClick={() => history.goBack()} tag="li">
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <span
+                            style={{
+                              float: "left",
+                              marginRight: "3%",
+                              fontSize: "1.25rem"
+                            }}
+                            className="material-icons"
+                          >
+                            logout
+                          </span>
+                          <p style={{ paddingTop: "2%" }}>Voltar</p>
+                        </DropdownItem>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                 </CardTitle>
               </CardHeader>
               <CardBody>

@@ -85,9 +85,12 @@ export default function CadastroCampanha() {
     FupsTot: "Follow Ups",
     EmpFin: "Empresas Finalizadas",
     FupsProx: "Follow Ups em Aberto",
-    FinsMotivo: "Finalizações por Motivo"
+    FinsMotivo: "Finalizações por Motivo",
+    EmpIncluida: "Empresas Incluídas"
   });
-  let string = "EmpIncluida,FupsTot,EmpFin,FupsProx,StatusCli,FinsMotivo,";
+  const [string, setString] = useState(
+    "EmpIncluida,FupsTot,EmpFin,FupsProx,StatusCli,FinsMotivo,"
+  );
 
   const [values, setValues] = useState(stateSchema);
   const [isOpen, setIsOpen] = useState(false);
@@ -182,7 +185,7 @@ export default function CadastroCampanha() {
   }, []);
 
   var options = {};
-
+  console.log(string);
   const notifyElment = useRef(null);
   function notify() {
     notifyElment.current.notificationAlert(options);
@@ -197,10 +200,10 @@ export default function CadastroCampanha() {
 
   const handleSwitchChange = (checked, field) => {
     if (checked && string.search(field) === -1) {
-      string += `${field},`;
+      setString(`${string}${field},`);
     }
     if (!checked && string.search(field) > -1) {
-      string = string.replace(`${field},`, "");
+      setString(string.replace(`${field},`, ""));
     }
   };
 
@@ -222,7 +225,6 @@ export default function CadastroCampanha() {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
-    console.log(aux);
     for (let i = 0; i < tamanho; i++) {
       if (!(aux[i][1].error === "has-danger")) {
         var valid = true;
@@ -256,7 +258,7 @@ export default function CadastroCampanha() {
           dataInic: values.dataInic.value,
           dataFim: values.dataFim.value,
           ColabId: values.ColabId.value,
-          Objetivo: values.objetivo.value,
+          objetivo: values.objetivo.value,
           dashFields: string
         })
       );
@@ -637,9 +639,7 @@ export default function CadastroCampanha() {
                               style={{ float: "left", marginRight: "3%" }}
                               fontSize="small"
                             />
-                            <p style={{ paddingTop: "2%" }}>
-                              Indicadores Dashboard
-                            </p>
+                            <p style={{ paddingTop: "2%" }}>Dashboard</p>
                           </DropdownItem>
                         </NavLink>
                         <NavLink onClick={() => setIsOpen(!isOpen)} tag="li">

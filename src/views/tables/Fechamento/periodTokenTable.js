@@ -32,11 +32,10 @@ import {
   Label
 } from "reactstrap";
 
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Close, Message } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
 import { toast } from "react-toastify";
 import { normalizeCpf } from "~/normalize";
 import api from "~/services/api";
@@ -265,21 +264,7 @@ function PeriodTokenTable() {
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>
-              <CardTitle tag="h4">
-                Liberar Períodos
-                <Link to="/cadastro/oportunidade/oport">
-                  <Tooltip title="Novo" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AddIcon fontSize="large" />
-                    </Button>
-                  </Tooltip>
-                </Link>
-              </CardTitle>
+              <CardTitle tag="h4">Liberar Períodos</CardTitle>
             </CardHeader>
             <CardBody>
               <ReactTable
