@@ -85,7 +85,6 @@ function ProspeccaoTable() {
                 arr => arr.CampanhaId === parseInt(campId, 10)
               );
       }
-      console.log(camp);
       setCampanha({ cod: camp.cod, desc: camp.desc });
       access === "acessoRestrito" &&
         setData2(
@@ -171,12 +170,6 @@ function ProspeccaoTable() {
       access === "acessoTotal" &&
         setData2(
           camp.Clientes.filter(arr => {
-            console.log(arr);
-            console.log(arr.FollowUps);
-
-            console.log("------");
-            console.log("------");
-            console.log("------");
             return (
               arr.Campanhas_Clientes.ativo === true &&
               (arr.FollowUps[0] ? arr.FollowUps[0].distanceFromToday : 99999) <=
