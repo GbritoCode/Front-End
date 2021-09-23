@@ -56,7 +56,7 @@ export default function ForgotPass() {
             <Card hidden={status !== "sent"} className="card-login card-white">
               <CardHeader>
                 <img alt="..." src={require("assets/img/card-info.png")} />
-                <CardTitle style={{ color: "#868686" }} tag="h2">
+                <CardTitle style={{ color: "rgb(80 80 80)" }} tag="h2">
                   Recuperar Senha
                 </CardTitle>
               </CardHeader>
@@ -65,7 +65,7 @@ export default function ForgotPass() {
                   style={{
                     justifyContent: "center",
                     textAlign: "center",
-                    color: "#868686"
+                    color: "rgb(80 80 80)"
                   }}
                 >
                   Um e-mail foi enviado para o seu endereço de e-mail com sua
@@ -92,7 +92,7 @@ export default function ForgotPass() {
             >
               <CardHeader>
                 <img alt="..." src={require("assets/img/card-info.png")} />
-                <CardTitle style={{ color: "#868686" }} tag="h2">
+                <CardTitle style={{ color: "rgb(80 80 80)" }} tag="h2">
                   Recuperar Senha
                 </CardTitle>
               </CardHeader>
@@ -116,7 +116,7 @@ export default function ForgotPass() {
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle style={{ color: "#868686" }} tag="h2">
+                  <CardTitle style={{ color: "rgb(80 80 80)" }} tag="h2">
                     Recuperar Senha
                   </CardTitle>
                 </CardHeader>
@@ -126,7 +126,7 @@ export default function ForgotPass() {
                       justifyContent: "center",
                       textAlign: "center",
                       marginBottom: "1rem",
-                      color: "#868686"
+                      color: "rgb(80 80 80)"
                     }}
                   >
                     Informe o e-mail utilizado no login para receber uma nova

@@ -71,7 +71,9 @@ export default function SignIn() {
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle tag="h1">Conta</CardTitle>
+                  <CardTitle style={{ color: "rgb(80 80 80)" }} tag="h2">
+                    Conta
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <InputGroup
