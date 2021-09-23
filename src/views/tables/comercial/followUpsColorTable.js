@@ -92,8 +92,11 @@ function ProspeccaoTable() {
             arr =>
               arr.Representante.ColabId === Colab &&
               arr.Campanhas_Clientes.ativo === true &&
-              arr.FollowUps[0].distanceFromToday <= maxDays &&
-              arr.FollowUps[0].distanceFromToday >= minDays
+              (arr.FollowUps[0] ? arr.FollowUps[0].distanceFromToday : 99999) <=
+                maxDays &&
+              (arr.FollowUps[0]
+                ? arr.FollowUps[0].distanceFromToday
+                : -99999) >= minDays
           ).map((client, key) => {
             return {
               idd: key,
