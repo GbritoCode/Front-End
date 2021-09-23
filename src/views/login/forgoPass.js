@@ -56,10 +56,18 @@ export default function ForgotPass() {
             <Card hidden={status !== "sent"} className="card-login card-white">
               <CardHeader>
                 <img alt="..." src={require("assets/img/card-info.png")} />
-                <CardTitle tag="h2">Recuperar Senha</CardTitle>
+                <CardTitle style={{ color: "#868686" }} tag="h2">
+                  Recuperar Senha
+                </CardTitle>
               </CardHeader>
               <CardBody>
-                <p style={{ justifyContent: "center", textAlign: "center" }}>
+                <p
+                  style={{
+                    justifyContent: "center",
+                    textAlign: "center",
+                    color: "#868686"
+                  }}
+                >
                   Um e-mail foi enviado para o seu endereço de e-mail com sua
                   nova credencial de acesso!
                   {/* Verifique o email {email} para visualizar os dados de acesso */}
@@ -84,7 +92,9 @@ export default function ForgotPass() {
             >
               <CardHeader>
                 <img alt="..." src={require("assets/img/card-info.png")} />
-                <CardTitle tag="h2">Recuperar Senha</CardTitle>
+                <CardTitle style={{ color: "#868686" }} tag="h2">
+                  Recuperar Senha
+                </CardTitle>
               </CardHeader>
               <CardBody>
                 <ReactLoadingContainer>
@@ -106,17 +116,20 @@ export default function ForgotPass() {
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle tag="h2">Recuperar Senha</CardTitle>
+                  <CardTitle style={{ color: "#868686" }} tag="h2">
+                    Recuperar Senha
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <p
                     style={{
                       justifyContent: "center",
                       textAlign: "center",
-                      marginBottom: "1rem"
+                      marginBottom: "1rem",
+                      color: "#868686"
                     }}
                   >
-                    Informe o e-mail utilizado para acesso para receber uma nova
+                    Informe o e-mail utilizado no login para receber uma nova
                     credencial!
                     {/* Verifique o email {email} para visualizar os dados de acesso */}
                   </p>
