@@ -180,9 +180,14 @@ export default class HorasTable extends Component {
       .split("/");
     if (this.state.data.length === 0) {
       return (
-        <Tooltip title="Exportar para excel" placement="top" interactive>
-          <img alt="Exportar para excel" src={iconExcel} />
-        </Tooltip>
+        <NavLink tag="li">
+          <DropdownItem style={{ paddingLeft: "3%" }} className="nav-item">
+            <div style={{ float: "left", marginRight: "3%" }}>
+              <img alt="Exportar para excel" src={iconExcel} />
+            </div>
+            <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+          </DropdownItem>
+        </NavLink>
       );
     }
     return (
@@ -378,7 +383,9 @@ export default class HorasTable extends Component {
                           <p style={{ paddingTop: "2%" }}>Filtrar</p>
                         </DropdownItem>
                       </NavLink>
+
                       {this.checkData()}
+
                       <NavLink onClick={() => history.goBack()} tag="li">
                         <DropdownItem
                           style={{ paddingLeft: "3%" }}
