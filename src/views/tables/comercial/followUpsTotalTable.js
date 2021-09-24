@@ -49,7 +49,6 @@ import {
   SentimentVeryDissatisfiedSharp
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
 import iconExcel from "~/assets/img/iconExcel.png";
@@ -89,6 +88,20 @@ function ComercialFUPsTotalTable() {
     motivo: ""
   };
   const [values, setValues] = useState(stateSchema);
+
+  const downloadFile = async () => {
+    // eslint-disable-next-line no-restricted-syntax
+    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    // eslint-disable-next-line no-await-in-loop
+    await delay(500);
+  };
 
   const checkAcao = value => {
     switch (value) {
@@ -548,24 +561,7 @@ function ComercialFUPsTotalTable() {
                       <div className="photo" />
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-navbar" right tag="ul">
-                      <NavLink
-                        onClick={async () => {
-                          await api
-                            .get(
-                              `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`,
-                              {
-                                responseType: "blob"
-                              }
-                            )
-                            .then(response =>
-                              fileDownload(
-                                response.data,
-                                "Relatório Follow Ups.xlsx"
-                              )
-                            );
-                        }}
-                        tag="li"
-                      >
+                      <NavLink onClick={() => downloadFile()} tag="li">
                         <DropdownItem
                           style={{ paddingLeft: "3%" }}
                           className="nav-item"
