@@ -240,9 +240,14 @@ export default class GerencialDespesasTable extends Component {
     return (
       <ExcelFile
         element={
-          <Tooltip title="Exportar para excel" placement="top" interactive>
-            <img alt="Exportar para excel" src={iconExcel} />
-          </Tooltip>
+          <NavLink tag="li">
+            <DropdownItem style={{ paddingLeft: "3%" }} className="nav-item">
+              <div style={{ float: "left", marginRight: "3%" }}>
+                <img alt="Exportar para excel" src={iconExcel} />
+              </div>
+              <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+            </DropdownItem>
+          </NavLink>
         }
         filename={`Despesa_${year}-${month}-${date}`}
       >
@@ -438,17 +443,7 @@ export default class GerencialDespesasTable extends Component {
                           <p style={{ paddingTop: "2%" }}>Filtrar</p>
                         </DropdownItem>
                       </NavLink>
-                      <NavLink tag="li">
-                        <DropdownItem
-                          style={{ paddingLeft: "3%" }}
-                          className="nav-item"
-                        >
-                          <div style={{ float: "left", marginRight: "3%" }}>
-                            {this.checkData()}
-                          </div>
-                          <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
-                        </DropdownItem>
-                      </NavLink>
+                      {this.checkData()}
                       <NavLink onClick={() => history.goBack()} tag="li">
                         <DropdownItem
                           style={{ paddingLeft: "3%" }}
