@@ -77,6 +77,7 @@ function EmpresasIncluidasCliCamp() {
   const [values, setValues] = useState(stateSchema);
 
   const history = useHistory();
+
   useEffect(() => {
     var situation;
     switch (status) {

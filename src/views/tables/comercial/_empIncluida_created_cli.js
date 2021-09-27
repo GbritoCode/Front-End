@@ -41,7 +41,6 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Close, PostAdd } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { normalizeCnpj, normalizeDatetime, normalizeFone } from "~/normalize";
 import { store } from "~/store";
@@ -80,6 +79,20 @@ function EmpresasIncluidasCreatedCli() {
     qtdFuncionarios: ""
   };
   const [values, setValues] = useState(stateSchema);
+
+  const downloadFile = async () => {
+    // eslint-disable-next-line no-restricted-syntax
+    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    // eslint-disable-next-line no-await-in-loop
+    await delay(500);
+  };
 
   const history = useHistory();
   useEffect(() => {
@@ -286,24 +299,7 @@ function EmpresasIncluidasCreatedCli() {
                       <div className="photo" />
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-navbar" right tag="ul">
-                      <NavLink
-                        onClick={async () => {
-                          await api
-                            .get(
-                              `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`,
-                              {
-                                responseType: "blob"
-                              }
-                            )
-                            .then(response =>
-                              fileDownload(
-                                response.data,
-                                "Relatório Empresas Incluídas.xlsx"
-                              )
-                            );
-                        }}
-                        tag="li"
-                      >
+                      <NavLink onClick={() => downloadFile()} tag="li">
                         <DropdownItem
                           style={{ paddingLeft: "3%" }}
                           className="nav-item"

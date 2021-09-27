@@ -37,7 +37,6 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { PostAdd } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
 import { normalizeDate } from "~/normalize";
@@ -57,6 +56,21 @@ function ComercialEmpresasFimTable() {
   const [isLoading, setIsLoading] = useState(true);
 
   const history = useHistory();
+
+  const downloadFile = async () => {
+    // eslint-disable-next-line no-restricted-syntax
+    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=true`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    // eslint-disable-next-line no-await-in-loop
+    await delay(500);
+  };
+
   useEffect(() => {
     const { acessible } = store.getState().auth;
     const { id } = store.getState().auth.user.Colab;
@@ -256,24 +270,7 @@ function ComercialEmpresasFimTable() {
                       <div className="photo" />
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-navbar" right tag="ul">
-                      <NavLink
-                        onClick={async () => {
-                          await api
-                            .get(
-                              `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=true`,
-                              {
-                                responseType: "blob"
-                              }
-                            )
-                            .then(response =>
-                              fileDownload(
-                                response.data,
-                                "Relatório Empresas Finalizadas.xlsx"
-                              )
-                            );
-                        }}
-                        tag="li"
-                      >
+                      <NavLink onClick={() => downloadFile()} tag="li">
                         <DropdownItem
                           style={{ paddingLeft: "3%" }}
                           className="nav-item"
@@ -284,6 +281,7 @@ function ComercialEmpresasFimTable() {
                           <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
                         </DropdownItem>
                       </NavLink>
+
                       <NavLink tag="li">
                         <Link to="/dashboardComercial">
                           <DropdownItem
