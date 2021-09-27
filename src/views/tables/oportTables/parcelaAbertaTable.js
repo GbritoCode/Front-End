@@ -23,7 +23,7 @@ import {
   Modal,
   ModalBody
 } from "reactstrap";
-import { Close, Message, ArrowBackIos } from "@material-ui/icons";
+import { Close, Message } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
@@ -200,7 +200,7 @@ class ParcelaAbertaTable extends Component {
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos />
+                        <span className="material-icons">logout</span>{" "}
                       </Button>
                     </Tooltip>
                   </Link>

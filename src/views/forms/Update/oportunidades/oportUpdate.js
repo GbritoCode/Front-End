@@ -22,26 +22,30 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   Label,
   Form,
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  NavLink
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
-import classNames from "classnames";
-import Tooltip from "@material-ui/core/Tooltip";
 import {
   AssignmentInd,
   CreditCard,
   LocalOffer,
+  PostAdd,
   Timeline
 } from "@material-ui/icons";
-import { normalizeCnpj } from "~/normalize";
+import { isAfter, isBefore, isToday, parseISO } from "date-fns";
+import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import { oportUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 
@@ -61,6 +65,7 @@ export default function UpdateOport() {
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
   const [data8, setData8] = useState({});
+  const [data9, setData9] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -70,16 +75,14 @@ export default function UpdateOport() {
     RecDespId: { value: "", error: "", message: "" },
     segmetId: { value: "", error: "", message: "" },
     RepresentanteId: { value: "", error: "", message: "" },
+    CampanhaId: { value: "", error: "", message: "", optional: true },
     contato: { value: "", error: "", message: "" },
     data: { value: "", error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
     cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" }
+    desc: { value: "", error: "", message: "" },
+    narrativa: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    narrativa: { value: "", error: "", message: "" }
-  };
-  const [optional, setOptional] = useState(optionalSchema);
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
@@ -103,7 +106,19 @@ export default function UpdateOport() {
       setData6(response6.data);
       setData7(response7.data);
       setData8(response8.data);
-
+      setData9(
+        response2.data
+          .find(arr => arr.id === response8.data.ClienteId)
+          .Campanhas.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+          )
+      );
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response8.data.empresaId },
@@ -111,17 +126,15 @@ export default function UpdateOport() {
         data: { value: response8.data.data },
         fase: { value: response8.data.fase },
         ClienteId: { value: response8.data.ClienteId },
+        CampanhaId: { value: response8.data.CampanhaId },
         contato: { value: response8.data.contato },
         cod: { value: response8.data.cod },
         UndNegId: { value: response8.data.UndNegId },
         RecDespId: { value: response8.data.RecDespId },
         segmetId: { value: response8.data.segmetId },
         RepresentanteId: { value: response8.data.RepresentanteId },
-        desc: { value: response8.data.desc }
-      }));
-      setOptional(prevState => ({
-        ...prevState,
-        narrativa: { value: response8.data.narrativa }
+        desc: { value: response8.data.desc },
+        narrativa: { value: response8.data.narrativa, optional: true }
       }));
 
       setIsLoading(false);
@@ -197,9 +210,9 @@ export default function UpdateOport() {
         }
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -211,52 +224,6 @@ export default function UpdateOport() {
       default:
     }
   };
-
-  function checkAprovada(fase) {
-    if ((fase == 4 || fase >= 5) && firstRender.current) {
-      return (
-        <>
-          <Link to={`/tabelas/oportunidade/recurso/${id}`}>
-            <Tooltip title="Recurso" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <AssignmentInd />
-              </Button>
-            </Tooltip>
-          </Link>
-
-          <Link to={`/tabelas/oportunidade/parcela/${id}`}>
-            <Tooltip title="Parcelas" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <CreditCard />
-              </Button>
-            </Tooltip>
-          </Link>
-          <Link to={`/view/oportunidade/dados/${id}`}>
-            <Tooltip title="Resultados" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <Timeline />
-              </Button>
-            </Tooltip>
-          </Link>
-        </>
-      );
-    }
-  }
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -272,15 +239,17 @@ export default function UpdateOport() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -300,7 +269,7 @@ export default function UpdateOport() {
           values.fase.value,
           values.cod.value,
           values.desc.value,
-          optional.narrativa.value
+          values.narrativa.value
         )
       );
     } else {
@@ -334,26 +303,148 @@ export default function UpdateOport() {
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    {checkAprovada(values.fase.value)}
-
-                    <Link to={`/tabelas/oportunidade/cotacao/${id}`}>
-                      <Tooltip title="Cotação" placement="top" interactive>
-                        <Button
-                          style={{ float: "right" }}
-                          color="default"
-                          size="sm"
-                          className={classNames("btn-icon btn-link like")}
+                    <UncontrolledDropdown style={{ float: "right" }}>
+                      <DropdownToggle
+                        caret
+                        color="default"
+                        data-toggle="dropdown"
+                        nav
+                        onClick={e => e.preventDefault()}
+                      >
+                        <PostAdd />
+                        <div className="photo" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-navbar" right tag="ul">
+                        <NavLink tag="li">
+                          <Link to={`/tabelas/oportunidade/cotacao/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <LocalOffer
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Cotação </p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+                        <NavLink
+                          hidden={
+                            !(
+                              (values.fase.value == 4 ||
+                                values.fase.value >= 5) &&
+                              firstRender.current
+                            )
+                          }
+                          tag="li"
                         >
-                          <LocalOffer />
-                        </Button>
-                      </Tooltip>
-                    </Link>
+                          <Link to={`/tabelas/oportunidade/recurso/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <AssignmentInd
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Recursos</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
 
-                    <CardTitle tag="h4">Oportunidade</CardTitle>
+                        <NavLink
+                          hidden={
+                            !(
+                              (values.fase.value == 4 ||
+                                values.fase.value >= 5) &&
+                              firstRender.current
+                            )
+                          }
+                          tag="li"
+                        >
+                          <Link to={`/tabelas/oportunidade/parcela/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <CreditCard
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Parcelas</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+
+                        <NavLink
+                          hidden={
+                            !(
+                              (values.fase.value == 4 ||
+                                values.fase.value >= 5) &&
+                              firstRender.current
+                            )
+                          }
+                          tag="li"
+                        >
+                          <Link to={`/view/oportunidade/dados/${id}`}>
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <Timeline
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Resultados</p>
+                            </DropdownItem>
+                          </Link>
+                        </NavLink>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                    <h3 style={{ marginBottom: 0 }}>Oportunidade</h3>
+                    <p style={{ fontSize: 14 }}>
+                      {checkFase(values.fase.value)}
+                    </p>{" "}
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <Row>
+                        <Col md="4">
+                          <Label>Cliente</Label>
+                          <FormGroup
+                            className={`has-label ${values.ClienteId.error}`}
+                          >
+                            <Input
+                              disabled
+                              name="ClienteId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "ClienteId", "text")
+                              }
+                              value={values.ClienteId.value}
+                              onChangeCapture={e => getContato(e.target.value)}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione o cliente{" "}
+                              </option>
+                              {data2.map(ClienteId => (
+                                <option value={ClienteId.id}>
+                                  {" "}
+                                  {ClienteId.nomeAbv} -{" "}
+                                  {normalizeCnpj(ClienteId.CNPJ)}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.ClienteId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.ClienteId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
                         <Col md="4">
                           <Label>Colaborador</Label>
                           <FormGroup
@@ -396,57 +487,8 @@ export default function UpdateOport() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
-                          <p
-                            style={{
-                              paddingTop: 27,
-                              paddingLeft: 47,
-                              marginRight: 5,
-                              fontSize: 30,
-                              float: "right",
-                              fontStyle: "sans-serif"
-                            }}
-                          >
-                            {checkFase(values.fase.value)}
-                          </p>
-                        </Col>
                       </Row>
                       <Row>
-                        <Col md="4">
-                          <Label>Cliente</Label>
-                          <FormGroup
-                            className={`has-label ${values.ClienteId.error}`}
-                          >
-                            <Input
-                              disabled={disabledField}
-                              name="ClienteId"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "ClienteId", "text")
-                              }
-                              value={values.ClienteId.value}
-                              onChangeCapture={e => getContato(e.target.value)}
-                            >
-                              {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione o cliente{" "}
-                              </option>
-                              {data2.map(ClienteId => (
-                                <option value={ClienteId.id}>
-                                  {" "}
-                                  {ClienteId.nomeAbv} -{" "}
-                                  {normalizeCnpj(ClienteId.CNPJ)}{" "}
-                                </option>
-                              ))}
-                            </Input>
-                            {values.ClienteId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.ClienteId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
                         <Col md="4">
                           <Label>Contato</Label>
                           <FormGroup
@@ -503,6 +545,35 @@ export default function UpdateOport() {
                                 <option value={RepresentanteId.id}>
                                   {" "}
                                   {RepresentanteId.id} - {RepresentanteId.nome}{" "}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.RepresentanteId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.RepresentanteId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Campanha</Label>
+                          <FormGroup
+                            className={`has-label ${values.CampanhaId.error}`}
+                          >
+                            <Input
+                              name="CampanhaId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "CampanhaId", "optional")
+                              }
+                              value={values.CampanhaId.value}
+                            >
+                              {" "}
+                              <option value=""> Selecione a Campanha </option>
+                              {data9.map(camp => (
+                                <option value={camp.id}>
+                                  {" "}
+                                  {camp.cod} - {camp.desc}{" "}
                                 </option>
                               ))}
                             </Input>
@@ -663,7 +734,7 @@ export default function UpdateOport() {
                         <Col>
                           <Label>Narrativa</Label>
                           <FormGroup
-                            className={`has-label ${optional.narrativa.error}`}
+                            className={`has-label ${values.narrativa.error}`}
                           >
                             <Input
                               disabled={disabledField}
@@ -672,11 +743,11 @@ export default function UpdateOport() {
                               onChange={event =>
                                 handleChange(event, "narrativa", "optional")
                               }
-                              value={optional.narrativa.value}
+                              value={values.narrativa.value}
                             />{" "}
-                            {optional.narrativa.error === "has-danger" ? (
+                            {values.narrativa.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.narrativa.message}
+                                {values.narrativa.message}
                               </Label>
                             ) : null}
                           </FormGroup>

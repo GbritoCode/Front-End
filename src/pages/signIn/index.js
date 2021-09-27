@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classnames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -20,6 +20,7 @@ import {
 
 import { signInRequest } from "~/store/modules/auth/actions";
 import { useInput } from "~/hooks";
+import { forgotPassFail } from "~/store/modules/user/actions";
 
 // reactstrap components
 
@@ -32,6 +33,10 @@ export default function SignIn() {
   const [passFocus, setPassFocus] = useState("");
   const { value: email, bind: bindEmail } = useInput("");
   const { value: password, bind: bindPassword } = useInput("");
+
+  useEffect(() => {
+    dispatch(forgotPassFail());
+  }, [dispatch]);
 
   const loading = useSelector(state => state.auth.loading);
 
@@ -66,7 +71,9 @@ export default function SignIn() {
               <Card className="card-login card-white">
                 <CardHeader>
                   <img alt="..." src={require("assets/img/card-info.png")} />
-                  <CardTitle tag="h1">Conta</CardTitle>
+                  <CardTitle style={{ color: "rgb(80 80 80)" }} tag="h2">
+                    Conta
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <InputGroup
@@ -115,6 +122,17 @@ export default function SignIn() {
                       {...bindPassword}
                     />
                   </InputGroup>
+                  <div className="pull-right">
+                    <h6>
+                      <a
+                        style={{ color: "blue", fontSize: "9px" }}
+                        className="link footer-link"
+                        href="/forgotPass"
+                      >
+                        Esqueci minha Senha
+                      </a>
+                    </h6>
+                  </div>
                 </CardBody>
                 <CardFooter>
                   <Button

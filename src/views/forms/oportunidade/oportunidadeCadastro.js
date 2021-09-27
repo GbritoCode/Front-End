@@ -16,6 +16,8 @@
 */
 import React, { useRef, useEffect, useState } from "react";
 
+import classNames from "classnames";
+import ReactTable from "react-table-v6";
 // reactstrap components
 import {
   Button,
@@ -28,20 +30,26 @@ import {
   Input,
   FormGroup,
   Row,
-  Col
+  Col,
+  InputGroup,
+  InputGroupAddon
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
-import { normalizeCnpj } from "~/normalize";
+import { isAfter, isBefore, isToday, parseISO } from "date-fns";
+import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import { store } from "~/store";
 import { oportRequest } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
+import Modal from "~/components/Modal/modalLarge";
+import { Footer, Header } from "~/components/Modal/modalStyles";
 
 export default function CadastroOport() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
@@ -49,6 +57,7 @@ export default function CadastroOport() {
   const [data5, setData5] = useState([]);
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
+  const [data9, setData9] = useState([]);
 
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
 
@@ -60,17 +69,16 @@ export default function CadastroOport() {
     RecDespId: { value: "", error: "", message: "" },
     segmetId: { value: "", error: "", message: "" },
     RepresentanteId: { value: "", error: "", message: "" },
+    CampanhaId: { value: "", error: "", message: "", optional: true },
     contato: { value: "", error: "", message: "" },
     data: { value: `${year}-${month}-${date}`, error: "", message: "" },
     fase: { value: 1, error: "", message: "" },
     cod: { value: "", error: "", message: "" },
-    desc: { value: "", error: "", message: "" }
+    desc: { value: "", error: "", message: "" },
+    narrativa: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    narrativa: { value: "", error: "", message: "" }
-  };
+
   const [values, setValues] = useState(stateSchema);
-  const [optional, setOptional] = useState(optionalSchema);
   useEffect(() => {
     const codAux = new Date();
     const { empresa } = store.getState().auth;
@@ -79,16 +87,34 @@ export default function CadastroOport() {
     async function loadData() {
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
-      const response2 = await api.get(`/cliente/?prospect=false`);
+      const response2 = await api.get(`/cliente/`);
       const response4 = await api.get(`/und_neg/`);
       const response5 = await api.get(`/rec_desp/?rec=true`);
       const response7 = await api.get(`/representante/`);
       const response8 = await api.get(`/oportunidade/?one=true`);
       setData1(response1.data);
-      setData2(response2.data);
+      setData2(
+        response2.data.map((client, key) => {
+          return {
+            idd: key,
+            id: client.id,
+            CNPJ: normalizeCnpj(client.CNPJ),
+            nomeAbv: client.nomeAbv,
+            contNome:
+              client.CliConts.length === 0 ? "--" : client.CliConts[0].nome,
+            contEmail:
+              client.CliConts.length === 0 ? "--" : client.CliConts[0].email,
+            RepresentanteId: client.RepresentanteId,
+            Representante: client.Representante.nome,
+            EmpresaId: client.EmpresaId,
+            prospect: client.prospect ? "Prospect" : "Cliente"
+          };
+        })
+      );
       setData4(response4.data);
       setData5(response5.data);
       setData7(response7.data);
+
       if (response8.data.length !== 0) {
         var zerofilled = `0000${response8.data[0].id + 1}`.slice(-4);
       } else {
@@ -117,6 +143,18 @@ export default function CadastroOport() {
           ...prevState,
           RepresentanteId: { value: result.data.RepresentanteId }
         }));
+        setData9(
+          result.data.Campanhas.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim))) &&
+              arr.Campanhas_Clientes.ativo
+          )
+        );
       });
     }
     if (undNeg) {
@@ -126,21 +164,7 @@ export default function CadastroOport() {
     }
   }
 
-  const checkFase = value => {
-    if (value === "1") {
-      return "Aberta";
-    }
-    if (value === "2") {
-      return "Em Cotação";
-    }
-    if (value === "3") {
-      return "Cotada";
-    }
-    if (value === "4") {
-      return "Aprovada";
-    }
-  };
-
+  console.log(data9);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {
@@ -176,10 +200,60 @@ export default function CadastroOport() {
         }
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
+        break;
+      case "campanha":
+        // eslint-disable-next-line no-case-declarations
+        if (target !== "") {
+          const camp = data9.find(arr => arr.id === parseInt(target, 10));
+          if (
+            camp.FollowUps.some(
+              arr =>
+                arr.ClienteId === parseInt(values.ClienteId.value, 10) &&
+                arr.CampanhaId === camp.id &&
+                arr.proxPasso === 3
+            )
+          ) {
+            setValues(prevState => ({
+              ...prevState,
+              [name]: { value: target, optional: true }
+            }));
+          } else {
+            setValues(prevState => ({
+              ...prevState,
+              [name]: {
+                value: target,
+                error: "has-danger",
+                message:
+                  "Esse Cliente não solicitou um orçamento nessa campanha, crie um FUP com essa ação",
+                optional: true
+              }
+            }));
+            options = {
+              place: "tr",
+              message: (
+                <div>
+                  <div>
+                    Esse Cliente não Solicitou um Orçamento, crie um FUP com
+                    essa ação
+                  </div>
+                </div>
+              ),
+              type: "danger",
+              icon: "tim-icons icon-alert-circle-exc",
+              autoDismiss: 7
+            };
+            notify();
+          }
+        } else {
+          setValues(prevState => ({
+            ...prevState,
+            [name]: { value: target, optional: true }
+          }));
+        }
         break;
       case "text":
         setValues(prevState => ({
@@ -204,35 +278,39 @@ export default function CadastroOport() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
       dispatch(
-        oportRequest(
-          values.empresaId.value,
-          values.ColabId.value,
-          values.ClienteId.value,
-          values.UndNegId.value,
-          values.RecDespId.value,
-          values.segmetId.value,
-          values.RepresentanteId.value,
-          values.contato.value,
-          values.data.value,
-          values.fase.value,
-          values.cod.value,
-          values.desc.value,
-          optional.narrativa.value
-        )
+        oportRequest({
+          EmpresaId: values.empresaId.value,
+          ColabId: values.ColabId.value,
+          ClienteId: values.ClienteId.value,
+          UndNegId: values.UndNegId.value,
+          RecDespId: values.RecDespId.value,
+          SegmentoId: values.segmetId.value,
+          RepresentanteId: values.RepresentanteId.value,
+          CampanhaId:
+            values.CampanhaId.value === "" ? null : values.CampanhaId.value,
+          contato: values.contato.value,
+          data: values.data.value,
+          fase: values.fase.value,
+          cod: values.cod.value,
+          desc: values.desc.value,
+          narrativa: values.narrativa.value
+        })
       );
     } else {
       options = {
@@ -255,6 +333,91 @@ export default function CadastroOport() {
         <NotificationAlert ref={notifyElment} />
       </div>
       <div className="content">
+        <Modal
+          onClose={() => {
+            setIsOpen(false);
+          }}
+          open={isOpen}
+        >
+          <Header>
+            {" "}
+            <h4 className="modalHeader">Empresa</h4>
+          </Header>
+
+          <ReactTable
+            data={data2}
+            getTdProps={(state, rowInfo) => {
+              return {
+                onClick: () => {
+                  setValues(prevState => ({
+                    ...prevState,
+                    ClienteId: {
+                      value: rowInfo.original.id
+                    }
+                  }));
+                  document.getElementsByName("Cliente")[0].value =
+                    rowInfo.original.nomeAbv;
+                  getDynamicData(rowInfo.original.id, null);
+                  setIsOpen(false);
+                }
+              };
+            }}
+            filterable
+            defaultFilterMethod={(filter, row) => {
+              const id = filter.pivotId || filter.id;
+              return row[id] !== undefined
+                ? String(row[id])
+                    .toLowerCase()
+                    .includes(filter.value.toLowerCase())
+                : true;
+            }}
+            previousText="Anterior"
+            nextText="Próximo"
+            loadingText="Carregando"
+            noDataText="Dados não encontrados"
+            pageText="Página"
+            ofText="de"
+            rowsText="Linhas"
+            columns={[
+              {
+                Header: "CNPJ",
+                accessor: "CNPJ"
+              },
+              {
+                Header: "Nome Abreviado",
+                accessor: "nomeAbv"
+              },
+              {
+                Header: "Contato",
+                accessor: "contNome"
+              },
+              {
+                Header: "Email",
+                accessor: "contEmail"
+              },
+              {
+                Header: "Representante",
+                accessor: "Representante"
+              },
+              {
+                Header: "Tipo",
+                accessor: "prospect"
+              }
+            ]}
+            defaultPageSize={5}
+            className="-striped -highlight"
+          />
+
+          <Footer />
+        </Modal>
+
+        {/*
+  --------------------------
+  --------------------------
+  --------------------------
+  --------------------------
+            */}
+
         <Row>
           <Col md="12">
             <Card>
@@ -264,6 +427,42 @@ export default function CadastroOport() {
               <CardBody>
                 <Form onSubmit={handleSubmit}>
                   <Row>
+                    <Col md="4">
+                      <Label>Empresa</Label>
+                      <FormGroup
+                        className={`has-label ${values.ClienteId.error}`}
+                      >
+                        <InputGroup>
+                          <Input
+                            disabled
+                            name="Cliente"
+                            type="text"
+                            onChange={event =>
+                              handleChange(event, "ColabId", "text")
+                            }
+                            placeholder="Selecione a Empresa"
+                          />
+                          <InputGroupAddon
+                            className="appendCustom"
+                            addonType="append"
+                          >
+                            <Button
+                              className={classNames(
+                                "btn-icon btn-link like addon"
+                              )}
+                              onClick={() => setIsOpen(!isOpen)}
+                            >
+                              <i className="tim-icons icon-zoom-split addon" />
+                            </Button>
+                          </InputGroupAddon>
+                        </InputGroup>
+                        {values.ClienteId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.ClienteId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
                     <Col md="4">
                       <Label>Colaborador</Label>
                       <FormGroup
@@ -301,58 +500,8 @@ export default function CadastroOport() {
                         ) : null}
                       </FormGroup>
                     </Col>
-                    <Col md="4">
-                      <p
-                        style={{
-                          paddingTop: 27,
-                          paddingLeft: 47,
-                          marginRight: 5,
-                          fontSize: 30,
-                          float: "right",
-                          fontStyle: "sans-serif"
-                        }}
-                      >
-                        {checkFase(values.fase.value)}
-                      </p>
-                    </Col>
                   </Row>
                   <Row>
-                    <Col md="4">
-                      <Label>Cliente</Label>
-                      <FormGroup
-                        className={`has-label ${values.ClienteId.error}`}
-                      >
-                        <Input
-                          name="ClienteId"
-                          type="select"
-                          onChange={event =>
-                            handleChange(event, "ClienteId", "text")
-                          }
-                          value={values.ClienteId.value}
-                          onChangeCapture={e => {
-                            getDynamicData(e.target.value, null);
-                          }}
-                        >
-                          {" "}
-                          <option disabled value="">
-                            {" "}
-                            Selecione o cliente{" "}
-                          </option>
-                          {data2.map(ClienteId => (
-                            <option value={ClienteId.id}>
-                              {" "}
-                              {ClienteId.nomeAbv} -{" "}
-                              {normalizeCnpj(ClienteId.CNPJ)}{" "}
-                            </option>
-                          ))}
-                        </Input>
-                        {values.ClienteId.error === "has-danger" ? (
-                          <Label className="error">
-                            {values.ClienteId.message}
-                          </Label>
-                        ) : null}
-                      </FormGroup>
-                    </Col>
                     <Col md="4">
                       <Label>Contato</Label>
                       <FormGroup
@@ -407,6 +556,35 @@ export default function CadastroOport() {
                             <option value={RepresentanteId.id}>
                               {" "}
                               {RepresentanteId.id} - {RepresentanteId.nome}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                        {values.RepresentanteId.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.RepresentanteId.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Campanha</Label>
+                      <FormGroup
+                        className={`has-label ${values.CampanhaId.error}`}
+                      >
+                        <Input
+                          name="CampanhaId"
+                          type="select"
+                          onChange={event =>
+                            handleChange(event, "CampanhaId", "campanha")
+                          }
+                          value={values.CampanhaId.value}
+                        >
+                          {" "}
+                          <option value=""> Selecione a Campanha </option>
+                          {data9.map(camp => (
+                            <option value={camp.id}>
+                              {" "}
+                              {camp.cod} - {camp.desc}{" "}
                             </option>
                           ))}
                         </Input>
@@ -556,7 +734,7 @@ export default function CadastroOport() {
                     <Col>
                       <Label>Narrativa</Label>
                       <FormGroup
-                        className={`has-label ${optional.narrativa.error}`}
+                        className={`has-label ${values.narrativa.error}`}
                       >
                         <Input
                           name="narrativa"
@@ -564,11 +742,11 @@ export default function CadastroOport() {
                           onChange={event =>
                             handleChange(event, "narrativa", "optional")
                           }
-                          value={optional.narrativa.value}
+                          value={values.narrativa.value}
                         />{" "}
-                        {optional.narrativa.error === "has-danger" ? (
+                        {values.narrativa.error === "has-danger" ? (
                           <Label className="error">
-                            {optional.narrativa.message}
+                            {values.narrativa.message}
                           </Label>
                         ) : null}
                       </FormGroup>

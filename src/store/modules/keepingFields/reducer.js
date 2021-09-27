@@ -12,7 +12,9 @@ export default function field(state = INITIAL_STATE, action) {
         draft.comercialDash = {
           camp: action.payload.camp,
           inicDate: action.payload.inicDate,
-          endDate: action.payload.endDate
+          endDate: action.payload.endDate,
+          dataForDoughnut: action.payload.dataForDoughnut,
+          cliStatusGraph: action.payload.cliStatusGraph
         };
         break;
       }
@@ -21,7 +23,6 @@ export default function field(state = INITIAL_STATE, action) {
         break;
       }
       case "@field/CLEAR_FIELDS": {
-        console.log(action.payload);
         draft[action.payload.field] = {};
         break;
       }

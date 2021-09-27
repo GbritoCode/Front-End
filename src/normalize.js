@@ -147,3 +147,11 @@ export function normalizeDatetime(datetime) {
   const localeString = new Date(datetime).toLocaleDateString("pt-br");
   return localeString;
 }
+
+export function pt_brDateToEUADate(datetime) {
+  const date = datetime.split("/");
+  const americanDate = new Date(
+    `${date[2]}-${date[1]}-${date[0]}`
+  ).toISOString();
+  return americanDate;
+}

@@ -30,9 +30,14 @@ import {
   ModalBody,
   Input,
   Label,
-  FormGroup
+  FormGroup,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
-import { ArrowBackIos, Close, FilterList, Message } from "@material-ui/icons";
+import { Close, FilterList, Message, PostAdd } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
@@ -227,17 +232,27 @@ export default class GerencialDespesasTable extends Component {
       .split("/");
     if (this.state.data.length === 0) {
       return (
-        <Tooltip title="Exportar para excel" placement="top" interactive>
-          <img alt="Exportar para excel" src={iconExcel} />
-        </Tooltip>
+        <NavLink tag="li">
+          <DropdownItem style={{ paddingLeft: "3%" }} className="nav-item">
+            <div style={{ float: "left", marginRight: "3%" }}>
+              <img alt="Exportar para excel" src={iconExcel} />
+            </div>
+            <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+          </DropdownItem>
+        </NavLink>
       );
     }
     return (
       <ExcelFile
         element={
-          <Tooltip title="Exportar para excel" placement="top" interactive>
-            <img alt="Exportar para excel" src={iconExcel} />
-          </Tooltip>
+          <NavLink tag="li">
+            <DropdownItem style={{ paddingLeft: "3%" }} className="nav-item">
+              <div style={{ float: "left", marginRight: "3%" }}>
+                <img alt="Exportar para excel" src={iconExcel} />
+              </div>
+              <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+            </DropdownItem>
+          </NavLink>
         }
         filename={`Despesa_${year}-${month}-${date}`}
       >
@@ -403,33 +418,59 @@ export default class GerencialDespesasTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Despesas
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    {this.checkData()}
-                  </div>
-                  <Tooltip title="Filtrar" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                      onClick={() => {
-                        this.toggleModalFilter();
-                      }}
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
                     >
-                      <FilterList />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Voltar">
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      onClick={() => history.goBack()}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <ArrowBackIos />
-                    </Button>
-                  </Tooltip>
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      <NavLink
+                        onClick={() => {
+                          this.toggleModalFilter();
+                        }}
+                        tag="li"
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <FilterList
+                            style={{ float: "left", marginRight: "3%" }}
+                            fontSize="small"
+                          />
+                          <p style={{ paddingTop: "2%" }}>Filtrar</p>
+                        </DropdownItem>
+                      </NavLink>
+
+                      {this.checkData()}
+
+                      <NavLink onClick={() => history.goBack()} tag="li">
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <span
+                            style={{
+                              float: "left",
+                              marginRight: "3%",
+                              fontSize: "1.25rem"
+                            }}
+                            className="material-icons"
+                          >
+                            logout
+                          </span>
+                          <p style={{ paddingTop: "2%" }}>Voltar</p>
+                        </DropdownItem>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                 </CardTitle>
               </CardHeader>
               <CardBody>

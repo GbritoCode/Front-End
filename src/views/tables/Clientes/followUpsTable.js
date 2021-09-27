@@ -26,12 +26,16 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody
+  ModalBody,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownItem,
+  NavLink,
+  DropdownMenu
 } from "reactstrap";
-import { ArrowBackIos, Close, Message, Timeline } from "@material-ui/icons";
+import { Close, Message, PostAdd, Timeline } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
 
@@ -67,6 +71,8 @@ class followUpTable extends Component {
         return "Solicitar Orçamento";
       case 4:
         return "Iniciar Contato";
+      case 5:
+        return "Analisar Reunião";
       case 10:
         return "Finalizar";
       default:
@@ -97,7 +103,6 @@ class followUpTable extends Component {
             // we've added some custom button actions
             <div className="actions-right">
               {/* use this button to add a like kind of action */}
-              {/* use this button to add a edit kind of action */}
               <Link to={`/update/cliente/followUps/${followUp.id}`}>
                 <Button
                   color="default"
@@ -188,42 +193,87 @@ class followUpTable extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <Link to={`/cadastro/cliente/followUps/${cliId}/${campId}`}>
-                  <Tooltip title="Novo" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AddIcon fontSize="large" />
-                    </Button>
-                  </Tooltip>
-                </Link>
-                <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
-                  <Tooltip title="TimeLine" placement="top" interactive>
-                    <Button
-                      style={{
-                        float: "right"
-                      }}
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <Timeline style={{ fontSize: 30 }} />
-                    </Button>
-                  </Tooltip>
-                </Link>
-                <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
+                <UncontrolledDropdown style={{ float: "right" }}>
+                  <DropdownToggle
+                    style={{ paddingLeft: "0px" }}
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    nav
+                    onClick={e => e.preventDefault()}
+                  >
+                    <PostAdd />
+                    <div className="photo" />
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-navbar" right tag="ul">
+                    <NavLink tag="li">
+                      <Link
+                        to={`/timeline/cliente/followUps/${cliId}/${campId}`}
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <Timeline
+                            style={{ float: "left", marginRight: "3%" }}
+                            fontSize="small"
+                          />
+                          <p style={{ paddingTop: "2%" }}>TimeLine</p>
+                        </DropdownItem>
+                      </Link>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <Link
+                        to={`/cadastro/cliente/followUps/${cliId}/${campId}`}
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <AddIcon
+                            style={{ float: "left", marginRight: "3%" }}
+                            fontSize="small"
+                          />
+                          <p style={{ paddingTop: "2%" }}>Novo</p>
+                        </DropdownItem>
+                      </Link>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <span
+                            style={{
+                              float: "left",
+                              marginRight: "3%",
+                              fontSize: "1.25rem"
+                            }}
+                            className="material-icons"
+                          >
+                            logout
+                          </span>
+                          <p style={{ paddingTop: "2%" }}>Voltar</p>
+                        </DropdownItem>
+                      </Link>
+                    </NavLink>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+
+                {/* <Link to={`/tabelas/prospeccao/campanha/${campId}`}>
                   <Tooltip title="Voltar">
                     <Button
                       style={{
-                        float: "right"
+                        float: "right",
+                        paddingBottom: "0.2%"
                       }}
                       className={classNames("btn-icon btn-link like")}
                     >
-                      <ArrowBackIos />
+                      <ArrowBackIos fontSize="small" />
                     </Button>
                   </Tooltip>
-                </Link>
+                </Link> */}
                 <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                 <p style={{ fontSize: 14 }}>
                   {this.state.cli === undefined ? "" : this.state.cli.nomeAbv}

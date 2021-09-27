@@ -33,17 +33,26 @@ import {
   InputGroupAddon,
   Modal,
   ModalBody,
-  CardTitle
+  CardTitle,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
 import {
+  Call,
+  Check,
   Close,
   FormatListBulleted,
+  InfoOutlined,
   InsertEmoticon,
   MailOutline,
   Message,
+  PostAdd,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
@@ -51,7 +60,7 @@ import {
   Timeline
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeCnpj, normalizeDate, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import api from "~/services/api";
 import { followUpCadastro } from "~/store/modules/Cliente/actions";
@@ -62,17 +71,19 @@ import {
   clearFields,
   FUPCadastroFields
 } from "~/store/modules/keepingFields/actions";
+import history from "~/services/history";
 
 export default function CadastroFollowUps() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
-
+  const [oportDisable, setOportDisable] = useState(true);
   const { cliId, campId } = useParams();
   const dispatch = useDispatch();
   const [timeline, setTimeLine] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [modalMini, setModalMini] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenOport, setIsOpenOport] = useState(false);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
   const [data2, setData2] = useState([]);
@@ -81,6 +92,9 @@ export default function CadastroFollowUps() {
   const [data5, setData5] = useState({});
   const [data6, setData6] = useState([]);
   const [data7, setData7] = useState([]);
+  const [data8, setData8] = useState([]);
+  const [data9, setData9] = useState([]);
+  const [data10, setData10] = useState([]);
   const [tagsinput, settagsinput] = useState([]);
   const [string, setString] = useState("");
 
@@ -99,6 +113,22 @@ export default function CadastroFollowUps() {
     prefContato: { value: "", error: "", message: "" },
     ativo: { value: true, error: "", message: "" },
     motivo: { value: "", error: "", message: "", optional: true }
+  };
+  const oportSchema = {
+    empresaId: { value: "", error: "", message: "" },
+    ColabId: { value: "", error: "", message: "" },
+    ClienteId: { value: "", error: "", message: "" },
+    UndNegId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
+    segmetId: { value: "", error: "", message: "" },
+    CampanhaId: { value: "", error: "", message: "" },
+    RepresentanteId: { value: "", error: "", message: "" },
+    contato: { value: "", error: "", message: "" },
+    data: { value: `${year}-${month}-${date}`, error: "", message: "" },
+    fase: { value: 1, error: "", message: "" },
+    cod: { value: "", error: "", message: "" },
+    desc: { value: "", error: "", message: "" },
+    narrativa: { value: "", error: "", message: "", optional: true }
   };
 
   const contSchema = {
@@ -125,12 +155,15 @@ export default function CadastroFollowUps() {
   const [values, setValues] = useState(stateSchema);
   const [contValues, setContValues] = useState(contSchema);
   const [meetingValues, setMeetingValues] = useState(meetingSchema);
+  const [oportValues, setOportValues] = useState(oportSchema);
+
   useEffect(() => {
     const { empresa } = store.getState().auth;
     const { FUPCadastro } = store.getState().field;
     const idColab = store.getState().auth.user.Colab.id;
 
     async function loadData() {
+      const codAux = new Date();
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
       const response2 = await api.get(`/cliente/${cliId}`);
@@ -138,6 +171,9 @@ export default function CadastroFollowUps() {
       const response4 = await api.get(`/campanha/${campId}/true`);
       const response6 = await api.get("/representante");
       const response7 = await api.get("/camposDinamicos");
+      const response8 = await api.get(`/und_neg/`);
+      const response9 = await api.get(`/rec_desp/?rec=true`);
+      const response11 = await api.get(`/oportunidade/?one=true`);
       setData1(response1.data);
       setData2(response2.data);
       setData3(response3.data);
@@ -148,12 +184,20 @@ export default function CadastroFollowUps() {
       });
       setData6(response6.data);
       setData7(response7.data);
+      setData8(response8.data);
+      setData9(response9.data);
+
+      var zerofilled =
+        response11.data.length !== 0
+          ? `0000${response11.data[0].id + 1}`.slice(-4)
+          : `0000${1}`.slice(-4);
 
       setMeetingValues(prevState => ({
         ...prevState,
         organizerName: { value: response1.data.nome },
         organizerEmail: { value: response1.data.email }
       }));
+
       if (FUPCadastro.CliContId) {
         const cont = response3.data.find(
           arr => arr.id === parseInt(FUPCadastro.CliContId, 10)
@@ -172,6 +216,52 @@ export default function CadastroFollowUps() {
           cargo: { value: cont.cargo }
         }));
       }
+
+      if (FUPCadastro.UndNegId) {
+        await api
+          .get(`/segmento/?idUndNeg=${FUPCadastro.UndNegId}`)
+          .then(result => {
+            setData10(result.data);
+          });
+      }
+
+      setOportValues(prevState => ({
+        ...prevState,
+        empresaId: { value: response.data.id },
+        ClienteId: { value: cliId },
+        CampanhaId: { value: campId },
+        ColabId: { value: response1.data.id },
+        RepresentanteId: { value: response2.data.RepresentanteId },
+        cod: {
+          value: `A${JSON.stringify(codAux.getYear()).slice(
+            -2
+          )}${`0${codAux.getMonth() + 1}`.slice(-2)}-${zerofilled}`
+        },
+        contato: {
+          value: FUPCadastro.CliContId ? FUPCadastro.CliContId : ""
+        },
+        RecDespId: {
+          value: FUPCadastro.RecDespId ? FUPCadastro.RecDespId : ""
+        },
+        UndNegId: {
+          value: FUPCadastro.UndNegId ? FUPCadastro.UndNegId : ""
+        },
+        segmetId: {
+          value: FUPCadastro.SegmentoId ? FUPCadastro.SegmentoId : ""
+        },
+        data: {
+          value: FUPCadastro.dataOport
+            ? FUPCadastro.dataOport
+            : `${year}-${month}-${date}`
+        },
+        desc: {
+          value: FUPCadastro.desc ? FUPCadastro.desc : ""
+        },
+        narrativa: {
+          value: FUPCadastro.narrativa ? FUPCadastro.narrativa : ""
+        }
+      }));
+
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id },
@@ -243,7 +333,6 @@ export default function CadastroFollowUps() {
       notify();
     }
   };
-
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -276,17 +365,23 @@ export default function CadastroFollowUps() {
         ...prevState,
         motivo: { value: "", optional: true }
       }));
-      // setValues(prevState => ({
-      //   ...prevState,
-      //   dataProxContato: { value: "" }
-      // }));
+    }
+    if (value === "3") {
+      setOportDisable(false);
+    } else {
+      setOportDisable(true);
     }
   };
+  console.log(oportDisable);
   const handleContatoChange = idd => {
     const cont = data3.find(arr => arr.id === parseInt(idd, 10));
     setMeetingValues(prevState => ({
       ...prevState,
       mainParticipant: { value: cont.email }
+    }));
+    setOportValues(prevState => ({
+      ...prevState,
+      contato: { value: cont.id }
     }));
     document.getElementsByName("meetingMainParticipant").value = cont.email;
     document.getElementById("email").value = cont.email;
@@ -295,6 +390,17 @@ export default function CadastroFollowUps() {
     document.getElementById("skype").value = cont.skype;
     document.getElementById("ramal").value = cont.ramal ? cont.ramal : "--";
     document.getElementById("cargo").value = cont.cargo ? cont.cargo : "--";
+  };
+
+  const getDynamicData = undNeg => {
+    api.get(`/segmento/?idUndNeg=${undNeg}`).then(result => {
+      setData10(result.data);
+
+      setOportValues(prevState => ({
+        ...prevState,
+        segmetId: { value: "", error: "", message: "" }
+      }));
+    });
   };
 
   const handleChange = (event, name, type) => {
@@ -336,53 +442,143 @@ export default function CadastroFollowUps() {
           [name]: { value: target }
         }));
         break;
+      case "oport":
+        setOportValues(prevState => ({
+          ...prevState,
+          [name]: { value: target }
+        }));
+        break;
       default:
     }
   };
   const handleSubmit = evt => {
     evt.preventDefault();
-    var aux = Object.entries(values);
-    const tamanho = aux.length;
+    var auxValues = Object.entries(values);
+    var auxOport = Object.entries(oportValues);
+    var auxMeeting = Object.entries(meetingValues);
+    const tamanhoValues = auxValues.length;
+    const tamanhoOport = auxValues.length;
+    const tamanhoMeeting = auxMeeting.length;
 
-    for (let i = 0; i < tamanho; i++) {
-      if (!(aux[i][1].error === "has-danger")) {
-        var valid = true;
-      } else {
-        valid = false;
-        break;
-      }
-    }
-    for (let j = 0; j < tamanho; j++) {
-      if (!aux[j][1].optional === true) {
-        if (aux[j][1].value !== "") {
-          var filled = true;
+    for (let j = 0; j < tamanhoMeeting; j++) {
+      if (!auxMeeting[j][1].optional === true) {
+        if (auxMeeting[j][1].value !== "") {
+          var meetingFilled = true;
         } else {
-          filled = false;
-          setValues(prevState => ({
+          meetingFilled = false;
+          setMeetingValues(prevState => ({
             ...prevState,
-            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+            [auxMeeting[j][0]]: {
+              error: "has-danger",
+              message: "Campo obrigatório"
+            }
           }));
           break;
         }
       }
     }
 
+    for (let i = 0; i < tamanhoValues; i++) {
+      if (!(auxValues[i][1].error === "has-danger")) {
+        var valid = true;
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    for (let i = 0; i < tamanhoOport; i++) {
+      if (!(auxOport[i][1].error === "has-danger")) {
+        var validOport = true;
+      } else {
+        validOport = false;
+        break;
+      }
+    }
+    for (let j = 0; j < tamanhoOport; j++) {
+      if (!auxValues[j][1].optional === true) {
+        if (auxValues[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setOportValues(prevState => ({
+            ...prevState,
+            [auxOport[j][0]]: {
+              error: "has-danger",
+              message: "Campo obrigatório"
+            }
+          }));
+          break;
+        }
+      }
+    }
+    for (let j = 0; j < tamanhoOport; j++) {
+      if (!auxOport[j][1].optional === true) {
+        if (auxOport[j][1].value !== "") {
+          var filledOport = true;
+        } else {
+          filledOport = false;
+          setOportValues(prevState => ({
+            ...prevState,
+            [auxOport[j][0]]: {
+              error: "has-danger",
+              message: "Campo obrigatório"
+            }
+          }));
+          break;
+        }
+      }
+    }
+    if (meetingFilled) {
+      // await api.post(`/followUp/meeting/?Cc=${""}`, {
+      //   meetingValues,
+      //   string,
+      //   tagsinput
+      // });
+    }
     if (valid && filled) {
       dispatch(
         followUpCadastro({
-          EmpresaId: values.empresaId.value,
-          ColabId: values.ColabId.value,
-          ClienteId: values.ClienteId.value,
-          CliContId: values.CliContId.value,
-          dataContato: values.data.value,
-          dataProxContato: values.dataProxContato.value,
-          detalhes: values.detalhes.value,
-          reacao: values.reacao.value,
-          CampanhaId: campId,
-          proxPasso: values.proxPasso.value,
-          prefContato: values.prefContato.value,
-          CamposDinamicosProspectId: values.motivo.value
-            ? values.motivo.value
+          Follow: {
+            EmpresaId: values.empresaId.value,
+            ColabId: values.ColabId.value,
+            ClienteId: values.ClienteId.value,
+            CliContId: values.CliContId.value,
+            dataContato: values.data.value,
+            dataProxContato: values.dataProxContato.value,
+            detalhes: values.detalhes.value,
+            reacao: values.reacao.value,
+            CampanhaId: campId,
+            proxPasso: values.proxPasso.value,
+            prefContato: values.prefContato.value,
+            CamposDinamicosProspectId: values.motivo.value
+              ? values.motivo.value
+              : null
+          },
+          Oport:
+            validOport && filledOport && !oportDisable
+              ? {
+                  EmpresaId: values.empresaId.value,
+                  ColabId: values.ColabId.value,
+                  ClienteId: values.ClienteId.value,
+                  contato: values.CliContId.value,
+                  UndNegId: oportValues.UndNegId.value,
+                  RecDespId: oportValues.RecDespId.value,
+                  SegmentoId: oportValues.segmetId.value,
+                  RepresentanteId: oportValues.RepresentanteId.value,
+                  CampanhaId: campId,
+                  data: oportValues.data.value,
+                  fase: oportValues.fase.value,
+                  cod: oportValues.cod.value,
+                  desc: oportValues.desc.value,
+                  narrativa: oportValues.narrativa.value
+                }
+              : null,
+          Meeting: meetingFilled
+            ? {
+                meetingValues,
+                string,
+                tagsinput
+              }
             : null
         })
       );
@@ -478,33 +674,7 @@ export default function CadastroFollowUps() {
                       float: "right"
                     }}
                     onClick={async () => {
-                      var aux = Object.entries(meetingValues);
-                      const tamanho = aux.length;
-                      for (let j = 0; j < tamanho; j++) {
-                        if (!aux[j][1].optional === true) {
-                          if (aux[j][1].value !== "") {
-                            var meetingFilled = true;
-                          } else {
-                            meetingFilled = false;
-                            setMeetingValues(prevState => ({
-                              ...prevState,
-                              [aux[j][0]]: {
-                                error: "has-danger",
-                                message: "Campo obrigatório"
-                              }
-                            }));
-                            break;
-                          }
-                        }
-                      }
-                      if (meetingFilled) {
-                        await api.post(`/followUp/meeting/?Cc=${""}`, {
-                          meetingValues,
-                          string,
-                          tagsinput
-                        });
-                        setIsOpen(false);
-                      }
+                      setIsOpen(false);
                     }}
                     className={classNames("btn-icon btn-link like")}
                   >
@@ -870,17 +1040,366 @@ export default function CadastroFollowUps() {
             ------------
             ------------
             */}
+            {/*
+            ------------
+            ------------
+            ------------
+            */}
+            <ModalLarge
+              onClose={() => {
+                setIsOpenOport(!isOpenOport);
+              }}
+              open={isOpenOport}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenOport(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenOport(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <h3 style={{ marginBottom: 0 }}>Oportunidade</h3>
+              </Header>
+              <Row>
+                <Col sm="4">
+                  <Label>Colaborador</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.ColabId.error}`}
+                  >
+                    <Input
+                      disabled
+                      name="ColabId"
+                      type="text"
+                      onChange={event =>
+                        handleChange(event, "ColabId", "oport")
+                      }
+                      defaultValue={data1.nome}
+                    />
+                    {oportValues.ColabId.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.ColabId.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Data</Label>
+                  <FormGroup className={`has-label ${oportValues.data.error}`}>
+                    <Input
+                      name="name_abv"
+                      type="date"
+                      onChange={event => handleChange(event, "data", "oport")}
+                      value={oportValues.data.value}
+                    />
+                    {oportValues.data.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.data.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Cliente</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.ClienteId.error}`}
+                  >
+                    <Input
+                      disabled
+                      name="ClienteId"
+                      type="text"
+                      value={`${data2.nomeAbv} - ${normalizeCnpj(data2.CNPJ)}`}
+                    />
+                    {oportValues.ClienteId.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.ClienteId.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Contato</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.contato.error}`}
+                  >
+                    <Input
+                      disabled
+                      name="contato"
+                      type="select"
+                      onChange={event =>
+                        handleChange(event, "contato", "oport")
+                      }
+                      value={oportValues.contato.value}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione o contato{" "}
+                      </option>
+                      {data3.map(contato => (
+                        <option value={contato.id}>
+                          {" "}
+                          {contato.nome} - {contato.email}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {oportValues.contato.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.contato.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Representante</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.RepresentanteId.error}`}
+                  >
+                    <Input
+                      disabled
+                      name="RepresentanteId"
+                      type="select"
+                      value={data2.RepresentanteId}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione o Representante{" "}
+                      </option>
+                      {data6.map(repr => (
+                        <option value={repr.id}>
+                          {" "}
+                          {repr.id} - {repr.nome}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {oportValues.RepresentanteId.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.RepresentanteId.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Unidade de Negócio</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.UndNegId.error}`}
+                  >
+                    <Input
+                      name="UndNegId"
+                      type="select"
+                      onChange={event =>
+                        handleChange(event, "UndNegId", "oport")
+                      }
+                      onChangeCapture={e => {
+                        getDynamicData(e.target.value);
+                      }}
+                      value={oportValues.UndNegId.value}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione a unidade de negócio{" "}
+                      </option>
+                      {data8.map(UndNegId => (
+                        <option value={UndNegId.id}>
+                          {" "}
+                          {UndNegId.id} - {UndNegId.descUndNeg}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {oportValues.UndNegId.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.UndNegId.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Receita</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.RecDespId.error}`}
+                  >
+                    <Input
+                      name="RecDespId"
+                      type="select"
+                      onChange={event =>
+                        handleChange(event, "RecDespId", "oport")
+                      }
+                      value={oportValues.RecDespId.value}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione a receita{" "}
+                      </option>
+                      {data9.map(RecDespId => (
+                        <option value={RecDespId.id}>
+                          {" "}
+                          {RecDespId.id} - {RecDespId.desc}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {oportValues.RecDespId.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.RecDespId.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="4">
+                  <Label>Segmento</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.segmetId.error}`}
+                  >
+                    <Input
+                      name="segmetId"
+                      type="select"
+                      onChange={event =>
+                        handleChange(event, "segmetId", "oport")
+                      }
+                      value={oportValues.segmetId.value}
+                    >
+                      {" "}
+                      <option disabled value="">
+                        {" "}
+                        Selecione o segmento{" "}
+                      </option>
+                      {data10.map(segmetId => (
+                        <option value={segmetId.id}>
+                          {" "}
+                          {segmetId.id} - {segmetId.descSegmt}{" "}
+                        </option>
+                      ))}
+                    </Input>
+                    {oportValues.segmetId.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.segmetId.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm="4">
+                  <Label>Código</Label>
+                  <FormGroup className={`has-label ${oportValues.cod.error}`}>
+                    <Input
+                      disabled
+                      name="cod"
+                      type="text"
+                      onChange={event => handleChange(event, "cod", "oport")}
+                      value={oportValues.cod.value}
+                    />{" "}
+                    {oportValues.cod.error === "has-danger" ? (
+                      <Label className="error">{oportValues.cod.message}</Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+                <Col sm="8">
+                  <Label>Descrição</Label>
+                  <FormGroup className={`has-label ${oportValues.desc.error}`}>
+                    <Input
+                      name="desc"
+                      type="text"
+                      onChange={event => handleChange(event, "desc", "oport")}
+                      value={oportValues.desc.value}
+                    />{" "}
+                    {oportValues.desc.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.desc.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Label>Narrativa</Label>
+                  <FormGroup
+                    className={`has-label ${oportValues.narrativa.error}`}
+                  >
+                    <Input
+                      name="narrativa"
+                      type="textarea"
+                      onChange={event =>
+                        handleChange(event, "narrativa", "oport")
+                      }
+                      value={oportValues.narrativa.value}
+                    />{" "}
+                    {oportValues.narrativa.error === "has-danger" ? (
+                      <Label className="error">
+                        {oportValues.narrativa.message}
+                      </Label>
+                    ) : null}
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Footer />
+            </ModalLarge>
+            {/*
+            ------------
+            ------------
+            ------------
+            */}
             <Row>
               <Col md="12">
                 <Card>
                   <CardHeader>
-                    <Link to={`/timeline/cliente/followUps/${cliId}/${campId}`}>
-                      <Tooltip title="TimeLine" placement="top" interactive>
-                        <Button
-                          style={{
-                            float: "right"
-                          }}
-                          className={classNames("btn-icon btn-link like")}
+                    <UncontrolledDropdown style={{ float: "right" }}>
+                      <DropdownToggle
+                        caret
+                        color="default"
+                        data-toggle="dropdown"
+                        nav
+                        onClick={e => e.preventDefault()}
+                      >
+                        <PostAdd />
+                        <div className="photo" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-navbar" right tag="ul">
+                        <NavLink
+                          id="oportLink"
+                          name="oportLink"
+                          disabled={oportDisable}
+                          onClick={() => setIsOpenOport(true)}
+                          tag="li"
+                        >
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <FormatListBulleted
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>Oportunidade</p>
+                          </DropdownItem>
+                        </NavLink>
+                        <NavLink
                           onClick={async () => {
                             await delay(500);
                             setTimeLine(true);
@@ -894,26 +1413,60 @@ export default function CadastroFollowUps() {
                                 reacao: values.reacao.value,
                                 proxPasso: values.proxPasso.value,
                                 prefContato: values.prefContato.value,
-                                motivo: values.motivo.value
+                                motivo: values.motivo.value,
+                                UndNegId: oportValues.UndNegId.value,
+                                RecDespId: oportValues.RecDespId.value,
+                                SegmentoId: oportValues.segmetId.value,
+                                dataOport: oportValues.data.value,
+                                fase: oportValues.fase.value,
+                                desc: oportValues.desc.value,
+                                narrativa: oportValues.narrativa.value
                               })
                             );
                           }}
+                          tag="li"
                         >
-                          <Timeline style={{ fontSize: 30 }} />
-                        </Button>
-                      </Tooltip>
-                    </Link>
-                    <Tooltip title="Info" placement="top" interactive>
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        onClick={() => setIsOpenInfo(true)}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <FormatListBulleted />
-                      </Button>
-                    </Tooltip>
+                          <Link
+                            to={`/timeline/cliente/followUps/${cliId}/${campId}`}
+                          >
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <Timeline
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Timeline</p>
+                            </DropdownItem>
+                          </Link>{" "}
+                        </NavLink>
+                        <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <InfoOutlined
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>Informações</p>
+                          </DropdownItem>
+                        </NavLink>
+                        <NavLink onClick={() => setIsOpen(!isOpen)} tag="li">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <Call
+                              style={{ float: "left", marginRight: "3%" }}
+                              fontSize="small"
+                            />
+                            <p style={{ paddingTop: "2%" }}>Agendar Reunião</p>
+                          </DropdownItem>
+                        </NavLink>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
                     <h3 style={{ marginBottom: 0 }}>Follow Up</h3>
                     <p style={{ fontSize: 14 }}>
                       {data4.cod} | {data2.nomeAbv}
@@ -1256,6 +1809,7 @@ export default function CadastroFollowUps() {
                               <option value={1}>Retornar Contato</option>
                               <option value={2}>Agendar Reunião</option>
                               <option value={3}>Solicitar Orçamento</option>
+                              <option value={5}>Analisar Reuniao</option>
                               <option value={10}>Finalizar Prospecção</option>
                             </Input>
                             {values.proxPasso.error === "has-danger" ? (
@@ -1291,7 +1845,7 @@ export default function CadastroFollowUps() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Agendar Reunião</Label>
+                          <Label>Reunião</Label>
                           <FormGroup className="has-label">
                             <InputGroup>
                               <Input
@@ -1303,23 +1857,14 @@ export default function CadastroFollowUps() {
                                 }
                                 placeholder={
                                   meetingValues.date.value === ""
-                                    ? "Agendar Reunião"
-                                    : `${meetingValues.date.value} | ${meetingValues.startTime.value} |${meetingValues.endTime.value}`
+                                    ? "Reunião"
+                                    : `${normalizeDate(
+                                        meetingValues.date.value
+                                      )} | ${meetingValues.startTime.value} |${
+                                        meetingValues.endTime.value
+                                      }`
                                 }
                               />
-                              <InputGroupAddon
-                                className="appendCustom"
-                                addonType="append"
-                              >
-                                <Button
-                                  className={classNames(
-                                    "btn-icon btn-link like addon"
-                                  )}
-                                  onClick={() => setIsOpen(!isOpen)}
-                                >
-                                  <i className="tim-icons icon-email-85 addon" />
-                                </Button>
-                              </InputGroupAddon>
                             </InputGroup>
                           </FormGroup>
                         </Col>
@@ -1365,31 +1910,34 @@ export default function CadastroFollowUps() {
                           size="large"
                         />
                       </Button>
-                      <Link
+                      {/* <Link
                         to={`/tabelas/cliente/followUps/${cliId}/${campId}`}
+                      > */}
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33,
+                          float: "left"
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                        onClick={() => {
+                          history.goBack();
+                        }}
                       >
-                        <Button
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33,
+                            paddingBottom: 4,
+                            paddingRight: 1,
                             float: "left"
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1,
-                              float: "left"
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
+                      {/* </Link> */}
                     </Form>
                   </CardBody>
                 </Card>

@@ -44,18 +44,18 @@ import {
   HeadsetMic
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import { getDaysInMonth } from "date-fns";
+import { getDaysInMonth, isAfter, isBefore, isToday, parseISO } from "date-fns";
 import { useDispatch } from "react-redux";
 import { store } from "~/store";
 
 // core components
 // import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
-import { barChart_1, doughnutChart_1 } from "./chartsOptions";
+import { barChart_1, CliStatusChart, doughnutChart_1 } from "./chartsOptions";
 import history from "~/services/history";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
-import { normalizeDate } from "~/normalize";
+import { normalizeDate, pt_brDateToEUADate } from "~/normalize";
 import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
 export default function ComercialDashboard() {
@@ -65,6 +65,7 @@ export default function ComercialDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [campData, setCampData] = useState([]);
+  const [dashFields, setDashFields] = useState({});
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
   const [miniChartData, setMiniChartData] = useState();
@@ -81,10 +82,16 @@ export default function ComercialDashboard() {
     green: 0,
     reset: true
   });
-  const [dataForDoughnut] = useState({
+  const [cliStatusGraph, setCliStatusGraph] = useState({
+    atraida: 0,
+    reuniao: 0,
+    orcamento: 0,
+    efetiv: 0,
     reset: true
   });
-  console.log(dataForDoughnut);
+  const [dataForDoughnut, setDataForDoughnut] = useState({
+    reset: true
+  });
   // useEffect(() => {
   //   const createCharts = () => {
   //     const chart_1_2_3_options = {
@@ -284,8 +291,18 @@ export default function ComercialDashboard() {
       const { Colab } = store.getState().auth.user;
       if (Colab) {
         const response = await api.get("/campanha");
-        setData(response.data);
-
+        setData(
+          response.data.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+          )
+        );
+        const dashFieldsAux = {};
         let array = [];
 
         const active = [];
@@ -294,6 +311,7 @@ export default function ComercialDashboard() {
             data: response.data[i].FollowUps,
             camp: response.data[i].id
           };
+          dashFieldsAux[response.data[i].id] = response.data[i].dashFields;
         }
         for (let k = 0; k < active.length; k += 1) {
           // eslint-disable-next-line no-loop-func
@@ -307,13 +325,12 @@ export default function ComercialDashboard() {
           array = [];
         }
         setData2(active);
-
+        setDashFields({ ...dashFieldsAux });
         setIsLoading(false);
       }
     };
     loadData();
   }, []);
-
   const handleFilterChange = async (camp, dataInic, dataFim) => {
     if (!dataForGraph.reset) {
       dataForGraph.red = 0;
@@ -325,10 +342,18 @@ export default function ComercialDashboard() {
       // eslint-disable-next-line no-restricted-syntax
       for (const key in dataForDoughnut) {
         if (dataForDoughnut.hasOwnProperty(key)) {
+          console.log(dataForDoughnut[key]);
           delete dataForDoughnut[key];
         }
       }
       dataForDoughnut.reset = true;
+    }
+    if (!cliStatusGraph.reset) {
+      cliStatusGraph.atraida = 0;
+      cliStatusGraph.reuniao = 0;
+      cliStatusGraph.orcamento = 0;
+      cliStatusGraph.efetiv = 0;
+      cliStatusGraph.reset = false;
     }
     const aux = data.filter(arr => arr.id === parseInt(camp, 10));
 
@@ -338,13 +363,7 @@ export default function ComercialDashboard() {
       dataInic,
       dataFim
     });
-    dispatch(
-      comercialDashFilterFields({
-        camp: aux[0].id,
-        inicDate: dataInic,
-        endDate: dataFim
-      })
-    );
+
     for (let j = 0; j < data2.length; j += 1) {
       if (data2[j].camp === parseInt(camp, 10)) {
         for (let i = 0; i < data2[j].data.length; i += 1) {
@@ -397,8 +416,61 @@ export default function ComercialDashboard() {
             }
           }
         }
+        const newDataInic = new Date(dataInic);
+        const newDataFim = new Date(dataFim);
+        for (let i = 0; i < result.data.cliStatusPassing.rows.length; i += 1) {
+          if (result.data.cliStatusPassing.rows[i].atraida !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].atraida) <=
+              newDataFim
+            ) {
+              cliStatusGraph.atraida += 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+          if (result.data.cliStatusPassing.rows[i].reuniaoAgend !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].reuniaoAgend) <=
+              newDataFim
+            ) {
+              cliStatusGraph.reuniao += 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+          if (result.data.cliStatusPassing.rows[i].orcamentoSolict !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].orcamentoSolict) <=
+              newDataFim
+            ) {
+              cliStatusGraph.orcamento += 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+          if (result.data.cliStatusPassing.rows[i].efetivacao !== null) {
+            if (
+              newDataInic <=
+              new Date(result.data.cliStatusPassing.rows[i].efetivacao) <=
+              newDataFim
+            ) {
+              cliStatusGraph.efetiv = 1;
+              cliStatusGraph.reset = false;
+            }
+          }
+        }
         setMiniChartData(result.data);
       });
+    dispatch(
+      comercialDashFilterFields({
+        camp: aux[0].id,
+        inicDate: dataInic,
+        endDate: dataFim,
+        dataForDoughnut: { ...dataForDoughnut },
+        cliStatusGraph: { ...cliStatusGraph }
+      })
+    );
   };
 
   useEffect(() => {
@@ -454,41 +526,19 @@ export default function ComercialDashboard() {
           inicDate: comercialDash.inicDate,
           endDate: comercialDash.endDate
         });
+        setDataForDoughnut({ ...comercialDash.dataForDoughnut });
+        setCliStatusGraph({ ...comercialDash.cliStatusGraph });
         await api
           .get(
             `comercialDash/?camp=${comercialDash.camp}&dataInic=${comercialDash.inicDate}&dataFim=${comercialDash.endDate}`
           )
           .then(result => {
             setMiniChartData(result.data);
-            for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
-              if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
-                if (
-                  !dataForDoughnut[
-                    result.data.finalizedFups.rows[i].CamposDinamicosProspect
-                      .valor
-                  ]
-                ) {
-                  dataForDoughnut[
-                    result.data.finalizedFups.rows[
-                      i
-                    ].CamposDinamicosProspect.valor
-                  ] = 1;
-                  dataForDoughnut.reset = false;
-                } else {
-                  dataForDoughnut[
-                    result.data.finalizedFups.rows[
-                      i
-                    ].CamposDinamicosProspect.valor
-                  ] += 1;
-                  dataForDoughnut.reset = false;
-                }
-              }
-            }
           });
       }
     }
     teste();
-  }, [data, data2, dataForDoughnut]);
+  }, [data, data2]);
   // const setBgChartData = name => {
   //   setBigChartData(name);
   // };
@@ -635,8 +685,6 @@ export default function ComercialDashboard() {
                         <CardTitle style={{ marginBottom: 0 }} tag="h3">
                           {campData.desc ? campData.desc : "--"}
                         </CardTitle>
-                        {/* <p style={{ fontSize: 14 }}>
-                        </p> */}
                         <p style={{ fontSize: 14 }}>
                           {campData.dataInic
                             ? normalizeDate(campData.dataInic)
@@ -659,7 +707,107 @@ export default function ComercialDashboard() {
                   </CardBody> */}
                 </Card>
               </Col>
-              <Col lg="4" md="6">
+            </Row>
+            <Row>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
+                    : false
+                }
+                lg="8"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Evolução Funil
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-send text-info" />{" "}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={CliStatusChart.data(
+                          ["Atraídas", "Convertidas", "Ativadas", "Alcançadas"],
+                          [
+                            cliStatusGraph.atraida,
+                            cliStatusGraph.reuniao,
+                            cliStatusGraph.orcamento,
+                            cliStatusGraph.efetiv
+                          ]
+                        )}
+                        options={CliStatusChart.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/campCli/?status=${elems[0]._model.label}`
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FinsMotivo") ===
+                      -1
+                    : false
+                }
+                lg="4"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Finalizados Por Motivo
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-simple-remove text-info" />{" "}
+                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Doughnut
+                        data={doughnutChart_1.data(
+                          Object.keys(dataForDoughnut).filter(
+                            arr => arr !== "reset"
+                          ),
+                          Object.values(dataForDoughnut).filter(
+                            arr => arr !== false && arr !== true
+                          )
+                        )}
+                        options={doughnutChart_1.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("EmpIncluida") ===
+                      -1
+                    : false
+                }
+                lg="4"
+                md="6"
+              >
                 <Card className="card-stats">
                   <CardBody>
                     <Row>
@@ -692,7 +840,7 @@ export default function ComercialDashboard() {
                     <hr />
                     <div className="stats">
                       <Link
-                        to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
+                        to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/created`}
                       >
                         <i className="tim-icons icon-refresh-01" /> Ver Empresas
                       </Link>
@@ -701,7 +849,14 @@ export default function ComercialDashboard() {
                 </Card>
               </Col>
               <Col lg="4" md="6">
-                <Card className="card-stats">
+                <Card
+                  hidden={
+                    dashFields[dataForTable.campId]
+                      ? dashFields[dataForTable.campId].search("FupsTot") === -1
+                      : false
+                  }
+                  className="card-stats"
+                >
                   <CardBody>
                     <Row>
                       <Col xs="5">
@@ -741,7 +896,14 @@ export default function ComercialDashboard() {
                 </Card>
               </Col>
               <Col lg="4" md="6">
-                <Card className="card-stats">
+                <Card
+                  hidden={
+                    dashFields[dataForTable.campId]
+                      ? dashFields[dataForTable.campId].search("EmpFin") === -1
+                      : false
+                  }
+                  className="card-stats"
+                >
                   <CardBody>
                     <Row>
                       <Col xs="5">
@@ -784,7 +946,14 @@ export default function ComercialDashboard() {
               </Col>
             </Row>
             <Row>
-              <Col lg="4">
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FupsProx") === -1
+                    : false
+                }
+                lg="4"
+              >
                 <Card className=" /*card-chart">
                   <CardHeader>
                     <p style={{ color: "#808080" }} className="card-category">
@@ -827,38 +996,53 @@ export default function ComercialDashboard() {
                   </CardBody>
                 </Card>
               </Col>
-              <Col lg="4" />
-              <Col lg="4">
+              {/* <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
+                    : false
+                }
+                lg="4"
+              >
                 <Card className=" /*card-chart">
                   <CardHeader>
                     <p style={{ color: "#808080" }} className="card-category">
-                      Finalizados Por Motivo
+                      Status
                     </p>
                     <CardTitle
                       tag="h4"
                       style={{ color: "orange", fontSize: 20 }}
                     >
-                      <i className="tim-icons icon-simple-remove text-info" />{" "}
-                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                      <i className="tim-icons icon-send text-info" />{" "}
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <div className="chart-area">
-                      <Doughnut
-                        data={doughnutChart_1.data(
-                          Object.keys(dataForDoughnut).filter(
-                            arr => arr !== "reset"
-                          ),
-                          Object.values(dataForDoughnut).filter(
-                            arr => arr !== false && arr !== true
-                          )
+                      <Bar
+                        data={barChart_1.data(
+                          ["Reunião Agendada", "Orçamento", "Efetivado"],
+                          [
+                            cliStatusGraph.reuniao,
+                            cliStatusGraph.orcamento,
+                            cliStatusGraph.efetiv
+                          ]
                         )}
-                        options={doughnutChart_1.options}
+                        options={barChart_1.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                            );
+                          }
+                        }}
                       />
                     </div>
                   </CardBody>
                 </Card>
-              </Col>
+              </Col> */}
             </Row>
           </div>
         </>

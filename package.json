@@ -40,6 +40,7 @@
     "react-google-maps": "^9.4.5",
     "react-idle-timer": "^4.6.4",
     "react-jvectormap": "^0.0.15",
+    "react-loading": "^2.0.3",
     "react-notification-alert": "^0.0.12",
     "react-number-format": "^4.4.1",
     "react-redux": "^7.2",

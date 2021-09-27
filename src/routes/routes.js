@@ -183,6 +183,7 @@ import ComercialEmpresasIncluidasTable from "~/views/tables/comercial/empresasIn
 import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTable";
 import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
 import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
+import ForgotPass from "~/views/login/forgoPass";
 
 const routes = [
   {
@@ -227,6 +228,15 @@ const routes = [
     namePerfil: "Login",
     mini: "L",
     component: signIn,
+    layout: "/auth",
+    redirect: true
+  },
+  {
+    path: "/forgotPass",
+    name: "Forgot Pass",
+    namePerfil: "Forgot Pass",
+    mini: "L",
+    component: ForgotPass,
     layout: "/auth",
     redirect: true
   },
@@ -728,7 +738,7 @@ const routes = [
     redirect: true,
     views: [
       {
-        path: "/tabelas/comercial/empresas/:campId/:inicDate/:endDate",
+        path: "/tabelas/comercial/empresas/:campId/:inicDate/:endDate/:type",
         name: "Empresas Incluídas",
         namePerfil: "Empresas Incluídas Tab",
         mini: "EMP",
@@ -866,7 +876,7 @@ const routes = [
         layout: "/admin"
       },
       {
-        path: "/cliente/comp_update/:id",
+        path: "/cliente/comp_update/:id/:prospect",
         name: "Atualizar Complemento do Cliente",
         namePerfil: "Atualizar Complemento do Cliente Cad",
         mini: "RF",

@@ -29,22 +29,26 @@ import {
   Row,
   Label,
   FormGroup,
-  Input
+  Input,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
 } from "reactstrap";
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
-  ArrowBackIos,
   Close,
   InsertEmoticon,
+  PostAdd,
   SentimentDissatisfied,
   SentimentSatisfiedAltSharp,
   SentimentVeryDissatisfied,
   SentimentVeryDissatisfiedSharp
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import fileDownload from "js-file-download";
 import api from "~/services/api";
 import { store } from "~/store";
 import iconExcel from "~/assets/img/iconExcel.png";
@@ -85,6 +89,20 @@ function ComercialFUPsTotalTable() {
   };
   const [values, setValues] = useState(stateSchema);
 
+  const downloadFile = async () => {
+    // eslint-disable-next-line no-restricted-syntax
+    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file", "");
+    document.body.appendChild(link);
+    link.click();
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    // eslint-disable-next-line no-await-in-loop
+    await delay(500);
+  };
+
   const checkAcao = value => {
     switch (value) {
       case 1:
@@ -95,6 +113,8 @@ function ComercialFUPsTotalTable() {
         return "Solicitar Orçamento";
       case 4:
         return "Iniciar Contato";
+      case 5:
+        return "Analisar Reunião";
       case 10:
         return "Finalizar";
       default:
@@ -528,42 +548,52 @@ function ComercialFUPsTotalTable() {
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
-                  <Link to="/dashboardComercial">
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <ArrowBackIos />
-                      </Button>
-                    </Tooltip>
-                  </Link>
-                  <div style={{ marginTop: 10, float: "right" }}>
-                    <Tooltip
-                      title="Exportar para excel"
-                      placement="top"
-                      interactive
-                      onClick={async () => {
-                        await api
-                          .get(
-                            `/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&totalFUP=true&repeat=true`,
-                            {
-                              responseType: "blob"
-                            }
-                          )
-                          .then(response =>
-                            fileDownload(
-                              response.data,
-                              "Relatório Follow Ups.xlsx"
-                            )
-                          );
-                      }}
+                  <UncontrolledDropdown style={{ float: "right" }}>
+                    <DropdownToggle
+                      style={{ paddingLeft: "0px" }}
+                      caret
+                      color="default"
+                      data-toggle="dropdown"
+                      nav
+                      onClick={e => e.preventDefault()}
                     >
-                      <img alt="Exportar para excel" src={iconExcel} />
-                    </Tooltip>
-                  </div>
+                      <PostAdd />
+                      <div className="photo" />
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-navbar" right tag="ul">
+                      <NavLink onClick={() => downloadFile()} tag="li">
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <div style={{ float: "left", marginRight: "3%" }}>
+                            <img alt="Exportar para excel" src={iconExcel} />
+                          </div>
+                          <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+                        </DropdownItem>
+                      </NavLink>
+                      <NavLink tag="li">
+                        <Link to="/dashboardComercial">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <span
+                              style={{
+                                float: "left",
+                                marginRight: "3%",
+                                fontSize: "1.25rem"
+                              }}
+                              className="material-icons"
+                            >
+                              logout
+                            </span>
+                            <p style={{ paddingTop: "2%" }}>Voltar</p>
+                          </DropdownItem>
+                        </Link>
+                      </NavLink>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                   <h3 style={{ marginBottom: 0 }}>Follow Ups</h3>
                   <p style={{ fontSize: 14 }}>
                     {campData.cod} | {campData.desc}

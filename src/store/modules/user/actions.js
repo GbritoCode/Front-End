@@ -4,6 +4,25 @@ export function signFailure() {
   };
 }
 
+export function forgotPassFail() {
+  return {
+    type: "@auth/FAIL_FORGOT_PASS"
+  };
+}
+
+export function forgotPassOK() {
+  return {
+    type: "@auth/OK_FORGOT_PASS"
+  };
+}
+
+export function forgotPass(email) {
+  return {
+    type: "@auth/REQUEST_FORGOT_PASS",
+    payload: { email }
+  };
+}
+
 export function updateProfile(
   id,
   nome,

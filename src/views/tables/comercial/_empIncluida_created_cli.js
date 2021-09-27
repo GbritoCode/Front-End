@@ -26,6 +26,10 @@ import {
   CardHeader,
   Col,
   Button,
+  Input,
+  Label,
+  Row,
+  FormGroup,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -35,31 +39,50 @@ import {
 
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { PostAdd } from "@material-ui/icons";
+import { Close, PostAdd } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
+import { normalizeCnpj, normalizeDatetime, normalizeFone } from "~/normalize";
 import { store } from "~/store";
-import { normalizeDate } from "~/normalize";
-import iconExcel from "~/assets/img/iconExcel.png";
 
+import iconExcel from "~/assets/img/iconExcel.png";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import Modal from "~/components/Modal/modalLarge";
 /* eslint-disable eqeqeq */
-function ComercialEmpresasFimTable() {
+function EmpresasIncluidasCreatedCli() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
   const { campId, inicDate, endDate } = useParams();
   const dispatch = useDispatch();
 
-  const [campData, setCampData] = useState();
-  const [data, setData] = useState([]);
+  const [isOpen, setIsOpen] = useState();
+  const [data, setData] = useState();
   const [access, setAccess] = useState("");
   const [Colab, setColab] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const history = useHistory();
+  const stateSchema = {
+    empresaId: "",
+    cnpj: "",
+    rzSoc: "",
+    nomeAbv: "",
+    representante: "",
+    tipoComiss: "",
+    fone: "",
+    site: "",
+    atvPrincipal: "",
+    fantasia: "",
+    erp: "",
+    database: "",
+    ramo: "",
+    setor: "",
+    qtdFuncionarios: ""
+  };
+  const [values, setValues] = useState(stateSchema);
 
   const downloadFile = async () => {
     // eslint-disable-next-line no-restricted-syntax
-    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=true&repeat=true`;
+    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`;
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", "file", "");
@@ -71,6 +94,7 @@ function ComercialEmpresasFimTable() {
     await delay(500);
   };
 
+  const history = useHistory();
   useEffect(() => {
     const { acessible } = store.getState().auth;
     const { id } = store.getState().auth.user.Colab;
@@ -89,47 +113,53 @@ function ComercialEmpresasFimTable() {
         `comercialDash/?camp=${campId}&dataInic=${inicDate}&dataFim=${endDate}`
       );
 
-      const response1 = await api.get(`/campanha/${campId}/true`);
-      setCampData({
-        cod: response1.data.cod,
-        desc: response1.data.desc
-      });
-
       setData(
-        response.data.finalizedFups.rows.map((fup, key) => {
+        response.data.cliJoinedCamp.rows.map((campCli, key) => {
           return {
             idd: key,
-            id: fup.id,
-            campanhaDesc: fup.Campanha.desc,
-            Cliente: fup.Cliente.nomeAbv,
-            cidade: fup.Cliente.CliComp.cidade,
-            uf: fup.Cliente.CliComp.uf,
-            ramo: fup.Cliente.ramo ? fup.Cliente.ramo : "--",
-            setor: fup.Cliente.setor ? fup.Cliente.setor : "--",
-            contato: fup.CliCont.nome,
-            cargoCont: fup.CliCont.cargo ? fup.CliCont.cargo : "--",
-            motivo: fup.CamposDinamicosProspect
-              ? fup.CamposDinamicosProspect.valor
+            id: campCli.Cliente.id,
+            campanhaDesc: campCli.Campanha.desc,
+            Cliente: campCli.Cliente.nomeAbv,
+            setor: campCli.Cliente.setor ? campCli.Cliente.setor : "--",
+            cidade: campCli.Cliente.CliComp.cidade,
+            uf: campCli.Cliente.CliComp.uf,
+            ramo: campCli.Cliente.ramo ? campCli.Cliente.ramo : "--",
+            contNome: campCli.Cliente.CliConts[0]
+              ? campCli.Cliente.CliConts[0].nome
               : "--",
-            dataFim: normalizeDate(fup.dataContato),
-            data: fup.createdAt,
+            // eslint-disable-next-line no-nested-ternary
+            contCargo: campCli.Cliente.CliConts[0]
+              ? campCli.Cliente.CliConts[0].cargo
+                ? campCli.Cliente.CliConts[0].cargo
+                : "--"
+              : "--",
+            data: normalizeDatetime(campCli.Cliente.createdAt),
             actions: (
               // we've added some custom button actions
               <>
                 <div className="actions-right">
-                  <Link
-                    to={`/timeline/cliente/followUps/${fup.Cliente.id}/${campId}`}
-                  >
-                    <Tooltip title="Visualizar">
-                      <Button
-                        color="default"
-                        size="sm"
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <i className="tim-icons icon-zoom-split" />
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  <Tooltip title="Visualizar">
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        setIsOpen(true);
+                        setValues({
+                          cnpj: normalizeCnpj(campCli.Cliente.CNPJ),
+                          fantasia: campCli.Cliente.fantasia,
+                          rzSoc: campCli.Cliente.rzSoc,
+                          nomeAbv: campCli.Cliente.nomeAbv,
+                          representante: campCli.Cliente.Representante.nome,
+                          site: campCli.Cliente.site,
+                          fone: normalizeFone(campCli.Cliente.fone),
+                          atvPrincipal: campCli.Cliente.atvPrincipal
+                        });
+                      }}
+                    >
+                      <i className="tim-icons icon-zoom-split" />
+                    </Button>
+                  </Tooltip>
 
                   {/* use this button to remove the data row */}
                 </div>
@@ -150,7 +180,7 @@ function ComercialEmpresasFimTable() {
       ) : (
         <>
           <div className="content">
-            {/* <Modal
+            <Modal
               onClose={() => {
                 setIsOpen(!isOpen);
               }}
@@ -252,8 +282,7 @@ function ComercialEmpresasFimTable() {
                 </Col>
               </Row>
               <Footer />
-            </Modal> */}
-
+            </Modal>
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
@@ -281,7 +310,6 @@ function ComercialEmpresasFimTable() {
                           <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
                         </DropdownItem>
                       </NavLink>
-
                       <NavLink tag="li">
                         <Link to="/dashboardComercial">
                           <DropdownItem
@@ -305,10 +333,7 @@ function ComercialEmpresasFimTable() {
                     </DropdownMenu>
                   </UncontrolledDropdown>
 
-                  <h3 style={{ marginBottom: 0 }}>Empresas Finalizadas</h3>
-                  <p style={{ fontSize: 14 }}>
-                    {campData.cod} | {campData.desc}
-                  </p>
+                  <h3 style={{ marginBottom: 0 }}>Empresas Incluídas</h3>
                 </CardHeader>
                 <CardBody>
                   <ReactTable
@@ -354,19 +379,16 @@ function ComercialEmpresasFimTable() {
                       },
                       {
                         Header: "Contato",
-                        accessor: "contato"
+                        accessor: "contNome"
                       },
                       {
                         Header: "Cargo",
-                        accessor: "cargo"
+                        accessor: "contCargo"
                       },
                       {
-                        Header: "Motivo",
-                        accessor: "motivo"
-                      },
-                      {
-                        Header: "DataFim",
-                        accessor: "dataFim",
+                        Header: "Data",
+                        accessor: "data",
+                        // minWidth: 100,
                         sortMethod: (a, b) => {
                           // force null and undefined to the bottom
                           a = a === null || a === undefined ? -Infinity : a;
@@ -398,35 +420,6 @@ function ComercialEmpresasFimTable() {
                         sortable: false,
                         filterable: false
                       }
-                      // {
-                      //   Header: "Data",
-                      //   accessor: "data",
-                      //   minWidth: 150,
-                      // sortMethod: (a, b) => {
-                      //   // force null and undefined to the bottom
-                      //   a = a === null || a === undefined ? -Infinity : a;
-                      //   b = b === null || b === undefined ? -Infinity : b;
-                      //   // force any string values to lowercase
-                      //   a = typeof a === "string" ? a.toLowerCase() : a;
-                      //   b = typeof b === "string" ? b.toLowerCase() : b;
-                      //   // Return either 1 or -1 to indicate a sort priority
-                      //   const aSplitted = a.split("/");
-                      //   const bSplitted = b.split("/");
-                      //   console.log(aSplitted);
-                      //   a = `${aSplitted[2]}-${aSplitted[1]}-${aSplitted[0]}`;
-                      //   b = `${bSplitted[2]}-${bSplitted[1]}-${bSplitted[0]}`;
-                      //   console.log(a);
-
-                      //   if (a > b) {
-                      //     return 1;
-                      //   }
-                      //   if (a < b) {
-                      //     return -1;
-                      //   }
-                      //   // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
-                      //   return 0;
-                      // }
-                      // }
                     ]}
                     defaultPageSize={10}
                     showPagination
@@ -444,4 +437,4 @@ function ComercialEmpresasFimTable() {
   );
 }
 
-export default ComercialEmpresasFimTable;
+export default EmpresasIncluidasCreatedCli;

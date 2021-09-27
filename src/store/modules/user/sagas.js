@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import history from "~/services/history";
 import api from "~/services/api";
 
-import { signFailure } from "./actions";
+import { forgotPassFail, forgotPassOK, signFailure } from "./actions";
 import { firstColabSuccess } from "../Colab/actions";
 
 export function* profileUpdate({ payload }) {
@@ -47,4 +47,19 @@ export function* profileUpdate({ payload }) {
   }
 }
 
-export default all([takeLatest("@update/USER_REQUEST", profileUpdate)]);
+export function* forgotPass({ payload }) {
+  try {
+    const { email } = payload;
+    yield call(api.put, `users_pass`, email);
+
+    yield put(forgotPassOK());
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(forgotPassFail());
+  }
+}
+
+export default all([
+  takeLatest("@update/USER_REQUEST", profileUpdate),
+  takeLatest("@auth/REQUEST_FORGOT_PASS", forgotPass)
+]);

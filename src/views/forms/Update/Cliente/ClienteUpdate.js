@@ -29,7 +29,12 @@ import {
   Input,
   Label,
   Row,
-  Col
+  Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  NavLink
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
@@ -43,8 +48,10 @@ import {
   Close,
   Contacts,
   FormatListBulleted,
-  InfoOutlined
+  InfoOutlined,
+  PostAdd
 } from "@material-ui/icons";
+import { isBefore } from "date-fns";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteUpdate } from "~/store/modules/Cliente/actions";
@@ -93,15 +100,17 @@ function ClienteUpdatee() {
       const response3 = await api.get(`/empresa/${empresa}`);
       setData1(response1.data);
       setData2(response2.data);
-      console.log(
-        response.data.Campanhas.filter(
-          arr => arr.Campanhas_Clientes.ClienteId === response.data.id
-        )
-      );
       setData4(
         response.data.Campanhas.filter(
           arr => arr.Campanhas_Clientes.ClienteId === response.data.id
         ).map((camp, key) => {
+          let situation = true;
+          if (
+            isBefore(new Date(camp.dataFim), new Date()) ||
+            !camp.Campanhas_Clientes.ativo
+          ) {
+            situation = false;
+          }
           return {
             idd: key,
             id: camp.id,
@@ -115,9 +124,7 @@ function ClienteUpdatee() {
                 ? camp.FollowUps.find(arr => arr.ClienteId === response.data.id)
                     .dataContato
                 : "--",
-            situacao: camp.Campanhas_Clientes.ativo
-              ? "Em Prospecção"
-              : "Finalizado",
+            situacao: situation ? "Em Prospecção" : "Finalizado",
             created:
               camp.FollowUps.find(arr => arr.ClienteId === response.data.id) !==
               undefined
@@ -323,68 +330,11 @@ function ClienteUpdatee() {
   }
 
   function checkProsp(param, aux) {
-    if (param == "false" && aux === "icons") {
-      return (
-        <>
-          <Link to={`/cliente/comp_update/${id}`}>
-            <Tooltip title="Complemento" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <EventNoteIcon />
-              </Button>
-            </Tooltip>
-          </Link>
-          <Link to={`/tabelas/cliente/rec_desp/${id}`}>
-            <Tooltip title="Receita" placement="top" interactive>
-              <Button
-                style={{ float: "right" }}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-              >
-                <AttachMoney />
-              </Button>
-            </Tooltip>
-          </Link>
-        </>
-      );
-    }
     switch (aux) {
-      case "icon":
+      case "icons":
         switch (param) {
           case "false":
-            return (
-              <>
-                <Link to={`/cliente/comp_update/${id}`}>
-                  <Tooltip title="Complemento" placement="top" interactive>
-                    <Button
-                      style={{ float: "right" }}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <EventNoteIcon />
-                    </Button>
-                  </Tooltip>
-                </Link>
-                <Link to={`/tabelas/cliente/rec_desp/${id}`}>
-                  <Tooltip title="Receita" placement="top" interactive>
-                    <Button
-                      style={{ float: "right" }}
-                      color="default"
-                      size="sm"
-                      className={classNames("btn-icon btn-link like")}
-                    >
-                      <AttachMoney />
-                    </Button>
-                  </Tooltip>
-                </Link>
-              </>
-            );
+            return <></>;
 
           default:
             break;
@@ -643,7 +593,7 @@ function ClienteUpdatee() {
                     <Check fontSize="large" />
                   </Button>
                 </Tooltip>{" "}
-                <h3 style={{ marginBottom: 0 }}>Dados Opcionais</h3>
+                <h3 style={{ marginBottom: 0 }}>Informações Opcionais</h3>
               </Header>
               <Row>
                 <Col sm="4">
@@ -744,45 +694,94 @@ function ClienteUpdatee() {
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4">
-                      {checkProsp(prospect, "icons")}
-                      <Link
-                        to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
-                      >
-                        <Tooltip title="Contato" placement="top" interactive>
-                          <Button
-                            style={{ float: "right" }}
-                            color="default"
-                            size="sm"
-                            className={classNames("btn-icon btn-link like")}
-                          >
-                            <Contacts />
-                          </Button>
-                        </Tooltip>
-                      </Link>
-
-                      <Tooltip title="Campanhas" placement="top" interactive>
-                        <Button
-                          style={{ float: "right" }}
+                      <UncontrolledDropdown style={{ float: "right" }}>
+                        <DropdownToggle
+                          caret
                           color="default"
-                          size="sm"
-                          className={classNames("btn-icon btn-link like")}
-                          onClick={() => setIsOpen(true)}
+                          data-toggle="dropdown"
+                          nav
+                          onClick={e => e.preventDefault()}
                         >
-                          <FormatListBulleted />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip title="Info" placement="top" interactive>
-                        <Button
-                          style={{
-                            float: "right"
-                          }}
-                          size="sm"
-                          onClick={() => setIsOpenInfo(true)}
-                          className={classNames("btn-icon btn-link like")}
+                          <PostAdd />
+                          <div className="photo" />
+                        </DropdownToggle>
+                        <DropdownMenu
+                          className="dropdown-navbar"
+                          right
+                          tag="ul"
                         >
-                          <InfoOutlined />
-                        </Button>
-                      </Tooltip>
+                          <NavLink tag="li">
+                            <Link to={`/cliente/comp_update/${id}/${prospect}`}>
+                              <DropdownItem
+                                style={{ paddingLeft: "3%" }}
+                                className="nav-item"
+                              >
+                                <EventNoteIcon
+                                  style={{ float: "left", marginRight: "3%" }}
+                                  fontSize="small"
+                                />
+                                <p style={{ paddingTop: "2%" }}>Complemento</p>
+                              </DropdownItem>
+                            </Link>
+                          </NavLink>
+                          <NavLink hidden={prospect === "true"} tag="li">
+                            <Link to={`/tabelas/cliente/rec_desp/${id}`}>
+                              <DropdownItem
+                                style={{ paddingLeft: "3%" }}
+                                className="nav-item"
+                              >
+                                <AttachMoney
+                                  style={{ float: "left", marginRight: "3%" }}
+                                  fontSize="small"
+                                />
+                                <p style={{ paddingTop: "2%" }}>
+                                  Receita/Despesa
+                                </p>
+                              </DropdownItem>
+                            </Link>
+                          </NavLink>
+                          <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
+                            <Link
+                              to={`/tabelas/cliente/cont/${id}/?prospect=${prospect}`}
+                            >
+                              <DropdownItem
+                                style={{ paddingLeft: "3%" }}
+                                className="nav-item"
+                              >
+                                <Contacts
+                                  style={{ float: "left", marginRight: "3%" }}
+                                  fontSize="small"
+                                />
+                                <p style={{ paddingTop: "2%" }}>Contato</p>
+                              </DropdownItem>
+                            </Link>
+                          </NavLink>
+                          <NavLink onClick={() => setIsOpen(true)} tag="li">
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <FormatListBulleted
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Campanhas</p>
+                            </DropdownItem>
+                          </NavLink>
+                          <NavLink onClick={() => setIsOpenInfo(true)} tag="li">
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <InfoOutlined
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Informações</p>
+                            </DropdownItem>
+                          </NavLink>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
                       {checkProsp(prospect, "title")}
                     </CardTitle>
                   </CardHeader>

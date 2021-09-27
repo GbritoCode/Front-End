@@ -3177,6 +3177,7 @@ input[type="button"].btn-block {
     text-decoration: none; }
   .nav-link.disabled {
     color: #6c757d;
+    background-color: #cacaca;
     pointer-events: none;
     cursor: default; }
 
@@ -3192,7 +3193,7 @@ input[type="button"].btn-block {
       border-color: #e9ecef #e9ecef #e3e3e3; }
     .nav-tabs .nav-link.disabled {
       color: #6c757d;
-      background-color: transparent;
+    background-color: #cacaca;
       border-color: transparent; }
   .nav-tabs .nav-link.active,
   .nav-tabs .nav-item.show .nav-link {

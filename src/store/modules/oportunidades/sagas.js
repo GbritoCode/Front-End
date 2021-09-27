@@ -8,37 +8,9 @@ import { signFailure, UpdateSuccess } from "./actions";
 
 export function* oportCadastro({ payload }) {
   try {
-    const {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      UndNegId,
-      RecDespId,
-      SegmentoId,
-      RepresentanteId,
-      contato,
-      data,
-      fase,
-      cod,
-      desc,
-      narrativa
-    } = payload;
-    yield call(api.post, "oportunidade", {
-      EmpresaId,
-      ColabId,
-      ClienteId,
-      UndNegId,
-      RecDespId,
-      SegmentoId,
-      RepresentanteId,
-      contato,
-      data,
-      fase,
-      cod,
-      desc,
-      narrativa
-    });
+    const response = yield call(api.post, "oportunidade", payload);
     history.push("/tabelas/oportunidade/oport");
+    toast.success(response.data.message);
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());

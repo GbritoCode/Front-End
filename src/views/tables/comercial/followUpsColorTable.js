@@ -25,7 +25,6 @@ import { Card, CardBody, CardHeader, Col, Button } from "reactstrap";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
-import { ArrowBackIos } from "@material-ui/icons";
 import { normalizeCnpj } from "~/normalize";
 import api from "~/services/api";
 import { store } from "~/store";
@@ -86,7 +85,6 @@ function ProspeccaoTable() {
                 arr => arr.CampanhaId === parseInt(campId, 10)
               );
       }
-      console.log(camp);
       setCampanha({ cod: camp.cod, desc: camp.desc });
       access === "acessoRestrito" &&
         setData2(
@@ -94,8 +92,11 @@ function ProspeccaoTable() {
             arr =>
               arr.Representante.ColabId === Colab &&
               arr.Campanhas_Clientes.ativo === true &&
-              arr.FollowUps[0].distanceFromToday <= maxDays &&
-              arr.FollowUps[0].distanceFromToday >= minDays
+              (arr.FollowUps[0] ? arr.FollowUps[0].distanceFromToday : 99999) <=
+                maxDays &&
+              (arr.FollowUps[0]
+                ? arr.FollowUps[0].distanceFromToday
+                : -99999) >= minDays
           ).map((client, key) => {
             return {
               idd: key,
@@ -171,12 +172,16 @@ function ProspeccaoTable() {
         );
       access === "acessoTotal" &&
         setData2(
-          camp.Clientes.filter(
-            arr =>
+          camp.Clientes.filter(arr => {
+            return (
               arr.Campanhas_Clientes.ativo === true &&
-              arr.FollowUps[0].distanceFromToday <= maxDays &&
-              arr.FollowUps[0].distanceFromToday >= minDays
-          ).map((client, key) => {
+              (arr.FollowUps[0] ? arr.FollowUps[0].distanceFromToday : 99999) <=
+                maxDays &&
+              (arr.FollowUps[0]
+                ? arr.FollowUps[0].distanceFromToday
+                : -99999) >= minDays
+            );
+          }).map((client, key) => {
             return {
               idd: key,
               id: client.id,
@@ -313,7 +318,7 @@ function ProspeccaoTable() {
                         }}
                         className={classNames("btn-icon btn-link like")}
                       >
-                        <ArrowBackIos />
+                        <span className="material-icons">logout</span>{" "}
                       </Button>
                     </Tooltip>
                   </Link>

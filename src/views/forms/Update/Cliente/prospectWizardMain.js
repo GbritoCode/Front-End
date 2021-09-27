@@ -27,6 +27,7 @@ import history from "~/services/history";
 import Step1 from "./ProspectWizardSteps/step1_Prospect";
 import Step2 from "./ProspectWizardSteps/step2_ProspectAddress";
 import Step3 from "./ProspectWizardSteps/step3_ProspectContato";
+import Step4 from "./ProspectWizardSteps/step4_optionalInfo";
 
 var steps = [
   {
@@ -43,6 +44,11 @@ var steps = [
     stepName: "Contato Prospect",
     stepIcon: "tim-icons icon-single-02",
     component: Step3
+  },
+  {
+    stepName: "Informações Opcionais",
+    stepIcon: "tim-icons icon-link-72",
+    component: Step4
   }
 ];
 

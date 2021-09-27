@@ -203,29 +203,21 @@ export function* updateCliRecDesp({ payload }) {
 
 //---------------------------------------------
 //---------------------------------------------
-
+// {
+//    id: int (updateOnly)
+//    EmpresaId: int,
+//    cod: str,
+//    desc: str,
+//    ClientesIds: arr(int),
+//    dataInic: dateOnly,
+//    dataFim: dateOnly,
+//    ColabId: int,
+//    Objetivo: str,
+//    dashFields: str,
+// }
 export function* campanhaCadastro({ payload }) {
   try {
-    const {
-      EmpresaId,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId,
-      objetivo
-    } = payload;
-    yield call(api.post, "campanha", {
-      EmpresaId,
-      cod,
-      desc,
-      ClienteIds,
-      dataInic,
-      dataFim,
-      ColabId,
-      objetivo
-    });
+    yield call(api.post, "campanha", payload);
     history.push(`/tabelas/cliente/campanha`);
   } catch (err) {
     toast.error(err.response.data.error);
@@ -281,9 +273,16 @@ export function* updateCamposDinamicos({ payload }) {
 
 export function* followUpsCadastro({ payload }) {
   try {
-    const { CampanhaId } = payload;
-    yield call(api.post, "followUp", payload);
-    history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
+    // const { CampanhaId } = payload.Follow;
+    yield call(api.post, "followUp", payload.Follow);
+    if (payload.Oport) {
+      yield call(api.post, "oportunidade", payload.Oport);
+    }
+    if (payload.Meeting) {
+      yield call(api.post, `/followUp/meeting/?Cc=${""}`, payload.Meeting);
+    }
+    // history.push(`/tabelas/prospeccao/campanha/${CampanhaId}`);
+    history.goBack();
   } catch (err) {
     toast.error(err.response.data.error);
     yield put(signFailure());
