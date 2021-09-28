@@ -82,7 +82,7 @@ function EmpresasIncluidasCreatedCli() {
 
   const downloadFile = async () => {
     // eslint-disable-next-line no-restricted-syntax
-    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?filter=true&campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&repeat=false`;
+    const url = `${process.env.REACT_APP_API_URL}/cliente/export/?campId=${campId}&inicDate=${inicDate}&endDate=${endDate}&finalized=false&filter=true&empIncluida=true`;
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", "file", "");
