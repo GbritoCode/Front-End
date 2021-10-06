@@ -150,6 +150,8 @@ import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTabl
 import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
 import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
 import ForgotPass from "~/views/login/forgoPass";
+import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
+import MovimentoCaixaTable from "~/views/tables/comercial/movimentoCaixaTable";
 
 export default function Routes() {
   return (
@@ -384,6 +386,11 @@ export default function Routes() {
       <Route
         path="/tabelas/comercial/FUPs/:campId/:color"
         component={ComercialFUPsColorTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/comercial/movCaixa"
+        component={MovimentoCaixaTable}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
@@ -694,6 +701,11 @@ export default function Routes() {
       <Route
         path="/cadastro/fechamento/periodo"
         component={CadastroPeriodo}
+        isPrivate
+      />
+      <Route
+        path="/cadastro/comercial/movCaixa"
+        component={MovimentoCaixaCadastro}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

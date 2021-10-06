@@ -7,6 +7,7 @@ import cliente from "./Cliente/reducer";
 import colab from "./Colab/reducer";
 import oport from "./oportunidades/reducer";
 import field from "./keepingFields/reducer";
+import comercial from "./comercial/reducer";
 
 export default combineReducers({
   auth,
@@ -15,5 +16,6 @@ export default combineReducers({
   geral,
   cliente,
   oport,
-  field
+  field,
+  comercial
 });

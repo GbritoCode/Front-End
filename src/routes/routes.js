@@ -184,6 +184,8 @@ import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTabl
 import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
 import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
 import ForgotPass from "~/views/login/forgoPass";
+import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
+import MovimentoCaixaTable from "~/views/tables/comercial/movimentoCaixaTable";
 
 const routes = [
   {
@@ -333,6 +335,15 @@ const routes = [
         namePerfil: "Liberar Períodos Tab",
         mini: "LPE",
         component: PeriodTokenTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: `/tabelas/comercial/movCaixa`,
+        name: "Movimento Caixa",
+        namePerfil: "Movimento Caixa tab",
+        mini: "MVC",
+        component: MovimentoCaixaTable,
         layout: "/admin",
         profile: 10
       }
@@ -1282,6 +1293,14 @@ const routes = [
         namePerfil: "Cadastro de Periodo Cad",
         mini: "RF",
         component: CadastroPeriodo,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/comercial/movCaixa",
+        name: "Cadastro de Movimento Caixa",
+        namePerfil: "Cadastro de MOvimento Caixa",
+        mini: "MVC",
+        component: MovimentoCaixaCadastro,
         layout: "/admin"
       }
       // astros Fim---------------------------------------------------------------------------------------------------------------------
