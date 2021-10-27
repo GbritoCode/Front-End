@@ -58,7 +58,8 @@ function ParametrosUpdatee() {
     vlrBsHr: { value: "", error: "", message: "" },
     vlrBsDesp: { value: "", error: "", message: "" },
     adiantaPgmto: { value: "", error: "", message: "" },
-    percAdiantaPgmto: { value: "", error: "", message: "" }
+    percAdiantaPgmto: { value: "", error: "", message: "" },
+    compHrs: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -103,7 +104,8 @@ function ParametrosUpdatee() {
           value: normalizeCurrency(JSON.stringify(response.data.vlrBsDesp))
         },
         adiantaPgmto: { value: response.data.adiantaPgmto },
-        percAdiantaPgmto: { value: response.data.percAdiantaPgmto }
+        percAdiantaPgmto: { value: response.data.percAdiantaPgmto },
+        compHrs: { value: response.data.compHrs }
       }));
 
       setIsLoading(false);
@@ -228,7 +230,8 @@ function ParametrosUpdatee() {
           vlrBsHrdb,
           vlrBsDespdb,
           values.adiantaPgmto.value,
-          values.percAdiantaPgmto.value
+          values.percAdiantaPgmto.value,
+          values.compHrs.value
         )
       );
     } else {
@@ -563,6 +566,27 @@ function ParametrosUpdatee() {
                             {values.percAdiantaPgmto.error === "has-danger" ? (
                               <Label className="error">
                                 {values.percAdiantaPgmto.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Total Horas Mensal</Label>
+                          <FormGroup
+                            className={`has-label ${values.compHrs.error}`}
+                          >
+                            <Input
+                              name="compHrs"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "compHrs", "number")
+                              }
+                              value={values.compHrs.value}
+                            />
+                            {values.compHrs.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.compHrs.message}
                               </Label>
                             ) : null}
                           </FormGroup>

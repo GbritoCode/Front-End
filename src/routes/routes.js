@@ -186,6 +186,7 @@ import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTabl
 import ForgotPass from "~/views/login/forgoPass";
 import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
 import MovimentoCaixaTable from "~/views/tables/comercial/movimentoCaixaTable";
+import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 
 const routes = [
   {
@@ -219,6 +220,15 @@ const routes = [
         namePerfil: "Comercial Dash",
         mini: "COM",
         component: DashboardComercial,
+        profile: 10,
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardFinanceira",
+        name: "Financeira",
+        namePerfil: "Financeira Dash",
+        mini: "FIN",
+        component: FinanceiraDashboard,
         profile: 10,
         layout: "/admin"
       }

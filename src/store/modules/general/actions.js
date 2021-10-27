@@ -183,7 +183,8 @@ export function ParametrosUpdate(
   vlrBsHr,
   vlrBsDesp,
   adiantaPgmto,
-  percAdiantaPgmto
+  percAdiantaPgmto,
+  compHrs
 ) {
   return {
     type: "@update/PARAMETROS_REQUEST",
@@ -202,7 +203,8 @@ export function ParametrosUpdate(
       vlrBsHr,
       vlrBsDesp,
       adiantaPgmto,
-      percAdiantaPgmto
+      percAdiantaPgmto,
+      compHrs
     }
   };
 }

@@ -1,0 +1,1133 @@
+/*!
+
+=========================================================
+* Black Dashboard PRO React - v1.0.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React, { useEffect, useState } from "react";
+// nodejs library that concatenates classes
+import classNames from "classnames";
+// react plugin used to create charts
+import { Bar, Doughnut, Line } from "react-chartjs-2";
+// react plugin for creating vector maps
+
+// reactstrap components
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  Row,
+  Col,
+  Input,
+  Label
+} from "reactstrap";
+
+import { Link } from "react-router-dom";
+import {
+  Business,
+  Check,
+  Close,
+  DateRangeOutlined,
+  DomainDisabled,
+  HeadsetMic
+} from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
+import {
+  format,
+  getDaysInMonth,
+  isAfter,
+  isBefore,
+  isToday,
+  parseISO
+} from "date-fns";
+// import { useDispatch } from "react-redux";
+import pt from "date-fns/locale/pt-BR";
+import { store } from "~/store";
+
+// core components
+// import { chart_1_2_3_options } from "~/variables/charts";
+import api from "~/services/api";
+import {
+  barChart_1,
+  bigChartLines,
+  CliStatusChart,
+  doughnutChart_1
+} from "./chartsOptions";
+import history from "~/services/history";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import Modal from "~/components/Modal/modalLarge";
+import { pt_brDateToEUADate } from "~/normalize";
+// import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
+
+export default function FinanceiraDashboard() {
+  document.body.classList.add("white-content");
+  // const dispatch = useDispatch();
+
+  const [visaoFilter, setVisaoFilter] = useState("mes");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [label, setLabel] = useState([]);
+  const [dashFields, setDashFields] = useState({});
+  const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
+  const [miniChartData, setMiniChartData] = useState();
+  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
+  const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
+  const [dataForTable, setDataForTable] = useState({
+    campId: "",
+    inicDate: `${year}-${month}-01`,
+    endDate: `${year}-${month}-${lastDayMonth}`
+  });
+  const [dataForGraph, setDataForGraph] = useState({
+    red: 0,
+    yellow: 0,
+    green: 0,
+    reset: true
+  });
+  const [cliStatusGraph, setCliStatusGraph] = useState({
+    atraida: 0,
+    reuniao: 0,
+    orcamento: 0,
+    efetiv: 0,
+    reset: true
+  });
+  const [dataForDoughnut, setDataForDoughnut] = useState({
+    reset: true
+  });
+  const [header, setHeader] = useState({
+    visao: format(new Date(), "LLLL", { locale: pt }),
+    particao: "Geral"
+  });
+
+  useEffect(() => {
+    const loadData = async () => {
+      const { Colab } = store.getState().auth.user;
+      if (Colab) {
+        const response = await api.get("/campanha");
+        setData(
+          response.data.filter(
+            arr =>
+              (isAfter(
+                new Date(),
+                parseISO(pt_brDateToEUADate(arr.dataInic))
+              ) ||
+                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
+              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
+          )
+        );
+        const dashFieldsAux = {};
+        let array = [];
+
+        const active = [];
+        for (let i = 0; i < response.data.length; i += 1) {
+          active[i] = {
+            data: response.data[i].FollowUps,
+            camp: response.data[i].id
+          };
+          dashFieldsAux[response.data[i].id] = response.data[i].dashFields;
+        }
+        for (let k = 0; k < active.length; k += 1) {
+          // eslint-disable-next-line no-loop-func
+          active[k].data = active[k].data.filter(arr => {
+            if (!array.includes(arr.ClienteId)) {
+              array.push(arr.ClienteId);
+              return true;
+            }
+            return false;
+          });
+          array = [];
+        }
+        setData2(active);
+        setDashFields({ ...dashFieldsAux });
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+  // const handleFilterChange = async (camp, dataInic, dataFim) => {
+  //   if (!dataForGraph.reset) {
+  //     dataForGraph.red = 0;
+  //     dataForGraph.yellow = 0;
+  //     dataForGraph.green = 0;
+  //     dataForGraph.reset = false;
+  //   }
+  //   if (!dataForDoughnut.reset) {
+  //     // eslint-disable-next-line no-restricted-syntax
+  //     for (const key in dataForDoughnut) {
+  //       if (dataForDoughnut.hasOwnProperty(key)) {
+  //         console.log(dataForDoughnut[key]);
+  //         delete dataForDoughnut[key];
+  //       }
+  //     }
+  //     dataForDoughnut.reset = true;
+  //   }
+  //   if (!cliStatusGraph.reset) {
+  //     cliStatusGraph.atraida = 0;
+  //     cliStatusGraph.reuniao = 0;
+  //     cliStatusGraph.orcamento = 0;
+  //     cliStatusGraph.efetiv = 0;
+  //     cliStatusGraph.reset = false;
+  //   }
+  //   const aux = data.filter(arr => arr.id === parseInt(camp, 10));
+
+  //   setCampData({
+  //     cod: aux[0].cod,
+  //     desc: aux[0].desc,
+  //     dataInic,
+  //     dataFim
+  //   });
+
+  //   for (let j = 0; j < data2.length; j += 1) {
+  //     if (data2[j].camp === parseInt(camp, 10)) {
+  //       for (let i = 0; i < data2[j].data.length; i += 1) {
+  //         switch (true) {
+  //           case data2[j].data[i].distanceFromToday <= 0 &&
+  //             data2[j].data[i].proxPasso !== 10:
+  //             dataForGraph.red += 1;
+  //             dataForGraph.reset = false;
+  //             break;
+  //           case data2[j].data[i].distanceFromToday > 0 &&
+  //             data2[j].data[i].distanceFromToday <= 4 &&
+  //             data2[j].data[i].proxPasso !== 10:
+  //             dataForGraph.yellow += 1;
+  //             dataForGraph.reset = false;
+  //             break;
+  //           case data2[j].data[i].distanceFromToday >= 5 &&
+  //             data2[j].data[i].proxPasso !== 10:
+  //             dataForGraph.green += 1;
+  //             dataForGraph.reset = false;
+  //             break;
+  //           case data2[j].data[i].distanceFromToday === "--":
+  //             return "--";
+  //           default:
+  //         }
+  //       }
+  //     }
+  //   }
+  //   setDataForTable({ campId: camp, inicDate: dataInic, endDate: dataFim });
+  //   await api
+  //     .get(
+  //       `comercialDash/?camp=${camp}&dataInic=${dataInic}&dataFim=${dataFim}`
+  //     )
+  //     .then(result => {
+  //       for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
+  //         if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
+  //           if (
+  //             !dataForDoughnut[
+  //               result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
+  //             ]
+  //           ) {
+  //             dataForDoughnut[
+  //               result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
+  //             ] = 1;
+  //             dataForDoughnut.reset = false;
+  //           } else {
+  //             dataForDoughnut[
+  //               result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
+  //             ] += 1;
+  //             dataForDoughnut.reset = false;
+  //           }
+  //         }
+  //       }
+  //       const newDataInic = new Date(dataInic);
+  //       const newDataFim = new Date(dataFim);
+  //       for (let i = 0; i < result.data.cliStatusPassing.rows.length; i += 1) {
+  //         if (result.data.cliStatusPassing.rows[i].atraida !== null) {
+  //           if (
+  //             newDataInic <=
+  //             new Date(result.data.cliStatusPassing.rows[i].atraida) <=
+  //             newDataFim
+  //           ) {
+  //             cliStatusGraph.atraida += 1;
+  //             cliStatusGraph.reset = false;
+  //           }
+  //         }
+  //         if (result.data.cliStatusPassing.rows[i].reuniaoAgend !== null) {
+  //           if (
+  //             newDataInic <=
+  //             new Date(result.data.cliStatusPassing.rows[i].reuniaoAgend) <=
+  //             newDataFim
+  //           ) {
+  //             cliStatusGraph.reuniao += 1;
+  //             cliStatusGraph.reset = false;
+  //           }
+  //         }
+  //         if (result.data.cliStatusPassing.rows[i].orcamentoSolict !== null) {
+  //           if (
+  //             newDataInic <=
+  //             new Date(result.data.cliStatusPassing.rows[i].orcamentoSolict) <=
+  //             newDataFim
+  //           ) {
+  //             cliStatusGraph.orcamento += 1;
+  //             cliStatusGraph.reset = false;
+  //           }
+  //         }
+  //         if (result.data.cliStatusPassing.rows[i].efetivacao !== null) {
+  //           if (
+  //             newDataInic <=
+  //             new Date(result.data.cliStatusPassing.rows[i].efetivacao) <=
+  //             newDataFim
+  //           ) {
+  //             cliStatusGraph.efetiv = 1;
+  //             cliStatusGraph.reset = false;
+  //           }
+  //         }
+  //       }
+  //       setMiniChartData(result.data);
+  //     });
+  //   dispatch(
+  //     comercialDashFilterFields({
+  //       camp: aux[0].id,
+  //       inicDate: dataInic,
+  //       endDate: dataFim,
+  //       dataForDoughnut: { ...dataForDoughnut },
+  //       cliStatusGraph: { ...cliStatusGraph }
+  //     })
+  //   );
+  // };
+
+  useEffect(() => {
+    async function teste() {
+      const { comercialDash } = store.getState().field;
+      if (comercialDash.camp) {
+        // const aux = data.filter(arr => arr.id === comercialDash.camp);
+
+        for (let j = 0; j < data2.length; j += 1) {
+          if (data2[j].camp === parseInt(comercialDash.camp, 10)) {
+            for (let i = 0; i < data2[j].data.length; i += 1) {
+              switch (true) {
+                case data2[j].data[i].distanceFromToday <= 0 &&
+                  data2[j].data[i].proxPasso !== 10:
+                  setDataForGraph(prevState => ({
+                    ...prevState,
+                    red: prevState.red + 1,
+                    reset: false
+                  }));
+                  break;
+                case data2[j].data[i].distanceFromToday > 0 &&
+                  data2[j].data[i].distanceFromToday <= 4 &&
+                  data2[j].data[i].proxPasso !== 10:
+                  setDataForGraph(prevState => ({
+                    ...prevState,
+                    yellow: prevState.yellow + 1,
+                    reset: false
+                  }));
+                  break;
+                case data2[j].data[i].distanceFromToday >= 5 &&
+                  data2[j].data[i].proxPasso !== 10:
+                  setDataForGraph(prevState => ({
+                    ...prevState,
+                    green: prevState.green + 1,
+                    reset: false
+                  }));
+                  break;
+                case data2[j].data[i].distanceFromToday === "--":
+                  return "--";
+                default:
+              }
+            }
+          }
+        }
+        setDataForTable({
+          campId: comercialDash.camp,
+          inicDate: comercialDash.inicDate,
+          endDate: comercialDash.endDate
+        });
+        setDataForDoughnut({ ...comercialDash.dataForDoughnut });
+        setCliStatusGraph({ ...comercialDash.cliStatusGraph });
+        await api
+          .get(
+            `comercialDash/?camp=${comercialDash.camp}&dataInic=${comercialDash.inicDate}&dataFim=${comercialDash.endDate}`
+          )
+          .then(result => {
+            setMiniChartData(result.data);
+          });
+      }
+    }
+    teste();
+  }, [data, data2]);
+  // const setBgChartData = name => {
+  //   setBigChartData(name);
+  // };
+
+  const createLabels = (type, division, lastDay) => {
+    switch (type) {
+      case "mensal":
+        switch (division) {
+          case "geral":
+            if (lastDay === 31) {
+              setLabel([
+                1,
+                3,
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17,
+                19,
+                21,
+                23,
+                25,
+                27,
+                29,
+                31
+              ]);
+            }
+            setLabel([1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]);
+            break;
+          case "1q":
+            setLabel([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+            break;
+          case "2q":
+            if (lastDay === 31) {
+              setLabel([
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31
+              ]);
+            }
+            setLabel([
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30
+            ]);
+            break;
+
+          default:
+            break;
+        }
+        break;
+      case "anual":
+        switch (division) {
+          case "geral":
+            setLabel([
+              "Jan",
+              "Fev",
+              "Mar",
+              "Abr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Ago",
+              "Set",
+              "Out",
+              "Nov",
+              "Dez"
+            ]);
+
+            break;
+          case "1sem":
+            setLabel(["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"]);
+
+            break;
+          case "2sem":
+            setLabel(["Jul", "Ago", "Set", "Out", "Nov", "Dez"]);
+
+            break;
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+    <>
+      {isLoading ? (
+        <>
+          <div className="content" />
+        </>
+      ) : (
+        <>
+          <div className="content">
+            <Modal
+              style={{ width: "50%" }}
+              onClose={() => {
+                setIsOpen(false);
+              }}
+              open={isOpen}
+            >
+              <Header>
+                {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <h4 className="modalHeader">Filtro</h4>
+              </Header>
+
+              <Row>
+                <Col sm="4">
+                  <Label>Visão</Label>
+                  <Input
+                    type="select"
+                    id="visao"
+                    onChangeCapture={e => {
+                      const { value } = e.target;
+                      createLabels(
+                        value,
+                        document.getElementById("particao").value,
+                        30
+                      );
+                      if (value === "mensal") {
+                        document.getElementById("mesCol").hidden = false;
+                        document.getElementById("anoCol").hidden = true;
+                        setVisaoFilter("mes");
+                        setHeader(prevState => ({
+                          ...prevState,
+                          visao: value
+                        }));
+                      } else {
+                        document.getElementById("mesCol").hidden = true;
+                        document.getElementById("anoCol").hidden = false;
+                        setVisaoFilter("ano");
+                        setHeader(prevState => ({
+                          ...prevState,
+                          visao: value
+                        }));
+                      }
+                      // handleFilterChange(
+                      //   e.target.value,
+                      //   document.getElementById("dataInic").value
+                      //     ? document.getElementById("dataInic").value
+                      //     : dataForTable.inicDate,
+                      //   document.getElementById("dataFim").value
+                      //     ? document.getElementById("dataFim").value
+                      //     : dataForTable.endDate
+                      // );
+                    }}
+                  >
+                    <option key={1} value="mensal">
+                      Mensal
+                    </option>
+                    <option key={2} value="anual">
+                      Anual
+                    </option>
+                  </Input>
+                </Col>
+                <Col id="mesCol" sm="4">
+                  <Label>Mes</Label>
+                  <Input
+                    type="select"
+                    id="mes"
+                    onChangeCapture={e => {
+                      const { value } = e.target;
+                      createLabels(
+                        "mensal",
+                        document.getElementById("particao").value,
+                        30
+                      );
+                      //   handleFilterChange(
+                      //     document.getElementById("camp").value
+                      //       ? document.getElementById("camp").value
+                      //       : dataForTable.campId,
+                      //     e.target.value,
+                      //     document.getElementById("dataFim").value
+                      //       ? document.getElementById("dataFim").value
+                      //       : dataForTable.endDate
+                      //   );
+                      setHeader(prevState => ({
+                        ...prevState,
+                        visao: value
+                      }));
+                    }}
+                  >
+                    <option key={1} value="Janeiro">
+                      Janeiro
+                    </option>
+                    <option key={2} value="Fevereiro">
+                      Fevereiro
+                    </option>
+                    <option key={3} value="Março">
+                      Março
+                    </option>
+                    <option key={4} value="Abril">
+                      Abril
+                    </option>
+                    <option key={5} value="Maio">
+                      Maio
+                    </option>
+                    <option key={6} value="Junho">
+                      Junho
+                    </option>
+                    <option key={7} value="Julho">
+                      Julho
+                    </option>
+                    <option key={8} value="Agosto">
+                      Agosto
+                    </option>
+                    <option key={9} value="Setembro">
+                      Setembro
+                    </option>
+                    <option key={10} value="Outubro">
+                      Outubro
+                    </option>
+                    <option key={11} value="Novembro">
+                      Novembro
+                    </option>
+                    <option key={12} value="Dezembro">
+                      Dezembro
+                    </option>
+                  </Input>
+                </Col>
+                <Col hidden id="anoCol" sm="4">
+                  <Label>Ano</Label>
+                  <Input
+                    type="select"
+                    id="ano"
+                    onChangeCapture={e => {
+                      const { value } = e.target.value;
+                      createLabels(
+                        "anual",
+                        document.getElementById("particao").value,
+                        30
+                      );
+                      //   handleFilterChange(
+                      //     document.getElementById("camp").value
+                      //       ? document.getElementById("camp").value
+                      //       : dataForTable.campId,
+                      //     e.target.value,
+                      //     document.getElementById("dataFim").value
+                      //       ? document.getElementById("dataFim").value
+                      //       : dataForTable.endDate
+                      //   );
+                      setHeader(prevState => ({
+                        ...prevState,
+                        visao: value
+                      }));
+                    }}
+                  >
+                    <option key={2020} value={2020}>
+                      2020
+                    </option>
+                    <option key={2021} value={2021}>
+                      2021
+                    </option>
+                    <option key={2022} value={2022}>
+                      2022
+                    </option>
+                    <option key={2023} value={2023}>
+                      2023
+                    </option>
+                  </Input>
+                </Col>
+                <Col sm="4">
+                  <Label>Partição</Label>
+                  <Input
+                    type="select"
+                    id="particao"
+                    onChangeCapture={e => {
+                      const { value } = e.target;
+                      createLabels(
+                        visaoFilter === "ano" ? "anual" : "mensal",
+                        value,
+                        30
+                      );
+                      // handleFilterChange(
+                      //   document.getElementById("camp").value
+                      //     ? document.getElementById("camp").value
+                      //     : dataForTable.campId,
+                      //   document.getElementById("dataInic").value
+                      //     ? document.getElementById("dataInic").value
+                      //     : dataForTable.inicDate,
+                      //   e.target.value
+                      // );
+                      setHeader(prevState => ({
+                        ...prevState,
+                        particao: value
+                      }));
+                    }}
+                  >
+                    <option key={1} value="geral">
+                      Geral
+                    </option>
+                    <option hidden={visaoFilter === "ano"} key={2} value="1q">
+                      1ª Quinzena
+                    </option>
+                    <option hidden={visaoFilter === "ano"} key={3} value="2q">
+                      2ª Quinzena
+                    </option>
+                    <option hidden={visaoFilter === "mes"} key={4} value="1sem">
+                      1º Semestre
+                    </option>
+                    <option hidden={visaoFilter === "mes"} key={5} value="2sem">
+                      2º Semestre
+                    </option>
+                  </Input>
+                </Col>
+              </Row>
+
+              <Footer />
+            </Modal>
+
+            <Row>
+              <Col xs="12">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <Row>
+                      <Col className="text-left" sm="12">
+                        <Tooltip title="Filtrar">
+                          <Button
+                            style={{
+                              float: "right",
+                              padding: 0
+                            }}
+                            onClick={() => {
+                              setIsOpen(true);
+                            }}
+                            size="sm"
+                            className={classNames("btn-icon btn-link like")}
+                          >
+                            <DateRangeOutlined />
+                          </Button>
+                        </Tooltip>
+
+                        <CardTitle
+                          style={{
+                            marginBottom: 0,
+                            textTransform: "capitalize"
+                          }}
+                          tag="h3"
+                        >
+                          {header.visao}
+                        </CardTitle>
+                        <p style={{ fontSize: 14 }}>{header.particao}</p>
+                      </Col>
+                    </Row>
+                  </CardHeader>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="12">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Fluxo de Caixa
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    />
+                  </CardHeader>{" "}
+                  <CardBody>
+                    <div className="chart-area">
+                      <Line
+                        data={bigChartLines.data(
+                          [15, 10, 15],
+                          [35, 40, 15],
+                          label
+                        )}
+                        options={bigChartLines.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
+                    : false
+                }
+                lg="8"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Evolução Funil
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-send text-info" />{" "}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={CliStatusChart.data(
+                          ["Atraídas", "Convertidas", "Ativadas", "Alcançadas"],
+                          [
+                            cliStatusGraph.atraida,
+                            cliStatusGraph.reuniao,
+                            cliStatusGraph.orcamento,
+                            cliStatusGraph.efetiv
+                          ]
+                        )}
+                        options={CliStatusChart.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/campCli/?status=${elems[0]._model.label}`
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FinsMotivo") ===
+                      -1
+                    : false
+                }
+                lg="4"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Finalizados Por Motivo
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-simple-remove text-info" />{" "}
+                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Doughnut
+                        data={doughnutChart_1.data(
+                          Object.keys(dataForDoughnut).filter(
+                            arr => arr !== "reset"
+                          ),
+                          Object.values(dataForDoughnut).filter(
+                            arr => arr !== false && arr !== true
+                          )
+                        )}
+                        options={doughnutChart_1.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("EmpIncluida") ===
+                      -1
+                    : false
+                }
+                lg="4"
+                md="6"
+              >
+                <Card className="card-stats">
+                  <CardBody>
+                    <Row>
+                      <Col xs="5">
+                        <div className="info-icon text-center icon-warning">
+                          <Business
+                            style={{ marginTop: 7, color: "white" }}
+                            fontSize="large"
+                          />
+                        </div>
+                      </Col>
+                      <Col xs="7">
+                        <div className="numbers">
+                          <p
+                            style={{ textTransform: "capitalize" }}
+                            className="card-category"
+                          >
+                            Empresas Incluídas
+                          </p>
+                          <CardTitle tag="h3">
+                            {miniChartData
+                              ? miniChartData.cliJoinedCamp.rows.length
+                              : 0}
+                          </CardTitle>
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                  <CardFooter>
+                    <hr />
+                    <div className="stats">
+                      <Link
+                        to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/created`}
+                      >
+                        <i className="tim-icons icon-refresh-01" /> Ver Empresas
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Col>
+              <Col lg="4" md="6">
+                <Card
+                  hidden={
+                    dashFields[dataForTable.campId]
+                      ? dashFields[dataForTable.campId].search("FupsTot") === -1
+                      : false
+                  }
+                  className="card-stats"
+                >
+                  <CardBody>
+                    <Row>
+                      <Col xs="5">
+                        <div className="info-icon text-center icon-primary">
+                          <HeadsetMic
+                            style={{ marginTop: 7, color: "white" }}
+                            fontSize="large"
+                          />
+                        </div>
+                      </Col>
+                      <Col xs="7">
+                        <div className="numbers">
+                          <p
+                            style={{ textTransform: "capitalize" }}
+                            className="card-category"
+                          >
+                            Follow Ups
+                          </p>
+                          <CardTitle tag="h3">
+                            {miniChartData ? miniChartData.Fups.rows.length : 0}
+                          </CardTitle>
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                  <CardFooter>
+                    <hr />
+                    <div className="stats">
+                      <Link
+                        to={`tabelas/comercial/FUPs/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
+                      >
+                        <i className="tim-icons icon-sound-wave" /> Ver Follow
+                        Ups
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Col>
+              <Col lg="4" md="6">
+                <Card
+                  hidden={
+                    dashFields[dataForTable.campId]
+                      ? dashFields[dataForTable.campId].search("EmpFin") === -1
+                      : false
+                  }
+                  className="card-stats"
+                >
+                  <CardBody>
+                    <Row>
+                      <Col xs="5">
+                        <div className="info-icon text-center icon-info">
+                          <DomainDisabled
+                            style={{ marginTop: 7, color: "white" }}
+                            fontSize="large"
+                          />
+                        </div>
+                      </Col>
+                      <Col xs="7">
+                        <div className="numbers">
+                          <p
+                            style={{ textTransform: "capitalize" }}
+                            className="card-category"
+                          >
+                            {" "}
+                            Empresas Finalizadas
+                          </p>
+                          <CardTitle tag="h3">
+                            {miniChartData
+                              ? miniChartData.finalizedFups.rows.length
+                              : 0}
+                          </CardTitle>
+                        </div>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                  <CardFooter>
+                    <hr />
+                    <div className="stats">
+                      <Link
+                        to={`tabelas/comercial/empresasFinalizadas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
+                      >
+                        <i className="tim-icons icon-trophy" /> Ver Empresas
+                      </Link>{" "}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("FupsProx") === -1
+                    : false
+                }
+                lg="4"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      FUPs
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-send text-info" />{" "}
+                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={barChart_1.data(
+                          ["Urgente", "Em Breve", "Distante"],
+                          [
+                            dataForGraph.red,
+                            dataForGraph.yellow,
+                            dataForGraph.green
+                          ]
+                        )}
+                        options={barChart_1.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                            );
+                          }
+                          // and then redirect to the target page:
+                          // window.location = "https://example.com";
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+              {/* <Col
+                hidden={
+                  dashFields[dataForTable.campId]
+                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
+                    : false
+                }
+                lg="4"
+              >
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <p style={{ color: "#808080" }} className="card-category">
+                      Status
+                    </p>
+                    <CardTitle
+                      tag="h4"
+                      style={{ color: "orange", fontSize: 20 }}
+                    >
+                      <i className="tim-icons icon-send text-info" />{" "}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={barChart_1.data(
+                          ["Reunião Agendada", "Orçamento", "Efetivado"],
+                          [
+                            cliStatusGraph.reuniao,
+                            cliStatusGraph.orcamento,
+                            cliStatusGraph.efetiv
+                          ]
+                        )}
+                        options={barChart_1.options}
+                        onElementsClick={elems => {
+                          // if required to build the URL, you can
+                          // get datasetIndex and value index from an `elem`:
+                          if (elems.length > 0) {
+                            console.log(elems[0]._model.label);
+                            return history.push(
+                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col> */}
+            </Row>
+          </div>
+        </>
+      )}
+    </>
+  );
+}

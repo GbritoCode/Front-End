@@ -35,7 +35,7 @@ import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import api from "~/services/api";
-import { normalizeDate } from "~/normalize";
+import { normalizeCurrency, normalizeDate } from "~/normalize";
 import { sortDates } from "~/sortingMethodReactTable";
 
 export default function MovimentoCaixaTable() {
@@ -78,13 +78,13 @@ export default function MovimentoCaixaTable() {
             idd: key,
             id: mov.id,
             RecDesp: mov.RecDesp.RecDesp === "Rec" ? "Receita" : "Despesa",
-            valor: mov.valor,
+            valor: normalizeCurrency(mov.valor.toFixed(2)),
             ColabCreate: mov.ColabCreated.nome,
             ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
-            Fornec: mov.Fornec.nome,
-            Cliente: mov.Cliente.nomeAbv,
+            Fornec: mov.Fornec ? mov.Fornec.nome : "--",
+            Cliente: mov.Cliente ? mov.Cliente.nomeAbv : "--",
             dtVenc: normalizeDate(mov.dtVenc),
-            dtLiqui: mov.dtLiqui ? normalizeDate(mov.dataLiqui) : "--",
+            dtLiqui: mov.dtLiqui ? normalizeDate(mov.dtLiqui) : "--",
             status: checkStatus(mov.status),
             actions: (
               // we've added some custom button actions

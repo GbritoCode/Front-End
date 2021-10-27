@@ -139,8 +139,10 @@ export function normalizeHrToMin(minsTotal) {
 }
 
 export function normalizeDate(date) {
-  const separatedDate = date.split("-");
-  return `${separatedDate[2]}/${separatedDate[1]}/${separatedDate[0]}`;
+  if (date) {
+    const separatedDate = date.split("-");
+    return `${separatedDate[2]}/${separatedDate[1]}/${separatedDate[0]}`;
+  }
 }
 
 export function normalizeDatetime(datetime) {
@@ -149,9 +151,11 @@ export function normalizeDatetime(datetime) {
 }
 
 export function pt_brDateToEUADate(datetime) {
-  const date = datetime.split("/");
-  const americanDate = new Date(
-    `${date[2]}-${date[1]}-${date[0]}`
-  ).toISOString();
-  return americanDate;
+  if (datetime) {
+    const date = datetime.split("/");
+    const americanDate = new Date(
+      `${date[2]}-${date[1]}-${date[0]}`
+    ).toISOString();
+    return americanDate;
+  }
 }

@@ -236,7 +236,8 @@ export function* updateParametros({ payload }) {
       vlrBsHr,
       vlrBsDesp,
       adiantaPgmto,
-      percAdiantaPgmto
+      percAdiantaPgmto,
+      compHrs
     } = payload;
 
     const Colab = {
@@ -253,7 +254,8 @@ export function* updateParametros({ payload }) {
       vlrBsHr,
       vlrBsDesp,
       adiantaPgmto,
-      percAdiantaPgmto
+      percAdiantaPgmto,
+      compHrs
     };
 
     const response = yield call(api.put, `parametros/${id}`, Colab);

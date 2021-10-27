@@ -55,6 +55,7 @@ export default function MovimentoCaixaCadastro() {
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [data4, setData4] = useState([]);
+  const [fieldFornecCli, setFieldFornecCli] = useState("Cliente");
   const [isLoading, setIsLoading] = useState(true);
   const [isOpenCli, setIsOpenCli] = useState(false);
   const [isOpenFornec, setIsOpenFornec] = useState(false);
@@ -262,6 +263,7 @@ export default function MovimentoCaixaCadastro() {
       notify();
     }
   };
+  console.log(values);
   return (
     <>
       {isLoading ? (
@@ -412,7 +414,7 @@ export default function MovimentoCaixaCadastro() {
                     <Close fontSize="large" />
                   </Button>
                 </Tooltip>{" "}
-                <h4 className="modalHeader">Cliente</h4>
+                <h4 className="modalHeader">Fornecedor</h4>
               </Header>
 
               <ReactTable
@@ -519,7 +521,7 @@ export default function MovimentoCaixaCadastro() {
                     <Close fontSize="large" />
                   </Button>
                 </Tooltip>{" "}
-                <h4 className="modalHeader">Cliente</h4>
+                <h4 className="modalHeader">Receita/Despesa</h4>
               </Header>
 
               <ReactTable
@@ -537,6 +539,27 @@ export default function MovimentoCaixaCadastro() {
                         document.getElementsByName(
                           "RecDespId"
                         )[0].value = `${rowInfo.original.recDesp} - ${rowInfo.original.desc}`;
+                        if (rowInfo.original.recDesp === "Desp") {
+                          setFieldFornecCli("Fornec");
+                          setValues(prevState => ({
+                            ...prevState,
+                            ClienteId: {
+                              value: "",
+                              optional: true
+                            }
+                          }));
+                          document.getElementsByName("ClienteId")[0].value = ``;
+                        } else if (rowInfo.original.recDesp === "Rec") {
+                          setFieldFornecCli("Cliente");
+                          setValues(prevState => ({
+                            ...prevState,
+                            FornecId: {
+                              value: "",
+                              optional: true
+                            }
+                          }));
+                          document.getElementsByName("FornecId")[0].value = ``;
+                        }
                         setIsOpenRecDesp(!isOpenRecDesp);
                       }
                     }
@@ -634,6 +657,37 @@ export default function MovimentoCaixaCadastro() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Receita/Despesa</Label>
+                          <FormGroup
+                            className={`has-label ${values.RecDespId.error}`}
+                          >
+                            <InputGroup>
+                              <Input disabled name="RecDespId" type="text" />{" "}
+                              <InputGroupAddon
+                                className="appendCustom"
+                                addonType="append"
+                              >
+                                <Button
+                                  className={classNames(
+                                    "btn-icon btn-link like addon"
+                                  )}
+                                  onClick={() => {
+                                    setIsOpenRecDesp(true);
+                                  }}
+                                >
+                                  <i className="tim-icons icon-zoom-split addon" />
+                                </Button>
+                              </InputGroupAddon>
+                            </InputGroup>
+
+                            {values.RecDespId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.RecDespId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col hidden={fieldFornecCli !== "Fornec"} md="4">
                           <Label>Fornecedor</Label>
                           <FormGroup
                             className={`has-label ${values.FornecId.error}`}
@@ -664,7 +718,7 @@ export default function MovimentoCaixaCadastro() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
+                        <Col hidden={fieldFornecCli !== "Cliente"} md="4">
                           <Label>Cliente</Label>
                           <FormGroup
                             className={`has-label ${values.ClienteId.error}`}
@@ -697,37 +751,6 @@ export default function MovimentoCaixaCadastro() {
                       </Row>
                       <Row>
                         <Col md="4">
-                          <Label>Receita/Despesa</Label>
-                          <FormGroup
-                            className={`has-label ${values.RecDespId.error}`}
-                          >
-                            <InputGroup>
-                              <Input disabled name="RecDespId" type="text" />{" "}
-                              <InputGroupAddon
-                                className="appendCustom"
-                                addonType="append"
-                              >
-                                <Button
-                                  className={classNames(
-                                    "btn-icon btn-link like addon"
-                                  )}
-                                  onClick={() => {
-                                    setIsOpenRecDesp(true);
-                                  }}
-                                >
-                                  <i className="tim-icons icon-zoom-split addon" />
-                                </Button>
-                              </InputGroupAddon>
-                            </InputGroup>
-
-                            {values.RecDespId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.RecDespId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
-                        <Col md="4">
                           <Label>Valor</Label>
                           <FormGroup
                             className={`has-label ${values.valor.error}`}
@@ -748,7 +771,11 @@ export default function MovimentoCaixaCadastro() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Data Vencimento</Label>
+                          <Label>
+                            {fieldFornecCli === "Cliente"
+                              ? "Data Recebimento"
+                              : "Data Vencimento"}
+                          </Label>
                           <FormGroup
                             className={`has-label ${values.dtVenc.error}`}
                           >
@@ -767,8 +794,6 @@ export default function MovimentoCaixaCadastro() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Situação</Label>
                           <FormGroup
@@ -799,6 +824,7 @@ export default function MovimentoCaixaCadastro() {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <Row />
 
                       <Row />
 

@@ -152,6 +152,7 @@ import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTabl
 import ForgotPass from "~/views/login/forgoPass";
 import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
 import MovimentoCaixaTable from "~/views/tables/comercial/movimentoCaixaTable";
+import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 
 export default function Routes() {
   return (
@@ -168,6 +169,11 @@ export default function Routes() {
       <Route
         path="/dashboardComercial"
         component={DashboardComercial}
+        isPrivate
+      />
+      <Route
+        path="/dashboardFinanceira"
+        component={FinanceiraDashboard}
         isPrivate
       />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

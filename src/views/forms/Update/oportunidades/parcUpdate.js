@@ -31,12 +31,12 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { Tooltip } from "@material-ui/core";
 import { GetApp } from "@material-ui/icons";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
-import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
+import { pagamentoParcela } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 import history from "~/services/history";
 
@@ -73,9 +73,6 @@ export default function ParcelaUpdate() {
   };
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-
-  const query = new URLSearchParams(useLocation().search);
-  const fromDash = query.get("fromDash");
 
   const downloadFile = async () => {
     for (const file of data.ParcelaFiles) {
@@ -140,12 +137,30 @@ export default function ParcelaUpdate() {
       .getElementsByName("vlrParcela")[0]
       .value.replace(/[.,]+/g, "");
     const saldo = parc - vPago;
-    if (vPago - parc > 0) {
+    if (parc - vPago < 0) {
       setOptional(prevState => ({
         ...prevState,
         vlrPago: {
           error: "has-danger",
           message: "O valor pago não pode ser maior do que a parcela"
+        }
+      }));
+      return;
+    }
+    if (parc - vPago === 0) {
+      setOptional(prevState => ({
+        ...prevState,
+        situacao: {
+          value: 4
+        }
+      }));
+      return;
+    }
+    if (parc - vPago > 0) {
+      setOptional(prevState => ({
+        ...prevState,
+        situacao: {
+          value: 3
         }
       }));
       return;
@@ -238,24 +253,22 @@ export default function ParcelaUpdate() {
       var vlrParceladb = values.vlrParcela.value.replace(/[^\d]+/g, "");
       var vlrPagodb = optional.vlrPago.value.replace(/[^\d]+/g, "");
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
-      const status = !!fromDash;
 
       dispatch(
-        parcelaUpdate(
+        pagamentoParcela({
           id,
-          values.OportunidadeId.value,
-          values.parcela.value,
-          vlrParceladb,
-          values.dtEmissao.value,
-          values.dtVencimento.value,
-          values.notaFiscal.value,
-          optional.pedidoCliente.value,
-          optional.situacao.value,
-          optional.dtLiquidacao.value,
-          vlrPagodb,
-          saldodb,
-          status
-        )
+          OpotunidadeId: values.OportunidadeId.value,
+          parcela: values.parcela.value,
+          vlrParcela: vlrParceladb,
+          dtEmissao: values.dtEmissao.value,
+          dtVencimento: values.dtVencimento.value,
+          notaFiscal: values.notaFiscal.value,
+          pedidoCliente: optional.pedidoCliente.value,
+          situacao: optional.situacao.value,
+          dtLiquidacao: optional.dtLiquidacao.value,
+          vlrPago: vlrPagodb,
+          saldo: saldodb
+        })
       );
     } else {
       options = {
@@ -457,7 +470,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.situacao.error}`}
                           >
                             <Input
-                              disabled={disabledField}
+                              disabled
                               name="situacao"
                               type="select"
                               onChange={event =>

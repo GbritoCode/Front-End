@@ -208,12 +208,6 @@ export const doughnutChart_1 = {
     };
   },
   options: {
-    // onClick: (evt, element) => {
-    //   if (element.length > 0) {
-    //     console.log(element, element[0]._datasetInde);
-    //     // you can also get dataset of your selected element
-    //   }
-    // },
     maintainAspectRatio: false,
     legend: {
       display: false
@@ -232,6 +226,99 @@ export const doughnutChart_1 = {
     scales: {
       yAxes: [],
       xAxes: []
+    }
+  }
+};
+
+export const bigChartLines = {
+  data: (chartData, chartData1, label) => {
+    return {
+      labels: label,
+      datasets: [
+        {
+          label: "Linha1",
+          fill: true,
+          backgroundColor: "#f5f5f5",
+          borderColor: "#1f8ef1",
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          pointBackgroundColor: "#1f8ef1",
+          pointBorderColor: "rgba(255,255,255,0)",
+          pointHoverBackgroundColor: "#1f8ef1",
+          pointBorderWidth: 20,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 15,
+          pointRadius: 4,
+          data: chartData
+        },
+        {
+          label: "Linha2",
+          fill: true,
+          backgroundColor: "#f5f5f5",
+          borderColor: "red",
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          pointBackgroundColor: "red",
+          pointBorderColor: "rgba(255,255,255,0)",
+          pointHoverBackgroundColor: "red",
+          pointBorderWidth: 20,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 15,
+          pointRadius: 4,
+          data: chartData1
+        }
+      ]
+    };
+  },
+  options: {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      backgroundColor: "#f5f5f5",
+      titleFontColor: "#333",
+      bodyFontColor: "#666",
+      bodySpacing: 4,
+      xPadding: 12,
+      mode: "nearest",
+      intersect: 0,
+      position: "nearest"
+    },
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(29,140,248,0.0)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            suggestedMin: 60,
+            suggestedMax: 125,
+            padding: 20,
+            fontColor: "#9a9a9a"
+          }
+        }
+      ],
+      xAxes: [
+        {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(29,140,248,0.1)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            padding: 20,
+            fontColor: "#9a9a9a"
+          }
+        }
+      ]
     }
   }
 };
