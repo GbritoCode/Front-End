@@ -185,7 +185,7 @@ import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinaliza
 import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
 import ForgotPass from "~/views/login/forgoPass";
 import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
-import MovimentoCaixaTable from "~/views/tables/comercial/movimentoCaixaTable";
+import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
 import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 
 const routes = [

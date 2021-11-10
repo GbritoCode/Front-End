@@ -79,6 +79,7 @@ class PeriodosTable extends Component {
               {/* use this button to add a edit kind of action */}
               <Tooltip title="Finalizar Período">
                 <Button
+                  disabled={periodo.situacao === "Fechado"}
                   color="default"
                   size="sm"
                   className={classNames("btn-icon btn-link like")}
