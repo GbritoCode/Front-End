@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 // react plugin for creating vector maps
 
 // reactstrap components
@@ -45,68 +45,55 @@ import {
   HeadsetMic
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
-import {
-  format,
-  getDaysInMonth,
-  isAfter,
-  isBefore,
-  isToday,
-  parseISO
-} from "date-fns";
+import { format, getDaysInMonth } from "date-fns";
 // import { useDispatch } from "react-redux";
 import pt from "date-fns/locale/pt-BR";
-import { store } from "~/store";
 
 // core components
 // import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
-import {
-  barChart_1,
-  bigChartLines,
-  CliStatusChart,
-  doughnutChart_1
-} from "./chartsOptions";
-import history from "~/services/history";
+import { bigChartLines, parcsCharts } from "./chartsOptions";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
-import { pt_brDateToEUADate } from "~/normalize";
+import { normalizeCalcCurrencyUpdated, normalizeCurrency } from "~/normalize";
+import { labelsDashFinanc, monthsGlobal } from "~/generalVar";
 // import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
 export default function FinanceiraDashboard() {
   document.body.classList.add("white-content");
   // const dispatch = useDispatch();
 
-  const [visaoFilter, setVisaoFilter] = useState("mes");
+  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
+  const lastDayMonth = getDaysInMonth(new Date(year, month, date));
+
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const [label, setLabel] = useState([]);
-  const [dashFields, setDashFields] = useState({});
-  const [data, setData] = useState([]);
-  const [data2, setData2] = useState([]);
+  const [label, setLabel] = useState(
+    lastDayMonth === 30 ? labelsDashFinanc.month30 : labelsDashFinanc.month31
+  );
+  const [data3, setData3] = useState([]);
   const [miniChartData, setMiniChartData] = useState();
-  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
-  const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
   const [dataForTable, setDataForTable] = useState({
-    campId: "",
+    visao: "mensal",
+    mes: month,
+    ano: year,
+    particao: "geral",
     inicDate: `${year}-${month}-01`,
     endDate: `${year}-${month}-${lastDayMonth}`
   });
-  const [dataForGraph, setDataForGraph] = useState({
-    red: 0,
-    yellow: 0,
-    green: 0,
-    reset: true
+
+  const [parcsState, setParcsState] = useState({
+    parcPendente: null,
+    parcAtrasada: null,
+    parcAberta: null,
+    parcLabelsPendente: null,
+    parcLabelsAtrasada: null,
+    parcLabelsAberta: null,
+    totalPendente: null,
+    totalAtrasada: null,
+    totalAberta: null
   });
-  const [cliStatusGraph, setCliStatusGraph] = useState({
-    atraida: 0,
-    reuniao: 0,
-    orcamento: 0,
-    efetiv: 0,
-    reset: true
-  });
-  const [dataForDoughnut, setDataForDoughnut] = useState({
-    reset: true
-  });
+
   const [header, setHeader] = useState({
     visao: format(new Date(), "LLLL", { locale: pt }),
     particao: "Geral"
@@ -114,325 +101,65 @@ export default function FinanceiraDashboard() {
 
   useEffect(() => {
     const loadData = async () => {
-      const { Colab } = store.getState().auth.user;
-      if (Colab) {
-        const response = await api.get("/campanha");
-        setData(
-          response.data.filter(
-            arr =>
-              (isAfter(
-                new Date(),
-                parseISO(pt_brDateToEUADate(arr.dataInic))
-              ) ||
-                isToday(parseISO(pt_brDateToEUADate(arr.dataFim)))) &&
-              isBefore(new Date(), parseISO(pt_brDateToEUADate(arr.dataFim)))
-          )
-        );
-        const dashFieldsAux = {};
-        let array = [];
+      const response3 = await api.get(
+        `/financeiraDash_mensal/?mes=${month}&part=geral`
+      );
+      setData3(response3.data);
+      setMiniChartData(response3.data);
+      const response4 = await api.get(`parcela/?chartData=true&tipo=gerencial`);
 
-        const active = [];
-        for (let i = 0; i < response.data.length; i += 1) {
-          active[i] = {
-            data: response.data[i].FollowUps,
-            camp: response.data[i].id
-          };
-          dashFieldsAux[response.data[i].id] = response.data[i].dashFields;
-        }
-        for (let k = 0; k < active.length; k += 1) {
-          // eslint-disable-next-line no-loop-func
-          active[k].data = active[k].data.filter(arr => {
-            if (!array.includes(arr.ClienteId)) {
-              array.push(arr.ClienteId);
-              return true;
-            }
-            return false;
-          });
-          array = [];
-        }
-        setData2(active);
-        setDashFields({ ...dashFieldsAux });
-        setIsLoading(false);
-      }
+      setParcsState({
+        parcPendente: response4.data.parcPendente,
+        parcAtrasada: response4.data.parcAtrasada,
+        parcAberta: response4.data.parcAberta,
+        parcLabelsPendente: response4.data.labelsPendente,
+        parcLabelsAtrasada: response4.data.labelsAtrasada,
+        parcLabelsAberta: response4.data.labelsAberta,
+        totalPendente: response4.data.totalPendente,
+        totalAtrasada: response4.data.totalAtrasada,
+        totalAberta: response4.data.totalAberta
+      });
     };
     loadData();
-  }, []);
-  // const handleFilterChange = async (camp, dataInic, dataFim) => {
-  //   if (!dataForGraph.reset) {
-  //     dataForGraph.red = 0;
-  //     dataForGraph.yellow = 0;
-  //     dataForGraph.green = 0;
-  //     dataForGraph.reset = false;
-  //   }
-  //   if (!dataForDoughnut.reset) {
-  //     // eslint-disable-next-line no-restricted-syntax
-  //     for (const key in dataForDoughnut) {
-  //       if (dataForDoughnut.hasOwnProperty(key)) {
-  //         console.log(dataForDoughnut[key]);
-  //         delete dataForDoughnut[key];
-  //       }
-  //     }
-  //     dataForDoughnut.reset = true;
-  //   }
-  //   if (!cliStatusGraph.reset) {
-  //     cliStatusGraph.atraida = 0;
-  //     cliStatusGraph.reuniao = 0;
-  //     cliStatusGraph.orcamento = 0;
-  //     cliStatusGraph.efetiv = 0;
-  //     cliStatusGraph.reset = false;
-  //   }
-  //   const aux = data.filter(arr => arr.id === parseInt(camp, 10));
+    setIsLoading(false);
+  }, [month]);
 
-  //   setCampData({
-  //     cod: aux[0].cod,
-  //     desc: aux[0].desc,
-  //     dataInic,
-  //     dataFim
-  //   });
-
-  //   for (let j = 0; j < data2.length; j += 1) {
-  //     if (data2[j].camp === parseInt(camp, 10)) {
-  //       for (let i = 0; i < data2[j].data.length; i += 1) {
-  //         switch (true) {
-  //           case data2[j].data[i].distanceFromToday <= 0 &&
-  //             data2[j].data[i].proxPasso !== 10:
-  //             dataForGraph.red += 1;
-  //             dataForGraph.reset = false;
-  //             break;
-  //           case data2[j].data[i].distanceFromToday > 0 &&
-  //             data2[j].data[i].distanceFromToday <= 4 &&
-  //             data2[j].data[i].proxPasso !== 10:
-  //             dataForGraph.yellow += 1;
-  //             dataForGraph.reset = false;
-  //             break;
-  //           case data2[j].data[i].distanceFromToday >= 5 &&
-  //             data2[j].data[i].proxPasso !== 10:
-  //             dataForGraph.green += 1;
-  //             dataForGraph.reset = false;
-  //             break;
-  //           case data2[j].data[i].distanceFromToday === "--":
-  //             return "--";
-  //           default:
-  //         }
-  //       }
-  //     }
-  //   }
-  //   setDataForTable({ campId: camp, inicDate: dataInic, endDate: dataFim });
-  //   await api
-  //     .get(
-  //       `comercialDash/?camp=${camp}&dataInic=${dataInic}&dataFim=${dataFim}`
-  //     )
-  //     .then(result => {
-  //       for (let i = 0; i < result.data.finalizedFups.rows.length; i += 1) {
-  //         if (result.data.finalizedFups.rows[i].CamposDinamicosProspect) {
-  //           if (
-  //             !dataForDoughnut[
-  //               result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
-  //             ]
-  //           ) {
-  //             dataForDoughnut[
-  //               result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
-  //             ] = 1;
-  //             dataForDoughnut.reset = false;
-  //           } else {
-  //             dataForDoughnut[
-  //               result.data.finalizedFups.rows[i].CamposDinamicosProspect.valor
-  //             ] += 1;
-  //             dataForDoughnut.reset = false;
-  //           }
-  //         }
-  //       }
-  //       const newDataInic = new Date(dataInic);
-  //       const newDataFim = new Date(dataFim);
-  //       for (let i = 0; i < result.data.cliStatusPassing.rows.length; i += 1) {
-  //         if (result.data.cliStatusPassing.rows[i].atraida !== null) {
-  //           if (
-  //             newDataInic <=
-  //             new Date(result.data.cliStatusPassing.rows[i].atraida) <=
-  //             newDataFim
-  //           ) {
-  //             cliStatusGraph.atraida += 1;
-  //             cliStatusGraph.reset = false;
-  //           }
-  //         }
-  //         if (result.data.cliStatusPassing.rows[i].reuniaoAgend !== null) {
-  //           if (
-  //             newDataInic <=
-  //             new Date(result.data.cliStatusPassing.rows[i].reuniaoAgend) <=
-  //             newDataFim
-  //           ) {
-  //             cliStatusGraph.reuniao += 1;
-  //             cliStatusGraph.reset = false;
-  //           }
-  //         }
-  //         if (result.data.cliStatusPassing.rows[i].orcamentoSolict !== null) {
-  //           if (
-  //             newDataInic <=
-  //             new Date(result.data.cliStatusPassing.rows[i].orcamentoSolict) <=
-  //             newDataFim
-  //           ) {
-  //             cliStatusGraph.orcamento += 1;
-  //             cliStatusGraph.reset = false;
-  //           }
-  //         }
-  //         if (result.data.cliStatusPassing.rows[i].efetivacao !== null) {
-  //           if (
-  //             newDataInic <=
-  //             new Date(result.data.cliStatusPassing.rows[i].efetivacao) <=
-  //             newDataFim
-  //           ) {
-  //             cliStatusGraph.efetiv = 1;
-  //             cliStatusGraph.reset = false;
-  //           }
-  //         }
-  //       }
-  //       setMiniChartData(result.data);
-  //     });
-  //   dispatch(
-  //     comercialDashFilterFields({
-  //       camp: aux[0].id,
-  //       inicDate: dataInic,
-  //       endDate: dataFim,
-  //       dataForDoughnut: { ...dataForDoughnut },
-  //       cliStatusGraph: { ...cliStatusGraph }
-  //     })
-  //   );
-  // };
-
-  useEffect(() => {
-    async function teste() {
-      const { comercialDash } = store.getState().field;
-      if (comercialDash.camp) {
-        // const aux = data.filter(arr => arr.id === comercialDash.camp);
-
-        for (let j = 0; j < data2.length; j += 1) {
-          if (data2[j].camp === parseInt(comercialDash.camp, 10)) {
-            for (let i = 0; i < data2[j].data.length; i += 1) {
-              switch (true) {
-                case data2[j].data[i].distanceFromToday <= 0 &&
-                  data2[j].data[i].proxPasso !== 10:
-                  setDataForGraph(prevState => ({
-                    ...prevState,
-                    red: prevState.red + 1,
-                    reset: false
-                  }));
-                  break;
-                case data2[j].data[i].distanceFromToday > 0 &&
-                  data2[j].data[i].distanceFromToday <= 4 &&
-                  data2[j].data[i].proxPasso !== 10:
-                  setDataForGraph(prevState => ({
-                    ...prevState,
-                    yellow: prevState.yellow + 1,
-                    reset: false
-                  }));
-                  break;
-                case data2[j].data[i].distanceFromToday >= 5 &&
-                  data2[j].data[i].proxPasso !== 10:
-                  setDataForGraph(prevState => ({
-                    ...prevState,
-                    green: prevState.green + 1,
-                    reset: false
-                  }));
-                  break;
-                case data2[j].data[i].distanceFromToday === "--":
-                  return "--";
-                default:
-              }
-            }
-          }
-        }
-        setDataForTable({
-          campId: comercialDash.camp,
-          inicDate: comercialDash.inicDate,
-          endDate: comercialDash.endDate
-        });
-        setDataForDoughnut({ ...comercialDash.dataForDoughnut });
-        setCliStatusGraph({ ...comercialDash.cliStatusGraph });
-        await api
-          .get(
-            `comercialDash/?camp=${comercialDash.camp}&dataInic=${comercialDash.inicDate}&dataFim=${comercialDash.endDate}`
-          )
-          .then(result => {
-            setMiniChartData(result.data);
-          });
-      }
+  const handleFilterChange = async (visao, mes, ano, part) => {
+    if (visao === "anual") {
+      const response3 = await api.get(
+        `/financeiraDash_anual/?ano=${ano}&part=${part}`
+      );
+      setData3(response3.data);
+      setMiniChartData(response3.data);
+    } else if (visao === "mensal") {
+      const response3 = await api.get(
+        `/financeiraDash_mensal/?mes=${mes}&part=${part}`
+      );
+      setData3(response3.data);
+      setMiniChartData(response3.data);
     }
-    teste();
-  }, [data, data2]);
-  // const setBgChartData = name => {
-  //   setBigChartData(name);
-  // };
+  };
 
   const createLabels = (type, division, lastDay) => {
+    console.log(type, division, lastDay);
     switch (type) {
       case "mensal":
         switch (division) {
           case "geral":
             if (lastDay === 31) {
-              setLabel([
-                1,
-                3,
-                5,
-                7,
-                9,
-                11,
-                13,
-                15,
-                17,
-                19,
-                21,
-                23,
-                25,
-                27,
-                29,
-                31
-              ]);
+              setLabel(labelsDashFinanc.month31);
             }
-            setLabel([1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]);
+            setLabel(labelsDashFinanc.month30);
             break;
           case "1q":
-            setLabel([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+            setLabel(labelsDashFinanc.month1Q);
             break;
           case "2q":
             if (lastDay === 31) {
-              setLabel([
-                16,
-                17,
-                18,
-                19,
-                20,
-                21,
-                22,
-                23,
-                24,
-                25,
-                26,
-                27,
-                28,
-                29,
-                30,
-                31
-              ]);
+              setLabel(labelsDashFinanc.month2Q31);
             }
-            setLabel([
-              16,
-              17,
-              18,
-              19,
-              20,
-              21,
-              22,
-              23,
-              24,
-              25,
-              26,
-              27,
-              28,
-              29,
-              30
-            ]);
+            setLabel(labelsDashFinanc.month2Q30);
             break;
-
           default:
             break;
         }
@@ -440,29 +167,13 @@ export default function FinanceiraDashboard() {
       case "anual":
         switch (division) {
           case "geral":
-            setLabel([
-              "Jan",
-              "Fev",
-              "Mar",
-              "Abr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Ago",
-              "Set",
-              "Out",
-              "Nov",
-              "Dez"
-            ]);
-
+            setLabel(labelsDashFinanc.yearly);
             break;
           case "1sem":
-            setLabel(["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"]);
-
+            setLabel(labelsDashFinanc.yearly1S);
             break;
           case "2sem":
-            setLabel(["Jul", "Ago", "Set", "Out", "Nov", "Dez"]);
-
+            setLabel(labelsDashFinanc.yearly2S);
             break;
           default:
             break;
@@ -472,7 +183,7 @@ export default function FinanceiraDashboard() {
         break;
     }
   };
-
+  console.log(parcsState);
   return (
     <>
       {isLoading ? (
@@ -526,39 +237,21 @@ export default function FinanceiraDashboard() {
                   <Input
                     type="select"
                     id="visao"
+                    value={dataForTable.visao}
                     onChangeCapture={e => {
                       const { value } = e.target;
-                      createLabels(
+                      createLabels(value, dataForTable.particao, lastDayMonth);
+
+                      setDataForTable(prevState => ({
+                        ...prevState,
+                        visao: value
+                      }));
+                      handleFilterChange(
                         value,
-                        document.getElementById("particao").value,
-                        30
+                        dataForTable.mes,
+                        dataForTable.ano,
+                        dataForTable.particao
                       );
-                      if (value === "mensal") {
-                        document.getElementById("mesCol").hidden = false;
-                        document.getElementById("anoCol").hidden = true;
-                        setVisaoFilter("mes");
-                        setHeader(prevState => ({
-                          ...prevState,
-                          visao: value
-                        }));
-                      } else {
-                        document.getElementById("mesCol").hidden = true;
-                        document.getElementById("anoCol").hidden = false;
-                        setVisaoFilter("ano");
-                        setHeader(prevState => ({
-                          ...prevState,
-                          visao: value
-                        }));
-                      }
-                      // handleFilterChange(
-                      //   e.target.value,
-                      //   document.getElementById("dataInic").value
-                      //     ? document.getElementById("dataInic").value
-                      //     : dataForTable.inicDate,
-                      //   document.getElementById("dataFim").value
-                      //     ? document.getElementById("dataFim").value
-                      //     : dataForTable.endDate
-                      // );
                     }}
                   >
                     <option key={1} value="mensal">
@@ -569,92 +262,66 @@ export default function FinanceiraDashboard() {
                     </option>
                   </Input>
                 </Col>
-                <Col id="mesCol" sm="4">
+                <Col hidden={dataForTable.visao === "anual"} id="mesCol" sm="4">
                   <Label>Mes</Label>
                   <Input
                     type="select"
                     id="mes"
+                    value={dataForTable.mes}
                     onChangeCapture={e => {
                       const { value } = e.target;
                       createLabels(
                         "mensal",
-                        document.getElementById("particao").value,
-                        30
+                        dataForTable.particao,
+                        lastDayMonth
                       );
-                      //   handleFilterChange(
-                      //     document.getElementById("camp").value
-                      //       ? document.getElementById("camp").value
-                      //       : dataForTable.campId,
-                      //     e.target.value,
-                      //     document.getElementById("dataFim").value
-                      //       ? document.getElementById("dataFim").value
-                      //       : dataForTable.endDate
-                      //   );
+                      setDataForTable(prevState => ({
+                        ...prevState,
+                        mes: value
+                      }));
+                      handleFilterChange(
+                        dataForTable.visao,
+                        value,
+                        dataForTable.ano,
+                        dataForTable.particao
+                      );
                       setHeader(prevState => ({
                         ...prevState,
-                        visao: value
+                        visao: monthsGlobal[value - 1].full
                       }));
                     }}
                   >
-                    <option key={1} value="Janeiro">
-                      Janeiro
-                    </option>
-                    <option key={2} value="Fevereiro">
-                      Fevereiro
-                    </option>
-                    <option key={3} value="Março">
-                      Março
-                    </option>
-                    <option key={4} value="Abril">
-                      Abril
-                    </option>
-                    <option key={5} value="Maio">
-                      Maio
-                    </option>
-                    <option key={6} value="Junho">
-                      Junho
-                    </option>
-                    <option key={7} value="Julho">
-                      Julho
-                    </option>
-                    <option key={8} value="Agosto">
-                      Agosto
-                    </option>
-                    <option key={9} value="Setembro">
-                      Setembro
-                    </option>
-                    <option key={10} value="Outubro">
-                      Outubro
-                    </option>
-                    <option key={11} value="Novembro">
-                      Novembro
-                    </option>
-                    <option key={12} value="Dezembro">
-                      Dezembro
-                    </option>
+                    {monthsGlobal.map((monthGlobal, idx) => {
+                      return (
+                        <option key={idx} value={monthGlobal.number}>
+                          {monthGlobal.full}{" "}
+                        </option>
+                      );
+                    })}
                   </Input>
                 </Col>
-                <Col hidden id="anoCol" sm="4">
+                <Col
+                  hidden={dataForTable.visao === "mensal"}
+                  id="anoCol"
+                  sm="4"
+                >
                   <Label>Ano</Label>
                   <Input
                     type="select"
                     id="ano"
+                    value={dataForTable.ano}
                     onChangeCapture={e => {
-                      const { value } = e.target.value;
-                      createLabels(
-                        "anual",
-                        document.getElementById("particao").value,
-                        30
+                      const { value } = e.target;
+                      setDataForTable(prevState => ({
+                        ...prevState,
+                        ano: value
+                      }));
+                      handleFilterChange(
+                        dataForTable.visao,
+                        dataForTable.mes,
+                        value,
+                        dataForTable.particao
                       );
-                      //   handleFilterChange(
-                      //     document.getElementById("camp").value
-                      //       ? document.getElementById("camp").value
-                      //       : dataForTable.campId,
-                      //     e.target.value,
-                      //     document.getElementById("dataFim").value
-                      //       ? document.getElementById("dataFim").value
-                      //       : dataForTable.endDate
-                      //   );
                       setHeader(prevState => ({
                         ...prevState,
                         visao: value
@@ -682,20 +349,17 @@ export default function FinanceiraDashboard() {
                     id="particao"
                     onChangeCapture={e => {
                       const { value } = e.target;
-                      createLabels(
-                        visaoFilter === "ano" ? "anual" : "mensal",
-                        value,
-                        30
+                      setDataForTable(prevState => ({
+                        ...prevState,
+                        particao: value
+                      }));
+                      createLabels(dataForTable.visao, value, lastDayMonth);
+                      handleFilterChange(
+                        dataForTable.visao,
+                        dataForTable.mes,
+                        dataForTable.ano,
+                        value
                       );
-                      // handleFilterChange(
-                      //   document.getElementById("camp").value
-                      //     ? document.getElementById("camp").value
-                      //     : dataForTable.campId,
-                      //   document.getElementById("dataInic").value
-                      //     ? document.getElementById("dataInic").value
-                      //     : dataForTable.inicDate,
-                      //   e.target.value
-                      // );
                       setHeader(prevState => ({
                         ...prevState,
                         particao: value
@@ -705,16 +369,32 @@ export default function FinanceiraDashboard() {
                     <option key={1} value="geral">
                       Geral
                     </option>
-                    <option hidden={visaoFilter === "ano"} key={2} value="1q">
+                    <option
+                      hidden={dataForTable.visao === "anual"}
+                      key={2}
+                      value="1q"
+                    >
                       1ª Quinzena
                     </option>
-                    <option hidden={visaoFilter === "ano"} key={3} value="2q">
+                    <option
+                      hidden={dataForTable.visao === "anual"}
+                      key={3}
+                      value="2q"
+                    >
                       2ª Quinzena
                     </option>
-                    <option hidden={visaoFilter === "mes"} key={4} value="1sem">
+                    <option
+                      hidden={dataForTable.visao === "mensal"}
+                      key={4}
+                      value="1sem"
+                    >
                       1º Semestre
                     </option>
-                    <option hidden={visaoFilter === "mes"} key={5} value="2sem">
+                    <option
+                      hidden={dataForTable.visao === "mensal"}
+                      key={5}
+                      value="2sem"
+                    >
                       2º Semestre
                     </option>
                   </Input>
@@ -778,8 +458,10 @@ export default function FinanceiraDashboard() {
                     <div className="chart-area">
                       <Line
                         data={bigChartLines.data(
-                          [15, 10, 15],
-                          [35, 40, 15],
+                          data3.arraySaldo,
+                          data3.arraySaldoPrev,
+                          data3.arrayDesp,
+                          data3.arrayRec,
                           label
                         )}
                         options={bigChartLines.options}
@@ -789,106 +471,9 @@ export default function FinanceiraDashboard() {
                 </Card>
               </Col>
             </Row>
+            <Row />
             <Row>
-              <Col
-                hidden={
-                  dashFields[dataForTable.campId]
-                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
-                    : false
-                }
-                lg="8"
-              >
-                <Card className=" /*card-chart">
-                  <CardHeader>
-                    <p style={{ color: "#808080" }} className="card-category">
-                      Evolução Funil
-                    </p>
-                    <CardTitle
-                      tag="h4"
-                      style={{ color: "orange", fontSize: 20 }}
-                    >
-                      <i className="tim-icons icon-send text-info" />{" "}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <div className="chart-area">
-                      <Bar
-                        data={CliStatusChart.data(
-                          ["Atraídas", "Convertidas", "Ativadas", "Alcançadas"],
-                          [
-                            cliStatusGraph.atraida,
-                            cliStatusGraph.reuniao,
-                            cliStatusGraph.orcamento,
-                            cliStatusGraph.efetiv
-                          ]
-                        )}
-                        options={CliStatusChart.options}
-                        onElementsClick={elems => {
-                          // if required to build the URL, you can
-                          // get datasetIndex and value index from an `elem`:
-                          if (elems.length > 0) {
-                            console.log(elems[0]._model.label);
-                            return history.push(
-                              `tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/campCli/?status=${elems[0]._model.label}`
-                            );
-                          }
-                        }}
-                      />
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col
-                hidden={
-                  dashFields[dataForTable.campId]
-                    ? dashFields[dataForTable.campId].search("FinsMotivo") ===
-                      -1
-                    : false
-                }
-                lg="4"
-              >
-                <Card className=" /*card-chart">
-                  <CardHeader>
-                    <p style={{ color: "#808080" }} className="card-category">
-                      Finalizados Por Motivo
-                    </p>
-                    <CardTitle
-                      tag="h4"
-                      style={{ color: "orange", fontSize: 20 }}
-                    >
-                      <i className="tim-icons icon-simple-remove text-info" />{" "}
-                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <div className="chart-area">
-                      <Doughnut
-                        data={doughnutChart_1.data(
-                          Object.keys(dataForDoughnut).filter(
-                            arr => arr !== "reset"
-                          ),
-                          Object.values(dataForDoughnut).filter(
-                            arr => arr !== false && arr !== true
-                          )
-                        )}
-                        options={doughnutChart_1.options}
-                      />
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col
-                hidden={
-                  dashFields[dataForTable.campId]
-                    ? dashFields[dataForTable.campId].search("EmpIncluida") ===
-                      -1
-                    : false
-                }
-                lg="4"
-                md="6"
-              >
+              <Col lg="4" md="6">
                 <Card className="card-stats">
                   <CardBody>
                     <Row>
@@ -906,38 +491,33 @@ export default function FinanceiraDashboard() {
                             style={{ textTransform: "capitalize" }}
                             className="card-category"
                           >
-                            Empresas Incluídas
+                            Receita {header.visao}
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? miniChartData.cliJoinedCamp.rows.length
-                              : 0}
+                              ? normalizeCalcCurrencyUpdated(
+                                  miniChartData.somaRec
+                                )
+                              : normalizeCalcCurrencyUpdated(0)}
                           </CardTitle>
                         </div>
                       </Col>
                     </Row>
                   </CardBody>
                   <CardFooter>
-                    <hr />
-                    <div className="stats">
+                    {/* <hr /> */}
+                    {/* <div className="stats">
                       <Link
                         to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/created`}
                       >
                         <i className="tim-icons icon-refresh-01" /> Ver Empresas
                       </Link>
-                    </div>
+                    </div> */}
                   </CardFooter>
                 </Card>
               </Col>
               <Col lg="4" md="6">
-                <Card
-                  hidden={
-                    dashFields[dataForTable.campId]
-                      ? dashFields[dataForTable.campId].search("FupsTot") === -1
-                      : false
-                  }
-                  className="card-stats"
-                >
+                <Card className="card-stats">
                   <CardBody>
                     <Row>
                       <Col xs="5">
@@ -954,17 +534,21 @@ export default function FinanceiraDashboard() {
                             style={{ textTransform: "capitalize" }}
                             className="card-category"
                           >
-                            Follow Ups
+                            Despesa {header.visao}{" "}
                           </p>
                           <CardTitle tag="h3">
-                            {miniChartData ? miniChartData.Fups.rows.length : 0}
+                            {miniChartData
+                              ? normalizeCalcCurrencyUpdated(
+                                  miniChartData.somaDesp
+                                )
+                              : normalizeCalcCurrencyUpdated(0)}
                           </CardTitle>
                         </div>
                       </Col>
                     </Row>
                   </CardBody>
                   <CardFooter>
-                    <hr />
+                    {/* <hr />
                     <div className="stats">
                       <Link
                         to={`tabelas/comercial/FUPs/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
@@ -972,19 +556,12 @@ export default function FinanceiraDashboard() {
                         <i className="tim-icons icon-sound-wave" /> Ver Follow
                         Ups
                       </Link>
-                    </div>
+                    </div> */}
                   </CardFooter>
                 </Card>
               </Col>
               <Col lg="4" md="6">
-                <Card
-                  hidden={
-                    dashFields[dataForTable.campId]
-                      ? dashFields[dataForTable.campId].search("EmpFin") === -1
-                      : false
-                  }
-                  className="card-stats"
-                >
+                <Card className="card-stats">
                   <CardBody>
                     <Row>
                       <Col xs="5">
@@ -1002,128 +579,112 @@ export default function FinanceiraDashboard() {
                             className="card-category"
                           >
                             {" "}
-                            Empresas Finalizadas
+                            Saldo {header.visao}
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? miniChartData.finalizedFups.rows.length
-                              : 0}
+                              ? normalizeCalcCurrencyUpdated(
+                                  miniChartData.somaSaldo
+                                )
+                              : normalizeCalcCurrencyUpdated(0)}
                           </CardTitle>
                         </div>
                       </Col>
                     </Row>
                   </CardBody>
                   <CardFooter>
-                    <hr />
-                    <div className="stats">
+                    {/* <hr /> */}
+                    {/* <div className="stats">
                       <Link
                         to={`tabelas/comercial/empresasFinalizadas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
                       >
                         <i className="tim-icons icon-trophy" /> Ver Empresas
                       </Link>{" "}
-                    </div>
+                    </div> */}
                   </CardFooter>
                 </Card>
               </Col>
             </Row>
+
             <Row>
-              <Col
-                hidden={
-                  dashFields[dataForTable.campId]
-                    ? dashFields[dataForTable.campId].search("FupsProx") === -1
-                    : false
-                }
-                lg="4"
-              >
+              <Col lg="4">
                 <Card className=" /*card-chart">
                   <CardHeader>
-                    <p style={{ color: "#808080" }} className="card-category">
-                      FUPs
-                    </p>
+                    <Link to="tabelas/parcela/pendentes/?fromDash=true">
+                      Parcelas Pendentes
+                    </Link>
                     <CardTitle
                       tag="h4"
                       style={{ color: "orange", fontSize: 20 }}
                     >
                       <i className="tim-icons icon-send text-info" />{" "}
-                      {/* {normalizeCurrency(state.parcsState.totalPendente)} */}
+                      {normalizeCurrency(parcsState.totalPendente)}
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <div className="chart-area">
                       <Bar
-                        data={barChart_1.data(
-                          ["Urgente", "Em Breve", "Distante"],
-                          [
-                            dataForGraph.red,
-                            dataForGraph.yellow,
-                            dataForGraph.green
-                          ]
+                        data={parcsCharts.parcPendenteChart(
+                          parcsState.parcLabelsPendente,
+                          parcsState.parcPendente
                         )}
-                        options={barChart_1.options}
-                        onElementsClick={elems => {
-                          // if required to build the URL, you can
-                          // get datasetIndex and value index from an `elem`:
-                          if (elems.length > 0) {
-                            console.log(elems[0]._model.label);
-                            return history.push(
-                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
-                            );
-                          }
-                          // and then redirect to the target page:
-                          // window.location = "https://example.com";
-                        }}
+                        options={parcsCharts.options}
                       />
                     </div>
                   </CardBody>
                 </Card>
               </Col>
-              {/* <Col
-                hidden={
-                  dashFields[dataForTable.campId]
-                    ? dashFields[dataForTable.campId].search("StatusCli") === -1
-                    : false
-                }
-                lg="4"
-              >
+              <Col lg="4">
                 <Card className=" /*card-chart">
                   <CardHeader>
-                    <p style={{ color: "#808080" }} className="card-category">
-                      Status
-                    </p>
+                    <Link to="tabelas/parcela/abertas/?fromDash=true">
+                      Parcelas Abertas
+                    </Link>
                     <CardTitle
-                      tag="h4"
-                      style={{ color: "orange", fontSize: 20 }}
+                      tag="h3"
+                      style={{ color: "green", fontSize: 20 }}
                     >
-                      <i className="tim-icons icon-send text-info" />{" "}
+                      <i className="tim-icons icon-tag text-info" />{" "}
+                      {normalizeCurrency(parcsState.totalAberta)}
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <div className="chart-area">
                       <Bar
-                        data={barChart_1.data(
-                          ["Reunião Agendada", "Orçamento", "Efetivado"],
-                          [
-                            cliStatusGraph.reuniao,
-                            cliStatusGraph.orcamento,
-                            cliStatusGraph.efetiv
-                          ]
+                        data={parcsCharts.parcAbertaChart(
+                          parcsState.parcLabelsAberta,
+                          parcsState.parcAberta
                         )}
-                        options={barChart_1.options}
-                        onElementsClick={elems => {
-                          // if required to build the URL, you can
-                          // get datasetIndex and value index from an `elem`:
-                          if (elems.length > 0) {
-                            console.log(elems[0]._model.label);
-                            return history.push(
-                              `/tabelas/comercial/FUPs/${dataForTable.campId}/${elems[0]._model.label}`
-                            );
-                          }
-                        }}
+                        options={parcsCharts.options}
                       />
                     </div>
                   </CardBody>
                 </Card>
-              </Col> */}
+              </Col>
+              <Col lg="4">
+                <Card className=" /*card-chart">
+                  <CardHeader>
+                    <Link to="tabelas/parcela/atrasadas/?fromDash=true">
+                      Parcelas Atrasadas
+                    </Link>
+                    <CardTitle tag="h3" style={{ color: "red", fontSize: 20 }}>
+                      <i className="tim-icons icon-shape-star text-info" />{" "}
+                      {normalizeCurrency(parcsState.totalAtrasada)}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={parcsCharts.parcAtrasadaChart(
+                          parcsState.parcLabelsAtrasada,
+                          parcsState.parcAtrasada
+                        )}
+                        options={parcsCharts.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
             </Row>
           </div>
         </>

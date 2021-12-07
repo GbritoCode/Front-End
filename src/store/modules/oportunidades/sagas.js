@@ -391,22 +391,7 @@ export function* updateHora({ payload }) {
 
 export function* despesaCadastro({ payload }) {
   try {
-    const {
-      OportunidadeId,
-      ColabId,
-      dataDespesa,
-      tipoDespesa,
-      valorDespesa,
-      desc
-    } = payload;
-    yield call(api.post, "despesas", {
-      OportunidadeId,
-      ColabId,
-      dataDespesa,
-      tipoDespesa,
-      valorDespesa,
-      desc
-    });
+    yield call(api.post, "despesas", payload);
     history.go(0);
   } catch (err) {
     toast.error(err.response.data.error);

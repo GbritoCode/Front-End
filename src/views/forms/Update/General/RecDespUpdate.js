@@ -43,6 +43,7 @@ function RecDespUpdatee() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [radioAux, setRadioAux] = useState({ desp: undefined });
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,6 +52,7 @@ function RecDespUpdatee() {
     desc: { value: "", error: "", message: "" },
     recDesp: { value: "", error: "", message: "" },
     tipoItem: { value: "", error: "", message: "" },
+    lancFlag: { value: "", error: "", message: "" },
     ContaContabilId: { value: "", error: "", message: "" },
     CentroCustoId: { value: "", error: "", message: "" }
   };
@@ -69,6 +71,7 @@ function RecDespUpdatee() {
         desc: { value: response.data.desc },
         recDesp: { value: response.data.recDesp },
         tipoItem: { value: response.data.tipoItem },
+        lancFlag: { value: response.data.lancFlag },
         ContaContabilId: { value: response.data.ContaContabilId },
         CentroCustoId: { value: response.data.CentroCustoId }
       }));
@@ -101,28 +104,28 @@ function RecDespUpdatee() {
     if (value === "Rec") {
       setValues(prevState => ({
         ...prevState,
-        CentroCustoId: { value: 1 }
+        CentroCustoId: { value: 1 },
+        lancFlag: { value: false }
       }));
       document.getElementsByName("CentroCustoId")[0].disabled = true;
+      document.getElementById("lancFlagFalse").checked = true;
+      document.getElementById("lancFlagTrue").checked = false;
+      for (let i = 0; i < document.getElementsByName("lancFlag").length; i++) {
+        document.getElementsByName("lancFlag")[i].disabled = true;
+      }
     }
     if (value === "Desp") {
       setValues(prevState => ({
         ...prevState,
-        CentroCustoId: { value: "" }
+        CentroCustoId: { value: radioAux || "" },
+        lancFlag: { value: "" }
       }));
       document.getElementsByName("CentroCustoId")[0].disabled = false;
-    }
-  };
-
-  const checkRec = () => {
-    if (values.recDesp.value === "Rec") {
-      return true;
-    }
-  };
-
-  const checkDesp = () => {
-    if (values.recDesp.value === "Desp") {
-      return true;
+      document.getElementById("lancFlagTrue").checked = false;
+      document.getElementById("lancFlagFalse").checked = false;
+      for (let i = 0; i < document.getElementsByName("lancFlag").length; i++) {
+        document.getElementsByName("lancFlag")[i].disabled = false;
+      }
     }
   };
 
@@ -167,15 +170,16 @@ function RecDespUpdatee() {
 
     if (valid && filled && validateCentCusto) {
       dispatch(
-        RecDespUpdate(
+        RecDespUpdate({
           id,
-          values.empresaId.value,
-          values.desc.value,
-          values.recDesp.value,
-          values.tipoItem.value,
-          values.ContaContabilId.value,
-          values.CentroCustoId.value
-        )
+          EmpresaId: values.empresaId.value,
+          desc: values.desc.value,
+          recDesp: values.recDesp.value,
+          tipoItem: values.tipoItem.value,
+          lancFlag: values.lancFlag.value,
+          ContaContabilId: values.ContaContabilId.value,
+          CentroCustoId: values.CentroCustoId.value
+        })
       );
     } else {
       options = {
@@ -214,44 +218,6 @@ function RecDespUpdatee() {
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
                       <Row>
-                        <Col md="4">
-                          <Label>Categoria</Label>
-                          <FormGroup
-                            check
-                            className={`has-label ${values.recDesp.error}`}
-                            onChangeCapture={e => recDespChange(e.target.value)}
-                          >
-                            <Label check>
-                              <Input
-                                checked={checkRec(values)}
-                                name="rec/desp"
-                                type="radio"
-                                onChange={event =>
-                                  handleChange(event, "recDesp", "text")
-                                }
-                                value="Rec"
-                              />
-                              Receita
-                            </Label>
-                            <Label check>
-                              <Input
-                                checked={checkDesp(values)}
-                                name="rec/desp"
-                                type="radio"
-                                onChange={event =>
-                                  handleChange(event, "recDesp", "text")
-                                }
-                                value="Desp"
-                              />
-                              Despesa
-                            </Label>
-                            {values.recDesp.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.recDesp.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
                         <Col md="4">
                           <Label>Tipo</Label>
                           <FormGroup
@@ -292,8 +258,6 @@ function RecDespUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Conta Contábil</Label>
                           <FormGroup
@@ -329,6 +293,8 @@ function RecDespUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Centro de Custo</Label>
                           <FormGroup
@@ -337,9 +303,10 @@ function RecDespUpdatee() {
                             <Input
                               name="CentroCustoId"
                               type="select"
-                              onChange={event =>
-                                handleChange(event, "CentroCustoId", "text")
-                              }
+                              onChange={event => {
+                                handleChange(event, "CentroCustoId", "text");
+                                setRadioAux(event.target.value);
+                              }}
                               value={values.CentroCustoId.value}
                             >
                               {" "}
@@ -360,6 +327,84 @@ function RecDespUpdatee() {
                             {values.CentroCustoId.error === "has-danger" ? (
                               <Label className="error">
                                 {values.CentroCustoId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Categoria</Label>
+                          <FormGroup
+                            check
+                            className={`has-label ${values.recDesp.error}`}
+                            onChangeCapture={e => recDespChange(e.target.value)}
+                          >
+                            <Label check>
+                              <Input
+                                checked={values.recDesp.value === "Rec"}
+                                name="rec/desp"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "recDesp", "text")
+                                }
+                                value="Rec"
+                              />
+                              Receita
+                            </Label>
+                            <Label check>
+                              <Input
+                                checked={values.recDesp.value === "Desp"}
+                                name="rec/desp"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "recDesp", "text")
+                                }
+                                value="Desp"
+                              />
+                              Despesa
+                            </Label>
+                            {values.recDesp.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.recDesp.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Apontamento Despesas</Label>
+                          <FormGroup
+                            check
+                            className={`has-label ${values.lancFlag.error}`}
+                            onChangeCapture={e => recDespChange(e.target.value)}
+                          >
+                            <Label check>
+                              <Input
+                                checked={values.lancFlag.value === true}
+                                id="lancFlagTrue"
+                                name="lancFlag"
+                                type="radio"
+                                onChange={event => {
+                                  handleChange(event, "lancFlag", "text");
+                                }}
+                                value
+                              />
+                              Sim
+                            </Label>
+                            <Label check>
+                              <Input
+                                checked={values.lancFlag.value === false}
+                                id="lancFlagFalse"
+                                name="lancFlag"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "lancFlag", "text")
+                                }
+                                value={false}
+                              />
+                              Não
+                            </Label>
+                            {values.lancFlag.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.lancFlag.message}
                               </Label>
                             ) : null}
                           </FormGroup>

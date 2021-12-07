@@ -367,24 +367,19 @@ export function horaUpdate(
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 
-export function despesaRequest(
-  OportunidadeId,
-  ColabId,
-  dataDespesa,
-  tipoDespesa,
-  valorDespesa,
-  desc
-) {
+// {
+//   OportunidadeId: int,
+//   ColabId: int,
+//   RecDespId: int,
+//   dataDespesa: dateonly,
+//   tipoDespesa: int,
+//   valorDespesa: float,
+//   desc: str
+// }
+export function despesaRequest(data) {
   return {
     type: "@cadastro/DESPESA_REQUEST",
-    payload: {
-      OportunidadeId,
-      ColabId,
-      dataDespesa,
-      tipoDespesa,
-      valorDespesa,
-      desc
-    }
+    payload: data
   };
 }
 

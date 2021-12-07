@@ -132,6 +132,18 @@ export function normalizeCalcCurrency(value) {
   return v;
 }
 
+export function normalizeCalcCurrencyUpdated(value) {
+  if (typeof value !== "string") {
+    value = JSON.stringify(value);
+  }
+  var v = value.replace(/[.,]+/g, "");
+  v = `${(v * 1).toFixed(2)}`;
+  v = v.replace(".", ",");
+  v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+  v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+  return v;
+}
+
 export function normalizeHrToMin(minsTotal) {
   const apontHr = `${Math.trunc(minsTotal / 60)}`;
   const apontMin = `0${Math.trunc(minsTotal % 60)}`.slice(-2);

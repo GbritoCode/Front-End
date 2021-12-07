@@ -34,7 +34,7 @@ import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { FornecUpdate } from "~/store/modules/general/actions";
-import { normalizeCnpj, normalizeFone } from "~/normalize";
+import { normalizeCnpj, normalizeFone, validarCNPJ } from "~/normalize";
 import api from "~/services/api";
 
 /* eslint-disable eqeqeq */
@@ -45,6 +45,7 @@ function FornecUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const stateSchema = {
@@ -52,6 +53,7 @@ function FornecUpdatee() {
     cnpj: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     CondPgmtoId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
     nomeConta: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
     cep: { value: "", error: "", message: "" },
@@ -62,25 +64,26 @@ function FornecUpdatee() {
     uf: { value: "", error: "", message: "" },
     banco: { value: "", error: "", message: "" },
     agencia: { value: "", error: "", message: "" },
-    conta: { value: "", error: "", message: "" }
+    conta: { value: "", error: "", message: "" },
+    complemento: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    complemento: { value: "", error: "", message: "" }
-  };
+
   const [values, setValues] = useState(stateSchema);
-  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/fornec/${id}`);
       const response1 = await api.get(`/condPgmto`);
+      const response2 = await api.get(`/rec_desp/?desp=true`);
       setData1(response1.data);
+      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         cnpj: { value: response.data.CNPJ },
         empresaId: { value: response.data.EmpresaId },
         nome: { value: response.data.nome },
         CondPgmtoId: { value: response.data.CondPgmtoId },
+        RecDespId: { value: response.data.RecDespId || "" },
         nomeConta: { value: response.data.nomeConta },
         fone: { value: normalizeFone(JSON.stringify(response.data.fone)) },
         cep: { value: response.data.cep },
@@ -91,65 +94,14 @@ function FornecUpdatee() {
         uf: { value: response.data.uf },
         banco: { value: response.data.banco },
         agencia: { value: response.data.agencia },
-        conta: { value: response.data.conta }
-      }));
-
-      setOptional(prevState => ({
-        ...prevState,
-        complemento: { value: response.data.complemento }
+        conta: { value: response.data.conta },
+        complemento: { value: response.data.complemento, optional: true }
       }));
 
       setIsLoading(false);
     }
     loadData();
   }, [id]);
-
-  function validarCNPJ(cnpj) {
-    cnpj = cnpj.replace(/[^\d]+/g, "");
-
-    if (cnpj == "") return false;
-
-    // Elimina CNPJs invalidos conhecidos
-    if (
-      cnpj === "00000000000000" ||
-      cnpj === "11111111111111" ||
-      cnpj === "22222222222222" ||
-      cnpj === "33333333333333" ||
-      cnpj === "44444444444444" ||
-      cnpj === "55555555555555" ||
-      cnpj === "66666666666666" ||
-      cnpj === "77777777777777" ||
-      cnpj === "88888888888888" ||
-      cnpj === "99999999999999"
-    )
-      return false;
-
-    // Valida DVs
-    var tamanho = cnpj.length - 2;
-    var numeros = cnpj.substring(0, tamanho);
-    var digitos = cnpj.substring(tamanho);
-    var soma = 0;
-    var pos = tamanho - 7;
-    for (var i = tamanho; i >= 1; i--) {
-      soma += numeros.charAt(tamanho - i) * pos--;
-      if (pos < 2) pos = 9;
-    }
-    var resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-    if (resultado != digitos.charAt(0)) return false;
-
-    tamanho += 1;
-    numeros = cnpj.substring(0, tamanho);
-    soma = 0;
-    pos = tamanho - 7;
-    for (i = tamanho; i >= 1; i--) {
-      soma += numeros.charAt(tamanho - i) * pos--;
-      if (pos < 2) pos = 9;
-    }
-    resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-    if (resultado != digitos.charAt(1)) return false;
-
-    return true;
-  }
 
   const renderCnpjState = value => {
     if (!validarCNPJ(value)) {
@@ -204,9 +156,9 @@ function FornecUpdatee() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -239,15 +191,17 @@ function FornecUpdatee() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (aux[j][1].optional !== true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -255,25 +209,26 @@ function FornecUpdatee() {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
       var fonedb = values.fone.value.replace(/[^\d]+/g, "");
       dispatch(
-        FornecUpdate(
+        FornecUpdate({
           id,
-          cnpjdb,
-          values.empresaId.value,
-          values.nome.value,
-          values.CondPgmtoId.value,
-          values.nomeConta.value,
-          fonedb,
-          values.cep.value,
-          values.rua.value,
-          values.numero.value,
-          optional.complemento.value,
-          values.bairro.value,
-          values.cidade.value,
-          values.uf.value,
-          values.banco.value,
-          values.agencia.value,
-          values.conta.value
-        )
+          CNPJ: cnpjdb,
+          EmpresaId: values.empresaId.value,
+          nome: values.nome.value,
+          RecDespId: values.RecDespId.value,
+          CondPgmtoId: values.CondPgmtoId.value,
+          nomeConta: values.nomeConta.value,
+          fone: fonedb,
+          cep: values.cep.value,
+          rua: values.rua.value,
+          numero: values.numero.value,
+          complemento: values.complemento.value,
+          bairro: values.bairro.value,
+          cidade: values.cidade.value,
+          uf: values.uf.value,
+          banco: values.banco.value,
+          agencia: values.agencia.value,
+          conta: values.conta.value
+        })
       );
     } else {
       options = {
@@ -310,28 +265,34 @@ function FornecUpdatee() {
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
-                      <Label>CNPJ</Label>
-                      <FormGroup className={`has-label ${values.cnpj.error}`}>
-                        <Input
-                          disabled
-                          maxLength={18}
-                          name="cnpj"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "cnpj", "cnpj")
-                          }
-                          value={normalizeCnpj(values.cnpj.value)}
-                          onBlur={e => {
-                            const { value } = e.target;
-                            renderCnpjState(value);
-                          }}
-                        />
-                        {values.cnpj.error === "has-danger" ? (
-                          <Label className="error">{values.cnpj.message}</Label>
-                        ) : null}
-                      </FormGroup>
                       <Row>
-                        <Col md="6">
+                        <Col md="4">
+                          <Label>CNPJ</Label>
+                          <FormGroup
+                            className={`has-label ${values.cnpj.error}`}
+                          >
+                            <Input
+                              disabled
+                              maxLength={18}
+                              name="cnpj"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "cnpj", "cnpj")
+                              }
+                              value={normalizeCnpj(values.cnpj.value)}
+                              onBlur={e => {
+                                const { value } = e.target;
+                                renderCnpjState(value);
+                              }}
+                            />
+                            {values.cnpj.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.cnpj.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           {" "}
                           <Label>Nome</Label>
                           <FormGroup
@@ -353,7 +314,7 @@ function FornecUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="6">
+                        <Col md="4">
                           <Label>Nome Abreviado</Label>
                           <FormGroup
                             className={`has-label ${values.nomeConta.error}`}
@@ -375,39 +336,7 @@ function FornecUpdatee() {
                           </FormGroup>
                         </Col>
                       </Row>
-
                       <Row>
-                        <Col md="4">
-                          <Label>Condição de Pagamento</Label>
-                          <FormGroup
-                            className={`has-label ${values.CondPgmtoId.error}`}
-                          >
-                            <Input
-                              name="CondPgmtoId"
-                              type="select"
-                              onChange={event =>
-                                handleChange(event, "CondPgmtoId", "text")
-                              }
-                              value={values.CondPgmtoId.value}
-                            >
-                              {" "}
-                              <option disabled value="">
-                                {" "}
-                                Selecione a condição de pagamento{" "}
-                              </option>
-                              {data1.map(condPgmto => (
-                                <option value={condPgmto.id}>
-                                  {condPgmto.cod} - {condPgmto.desc}
-                                </option>
-                              ))}
-                            </Input>
-                            {values.CondPgmtoId.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.CondPgmtoId.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
-                        </Col>
                         <Col md="4">
                           {" "}
                           <Label>Telefone</Label>
@@ -457,9 +386,6 @@ function FornecUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-
-                      <Row>
                         <Col md="4">
                           <Label>Rua</Label>
                           <FormGroup
@@ -481,7 +407,10 @@ function FornecUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="2">
+                      </Row>
+
+                      <Row>
+                        <Col md="4">
                           <Label>Número</Label>
                           <FormGroup
                             className={`has-label ${values.numero.error}`}
@@ -503,10 +432,10 @@ function FornecUpdatee() {
                           </FormGroup>
                         </Col>
 
-                        <Col md="6">
+                        <Col md="8">
                           <Label>Complemento</Label>
                           <FormGroup
-                            className={`has-label ${optional.complemento.error}`}
+                            className={`has-label ${values.complemento.error}`}
                           >
                             <Input
                               name="complemento"
@@ -514,11 +443,11 @@ function FornecUpdatee() {
                               onChange={event =>
                                 handleChange(event, "complemento", "optional")
                               }
-                              value={optional.complemento.value}
+                              value={values.complemento.value}
                             />
-                            {optional.complemento.error === "has-danger" ? (
+                            {values.complemento.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.complemento.message}
+                                {values.complemento.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -713,6 +642,68 @@ function FornecUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                        <Col md="4">
+                          <Label>Condição de Pagamento</Label>
+                          <FormGroup
+                            className={`has-label ${values.CondPgmtoId.error}`}
+                          >
+                            <Input
+                              name="CondPgmtoId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "CondPgmtoId", "text")
+                              }
+                              value={values.CondPgmtoId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a condição de pagamento{" "}
+                              </option>
+                              {data1.map(condPgmto => (
+                                <option value={condPgmto.id}>
+                                  {condPgmto.cod} - {condPgmto.desc}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.CondPgmtoId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.CondPgmtoId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo de Despesa</Label>
+                          <FormGroup
+                            className={`has-label ${values.RecDespId.error}`}
+                          >
+                            <Input
+                              name="RecDespId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "RecDespId", "text")
+                              }
+                              value={values.RecDespId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a despesa
+                              </option>
+                              {data2.map(recDesp => (
+                                <option value={recDesp.id}>
+                                  {recDesp.id} - {recDesp.desc}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.RecDespId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.RecDespId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>{" "}
                       </Row>
                       <Link to="/tabelas/general/fornec">
                         <Button

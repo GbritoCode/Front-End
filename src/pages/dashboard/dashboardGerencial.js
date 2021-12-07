@@ -18,7 +18,7 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 // react plugin for creating vector maps
 
 // reactstrap components
@@ -648,7 +648,7 @@ class DashboardGerencial extends React.Component {
                   </Card>
                 </Col>
               </Row>
-              <Row>
+              {/* <Row>
                 <Col lg="4">
                   <Card className=" /*card-chart">
                     <CardHeader>
@@ -721,7 +721,7 @@ class DashboardGerencial extends React.Component {
                     </CardBody>
                   </Card>
                 </Col>
-              </Row>
+              </Row> */}
             </div>
           </>
         )}

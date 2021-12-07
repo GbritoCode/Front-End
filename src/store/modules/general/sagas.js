@@ -15,7 +15,7 @@ export function* areaCadastro({ payload }) {
     });
     history.push("/tabelas/general/area");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -31,7 +31,7 @@ export function* updateArea({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -53,7 +53,7 @@ export function* empresaCadastro({ payload }) {
       history.push("/tabelas/general/empresa");
     }
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -69,110 +69,57 @@ export function* updateEmpresa({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
-
+//    FORNEC
+// {
+// CNPJ:str,
+// EmpresaId:int,
+// nome:str,
+// CondPgmtoId:int,
+// nomeConta:str,
+// fone:str,
+// cep:str,
+// rua:str,
+// numero:int,
+// complemento:str,
+// bairro:str,
+// cidade:str,
+// uf:str,
+// banco:int,
+// agencia:int,
+// conta:str,
+// first:bool
+// }
 export function* fornecCadastro({ payload }) {
   try {
-    const {
-      CNPJ,
-      EmpresaId,
-      nome,
-      CondPgmtoId,
-      nomeConta,
-      fone,
-      cep,
-      rua,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      banco,
-      agencia,
-      conta,
-      first
-    } = payload;
-    yield call(api.post, "fornec", {
-      CNPJ,
-      EmpresaId,
-      nome,
-      CondPgmtoId,
-      nomeConta,
-      fone,
-      cep,
-      rua,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      banco,
-      agencia,
-      conta
-    });
+    const { first } = payload;
+    yield call(api.post, "fornec", payload);
     if (first === false) {
       history.push("/tabelas/general/fornec");
     } else if (first === true) {
       history.push("/cadastro/wizard/colab");
     }
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
 export function* updateFornec({ payload }) {
   try {
-    const {
-      id,
-      CNPJ,
-      EmpresaId,
-      nome,
-      CondPgmtoId,
-      nomeConta,
-      fone,
-      cep,
-      rua,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      banco,
-      agencia,
-      conta
-    } = payload;
+    const { id } = payload;
 
-    const Colab = {
-      CNPJ,
-      EmpresaId,
-      nome,
-      CondPgmtoId,
-      nomeConta,
-      fone,
-      cep,
-      rua,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      banco,
-      agencia,
-      conta
-    };
-
-    const response = yield call(api.put, `fornec/${id}`, Colab);
+    const response = yield call(api.put, `fornec/${id}`, payload);
 
     history.push("/tabelas/general/fornec");
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -215,56 +162,21 @@ export function* parametrosCadastro({ payload }) {
     });
     history.push("/tabelas/general/parametros");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
 export function* updateParametros({ payload }) {
   try {
-    const {
-      id,
-      EmpresaId,
-      IRPJ,
-      CSLL,
-      COFINS,
-      PIS,
-      INSS,
-      ISS,
-      PSProLabor,
-      IRRFProLabor,
-      vlrMinHr,
-      vlrBsHr,
-      vlrBsDesp,
-      adiantaPgmto,
-      percAdiantaPgmto,
-      compHrs
-    } = payload;
+    const { id } = payload;
 
-    const Colab = {
-      EmpresaId,
-      IRPJ,
-      CSLL,
-      COFINS,
-      PIS,
-      INSS,
-      ISS,
-      PSProLabor,
-      IRRFProLabor,
-      vlrMinHr,
-      vlrBsHr,
-      vlrBsDesp,
-      adiantaPgmto,
-      percAdiantaPgmto,
-      compHrs
-    };
-
-    const response = yield call(api.put, `parametros/${id}`, Colab);
+    const response = yield call(api.put, `parametros/${id}`, payload);
 
     history.push("/dashboard");
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -280,7 +192,7 @@ export function* prodtCadastro({ payload }) {
     });
     history.push("/tabelas/general/prodt");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -296,7 +208,7 @@ export function* updateProdt({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -305,56 +217,24 @@ export function* updateProdt({ payload }) {
 
 export function* recDespCadastro({ payload }) {
   try {
-    const {
-      EmpresaId,
-      desc,
-      recDesp,
-      tipoItem,
-      ContaContabilId,
-      CentroCustoId
-    } = payload;
-    yield call(api.post, "rec_desp", {
-      EmpresaId,
-      desc,
-      recDesp,
-      tipoItem,
-      ContaContabilId,
-      CentroCustoId
-    });
+    yield call(api.post, "rec_desp", payload);
     history.push("/tabelas/aux/rec_desp");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
 export function* updateRecDesp({ payload }) {
   try {
-    const {
-      id,
-      EmpresaId,
-      desc,
-      recDesp,
-      tipoItem,
-      ContaContabilId,
-      CentroCustoId
-    } = payload;
+    const { id } = payload;
 
-    const Colab = {
-      EmpresaId,
-      desc,
-      recDesp,
-      tipoItem,
-      ContaContabilId,
-      CentroCustoId
-    };
-
-    const response = yield call(api.put, `rec_desp/${id}`, Colab);
+    const response = yield call(api.put, `rec_desp/${id}`, payload);
 
     history.push("/tabelas/aux/rec_desp");
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -375,7 +255,7 @@ export function* condPgmtoCadastro({ payload }) {
       history.push("/tabelas/aux/condPgmto");
     }
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -391,7 +271,7 @@ export function* updateCondPgmto({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -409,7 +289,7 @@ export function* tipoComissCadastro({ payload }) {
     });
     history.push("/tabelas/aux/tipoComiss");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -425,7 +305,7 @@ export function* updateTipoComiss({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -445,7 +325,7 @@ export function* perfilCadastro({ payload }) {
       history.push("/tabelas/aux/perfil");
     }
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -466,7 +346,7 @@ export function* updatePerfil({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -485,7 +365,7 @@ export function* representanteCadastro({ payload }) {
     });
     history.push("/tabelas/general/representante");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -499,7 +379,7 @@ export function* updateRepresentante({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -517,7 +397,7 @@ export function* segmentoCadastro({ payload }) {
     });
     history.push("/tabelas/general/segmento");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -533,7 +413,7 @@ export function* updateSegmento({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -548,7 +428,7 @@ export function* undNegCadastro({ payload }) {
     });
     history.push("/tabelas/general/und_neg");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -564,7 +444,7 @@ export function* updateUndNeg({ payload }) {
     history.push("/tabelas/general/Und_neg");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -581,7 +461,7 @@ export function* contaContabilCadastro({ payload }) {
     });
     history.push("/tabelas/general/contaContabil");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -597,7 +477,7 @@ export function* updateContaContabil({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -614,7 +494,7 @@ export function* centroCustoCadastro({ payload }) {
     });
     history.push("/tabelas/general/centroCusto");
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -630,7 +510,7 @@ export function* updateCentroCusto({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }
@@ -669,7 +549,7 @@ export function* updateEmailParams({ payload }) {
     toast.success("Atualizado com Sucesso");
     yield put(ClienteUpdateSuccess(response.data));
   } catch (err) {
-    toast.error("Ops! Algo deu errado");
+    toast.error(err.response.data.error);
     yield put(requestFailure());
   }
 }

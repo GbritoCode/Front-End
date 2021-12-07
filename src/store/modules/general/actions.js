@@ -44,89 +44,38 @@ export function EmpresaUpdate(id, idFederal, nome, license, UserId) {
 }
 //----------------------------------------------------
 //----------------------------------------------------
+// {
+// id:int (onlyUpdate)
+// CNPJ:str,
+// EmpresaId:int,
+// nome:str,
+// CondPgmtoId:int,
+// RecDespId:int,
+// nomeConta:str,
+// fone:str,
+// cep:str,
+// rua:str,
+// numero:int,
+// complemento:str,
+// bairro:str,
+// cidade:str,
+// uf:str,
+// banco:int,
+// agencia:int,
+// conta:str,
+// first:bool (onlyStore)
+// }
 
-export function fornecRequest(
-  CNPJ,
-  EmpresaId,
-  nome,
-  CondPgmtoId,
-  nomeConta,
-  fone,
-  cep,
-  rua,
-  numero,
-  complemento,
-  bairro,
-  cidade,
-  uf,
-  banco,
-  agencia,
-  conta,
-  first
-) {
+export function fornecRequest(data) {
   return {
     type: "@cadastro/FORNEC_REQUEST",
-    payload: {
-      CNPJ,
-      EmpresaId,
-      nome,
-      CondPgmtoId,
-      nomeConta,
-      fone,
-      cep,
-      rua,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      banco,
-      agencia,
-      conta,
-      first
-    }
+    payload: data
   };
 }
-export function FornecUpdate(
-  id,
-  CNPJ,
-  EmpresaId,
-  nome,
-  CondPgmtoId,
-  nomeConta,
-  fone,
-  cep,
-  rua,
-  numero,
-  complemento,
-  bairro,
-  cidade,
-  uf,
-  banco,
-  agencia,
-  conta
-) {
+export function FornecUpdate(data) {
   return {
     type: "@update/FORNEC_REQUEST",
-    payload: {
-      id,
-      CNPJ,
-      EmpresaId,
-      nome,
-      CondPgmtoId,
-      nomeConta,
-      fone,
-      cep,
-      rua,
-      numero,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      banco,
-      agencia,
-      conta
-    }
+    payload: data
   };
 }
 //----------------------------------------------------
@@ -168,44 +117,29 @@ export function parametrosRequest(
     }
   };
 }
-export function ParametrosUpdate(
-  id,
-  EmpresaId,
-  IRPJ,
-  CSLL,
-  COFINS,
-  PIS,
-  INSS,
-  ISS,
-  PSProLabor,
-  IRRFProLabor,
-  vlrMinHr,
-  vlrBsHr,
-  vlrBsDesp,
-  adiantaPgmto,
-  percAdiantaPgmto,
-  compHrs
-) {
+
+// id: int,
+// EmpresaId: int,
+// IRPJ: float,
+// CSLL: float,
+// COFINS: float,
+// PIS: float,
+// INSS: float,
+// ISS: float,
+// PSProLabor: float,
+// IRRFProLabor: float,
+// vlrMinHr: int,
+// vlrBsHr: int,
+// vlrBsDesp: int,
+// adiantaPgmto: bool,
+// percAdiantaPgmto: float,
+// compHrs: int,
+// compFlag: bool,
+// pgmtoVenc: dateonly
+export function ParametrosUpdate(data) {
   return {
     type: "@update/PARAMETROS_REQUEST",
-    payload: {
-      id,
-      EmpresaId,
-      IRPJ,
-      CSLL,
-      COFINS,
-      PIS,
-      INSS,
-      ISS,
-      PSProLabor,
-      IRRFProLabor,
-      vlrMinHr,
-      vlrBsHr,
-      vlrBsDesp,
-      adiantaPgmto,
-      percAdiantaPgmto,
-      compHrs
-    }
+    payload: data
   };
 }
 //----------------------------------------------------
@@ -232,47 +166,26 @@ export function ProdtUpdate(id, EmpresaId, descProdt) {
 }
 //----------------------------------------------------
 //----------------------------------------------------
-
-export function recDespRequest(
-  EmpresaId,
-  desc,
-  recDesp,
-  tipoItem,
-  ContaContabilId,
-  CentroCustoId
-) {
+// {
+//   id: int (onlyUpdate),
+//   EmpresaId: int,
+//   desc: str,
+//   recDesp: int,
+//   tipoItem: int,
+//   lancFlag: bool,
+//   ContaContabilId: int,
+//   CentroCustoId: int
+// }
+export function recDespRequest(data) {
   return {
     type: "@cadastro/REC_DESP_REQUEST",
-    payload: {
-      EmpresaId,
-      desc,
-      recDesp,
-      tipoItem,
-      ContaContabilId,
-      CentroCustoId
-    }
+    payload: data
   };
 }
-export function RecDespUpdate(
-  id,
-  EmpresaId,
-  desc,
-  recDesp,
-  tipoItem,
-  ContaContabilId,
-  CentroCustoId
-) {
+export function RecDespUpdate(data) {
   return {
     type: "@update/REC_DESP_REQUEST",
-    payload: {
-      id,
-      EmpresaId,
-      desc,
-      recDesp,
-      tipoItem,
-      ContaContabilId,
-      CentroCustoId
-    }
+    payload: data
   };
 }
 //----------------------------------------------------
