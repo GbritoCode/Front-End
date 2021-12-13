@@ -245,8 +245,7 @@ export default function MovimentoCaixaCadastro() {
             values.ClienteId.value === "" ? null : values.ClienteId.value,
           valor: vlrdb,
           dtVenc: values.dtVenc.value,
-          status: values.status.value,
-          ColabId: idColab
+          status: values.status.value
         })
       );
     } else {
@@ -264,7 +263,7 @@ export default function MovimentoCaixaCadastro() {
       notify();
     }
   };
-
+  console.log(values);
   return (
     <>
       {isLoading ? (

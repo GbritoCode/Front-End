@@ -70,7 +70,7 @@ export default function AdminDashboard() {
         const desps = await api.get(
           `despesas/${idColab}/?total=${true}&tipo=month`
         );
-        const vlrHrsDb = await api.get(`colab/${idColab}/?vlrHrMes=true`);
+        const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
 
         const resultPeriodo = await api.get(`resultPeriodo/${idColab}`);
 
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         setMes(month);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
+        setVlrHrs(normalizeCalcCurrency(vlrHrs.data + desps.data));
         setChartHrsData(
           resultPeriodo.data.map(d => {
             return Math.trunc(d.totalHrs / 60);

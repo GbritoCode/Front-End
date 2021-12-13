@@ -73,12 +73,12 @@ export default function MovimentoCaixaCadastro() {
   };
 
   const [values, setValues] = useState(stateSchema);
-  const idColab = store.getState().auth.user.Colab.id;
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
       setIsLoading(true);
+      const idColab = store.getState().auth.user.Colab.id;
 
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/colab/?idColab=${idColab}`);
@@ -140,7 +140,7 @@ export default function MovimentoCaixaCadastro() {
       setIsLoading(false);
     }
     loadData();
-  }, [idColab]);
+  }, []);
   var options = {};
 
   const notifyElment = useRef(null);
@@ -245,8 +245,7 @@ export default function MovimentoCaixaCadastro() {
             values.ClienteId.value === "" ? null : values.ClienteId.value,
           valor: vlrdb,
           dtVenc: values.dtVenc.value,
-          status: values.status.value,
-          ColabId: idColab
+          status: values.status.value
         })
       );
     } else {
@@ -264,7 +263,7 @@ export default function MovimentoCaixaCadastro() {
       notify();
     }
   };
-
+  console.log(values);
   return (
     <>
       {isLoading ? (

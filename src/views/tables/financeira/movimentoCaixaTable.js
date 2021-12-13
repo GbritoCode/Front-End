@@ -161,7 +161,7 @@ export default function MovimentoCaixaTable() {
                   setValues(prevState => ({
                     ...prevState,
                     hidden: false,
-                    vlrSingle: normalizeCurrencyInput(mov.valor),
+                    vlrSingle: normalizeCurrencyDb(mov.valor),
                     multiple: false,
                     movs: [],
                     mov: {
@@ -314,7 +314,7 @@ export default function MovimentoCaixaTable() {
                 } else if (!values.multiple) {
                   await api
                     .put(`/movCaixa/${values.mov.id}`, {
-                      mov: values.mov,
+                      mov: values.mov.id,
                       dtLiqui: values.dtLiqui,
                       ColabId: values.ColabId,
                       vlrSingle: values.vlrSingle

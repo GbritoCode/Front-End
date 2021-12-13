@@ -373,14 +373,6 @@ const routes = [
         mini: "PRP",
         component: ProspeccaoTable,
         layout: "/admin"
-      },
-      {
-        path: "/tabelas/oportunidade/oport",
-        name: "Oportunidades",
-        namePerfil: "Oportunidades Tab",
-        mini: "OPT",
-        component: OportTable,
-        layout: "/admin"
       }
     ]
   },
@@ -669,12 +661,20 @@ const routes = [
   },
   {
     collapse: true,
-    name: "Histórico",
-    namePerfil: "Historico",
-    icon: "tim-icons icon-notes",
-    state: "HistoricoCollapse",
-    profile: 1,
+    name: "Oportunidades",
+    namePerfil: "Oportunidades side",
+    icon: "tim-icons icon-pin",
+    state: "OportunidadeCollapse",
+    profile: 2,
     views: [
+      {
+        path: "/tabelas/oportunidade/oport",
+        name: "Oportunidades",
+        namePerfil: "Oportunidades Tab",
+        mini: "OPT",
+        component: OportTable,
+        layout: "/admin"
+      },
       {
         path: "/tabelas/oportunidade/finOport",
         name: "Finalizadas",
@@ -682,18 +682,7 @@ const routes = [
         mini: "OPF",
         component: OportFinTable,
         layout: "/admin"
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Oportunidades",
-    namePerfil: "Oportunidades side",
-    icon: "tim-icons icon-pin",
-    state: "OportunidadeCollapse",
-    profile: 2,
-    redirect: true,
-    views: [
+      },
       {
         path: "/tabelas/oportunidade/cotacao/:id",
         name: "Cotacao",

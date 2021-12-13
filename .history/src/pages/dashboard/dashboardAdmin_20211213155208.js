@@ -43,7 +43,6 @@ import { store } from "~/store";
 import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import history from "~/services/history";
-import { bigChartsAdmin } from "~/components/charts/bigChart";
 
 export default function AdminDashboard() {
   // --------- colocando no modo claro do template
@@ -56,8 +55,8 @@ export default function AdminDashboard() {
   const [chartRecebData, setChartRecebData] = useState(null);
   const [horas, setHoras] = useState(null);
   const [mes, setMes] = useState(null);
-  const [vlrDesps, setVlrDesps] = useState(null);
-  const [vlrHrs, setVlrHrs] = useState(null);
+  const [VlrDesps, setVlrDesps] = useState(null);
+  const [VlrHrs, setVlrHrs] = useState(null);
   const { id } = store.getState().auth.user;
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export default function AdminDashboard() {
         const desps = await api.get(
           `despesas/${idColab}/?total=${true}&tipo=month`
         );
-        const vlrHrsDb = await api.get(`colab/${idColab}/?vlrHrMes=true`);
+        const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
 
         const resultPeriodo = await api.get(`resultPeriodo/${idColab}`);
 
@@ -79,7 +78,7 @@ export default function AdminDashboard() {
         setMes(month);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
+        setVlrHrs(normalizeCalcCurrency(vlrHrs.data + desps.data));
         setChartHrsData(
           resultPeriodo.data.map(d => {
             return Math.trunc(d.totalHrs / 60);
@@ -96,7 +95,6 @@ export default function AdminDashboard() {
           })
         );
       }
-      setIsLoading(false);
     };
     loadData();
   }, []);
@@ -188,15 +186,8 @@ export default function AdminDashboard() {
                   <CardBody>
                     <div className="chart-area">
                       <Line
-                        data={
-                          // eslint-disable-next-line no-nested-ternary
-                          bigChartData === "hrs"
-                            ? bigChartsAdmin.chartHrs(chartHrsData)
-                            : bigChartData === "desps"
-                            ? bigChartsAdmin.chartDesp(chartDespData)
-                            : bigChartsAdmin.chartReceb(chartRecebData)
-                        }
-                        options={bigChartsAdmin.chartOptions}
+                        data={chartExample1[bigChartData]}
+                        options={chartExample1.options}
                       />
                     </div>
                   </CardBody>

@@ -43,7 +43,6 @@ import { store } from "~/store";
 import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import history from "~/services/history";
-import { bigChartsAdmin } from "~/components/charts/bigChart";
 
 export default function AdminDashboard() {
   // --------- colocando no modo claro do template
@@ -56,8 +55,8 @@ export default function AdminDashboard() {
   const [chartRecebData, setChartRecebData] = useState(null);
   const [horas, setHoras] = useState(null);
   const [mes, setMes] = useState(null);
-  const [vlrDesps, setVlrDesps] = useState(null);
-  const [vlrHrs, setVlrHrs] = useState(null);
+  const [VlrDesps, setVlrDesps] = useState(null);
+  const [VlrHrs, setVlrHrs] = useState(null);
   const { id } = store.getState().auth.user;
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export default function AdminDashboard() {
         const desps = await api.get(
           `despesas/${idColab}/?total=${true}&tipo=month`
         );
-        const vlrHrsDb = await api.get(`colab/${idColab}/?vlrHrMes=true`);
+        const vlrHrs = await api.get(`colab/${idColab}/?vlrHrMes=true`);
 
         const resultPeriodo = await api.get(`resultPeriodo/${idColab}`);
 
@@ -79,7 +78,7 @@ export default function AdminDashboard() {
         setMes(month);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
+        setVlrHrs(normalizeCalcCurrency(vlrHrs.data + desps.data));
         setChartHrsData(
           resultPeriodo.data.map(d => {
             return Math.trunc(d.totalHrs / 60);
@@ -96,7 +95,6 @@ export default function AdminDashboard() {
           })
         );
       }
-      setIsLoading(false);
     };
     loadData();
   }, []);
@@ -107,7 +105,7 @@ export default function AdminDashboard() {
 
   return (
     <>
-      {isLoading ? (
+      {this.state.isLoading ? (
         <>
           <div className="content" />
         </>
@@ -133,9 +131,9 @@ export default function AdminDashboard() {
                             size="sm"
                             tag="label"
                             className={classNames("btn-simple", {
-                              active: bigChartData === "hrs"
+                              active: this.state.bigChartData === "data1"
                             })}
-                            onClick={() => setBgChartData("hrs")}
+                            onClick={() => this.setBgChartData("data1")}
                           >
                             <input defaultChecked name="options" type="radio" />
                             <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
@@ -151,9 +149,9 @@ export default function AdminDashboard() {
                             size="sm"
                             tag="label"
                             className={classNames("btn-simple", {
-                              active: bigChartData === "desp"
+                              active: this.state.bigChartData === "data2"
                             })}
-                            onClick={() => setBgChartData("desp")}
+                            onClick={() => this.setBgChartData("data2")}
                           >
                             <input name="options" type="radio" />
                             <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
@@ -169,9 +167,9 @@ export default function AdminDashboard() {
                             size="sm"
                             tag="label"
                             className={classNames("btn-simple", {
-                              active: bigChartData === "receb"
+                              active: this.state.bigChartData === "data3"
                             })}
-                            onClick={() => setBgChartData("receb")}
+                            onClick={() => this.setBgChartData("data3")}
                           >
                             <input name="options" type="radio" />
                             <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
@@ -188,15 +186,8 @@ export default function AdminDashboard() {
                   <CardBody>
                     <div className="chart-area">
                       <Line
-                        data={
-                          // eslint-disable-next-line no-nested-ternary
-                          bigChartData === "hrs"
-                            ? bigChartsAdmin.chartHrs(chartHrsData)
-                            : bigChartData === "desps"
-                            ? bigChartsAdmin.chartDesp(chartDespData)
-                            : bigChartsAdmin.chartReceb(chartRecebData)
-                        }
-                        options={bigChartsAdmin.chartOptions}
+                        data={this.state.chartExample1[this.state.bigChartData]}
+                        options={this.state.chartExample1.options}
                       />
                     </div>
                   </CardBody>
@@ -220,9 +211,9 @@ export default function AdminDashboard() {
                             style={{ textTransform: "capitalize" }}
                             className="card-category"
                           >
-                            horas {mes}
+                            horas {this.state.mes}
                           </p>
-                          <CardTitle tag="h3">{horas}</CardTitle>
+                          <CardTitle tag="h3">{this.state.horas}</CardTitle>
                         </div>
                       </Col>
                     </Row>
@@ -255,9 +246,9 @@ export default function AdminDashboard() {
                             style={{ textTransform: "capitalize" }}
                             className="card-category"
                           >
-                            despesas {mes}
+                            despesas {this.state.mes}
                           </p>
-                          <CardTitle tag="h3">{vlrDesps}</CardTitle>
+                          <CardTitle tag="h3">{this.state.vlrDesps}</CardTitle>
                         </div>
                       </Col>
                     </Row>
@@ -291,9 +282,9 @@ export default function AdminDashboard() {
                             className="card-category"
                           >
                             {" "}
-                            a Receber {mes}
+                            a Receber {this.state.mes}
                           </p>
-                          <CardTitle tag="h3">{vlrHrs}</CardTitle>
+                          <CardTitle tag="h3">{this.state.vlrHrs}</CardTitle>
                         </div>
                       </Col>
                     </Row>
