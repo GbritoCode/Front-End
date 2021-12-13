@@ -120,6 +120,37 @@ export function normalizeCurrency(value) {
   v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
   return v;
 }
+
+export function normalizeCurrencyInput(value) {
+  console.log("1", value);
+  if (typeof value !== "string") {
+    value = JSON.stringify(value);
+  }
+  var v = value.replace(/\D/g, "");
+  console.log("2", v);
+  v = `${(v / 100).toFixed(2)}`;
+  console.log("3", v);
+  v = v.replace(".", ",");
+  v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+  v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+  return v;
+}
+
+export function normalizeCurrencyDb(value) {
+  console.log("1", value);
+  if (typeof value !== "string") {
+    value = JSON.stringify(value);
+  }
+  var v = value.replace(/\D/g, "");
+  console.log("2", v);
+  v = `${(v * 1).toFixed(2)}`;
+  console.log("3", v);
+  v = v.replace(".", ",");
+  v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+  v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+  return v;
+}
+
 export function normalizeCalcCurrency(value) {
   if (typeof value !== "string") {
     value = JSON.stringify(value);

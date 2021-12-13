@@ -49,7 +49,11 @@ import { Link } from "react-router-dom";
 import AddIcon from "@material-ui/icons/Add";
 import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
-import { normalizeCurrency, normalizeDate } from "~/normalize";
+import {
+  normalizeCurrencyInput,
+  normalizeCurrencyDb,
+  normalizeDate
+} from "~/normalize";
 import { sortDates } from "~/sortingMethodReactTable";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import ModalLarge from "~/components/Modal/modalLarge";
@@ -72,9 +76,11 @@ export default function MovimentoCaixaTable() {
 
   const stateSchema = {
     movs: [],
+    mov: {},
     dtLiqui: `${year}-${month}-${date}`,
     vlrSingle: 0,
     hidden: true,
+    multiple: false,
     ColabId: 0
   };
   const [values, setValues] = useState(stateSchema);
@@ -121,7 +127,7 @@ export default function MovimentoCaixaTable() {
           id: mov.id,
           RecDesp: mov.RecDesp.recDesp === "Rec" ? "Receita" : "Despesa",
           recDespDB: mov.RecDesp.recDesp,
-          valor: normalizeCurrency(mov.valor.toFixed(2)),
+          valor: normalizeCurrencyDb(mov.valor),
           valorDB: mov.valor,
           saldo: mov.saldo,
           ColabCreate: mov.ColabCreated.nome,
@@ -155,14 +161,15 @@ export default function MovimentoCaixaTable() {
                   setValues(prevState => ({
                     ...prevState,
                     hidden: false,
-                    movs: [
-                      {
-                        id: mov.id,
-                        saldo: mov.saldo,
-                        recDesp: mov.RecDesp.recDesp,
-                        total: mov.valor
-                      }
-                    ]
+                    vlrSingle: normalizeCurrencyInput(mov.valor),
+                    multiple: false,
+                    movs: [],
+                    mov: {
+                      id: mov.id,
+                      saldo: mov.saldo,
+                      recDesp: mov.RecDesp.recDesp,
+                      total: mov.valor
+                    }
                   }));
                 }}
               >
@@ -192,7 +199,7 @@ export default function MovimentoCaixaTable() {
             id: mov.id,
             RecDesp: mov.RecDesp.recDesp === "Rec" ? "Receita" : "Despesa",
             recDespDB: mov.RecDesp.recDesp,
-            valor: normalizeCurrency(mov.valor.toFixed(2)),
+            valor: normalizeCurrencyDb(mov.valor.toFixed(2)),
             valorDB: mov.valor,
             saldo: mov.saldo,
             ColabCreate: mov.ColabCreated.nome,
@@ -267,9 +274,11 @@ export default function MovimentoCaixaTable() {
               value={values.vlrSingle}
               onChange={e => {
                 var { value } = e.target;
+                console.log("mov", value);
                 setValues(prevState => ({
                   ...prevState,
-                  vlrSingle: value
+                  vlrSingle: normalizeCurrencyInput(value),
+                  multiple: false
                 }));
               }}
             />
@@ -288,19 +297,36 @@ export default function MovimentoCaixaTable() {
               className="btn-neutral"
               type="button"
               onClick={async () => {
-                await api
-                  .put(`/movCaixa_liquid/`, {
-                    movs: values.movs,
-                    dtLiqui: values.dtLiqui,
-                    ColabId: values.ColabId
-                  })
-                  .then(res => {
-                    toast.success(res.data.message);
-                    history.go(0);
-                  })
-                  .catch(err => {
-                    toast.error(err.response.data.error);
-                  });
+                if (values.multiple) {
+                  await api
+                    .put(`/movCaixa_liquid/`, {
+                      movs: values.movs,
+                      dtLiqui: values.dtLiqui,
+                      ColabId: values.ColabId
+                    })
+                    .then(res => {
+                      toast.success(res.data.message);
+                      history.go(0);
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                } else if (!values.multiple) {
+                  await api
+                    .put(`/movCaixa/${values.mov.id}`, {
+                      mov: values.mov,
+                      dtLiqui: values.dtLiqui,
+                      ColabId: values.ColabId,
+                      vlrSingle: values.vlrSingle
+                    })
+                    .then(res => {
+                      toast.success(res.data.message);
+                      history.go(0);
+                    })
+                    .catch(err => {
+                      toast.error(err.response.data.error);
+                    });
+                }
               }}
             >
               Sim
@@ -351,7 +377,8 @@ export default function MovimentoCaixaTable() {
                   setValues(prevState => ({
                     ...prevState,
                     hidden: true,
-                    vlrSingle: 0
+                    vlrSingle: 0,
+                    multiple: true
                   }));
                 }}
                 className={classNames("btn-icon btn-link like")}
@@ -590,6 +617,14 @@ export default function MovimentoCaixaTable() {
                     <NavLink
                       onClick={() => {
                         setIsOpen(true);
+                        setValues(prevState => ({
+                          ...prevState,
+                          hidden: true,
+                          vlrSingle: 0,
+                          multiple: true,
+                          movs: [],
+                          mov: {}
+                        }));
                       }}
                       tag="li"
                     >
