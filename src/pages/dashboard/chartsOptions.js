@@ -357,7 +357,7 @@ export const bigChartLines = {
   }
 };
 
-export const parcsCharts = {
+export const barCharts = {
   options: {
     maintainAspectRatio: false,
     legend: {
@@ -405,7 +405,7 @@ export const parcsCharts = {
       ]
     }
   },
-  parcPendenteChart: (label, chartData) => {
+  orangeBarChart: (label, chartData) => {
     return {
       labels: label,
       datasets: [
@@ -423,7 +423,7 @@ export const parcsCharts = {
       ]
     };
   },
-  parcAtrasadaChart: (label, chartData) => {
+  redBarChart: (label, chartData) => {
     return {
       labels: label,
       datasets: [
@@ -442,7 +442,7 @@ export const parcsCharts = {
     };
   },
 
-  parcAbertaChart: (label, chartData) => {
+  greenBarChart: (label, chartData) => {
     return {
       labels: label,
       datasets: [

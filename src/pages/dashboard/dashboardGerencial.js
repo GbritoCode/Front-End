@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /*!
 
 =========================================================
@@ -18,7 +19,7 @@ import React, { useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
-import { Line } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 // react plugin for creating vector maps
 
 // reactstrap components
@@ -31,7 +32,10 @@ import {
   CardFooter,
   CardTitle,
   Row,
-  Col
+  Col,
+  Progress,
+  UncontrolledTooltip,
+  Table
 } from "reactstrap";
 
 import { Link } from "react-router-dom";
@@ -42,32 +46,41 @@ import { store } from "~/store";
 import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import { bigChartsAdmin } from "~/components/charts/bigChart";
+import { barCharts } from "./chartsOptions";
 
 export default function DashboardGerencial() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
+  const today = new Date();
   const [isLoading, setIsLoading] = useState(true);
   const [bigChartData, setbigChartData] = useState("hrs");
   const [chartHrsData, setChartHrsData] = useState(null);
   const [chartDespData, setChartDespData] = useState(null);
   const [chartRecebData, setChartRecebData] = useState(null);
   const [horas, setHoras] = useState(null);
-  const [mes, setMes] = useState(null);
+  const [mes] = useState(today.toLocaleString("default", { month: "long" }));
   const [vlrDesps, setVlrDesps] = useState(null);
   const [vlrHrs, setVlrHrs] = useState(null);
+  const [graphData, setGraphData] = useState({
+    oportsGraph: {
+      oportsTotal: 0,
+      oportsArray: []
+    }
+  });
 
   useEffect(() => {
     const loadData = async () => {
       if (store.getState().auth.user.Colab) {
-        const date = new Date();
+        const gerencialDash = await api.get("gerencialDash");
         const hrs = await api.get(`horas/?total=${true}&tipo=gerencial`);
         const desps = await api.get(`despesas/?total=${true}&tipo=gerencial`);
         const vlrHrsDb = await api.get(`colab/?vlrHrMes=true&tipo=gerencial`);
         const resultPeriodoGerencial = await api.get(`resultPeriodoGerencial`);
-        const month = date.toLocaleString("default", { month: "long" });
-
-        setMes(month);
+        setGraphData(prevState => ({
+          ...prevState,
+          oportsGraph: gerencialDash.data.oportsGraph
+        }));
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
         setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
@@ -92,10 +105,6 @@ export default function DashboardGerencial() {
 
     loadData();
   }, []);
-
-  const setBgChartData = name => {
-    setbigChartData(name);
-  };
 
   return (
     <>
@@ -127,7 +136,7 @@ export default function DashboardGerencial() {
                             className={classNames("btn-simple", {
                               active: bigChartData === "hrs"
                             })}
-                            onClick={() => setBgChartData("hrs")}
+                            onClick={() => setbigChartData("hrs")}
                           >
                             <input defaultChecked name="options" type="radio" />
                             <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
@@ -145,7 +154,7 @@ export default function DashboardGerencial() {
                             className={classNames("btn-simple", {
                               active: bigChartData === "desp"
                             })}
-                            onClick={() => setBgChartData("desp")}
+                            onClick={() => setbigChartData("desp")}
                           >
                             <input name="options" type="radio" />
                             <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
@@ -163,7 +172,7 @@ export default function DashboardGerencial() {
                             className={classNames("btn-simple", {
                               active: bigChartData === "receb"
                             })}
-                            onClick={() => setBgChartData("receb")}
+                            onClick={() => setbigChartData("receb")}
                           >
                             <input name="options" type="radio" />
                             <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
@@ -181,12 +190,13 @@ export default function DashboardGerencial() {
                     <div className="chart-area">
                       <Line
                         data={
-                          // eslint-disable-next-line no-nested-ternary
                           bigChartData === "hrs"
                             ? bigChartsAdmin.chartHrs(chartHrsData)
-                            : bigChartData === "desps"
+                            : bigChartData === "desp"
                             ? bigChartsAdmin.chartDesp(chartDespData)
-                            : bigChartsAdmin.chartReceb(chartRecebData)
+                            : bigChartData === "receb"
+                            ? bigChartsAdmin.chartReceb(chartRecebData)
+                            : null
                         }
                         options={bigChartsAdmin.chartOptions}
                       />
@@ -301,24 +311,166 @@ export default function DashboardGerencial() {
               </Col>
             </Row>
             <Row>
-              {/* <Col lg="4">
+              <Col lg="4">
                 <Card className=" /*card-chart">
                   <CardHeader>
-                    <Link to="tabelas/parcela/atrasadas/?fromDash=true">
-                      Oportunidades
-                    </Link>
-                    <CardTitle tag="h3" style={{ color: "red", fontSize: 20 }}>
+                    <Link to="cadastro/oportunidade/oport">Oportunidades</Link>
+                    <CardTitle
+                      tag="h3"
+                      style={{ color: "green", fontSize: 20 }}
+                    >
                       <i className="tim-icons icon-shape-star text-info" />{" "}
-                      {normalizeCurrency(totalAtrasada)}
+                      {graphData.oportsGraph.oportsTotal}
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <div className="chart-area">
-                      <Bar data={data} options={options} />
+                      <Bar
+                        data={barCharts.greenBarChart(
+                          ["Aberta", "Cot Baixa", "Cot Méd", "Cot Alta"],
+                          graphData.oportsGraph.oportsArray
+                        )}
+                        options={barCharts.options}
+                      />
                     </div>
                   </CardBody>
                 </Card>
-              </Col> */}
+              </Col>
+              <Col lg="8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h3" style={{ fontSize: 15 }}>
+                      Oportunidades
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Table responsive>
+                      <thead className="text-primary">
+                        <tr>
+                          <th className="text-center">#</th>
+                          <th>Name</th>
+                          <th>Job Position</th>
+                          <th>Milestone</th>
+                          <th className="text-right">Salary</th>
+                          <th className="text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="text-center">
+                            <div className="photo">
+                              {/* <img
+                                alt="..."
+                                src={require("assets/img/tania.jpg").default}
+                              /> */}
+                            </div>
+                          </td>
+                          <td>Tania Mike</td>
+                          <td>Develop</td>
+                          <td className="text-center">
+                            <div className="progress-container progress-sm">
+                              <Progress multi>
+                                <span className="progress-value">25%</span>
+                                <Progress bar max="100" value="25" />
+                              </Progress>
+                            </div>
+                          </td>
+                          <td className="text-right">€ 99,225</td>
+                          <td className="text-right">
+                            <Button
+                              className="btn-link btn-icon btn-neutral"
+                              color="success"
+                              id="tooltip618296632"
+                              size="sm"
+                              title="Refresh"
+                              type="button"
+                            >
+                              <i className="tim-icons icon-refresh-01" />
+                            </Button>
+                            <UncontrolledTooltip
+                              delay={0}
+                              target="tooltip618296632"
+                            >
+                              Tooltip on top
+                            </UncontrolledTooltip>
+                            <Button
+                              className="btn-link btn-icon btn-neutral"
+                              color="danger"
+                              id="tooltip707467505"
+                              size="sm"
+                              title="Delete"
+                              type="button"
+                            >
+                              <i className="tim-icons icon-simple-remove" />
+                            </Button>
+                            <UncontrolledTooltip
+                              delay={0}
+                              target="tooltip707467505"
+                            >
+                              Tooltip on top
+                            </UncontrolledTooltip>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-center">
+                            <div className="photo">
+                              {/* <img
+                                alt="..."
+                                src={require("assets/img/emilyz.jpg").default}
+                              /> */}
+                            </div>
+                          </td>
+                          <td>Manuela Rico</td>
+                          <td>Manager</td>
+                          <td className="text-center">
+                            <div className="progress-container progress-sm">
+                              <Progress multi>
+                                <span className="progress-value">15%</span>
+                                <Progress bar max="100" value="15" />
+                              </Progress>
+                            </div>
+                          </td>
+                          <td className="text-right">€ 99,201</td>
+                          <td className="text-right">
+                            <Button
+                              className="btn-link btn-icon"
+                              color="success"
+                              id="tooltip30547133"
+                              size="sm"
+                              title="Refresh"
+                              type="button"
+                            >
+                              <i className="tim-icons icon-refresh-01" />
+                            </Button>
+                            <UncontrolledTooltip
+                              delay={0}
+                              target="tooltip30547133"
+                            >
+                              Tooltip on top
+                            </UncontrolledTooltip>
+                            <Button
+                              className="btn-link btn-icon"
+                              color="danger"
+                              id="tooltip156899243"
+                              size="sm"
+                              title="Delete"
+                              type="button"
+                            >
+                              <i className="tim-icons icon-simple-remove" />
+                            </Button>
+                            <UncontrolledTooltip
+                              delay={0}
+                              target="tooltip156899243"
+                            >
+                              Tooltip on top
+                            </UncontrolledTooltip>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </CardBody>
+                </Card>
+              </Col>
             </Row>
           </div>
         </>

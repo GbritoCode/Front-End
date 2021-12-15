@@ -302,7 +302,8 @@ export default function MovimentoCaixaTable() {
                     .put(`/movCaixa_liquid/`, {
                       movs: values.movs,
                       dtLiqui: values.dtLiqui,
-                      ColabId: values.ColabId
+                      ColabId: values.ColabId,
+                      multiple: values.multiple
                     })
                     .then(res => {
                       toast.success(res.data.message);
@@ -313,11 +314,14 @@ export default function MovimentoCaixaTable() {
                     });
                 } else if (!values.multiple) {
                   await api
-                    .put(`/movCaixa/${values.mov.id}`, {
-                      mov: values.mov.id,
+                    .put(`/movCaixa_liquid/`, {
+                      mov: values.mov,
                       dtLiqui: values.dtLiqui,
                       ColabId: values.ColabId,
-                      vlrSingle: values.vlrSingle
+                      vlrSingle:
+                        parseInt(values.vlrSingle.replace(/[^\d]+/g, ""), 10) /
+                        100,
+                      multiple: values.multiple
                     })
                     .then(res => {
                       toast.success(res.data.message);

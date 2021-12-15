@@ -69,7 +69,8 @@ export default function MovimentoCaixaCadastro() {
     ClienteId: { value: "", error: "", message: "", optional: true },
     valor: { value: "", error: "", message: "" },
     dtVenc: { value: "", error: "", message: "" },
-    status: { value: 1, error: "", message: "" }
+    status: { value: 1, error: "", message: "" },
+    desc: { value: "", error: "", message: "", optional: true }
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -246,7 +247,8 @@ export default function MovimentoCaixaCadastro() {
           valor: vlrdb,
           dtVenc: values.dtVenc.value,
           status: values.status.value,
-          ColabId: idColab
+          ColabId: idColab,
+          desc: values.desc.value
         })
       );
     } else {
@@ -825,8 +827,24 @@ export default function MovimentoCaixaCadastro() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Row />
-
+                      <Row>
+                        <Col md="12" />
+                      </Row>
+                      <Label>Descrição</Label>
+                      <FormGroup className={`has-label ${values.desc.error}`}>
+                        <Input
+                          disabled
+                          name="desc"
+                          type="textarea"
+                          onChange={event =>
+                            handleChange(event, "optional", "text")
+                          }
+                          value={values.desc.value}
+                        />
+                        {values.desc.error === "has-danger" ? (
+                          <Label className="error">{values.desc.message}</Label>
+                        ) : null}
+                      </FormGroup>
                       <Row />
 
                       <Link to="/tabelas/comercial/movimentoCaixa">

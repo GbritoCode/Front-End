@@ -52,7 +52,7 @@ import pt from "date-fns/locale/pt-BR";
 // core components
 // import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
-import { bigChartLines, parcsCharts } from "./chartsOptions";
+import { bigChartLines, barCharts } from "./chartsOptions";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
 import { normalizeCalcCurrencyUpdated, normalizeCurrency } from "~/normalize";
@@ -624,11 +624,11 @@ export default function FinanceiraDashboard() {
                   <CardBody>
                     <div className="chart-area">
                       <Bar
-                        data={parcsCharts.parcPendenteChart(
+                        data={barCharts.orangeBarChart(
                           parcsState.parcLabelsPendente,
                           parcsState.parcPendente
                         )}
-                        options={parcsCharts.options}
+                        options={barCharts.options}
                       />
                     </div>
                   </CardBody>
@@ -651,11 +651,11 @@ export default function FinanceiraDashboard() {
                   <CardBody>
                     <div className="chart-area">
                       <Bar
-                        data={parcsCharts.parcAbertaChart(
+                        data={barCharts.greenBarChart(
                           parcsState.parcLabelsAberta,
                           parcsState.parcAberta
                         )}
-                        options={parcsCharts.options}
+                        options={barCharts.options}
                       />
                     </div>
                   </CardBody>
@@ -675,11 +675,11 @@ export default function FinanceiraDashboard() {
                   <CardBody>
                     <div className="chart-area">
                       <Bar
-                        data={parcsCharts.parcAtrasadaChart(
+                        data={barCharts.redBarChart(
                           parcsState.parcLabelsAtrasada,
                           parcsState.parcAtrasada
                         )}
-                        options={parcsCharts.options}
+                        options={barCharts.options}
                       />
                     </div>
                   </CardBody>
