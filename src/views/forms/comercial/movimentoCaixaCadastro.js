@@ -235,7 +235,7 @@ export default function MovimentoCaixaCadastro() {
     }
 
     if (valid && filled) {
-      var vlrdb = parseInt(values.valor.value.replace(/[.,]+/g, ""), 10) / 100;
+      var vlrDb = parseInt(values.valor.value.replace(/[.,]+/g, ""), 10) / 100;
       dispatch(
         movCaixaCadastro({
           EmpresaId: values.EmpresaId.value,
@@ -244,7 +244,7 @@ export default function MovimentoCaixaCadastro() {
           FornecId: values.FornecId.value === "" ? null : values.FornecId.value,
           ClienteId:
             values.ClienteId.value === "" ? null : values.ClienteId.value,
-          valor: vlrdb,
+          valor: fieldFornecCli === "Fornec" ? vlrDb * -1 : vlrDb,
           dtVenc: values.dtVenc.value,
           status: values.status.value,
           ColabId: idColab,
