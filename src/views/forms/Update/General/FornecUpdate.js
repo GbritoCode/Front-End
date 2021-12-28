@@ -665,6 +665,9 @@ function FornecUpdatee() {
                               <option value="260">
                                 260: Nu Pagamentos S.A.
                               </option>
+                               <option value="077">
+                                077: Banco Inter S.A.
+                              </option>
                             </Input>
                             {values.banco.error === "has-danger" ? (
                               <Label className="error">
