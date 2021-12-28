@@ -670,8 +670,12 @@ export default function MovimentoCaixaTable() {
                 rowsText="Linhas"
                 columns={[
                   {
-                    Header: "Colaborador Criação",
-                    accessor: "ColabCreate"
+                    Header: "fornec",
+                    accessor: "Fornec"
+                  },
+                  {
+                    Header: "Cliente",
+                    accessor: "Cliente"
                   },
                   {
                     Header: "Rec/Desp",
