@@ -774,11 +774,7 @@ export default function MovimentoCaixaCadastro() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>
-                            {fieldFornecCli === "Cliente"
-                              ? "Data Recebimento"
-                              : "Data Vencimento"}
-                          </Label>
+                          <Label>Data Vencimento</Label>
                           <FormGroup
                             className={`has-label ${values.dtVenc.error}`}
                           >

@@ -34,7 +34,6 @@ import {
   Row,
   Col,
   Progress,
-  UncontrolledTooltip,
   Table
 } from "reactstrap";
 
@@ -68,6 +67,7 @@ export default function DashboardGerencial() {
       oportsArray: []
     }
   });
+  const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -81,6 +81,7 @@ export default function DashboardGerencial() {
           ...prevState,
           oportsGraph: gerencialDash.data.oportsGraph
         }));
+        setTableData(gerencialDash.data.oportsForTable);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
         setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
@@ -116,7 +117,7 @@ export default function DashboardGerencial() {
         <>
           <div className="content">
             <Row>
-              <Col xs="12">
+              <Col xs="8">
                 <Card className="card-chart">
                   <CardHeader>
                     <Row>
@@ -204,6 +205,35 @@ export default function DashboardGerencial() {
                   </CardBody>
                 </Card>
               </Col>
+              <Col xs="4">
+                <Card className="card-chart">
+                  <CardHeader>
+                    <CardTitle tag="h2" style={{ color: "green" }}>
+                      <Link
+                        style={{ color: "black" }}
+                        to="cadastro/oportunidade/oport"
+                      >
+                        Oportunidades
+                      </Link>
+                      {/* <i className="tim-icons icon-shape-star text-info" />{" "}
+                      {graphData.oportsGraph.oportsTotal} */}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="chart-area">
+                      <Bar
+                        data={barCharts.greenBarChart(
+                          ["Aberta", "Cot Baixa", "Cot Méd", "Cot Alta"],
+                          graphData.oportsGraph.oportsArray
+                        )}
+                        options={barCharts.options}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
               <Col lg="4" md="6">
                 <Card className="card-stats">
                   <CardBody>
@@ -238,8 +268,6 @@ export default function DashboardGerencial() {
                     </div>
                   </CardFooter>
                 </Card>
-              </Col>
-              <Col lg="4" md="6">
                 <Card className="card-stats">
                   <CardBody>
                     <Row>
@@ -273,8 +301,6 @@ export default function DashboardGerencial() {
                     </div>
                   </CardFooter>
                 </Card>
-              </Col>
-              <Col lg="4" md="6">
                 <Card className="card-stats">
                   <CardBody>
                     <Row>
@@ -309,34 +335,7 @@ export default function DashboardGerencial() {
                   </CardFooter>
                 </Card>
               </Col>
-            </Row>
-            <Row>
-              <Col lg="4">
-                <Card className=" /*card-chart">
-                  <CardHeader>
-                    <Link to="cadastro/oportunidade/oport">Oportunidades</Link>
-                    <CardTitle
-                      tag="h3"
-                      style={{ color: "green", fontSize: 20 }}
-                    >
-                      <i className="tim-icons icon-shape-star text-info" />{" "}
-                      {graphData.oportsGraph.oportsTotal}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardBody>
-                    <div className="chart-area">
-                      <Bar
-                        data={barCharts.greenBarChart(
-                          ["Aberta", "Cot Baixa", "Cot Méd", "Cot Alta"],
-                          graphData.oportsGraph.oportsArray
-                        )}
-                        options={barCharts.options}
-                      />
-                    </div>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="8">
+              <Col lg="8" md="6">
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h3" style={{ fontSize: 15 }}>
@@ -344,128 +343,38 @@ export default function DashboardGerencial() {
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
-                    <Table responsive>
+                    <Table style={{ maxHeight: "2rem" }} responsive>
                       <thead className="text-primary">
                         <tr>
-                          <th className="text-center">#</th>
-                          <th>Name</th>
-                          <th>Job Position</th>
-                          <th>Milestone</th>
-                          <th className="text-right">Salary</th>
-                          <th className="text-right">Actions</th>
+                          <th>Código</th>
+                          <th>Descrição</th>
+                          <th>Cliente</th>
+                          <th>Horas</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td className="text-center">
-                            <div className="photo">
-                              {/* <img
-                                alt="..."
-                                src={require("assets/img/tania.jpg").default}
-                              /> */}
-                            </div>
-                          </td>
-                          <td>Tania Mike</td>
-                          <td>Develop</td>
-                          <td className="text-center">
-                            <div className="progress-container progress-sm">
-                              <Progress multi>
-                                <span className="progress-value">25%</span>
-                                <Progress bar max="100" value="25" />
-                              </Progress>
-                            </div>
-                          </td>
-                          <td className="text-right">€ 99,225</td>
-                          <td className="text-right">
-                            <Button
-                              className="btn-link btn-icon btn-neutral"
-                              color="success"
-                              id="tooltip618296632"
-                              size="sm"
-                              title="Refresh"
-                              type="button"
-                            >
-                              <i className="tim-icons icon-refresh-01" />
-                            </Button>
-                            <UncontrolledTooltip
-                              delay={0}
-                              target="tooltip618296632"
-                            >
-                              Tooltip on top
-                            </UncontrolledTooltip>
-                            <Button
-                              className="btn-link btn-icon btn-neutral"
-                              color="danger"
-                              id="tooltip707467505"
-                              size="sm"
-                              title="Delete"
-                              type="button"
-                            >
-                              <i className="tim-icons icon-simple-remove" />
-                            </Button>
-                            <UncontrolledTooltip
-                              delay={0}
-                              target="tooltip707467505"
-                            >
-                              Tooltip on top
-                            </UncontrolledTooltip>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-center">
-                            <div className="photo">
-                              {/* <img
-                                alt="..."
-                                src={require("assets/img/emilyz.jpg").default}
-                              /> */}
-                            </div>
-                          </td>
-                          <td>Manuela Rico</td>
-                          <td>Manager</td>
-                          <td className="text-center">
-                            <div className="progress-container progress-sm">
-                              <Progress multi>
-                                <span className="progress-value">15%</span>
-                                <Progress bar max="100" value="15" />
-                              </Progress>
-                            </div>
-                          </td>
-                          <td className="text-right">€ 99,201</td>
-                          <td className="text-right">
-                            <Button
-                              className="btn-link btn-icon"
-                              color="success"
-                              id="tooltip30547133"
-                              size="sm"
-                              title="Refresh"
-                              type="button"
-                            >
-                              <i className="tim-icons icon-refresh-01" />
-                            </Button>
-                            <UncontrolledTooltip
-                              delay={0}
-                              target="tooltip30547133"
-                            >
-                              Tooltip on top
-                            </UncontrolledTooltip>
-                            <Button
-                              className="btn-link btn-icon"
-                              color="danger"
-                              id="tooltip156899243"
-                              size="sm"
-                              title="Delete"
-                              type="button"
-                            >
-                              <i className="tim-icons icon-simple-remove" />
-                            </Button>
-                            <UncontrolledTooltip
-                              delay={0}
-                              target="tooltip156899243"
-                            >
-                              Tooltip on top
-                            </UncontrolledTooltip>
-                          </td>
-                        </tr>
+                        {tableData.map(oport => {
+                          console.log(1);
+                          return (
+                            <>
+                              <tr>
+                                <td>{oport.cod}</td>
+                                <td>{oport.desc}</td>
+                                <td>{oport.Cliente.nomeAbv}</td>
+                                <td className="text-center">
+                                  <div className="progress-container progress-sm">
+                                    <Progress multi>
+                                      <span className="progress-value">
+                                        25%
+                                      </span>
+                                      <Progress bar max="100" value="25" />
+                                    </Progress>
+                                  </div>
+                                </td>
+                              </tr>
+                            </>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </CardBody>

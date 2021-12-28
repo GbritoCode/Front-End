@@ -153,6 +153,7 @@ import ForgotPass from "~/views/login/forgoPass";
 import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
 import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
 import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
+import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
 
 export default function Routes() {
   return (
@@ -322,6 +323,11 @@ export default function Routes() {
       <Route
         path="/tabelas/parcela/abertas"
         component={ParcelaAbertaTable}
+        isPrivate
+      />
+      <Route
+        path="/tabelas/parcela/liquidadas"
+        component={ParcelaLiquidadaTable}
         isPrivate
       />
       <Route

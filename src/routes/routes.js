@@ -187,6 +187,7 @@ import ForgotPass from "~/views/login/forgoPass";
 import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
 import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
 import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
+import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
 
 const routes = [
   {
@@ -670,7 +671,7 @@ const routes = [
   {
     collapse: true,
     name: "Histórico",
-    namePerfil: "Historico",
+    namePerfil: "Historico side",
     icon: "tim-icons icon-notes",
     state: "HistoricoCollapse",
     profile: 1,
@@ -725,7 +726,7 @@ const routes = [
         path: "/tabelas/parcela/pendentes",
         name: "Parcelas Pendente",
         namePerfil: "Parcelas Pendente Tab",
-        mini: "rec",
+        mini: "PPD",
         component: ParcelaPendentesTable,
         layout: "/admin",
         redirect: true
@@ -734,7 +735,7 @@ const routes = [
         path: "/tabelas/parcela/abertas",
         name: "Parcelas Abertas",
         namePerfil: "Parcelas Abertas Tab",
-        mini: "rec",
+        mini: "PAB",
         component: ParcelaAbertaTable,
         layout: "/admin",
         redirect: true
@@ -743,8 +744,17 @@ const routes = [
         path: "/tabelas/parcela/atrasadas",
         name: "Parcelas Atrasadas",
         namePerfil: "Parcelas Atrasadas Tab",
-        mini: "rec",
+        mini: "PAT",
         component: ParcelaAtrasadaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/liquidadas",
+        name: "Parcelas Liquidadas",
+        namePerfil: "Parcelas Liquidadas Tab",
+        mini: "PLQ",
+        component: ParcelaLiquidadaTable,
         layout: "/admin",
         redirect: true
       },

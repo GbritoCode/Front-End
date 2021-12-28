@@ -137,6 +137,11 @@ export default function ParcelaUpdate() {
       .getElementsByName("vlrParcela")[0]
       .value.replace(/[.,]+/g, "");
     const saldo = parc - vPago;
+    setOptional(prevState => ({
+      ...prevState,
+      saldo: { value: normalizeCalcCurrency(saldo) }
+    }));
+
     if (parc - vPago < 0) {
       setOptional(prevState => ({
         ...prevState,
@@ -163,12 +168,7 @@ export default function ParcelaUpdate() {
           value: 3
         }
       }));
-      return;
     }
-    setOptional(prevState => ({
-      ...prevState,
-      saldo: { value: normalizeCalcCurrency(saldo) }
-    }));
   };
   const handleChange = (event, name, type) => {
     event.persist();
@@ -218,6 +218,7 @@ export default function ParcelaUpdate() {
       default:
     }
   };
+  console.log(optional);
   var options = {};
   const notifyElment = useRef(null);
   function notify() {

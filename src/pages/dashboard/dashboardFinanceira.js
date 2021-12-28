@@ -37,12 +37,13 @@ import {
 
 import { Link } from "react-router-dom";
 import {
-  Business,
+  AccountBalanceWalletOutlined,
+  Add,
+  AttachMoney,
   Check,
   Close,
   DateRangeOutlined,
-  DomainDisabled,
-  HeadsetMic
+  MoneyOff
 } from "@material-ui/icons";
 import { Tooltip } from "@material-ui/core";
 import { format, getDaysInMonth } from "date-fns";
@@ -446,13 +447,29 @@ export default function FinanceiraDashboard() {
               <Col xs="12">
                 <Card className="card-chart">
                   <CardHeader>
-                    <p style={{ color: "#808080" }} className="card-category">
+                    <Link to="/cadastro/comercial/movCaixa">
+                      <Tooltip
+                        title="Novo Movimento"
+                        placement="top"
+                        interactive
+                      >
+                        <Button
+                          style={{
+                            float: "right",
+                            paddingBottom: "15px"
+                          }}
+                          className={classNames("btn-icon btn-link like")}
+                        >
+                          <Add fontSize="md" />
+                        </Button>
+                      </Tooltip>{" "}
+                    </Link>
+                    <p
+                      style={{ color: "#808080", paddingTop: "5px" }}
+                      className="card-category"
+                    >
                       Fluxo de Caixa
                     </p>
-                    <CardTitle
-                      tag="h4"
-                      style={{ color: "orange", fontSize: 20 }}
-                    />
                   </CardHeader>{" "}
                   <CardBody>
                     <div className="chart-area">
@@ -478,8 +495,14 @@ export default function FinanceiraDashboard() {
                   <CardBody>
                     <Row>
                       <Col xs="5">
-                        <div className="info-icon text-center icon-warning">
-                          <Business
+                        <div
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(to bottom left, #5CC23F, #5CC23F)"
+                          }}
+                          className="info-icon text-center"
+                        >
+                          <AttachMoney
                             style={{ marginTop: 7, color: "white" }}
                             fontSize="large"
                           />
@@ -521,8 +544,14 @@ export default function FinanceiraDashboard() {
                   <CardBody>
                     <Row>
                       <Col xs="5">
-                        <div className="info-icon text-center icon-primary">
-                          <HeadsetMic
+                        <div
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(to bottom left, #F00501, #F00501)"
+                          }}
+                          className="info-icon text-center"
+                        >
+                          <MoneyOff
                             style={{ marginTop: 7, color: "white" }}
                             fontSize="large"
                           />
@@ -565,8 +594,14 @@ export default function FinanceiraDashboard() {
                   <CardBody>
                     <Row>
                       <Col xs="5">
-                        <div className="info-icon text-center icon-info">
-                          <DomainDisabled
+                        <div
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(to bottom left, #2DA9FC, #2DA9FC)"
+                          }}
+                          className="info-icon text-center"
+                        >
+                          <AccountBalanceWalletOutlined
                             style={{ marginTop: 7, color: "white" }}
                             fontSize="large"
                           />
