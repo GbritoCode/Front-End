@@ -38,7 +38,12 @@ import {
 } from "reactstrap";
 
 import { Link } from "react-router-dom";
-import { AttachFileOutlined, AttachMoney, Schedule } from "@material-ui/icons";
+import {
+  Add,
+  AttachFileOutlined,
+  AttachMoney,
+  Schedule
+} from "@material-ui/icons";
 import { store } from "~/store";
 
 // core components
@@ -208,13 +213,18 @@ export default function DashboardGerencial() {
               <Col xs="4">
                 <Card className="card-chart">
                   <CardHeader>
-                    <CardTitle tag="h2" style={{ color: "green" }}>
+                    <CardTitle tag="h2">
+                      Oportunidades
                       <Link
-                        style={{ color: "black" }}
+                        style={{ float: "right" }}
                         to="cadastro/oportunidade/oport"
                       >
-                        Oportunidades
+                        <Add style={{ marginBottom: "7.5px" }} />
                       </Link>
+                      <p style={{ float: "right" }}>
+                        {" "}
+                        {graphData.oportsGraph.oportsTotal}{" "}
+                      </p>
                       {/* <i className="tim-icons icon-shape-star text-info" />{" "}
                       {graphData.oportsGraph.oportsTotal} */}
                     </CardTitle>
