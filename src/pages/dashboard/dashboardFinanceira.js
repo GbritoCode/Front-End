@@ -74,7 +74,7 @@ export default function FinanceiraDashboard() {
   );
   const [data3, setData3] = useState([]);
   const [miniChartData, setMiniChartData] = useState();
-  const [dataForTable, setDataForTable] = useState({
+  const [dataForGraph, setDataForGraph] = useState({
     visao: "mensal",
     mes: month,
     ano: year,
@@ -238,21 +238,33 @@ export default function FinanceiraDashboard() {
                   <Input
                     type="select"
                     id="visao"
-                    value={dataForTable.visao}
+                    value={dataForGraph.visao}
                     onChangeCapture={e => {
                       const { value } = e.target;
-                      createLabels(value, dataForTable.particao, lastDayMonth);
+                      createLabels(value, dataForGraph.particao, lastDayMonth);
 
-                      setDataForTable(prevState => ({
+                      setDataForGraph(prevState => ({
                         ...prevState,
                         visao: value
                       }));
                       handleFilterChange(
                         value,
-                        dataForTable.mes,
-                        dataForTable.ano,
-                        dataForTable.particao
+                        dataForGraph.mes,
+                        dataForGraph.ano,
+                        dataForGraph.particao
                       );
+
+                      value === "anual" &&
+                        setHeader(prevState => ({
+                          ...prevState,
+                          visao: dataForGraph.ano
+                        }));
+
+                      value === "mensal" &&
+                        setHeader(prevState => ({
+                          ...prevState,
+                          visao: monthsGlobal[dataForGraph.mes - 1].full
+                        }));
                     }}
                   >
                     <option key={1} value="mensal">
@@ -263,28 +275,28 @@ export default function FinanceiraDashboard() {
                     </option>
                   </Input>
                 </Col>
-                <Col hidden={dataForTable.visao === "anual"} id="mesCol" sm="4">
+                <Col hidden={dataForGraph.visao === "anual"} id="mesCol" sm="4">
                   <Label>Mes</Label>
                   <Input
                     type="select"
                     id="mes"
-                    value={dataForTable.mes}
+                    value={dataForGraph.mes}
                     onChangeCapture={e => {
                       const { value } = e.target;
                       createLabels(
                         "mensal",
-                        dataForTable.particao,
+                        dataForGraph.particao,
                         lastDayMonth
                       );
-                      setDataForTable(prevState => ({
+                      setDataForGraph(prevState => ({
                         ...prevState,
                         mes: value
                       }));
                       handleFilterChange(
-                        dataForTable.visao,
+                        dataForGraph.visao,
                         value,
-                        dataForTable.ano,
-                        dataForTable.particao
+                        dataForGraph.ano,
+                        dataForGraph.particao
                       );
                       setHeader(prevState => ({
                         ...prevState,
@@ -302,7 +314,7 @@ export default function FinanceiraDashboard() {
                   </Input>
                 </Col>
                 <Col
-                  hidden={dataForTable.visao === "mensal"}
+                  hidden={dataForGraph.visao === "mensal"}
                   id="anoCol"
                   sm="4"
                 >
@@ -310,18 +322,18 @@ export default function FinanceiraDashboard() {
                   <Input
                     type="select"
                     id="ano"
-                    value={dataForTable.ano}
+                    value={dataForGraph.ano}
                     onChangeCapture={e => {
                       const { value } = e.target;
-                      setDataForTable(prevState => ({
+                      setDataForGraph(prevState => ({
                         ...prevState,
                         ano: value
                       }));
                       handleFilterChange(
-                        dataForTable.visao,
-                        dataForTable.mes,
+                        dataForGraph.visao,
+                        dataForGraph.mes,
                         value,
-                        dataForTable.particao
+                        dataForGraph.particao
                       );
                       setHeader(prevState => ({
                         ...prevState,
@@ -348,17 +360,18 @@ export default function FinanceiraDashboard() {
                   <Input
                     type="select"
                     id="particao"
+                    value={dataForGraph.particao}
                     onChangeCapture={e => {
                       const { value } = e.target;
-                      setDataForTable(prevState => ({
+                      setDataForGraph(prevState => ({
                         ...prevState,
                         particao: value
                       }));
-                      createLabels(dataForTable.visao, value, lastDayMonth);
+                      createLabels(dataForGraph.visao, value, lastDayMonth);
                       handleFilterChange(
-                        dataForTable.visao,
-                        dataForTable.mes,
-                        dataForTable.ano,
+                        dataForGraph.visao,
+                        dataForGraph.mes,
+                        dataForGraph.ano,
                         value
                       );
                       setHeader(prevState => ({
@@ -371,28 +384,28 @@ export default function FinanceiraDashboard() {
                       Geral
                     </option>
                     <option
-                      hidden={dataForTable.visao === "anual"}
+                      hidden={dataForGraph.visao === "anual"}
                       key={2}
                       value="1q"
                     >
                       1ª Quinzena
                     </option>
                     <option
-                      hidden={dataForTable.visao === "anual"}
+                      hidden={dataForGraph.visao === "anual"}
                       key={3}
                       value="2q"
                     >
                       2ª Quinzena
                     </option>
                     <option
-                      hidden={dataForTable.visao === "mensal"}
+                      hidden={dataForGraph.visao === "mensal"}
                       key={4}
                       value="1sem"
                     >
                       1º Semestre
                     </option>
                     <option
-                      hidden={dataForTable.visao === "mensal"}
+                      hidden={dataForGraph.visao === "mensal"}
                       key={5}
                       value="2sem"
                     >
@@ -531,7 +544,7 @@ export default function FinanceiraDashboard() {
                     {/* <hr /> */}
                     {/* <div className="stats">
                       <Link
-                        to={`tabelas/comercial/empresas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}/created`}
+                        to={`tabelas/comercial/empresas/${dataForGraph.campId}/${dataForGraph.inicDate}/${dataForGraph.endDate}/created`}
                       >
                         <i className="tim-icons icon-refresh-01" /> Ver Empresas
                       </Link>
@@ -580,7 +593,7 @@ export default function FinanceiraDashboard() {
                     {/* <hr />
                     <div className="stats">
                       <Link
-                        to={`tabelas/comercial/FUPs/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
+                        to={`tabelas/comercial/FUPs/${dataForGraph.campId}/${dataForGraph.inicDate}/${dataForGraph.endDate}`}
                       >
                         <i className="tim-icons icon-sound-wave" /> Ver Follow
                         Ups
@@ -631,7 +644,7 @@ export default function FinanceiraDashboard() {
                     {/* <hr /> */}
                     {/* <div className="stats">
                       <Link
-                        to={`tabelas/comercial/empresasFinalizadas/${dataForTable.campId}/${dataForTable.inicDate}/${dataForTable.endDate}`}
+                        to={`tabelas/comercial/empresasFinalizadas/${dataForGraph.campId}/${dataForGraph.inicDate}/${dataForGraph.endDate}`}
                       >
                         <i className="tim-icons icon-trophy" /> Ver Empresas
                       </Link>{" "}

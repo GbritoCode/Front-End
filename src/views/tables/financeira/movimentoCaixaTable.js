@@ -125,7 +125,7 @@ export default function MovimentoCaixaTable() {
         return {
           idd: key,
           id: mov.id,
-          RecDesp: mov.RecDesp.recDesp === "Rec" ? "Receita" : "Despesa",
+          RecDespDesc: mov.RecDesp.desc,
           recDespDB: mov.RecDesp.recDesp,
           valor: normalizeCurrencyDb(mov.valor),
           valorDB: mov.valor,
@@ -134,6 +134,7 @@ export default function MovimentoCaixaTable() {
           ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
           Fornec: mov.Fornec ? mov.Fornec.nome : "--",
           Cliente: mov.Cliente ? mov.Cliente.nomeAbv : "--",
+          Solicitante: mov.Cliente ? mov.Cliente.nomeAbv : mov.Fornec.nome,
           dtVenc: normalizeDate(mov.dtVenc),
           dtLiqui: mov.dtLiqui ? normalizeDate(mov.dtLiqui) : "--",
           status: checkStatus(mov.status),
@@ -218,7 +219,7 @@ export default function MovimentoCaixaTable() {
       setFilteredData({ data: responseFiltered, default: true });
     };
     loadData();
-  }, []);
+  }, [modalMini]);
 
   console.log(values);
   return (
@@ -670,16 +671,12 @@ export default function MovimentoCaixaTable() {
                 rowsText="Linhas"
                 columns={[
                   {
-                    Header: "fornec",
-                    accessor: "Fornec"
+                    Header: "Solicitante",
+                    accessor: "Solicitante"
                   },
                   {
-                    Header: "Cliente",
-                    accessor: "Cliente"
-                  },
-                  {
-                    Header: "Rec/Desp",
-                    accessor: "RecDesp"
+                    Header: "Desc",
+                    accessor: "RecDespDesc"
                   },
                   {
                     Header: "Valor",
