@@ -130,6 +130,7 @@ export default function MovimentoCaixaTable() {
           valor: normalizeCurrencyDb(mov.valor),
           valorDB: mov.valor,
           saldo: mov.saldo,
+          colabPgmto: mov.ColabPgmt ? mov.ColabPgmt.nome : "--",
           ColabCreate: mov.ColabCreated.nome,
           ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
           Fornec: mov.Fornec ? mov.Fornec.nome : "--",
@@ -673,6 +674,10 @@ export default function MovimentoCaixaTable() {
                   {
                     Header: "Solicitante",
                     accessor: "Solicitante"
+                  },
+                  {
+                    Header: "colab",
+                    accessor: "colabPgmto"
                   },
                   {
                     Header: "Desc",
