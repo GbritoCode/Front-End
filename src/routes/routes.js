@@ -678,10 +678,18 @@ const routes = [
     views: [
       {
         path: "/tabelas/oportunidade/finOport",
-        name: "Finalizadas",
+        name: "Oportunidades",
         namePerfil: "Finalizadas Tab",
         mini: "OPF",
         component: OportFinTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/parcela/liquidadas",
+        name: "Parcelas",
+        namePerfil: "ParcelasLiqui Tab",
+        mini: "OPF",
+        component: ParcelaLiquidadaTable,
         layout: "/admin"
       }
     ]

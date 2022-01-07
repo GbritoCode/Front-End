@@ -99,7 +99,7 @@ export default function ParcelaUpdate() {
   };
   const optionalSchema = {
     pedidoCliente: { value: "Não informado", error: "", message: "" },
-    situacao: { value: "", error: "", message: "" },
+    situacao: { value: 1, error: "", message: "" },
     dtLiquidacao: { value: "", error: "", message: "" },
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" }
@@ -135,6 +135,15 @@ export default function ParcelaUpdate() {
       const response4 = await api.get(
         `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
       );
+      await api
+        .get(`/parcela_ped/${response.data.OportunidadeId}`)
+        .then(result => {
+          setOptional(prevState => ({
+            ...prevState,
+            pedidoCliente: { value: result.data.parc.pedidoCliente }
+          }));
+        })
+        .catch(err => console.log("sem ped"));
 
       if (response.data.situacao > 1) {
         const response5 = await api.get(
@@ -142,6 +151,10 @@ export default function ParcelaUpdate() {
         );
         setFilePreview(response5.data);
         setFile(response5.data);
+        setOptional(prevState => ({
+          ...prevState,
+          pedidoCliente: { value: response.data.pedidoCliente }
+        }));
       }
       setDisabledField(response.data.situacao > 1);
       setData(response.data);
@@ -179,14 +192,16 @@ export default function ParcelaUpdate() {
 
       setOptional(prevState => ({
         ...prevState,
-        pedidoCliente: { value: response.data.pedidoCliente },
         situacao: { value: response.data.situacao },
         dtLiquidacao: { value: response.data.dtLiquidacao },
         vlrPago: {
           value: normalizeCurrency(JSON.stringify(response.data.vlrPago))
         },
-        saldo: { value: normalizeCurrency(JSON.stringify(response.data.saldo)) }
+        saldo: {
+          value: normalizeCurrency(JSON.stringify(response.data.saldo))
+        }
       }));
+
       if (normalizeCurrency(JSON.stringify(response.data.saldo)) === "0,00") {
         setOptional(prevState => ({
           ...prevState,

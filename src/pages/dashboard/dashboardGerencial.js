@@ -348,9 +348,7 @@ export default function DashboardGerencial() {
               <Col lg="8" md="6">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h3" style={{ fontSize: 15 }}>
-                      Oportunidades
-                    </CardTitle>
+                    <CardTitle tag="h2">Acompanhamento</CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Table style={{ maxHeight: "2rem" }} responsive>
@@ -375,9 +373,13 @@ export default function DashboardGerencial() {
                                   <div className="progress-container progress-sm">
                                     <Progress multi>
                                       <span className="progress-value">
-                                        25%
+                                        {oport.percentHrs}%
                                       </span>
-                                      <Progress bar max="100" value="25" />
+                                      <Progress
+                                        bar
+                                        max="100"
+                                        value={oport.percentHrs}
+                                      />
                                     </Progress>
                                   </div>
                                 </td>
