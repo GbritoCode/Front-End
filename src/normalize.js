@@ -138,10 +138,7 @@ export function normalizeCurrencyInput(value) {
 
 export function normalizeCurrencyDb(value) {
   console.log("1", value);
-  if (typeof value !== "string") {
-    value = JSON.stringify(value);
-  }
-  var v = value.replace(/\D/g, "");
+  var v = value;
   console.log("2", v);
   v = `${(v * 1).toFixed(2)}`;
   console.log("3", v);
