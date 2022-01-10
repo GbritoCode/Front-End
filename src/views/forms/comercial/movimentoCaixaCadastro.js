@@ -45,6 +45,7 @@ import api from "~/services/api";
 import { movCaixaCadastro } from "~/store/modules/comercial/actions";
 import Modal from "~/components/Modal/modalLarge";
 import { Footer, Header } from "~/components/Modal/modalStyles";
+import history from "~/services/history";
 
 export default function MovimentoCaixaCadastro() {
   // --------- colocando no modo claro do template
@@ -842,28 +843,28 @@ export default function MovimentoCaixaCadastro() {
                         ) : null}
                       </FormGroup>
                       <Row />
-
-                      <Link to="/tabelas/comercial/movimentoCaixa">
-                        <Button
+                      <Button
+                        style={{
+                          paddingLeft: 32,
+                          paddingRight: 33
+                        }}
+                        onClick={() => {
+                          history.goBack();
+                        }}
+                        color="secundary"
+                        size="small"
+                        className="form"
+                      >
+                        <i
+                          className="tim-icons icon-double-left"
                           style={{
-                            paddingLeft: 32,
-                            paddingRight: 33
+                            paddingBottom: 4,
+                            paddingRight: 1
                           }}
-                          color="secundary"
-                          size="small"
-                          className="form"
-                        >
-                          <i
-                            className="tim-icons icon-double-left"
-                            style={{
-                              paddingBottom: 4,
-                              paddingRight: 1
-                            }}
-                            size="large"
-                          />{" "}
-                          Voltar
-                        </Button>
-                      </Link>
+                          size="large"
+                        />{" "}
+                        Voltar
+                      </Button>
                       <Button
                         style={{
                           paddingLeft: 29,

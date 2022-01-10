@@ -329,8 +329,8 @@ class ParcelaLiquidadaTable extends Component {
                       accessor: "parcela"
                     },
                     {
-                      Header: "Saldo",
-                      accessor: "saldo"
+                      Header: "Valor",
+                      accessor: "vlrParcela"
                     },
                     {
                       Header: "Nota Fiscal",
