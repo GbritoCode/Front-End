@@ -127,7 +127,9 @@ export default function DashboardGerencial() {
                   <CardHeader>
                     <Row>
                       <Col className="text-left" sm="6">
-                        <CardTitle tag="h2">Histórico</CardTitle>
+                        <CardTitle style={{ color: "#ba54f5" }} tag="h3">
+                          Histórico
+                        </CardTitle>
                       </Col>
                       <Col sm="6">
                         <ButtonGroup
@@ -213,7 +215,7 @@ export default function DashboardGerencial() {
               <Col xs="4">
                 <Card className="card-chart">
                   <CardHeader>
-                    <CardTitle tag="h2">
+                    <CardTitle style={{ color: "#ba54f5" }} tag="h3">
                       Oportunidades
                       <Link
                         style={{ float: "right" }}
@@ -348,7 +350,9 @@ export default function DashboardGerencial() {
               <Col lg="8" md="6">
                 <Card>
                   <CardHeader>
-                    <CardTitle tag="h2">Acompanhamento</CardTitle>
+                    <CardTitle style={{ color: "#ba54f5" }} tag="h3">
+                      Acompanhamento
+                    </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Table style={{ maxHeight: "2rem" }} responsive>

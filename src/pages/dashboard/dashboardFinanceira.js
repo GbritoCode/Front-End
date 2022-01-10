@@ -56,7 +56,7 @@ import api from "~/services/api";
 import { bigChartLines, barCharts } from "./chartsOptions";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
-import { normalizeCalcCurrencyUpdated, normalizeCurrency } from "~/normalize";
+import { normalizeCurrency, normalizeCurrencyDb } from "~/normalize";
 import { labelsDashFinanc, monthsGlobal } from "~/generalVar";
 // import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
@@ -531,10 +531,8 @@ export default function FinanceiraDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? normalizeCalcCurrencyUpdated(
-                                  miniChartData.somaRec
-                                )
-                              : normalizeCalcCurrencyUpdated(0)}
+                              ? normalizeCurrencyDb(miniChartData.somaRec)
+                              : normalizeCurrencyDb(0)}
                           </CardTitle>
                         </div>
                       </Col>
@@ -580,10 +578,8 @@ export default function FinanceiraDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? normalizeCalcCurrencyUpdated(
-                                  miniChartData.somaDesp
-                                )
-                              : normalizeCalcCurrencyUpdated(0)}
+                              ? normalizeCurrencyDb(miniChartData.somaDesp)
+                              : normalizeCurrencyDb(0)}
                           </CardTitle>
                         </div>
                       </Col>
@@ -631,10 +627,8 @@ export default function FinanceiraDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? normalizeCalcCurrencyUpdated(
-                                  miniChartData.somaSaldo
-                                )
-                              : normalizeCalcCurrencyUpdated(0)}
+                              ? normalizeCurrencyDb(miniChartData.somaSaldo)
+                              : normalizeCurrencyDb(0)}
                           </CardTitle>
                         </div>
                       </Col>
