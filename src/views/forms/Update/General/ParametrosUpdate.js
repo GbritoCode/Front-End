@@ -111,7 +111,7 @@ function ParametrosUpdatee() {
         adiantaPgmto: { value: response.data.adiantaPgmto },
         percAdiantaPgmto: { value: response.data.percAdiantaPgmto },
         compHrs: { value: response.data.compHrs },
-        compFlag: { value: response.data.compFlag ? "1" : "" },
+        compFlag: { value: response.data.compFlag ? "true" : "false" },
         pgmtoVenc: { value: response.data.pgmtoVenc },
         RecDespCompHrs: {
           value: response.data.RecDespCompHrs || "",
@@ -269,7 +269,7 @@ function ParametrosUpdatee() {
           adiantaPgmto: values.adiantaPgmto.value,
           percAdiantaPgmto: values.percAdiantaPgmto.value,
           compHrs: values.compHrs.value,
-          compFlag: !!values.compFlag.value,
+          compFlag: values.compFlag.value === "true",
           pgmtoVenc: values.pgmtoVenc.value,
           RecDespCompHrs: values.RecDespCompHrs.value
         })
@@ -578,25 +578,25 @@ function ParametrosUpdatee() {
                           >
                             <Label check>
                               <Input
-                                checked={values.compFlag.value === "1"}
+                                checked={values.compFlag.value === "true"}
                                 name="compFlag"
                                 type="radio"
                                 onChange={event =>
                                   handleChange(event, "compFlag", "text")
                                 }
-                                value="1"
+                                value="true"
                               />
                               Sim
                             </Label>
                             <Label check>
                               <Input
-                                checked={values.compFlag.value === ""}
+                                checked={values.compFlag.value === "false"}
                                 name="compFlag"
                                 type="radio"
                                 onChange={event =>
                                   handleChange(event, "compFlag", "text")
                                 }
-                                value=""
+                                value={false}
                               />
                               Não
                             </Label>

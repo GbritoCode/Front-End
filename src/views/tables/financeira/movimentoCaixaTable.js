@@ -199,15 +199,17 @@ export default function MovimentoCaixaTable() {
           return {
             idd: key,
             id: mov.id,
-            RecDesp: mov.RecDesp.recDesp === "Rec" ? "Receita" : "Despesa",
+            RecDespDesc: mov.RecDesp.desc,
             recDespDB: mov.RecDesp.recDesp,
-            valor: normalizeCurrencyDb(mov.valor.toFixed(2)),
+            valor: normalizeCurrencyDb(mov.valor),
             valorDB: mov.valor,
             saldo: mov.saldo,
+            colabPgmto: mov.ColabPgmt ? mov.ColabPgmt.nome : "--",
             ColabCreate: mov.ColabCreated.nome,
             ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
             Fornec: mov.Fornec ? mov.Fornec.nome : "--",
             Cliente: mov.Cliente ? mov.Cliente.nomeAbv : "--",
+            Solicitante: mov.Cliente ? mov.Cliente.nomeAbv : mov.Fornec.nome,
             dtVenc: normalizeDate(mov.dtVenc),
             dtLiqui: mov.dtLiqui ? normalizeDate(mov.dtLiqui) : "--",
             status: checkStatus(mov.status)
@@ -422,7 +424,7 @@ export default function MovimentoCaixaTable() {
                 <DoneAll fontSize="large" />
               </Button>
             </Tooltip>
-            <h4 className="modalHeader">Clientes/Prospects</h4>
+            <h4 className="modalHeader">Liquidar</h4>
           </Header>
 
           <ReactTable

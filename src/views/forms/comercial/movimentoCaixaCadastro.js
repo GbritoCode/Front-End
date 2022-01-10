@@ -36,7 +36,6 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { normalizeCnpj, normalizeCurrency, normalizeFone } from "~/normalize";
