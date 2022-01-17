@@ -553,7 +553,6 @@ export default function ComercialDashboard() {
         <>
           <div className="content">
             <Modal
-              style={{ width: "50%" }}
               onClose={() => {
                 setIsOpen(false);
               }}

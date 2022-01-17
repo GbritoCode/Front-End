@@ -63,7 +63,8 @@ function ParametrosUpdatee() {
     compFlag: { value: "", error: "", message: "" },
     compHrs: { value: 0, error: "", message: "" },
     pgmtoVenc: { value: "", error: "", message: "" },
-    RecDespCompHrs: { value: "", error: "", message: "", optional: true }
+    RecDespCompHrs: { value: "", error: "", message: "", optional: true },
+    color: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -271,7 +272,8 @@ function ParametrosUpdatee() {
           compHrs: values.compHrs.value,
           compFlag: values.compFlag.value === "true",
           pgmtoVenc: values.pgmtoVenc.value,
-          RecDespCompHrs: values.RecDespCompHrs.value
+          RecDespCompHrs: values.RecDespCompHrs.value,
+          color: values.color.value
         })
       );
     } else {
@@ -724,6 +726,33 @@ function ParametrosUpdatee() {
                             {values.percAdiantaPgmto.error === "has-danger" ? (
                               <Label className="error">
                                 {values.percAdiantaPgmto.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Cores</Label>
+                          <FormGroup
+                            className={`has-label ${values.color.error}`}
+                          >
+                            <Input
+                              name="color"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "color", "optional")
+                              }
+                              value={values.color.value}
+                            >
+                              <option value="primary">Rosa</option>
+                              <option value="blue">Azul</option>
+                              <option value="orange">Laranja</option>
+                              <option value="green">Verde</option>
+                              <option value="red">Vermelho</option>
+                            </Input>
+                            {values.color.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.color.message}
                               </Label>
                             ) : null}
                           </FormGroup>

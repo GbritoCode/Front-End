@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   signed: false,
   loading: false,
   empresa: null,
+  color: null,
   user: { Colab: null }
 };
 
@@ -24,6 +25,7 @@ export default function auth(state = INITIAL_STATE, action) {
         draft.signed = true;
         draft.loading = false;
         draft.empresa = action.payload.empresa;
+        draft.color = action.payload.color;
         break;
       }
       case "@colab/FIRST_COLAB_SUCCESS": {

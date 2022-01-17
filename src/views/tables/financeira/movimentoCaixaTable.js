@@ -133,9 +133,9 @@ export default function MovimentoCaixaTable() {
           colabPgmto: mov.ColabPgmt ? mov.ColabPgmt.nome : "--",
           ColabCreate: mov.ColabCreated.nome,
           ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
-          Fornec: mov.Fornec ? mov.Fornec.nome : "--",
+          Fornec: mov.Fornec ? mov.Fornec.nomeConta : "--",
           Cliente: mov.Cliente ? mov.Cliente.nomeAbv : "--",
-          Solicitante: mov.Cliente ? mov.Cliente.nomeAbv : mov.Fornec.nome,
+          Solicitante: mov.Cliente ? mov.Cliente.nomeAbv : mov.Fornec.nomeConta,
           dtVenc: normalizeDate(mov.dtVenc),
           dtLiqui: mov.dtLiqui ? normalizeDate(mov.dtLiqui) : "--",
           status: checkStatus(mov.status),
@@ -207,9 +207,11 @@ export default function MovimentoCaixaTable() {
             colabPgmto: mov.ColabPgmt ? mov.ColabPgmt.nome : "--",
             ColabCreate: mov.ColabCreated.nome,
             ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
-            Fornec: mov.Fornec ? mov.Fornec.nome : "--",
+            Fornec: mov.Fornec ? mov.Fornec.nomeConta : "--",
             Cliente: mov.Cliente ? mov.Cliente.nomeAbv : "--",
-            Solicitante: mov.Cliente ? mov.Cliente.nomeAbv : mov.Fornec.nome,
+            Solicitante: mov.Cliente
+              ? mov.Cliente.nomeAbv
+              : mov.Fornec.nomeConta,
             dtVenc: normalizeDate(mov.dtVenc),
             dtLiqui: mov.dtLiqui ? normalizeDate(mov.dtLiqui) : "--",
             status: checkStatus(mov.status)
@@ -494,12 +496,16 @@ export default function MovimentoCaixaTable() {
             rowsText="Linhas"
             columns={[
               {
-                Header: "Colaborador Criação",
-                accessor: "ColabCreate"
+                Header: "Empresa",
+                accessor: "Solicitante"
               },
               {
-                Header: "Rec/Desp",
-                accessor: "RecDesp"
+                Header: "colab",
+                accessor: "colabPgmto"
+              },
+              {
+                Header: "Desc",
+                accessor: "RecDespDesc"
               },
               {
                 Header: "Valor",
@@ -514,10 +520,6 @@ export default function MovimentoCaixaTable() {
                 Header: "Data Vencimento",
                 accessor: "dtVenc",
                 sortMethod: sortDates()
-              },
-              {
-                Header: "Situação",
-                accessor: "status"
               }
             ]}
             defaultPageSize={6}
@@ -645,7 +647,7 @@ export default function MovimentoCaixaTable() {
                           style={{ float: "left", marginRight: "3%" }}
                           fontSize="small"
                         />
-                        <p style={{ paddingTop: "2%" }}>Pagar Múltiplos</p>
+                        <p style={{ paddingTop: "2%" }}>Liquidar Múltiplos</p>
                       </DropdownItem>
                     </NavLink>
                   </DropdownMenu>
@@ -674,7 +676,7 @@ export default function MovimentoCaixaTable() {
                 rowsText="Linhas"
                 columns={[
                   {
-                    Header: "Solicitante",
+                    Header: "Empresa",
                     accessor: "Solicitante"
                   },
                   {

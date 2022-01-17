@@ -154,6 +154,7 @@ import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadast
 import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
 import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
+import DashboardCliente from "~/pages/dashboard/dashboardCliente";
 
 export default function Routes() {
   return (
@@ -177,6 +178,7 @@ export default function Routes() {
         component={FinanceiraDashboard}
         isPrivate
       />
+      <Route path="/dashboardCliente" component={DashboardCliente} isPrivate />
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}

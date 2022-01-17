@@ -10,14 +10,15 @@ export function* signIn({ payload }) {
     const { email, senha } = payload;
 
     const response = yield call(api.post, "sessions", { email, senha });
-    const { token, user, acessible } = response.data;
+    const { token, user, acessible, color } = response.data;
     console.log(response.data);
     yield put(
       signInSuccess(
         token,
         user,
         acessible,
-        user.empresa === undefined ? "" : user.empresa.idFederal
+        user.empresa === undefined ? "" : user.empresa.idFederal,
+        color
       )
     );
 

@@ -188,6 +188,7 @@ import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadast
 import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
 import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
+import DashboardCliente from "~/pages/dashboard/dashboardCliente";
 
 const routes = [
   {
@@ -230,6 +231,15 @@ const routes = [
         namePerfil: "Financeira Dash",
         mini: "FIN",
         component: FinanceiraDashboard,
+        profile: 10,
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardCliente",
+        name: "Cliente",
+        namePerfil: "Cliente Dash",
+        mini: "FIN",
+        component: DashboardCliente,
         profile: 10,
         layout: "/admin"
       }

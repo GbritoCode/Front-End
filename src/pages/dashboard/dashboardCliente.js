@@ -34,7 +34,8 @@ import {
   Row,
   Col,
   Progress,
-  Table
+  Table,
+  Input
 } from "reactstrap";
 
 import { Link } from "react-router-dom";
@@ -42,8 +43,12 @@ import {
   Add,
   AttachFileOutlined,
   AttachMoney,
+  Check,
+  Close,
+  DateRangeOutlined,
   Schedule
 } from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
 import { store } from "~/store";
 
 // core components
@@ -51,12 +56,15 @@ import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import { bigChartsAdmin } from "~/components/charts/bigChart";
 import { barCharts } from "./chartsOptions";
+import { Footer, Header } from "~/components/Modal/modalStyles";
+import Modal from "~/components/Modal/modalLarge";
 
-export default function DashboardGerencial() {
+export default function DashboardCliente() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
 
   const today = new Date();
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [bigChartData, setbigChartData] = useState("hrs");
   const [chartHrsData, setChartHrsData] = useState(null);
@@ -73,20 +81,18 @@ export default function DashboardGerencial() {
     }
   });
   const [tableData, setTableData] = useState([]);
+  const [clienteData, setClienteData] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       if (store.getState().auth.user.Colab) {
-        const gerencialDash = await api.get("gerencialDash");
+        const clienteDash = await api.get("clienteDash");
         const hrs = await api.get(`horas/?total=${true}&tipo=gerencial`);
         const desps = await api.get(`despesas/?total=${true}&tipo=gerencial`);
         const vlrHrsDb = await api.get(`colab/?vlrHrMes=true&tipo=gerencial`);
         const resultPeriodoGerencial = await api.get(`resultPeriodoGerencial`);
-        setGraphData(prevState => ({
-          ...prevState,
-          oportsGraph: gerencialDash.data.oportsGraph
-        }));
-        setTableData(gerencialDash.data.oportsForTable);
+
+        setClienteData(clienteDash.data.cli);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
         setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
@@ -112,6 +118,15 @@ export default function DashboardGerencial() {
     loadData();
   }, []);
 
+  const handleFilterChange = async cliId => {
+    const clienteDash = await api.get(`clienteDash/?cliId=${cliId}`);
+    setGraphData(prevState => ({
+      ...prevState,
+      oportsGraph: clienteDash.data.oportsGraph
+    }));
+    setTableData(clienteDash.data.oportsForTable);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -121,6 +136,94 @@ export default function DashboardGerencial() {
       ) : (
         <>
           <div className="content">
+            <Modal
+              onClose={() => {
+                setIsOpen(false);
+              }}
+              open={isOpen}
+            >
+              <Header>
+                {" "}
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>
+                <h4 className="modalHeader">Filtrar</h4>
+              </Header>
+
+              <Row>
+                <Col sm="4">
+                  <Input
+                    type="select"
+                    id="camp"
+                    onChangeCapture={e => {
+                      handleFilterChange(e.target.value);
+                    }}
+                  >
+                    <option disabled value="">
+                      {" "}
+                      Selecione um Cliente
+                    </option>
+                    {clienteData.map((cli, index) => (
+                      <option key={index} value={cli.id}>
+                        {cli.nomeAbv} - {cli.rzSoc}
+                      </option>
+                    ))}
+                  </Input>
+                </Col>
+              </Row>
+
+              <Footer />
+            </Modal>
+            <Card className="card-chart">
+              <CardHeader>
+                <Row>
+                  <Col className="text-left" sm="12">
+                    <Tooltip title="Filtrar">
+                      <Button
+                        style={{
+                          float: "right",
+                          padding: 0
+                        }}
+                        onClick={() => {
+                          setIsOpen(true);
+                        }}
+                        size="sm"
+                        className={classNames("btn-icon btn-link like")}
+                      >
+                        <DateRangeOutlined />
+                      </Button>
+                    </Tooltip>
+
+                    <CardTitle style={{ marginBottom: 0 }} tag="h3">
+                      Cliente
+                    </CardTitle>
+                  </Col>
+                </Row>
+              </CardHeader>
+            </Card>
             <Row>
               <Col xs="8">
                 <Card className="card-chart">
@@ -172,7 +275,7 @@ export default function DashboardGerencial() {
                               <i className="tim-icons icon-gift-2" />
                             </span>
                           </Button>
-                          <Button
+                          {/* <Button
                             color="info"
                             id="2"
                             size="sm"
@@ -189,7 +292,7 @@ export default function DashboardGerencial() {
                             <span className="d-block d-sm-none">
                               <i className="tim-icons icon-tap-02" />
                             </span>
-                          </Button>
+                          </Button> */}
                         </ButtonGroup>
                       </Col>
                     </Row>
@@ -235,7 +338,7 @@ export default function DashboardGerencial() {
                     <div className="chart-area">
                       <Bar
                         data={barCharts.greenBarChart(
-                          ["Aberta", "Cot Baixa", "Cot Méd", "Cot Alta"],
+                          ["Aberta", "Cotada", "Aprovada"],
                           graphData.oportsGraph.oportsArray
                         )}
                         options={barCharts.options}
