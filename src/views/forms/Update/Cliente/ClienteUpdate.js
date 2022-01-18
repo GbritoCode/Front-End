@@ -86,7 +86,8 @@ function ClienteUpdatee() {
     database: { value: "", error: "", message: "", optional: true },
     ramo: { value: "", error: "", message: "", optional: true },
     setor: { value: "", error: "", message: "", optional: true },
-    qtdFuncionarios: { value: "", error: "", message: "", optional: true }
+    qtdFuncionarios: { value: "", error: "", message: "", optional: true },
+    sigla: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -157,7 +158,8 @@ function ClienteUpdatee() {
         qtdFuncionarios: {
           value: response.data.qtdFuncionarios,
           optional: true
-        }
+        },
+        sigla: { value: response.data.sigla }
       }));
       setIsLoading(false);
     }
@@ -458,7 +460,8 @@ function ClienteUpdatee() {
           database: values.database.value,
           ramo: values.ramo.value,
           setor: values.setor.value,
-          qtdFuncionarios: values.qtdFuncionarios.value
+          qtdFuncionarios: values.qtdFuncionarios.value,
+          sigla: values.sigla.value
         })
       );
     } else {
@@ -882,6 +885,26 @@ function ClienteUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Sigla</Label>
+                          <FormGroup
+                            className={`has-label ${values.sigla.error}`}
+                          >
+                            <Input
+                              name="name_abv"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "sigla", "text")
+                              }
+                              value={values.sigla.value}
+                            />
+                            {values.sigla.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.sigla.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
                           <Label>Representante</Label>
                           <FormGroup
                             className={`has-label ${values.representante.error}`}
@@ -916,6 +939,8 @@ function ClienteUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Tipo Comissão</Label>
                           <FormGroup
@@ -951,8 +976,6 @@ function ClienteUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Site</Label>
                           <FormGroup

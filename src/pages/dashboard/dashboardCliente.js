@@ -475,7 +475,7 @@ export default function DashboardCliente() {
                               <tr>
                                 <td>{oport.cod}</td>
                                 <td>{oport.desc}</td>
-                                <td>{oport.Cliente.nomeAbv}</td>
+                                <td>{oport.Cliente.sigla}</td>
                                 <td className="text-center">
                                   <div className="progress-container progress-sm">
                                     <Progress multi>

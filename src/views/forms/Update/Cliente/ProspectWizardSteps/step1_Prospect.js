@@ -77,7 +77,8 @@ const CadastroCliente = forwardRef((props, ref) => {
       array: [],
       optional: true
     },
-    fantasia: { value: "", error: "", message: "", optional: true }
+    fantasia: { value: "", error: "", message: "", optional: true },
+    sigla: { value: "", error: "", message: "" }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -421,7 +422,8 @@ const CadastroCliente = forwardRef((props, ref) => {
       CampanhaIds: values.CampanhaIds.array,
       site: values.site.value,
       fone: values.fone.value,
-      atvPrincipal: values.atvPrincipal.value
+      atvPrincipal: values.atvPrincipal.value,
+      sigla: values.sigla.value
     }
   }));
 
@@ -728,6 +730,28 @@ const CadastroCliente = forwardRef((props, ref) => {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          <Label>Sigla</Label>
+                          <FormGroup
+                            className={`has-label ${values.sigla.error}`}
+                          >
+                            <Input
+                              name="name_abv"
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "sigla", "text")
+                              }
+                              value={values.sigla.value}
+                            />
+                            {values.sigla.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.sigla.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
                           <Label>Representante</Label>
                           <FormGroup
                             className={`has-label ${values.representante.error}`}
@@ -784,8 +808,6 @@ const CadastroCliente = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           <Label>Site</Label>
                           <FormGroup
@@ -838,6 +860,8 @@ const CadastroCliente = forwardRef((props, ref) => {
                             ) : null}
                           </FormGroup>
                         </Col>
+                      </Row>
+                      <Row>
                         <Col md="4">
                           <Label>Campanhas</Label>
                           <FormGroup
