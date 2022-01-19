@@ -191,7 +191,7 @@ export function normalizeDatetime(datetime) {
 }
 
 export function pt_brDateToEUADate(datetime) {
-  if (datetime) {
+   if (datetime) {
     const date = datetime.split("/");
     const americanDate = new Date(
       `${date[2]}-${date[1]}-${date[0]}`
