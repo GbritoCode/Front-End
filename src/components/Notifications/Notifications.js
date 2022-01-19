@@ -24,6 +24,7 @@ export default function Notifications() {
       store.getState().auth.user.Colab === null
         ? 0
         : store.getState().auth.user.Colab;
+    console.log(idColab);
     async function loadNotifications() {
       const response = await api.get(`/notifications/${idColab}`);
 
@@ -50,7 +51,7 @@ export default function Notifications() {
 
     setNotify(
       notify.map(notification =>
-        notification._id === id ? { ...notification, read: true } : notification
+        notification.id === id ? { ...notification, read: true } : notification
       )
     );
   };
@@ -80,7 +81,7 @@ export default function Notifications() {
         ) : (
           notify.map(notification => (
             <NavLink
-              key={notification._id}
+              key={notification.id}
               onClick={e => e.preventDefault}
               tag="li"
             >
@@ -113,7 +114,7 @@ export default function Notifications() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => handleMarkasRead(notification._id)}
+                    onClick={() => handleMarkasRead(notification.id)}
                     className="notificationMarkAsRead"
                   >
                     <Tooltip title="Marcar como lida">

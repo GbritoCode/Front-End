@@ -32,7 +32,11 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link, useParams } from "react-router-dom";
-import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
+import {
+  normalizeCalcCurrency,
+  normalizeCurrency,
+  normalizeCurrencyDb
+} from "~/normalize";
 import { store } from "~/store";
 import { recursoUpdate } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
@@ -88,12 +92,12 @@ export default function RecursoCadastro() {
         tipoValor: { value: response1.data.tipoValor },
         tipoAtend: { value: response1.data.tipoAtend },
         colabVlrHr: {
-          value: normalizeCurrency(JSON.stringify(response1.data.colabVlrHr))
+          value: normalizeCurrencyDb(JSON.stringify(response1.data.colabVlrHr))
         },
         dataInclusao: { value: response1.data.dataInclusao },
         hrsPrevst: { value: response1.data.hrsPrevst },
         custoPrev: {
-          value: normalizeCurrency(JSON.stringify(response1.data.custoPrev))
+          value: normalizeCurrencyDb(JSON.stringify(response1.data.custoPrev))
         }
       }));
 

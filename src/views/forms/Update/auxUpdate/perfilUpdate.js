@@ -64,6 +64,7 @@ function PerfilUpdate() {
   const [horizontalTabs, sethorizontalTabs] = useState("Dashboards");
   const [permittedPages, setPermittedPages] = useState([]);
   const [ParentPagesCounter, setParentPagesCounter] = useState({
+    "Historico side": { count: 0, value: "Historico" },
     Dashboards: { count: 0, value: "Dashboards" },
     Administração: { count: 0, value: "Administração" },
     Vendas: { count: 0, value: "Vendas" },
@@ -433,19 +434,15 @@ function PerfilUpdate() {
                             data-toggle="tab"
                             href="#"
                             className={
-                              horizontalTabs === "Oportunidades"
+                              horizontalTabs === "Historico"
                                 ? "active perfilPage"
                                 : "perfilPage"
                             }
                             onClick={e =>
-                              changeActiveTab(
-                                e,
-                                "horizontalTabs",
-                                "Oportunidades"
-                              )
+                              changeActiveTab(e, "horizontalTabs", "Historico")
                             }
                           >
-                            Oportunidades
+                            Histórico
                           </NavLink>
                         </NavItem>
                       </Nav>
@@ -863,13 +860,13 @@ function PerfilUpdate() {
                           </Row>
                         </TabPane>
 
-                        <TabPane tabId="Oportunidades">
+                        <TabPane tabId="Historico">
                           <Row>
                             {routes.map(route => {
                               if (
                                 route.layout !== "/auth" &&
                                 !route.redirect &&
-                                route.namePerfil === "Oportunidades side"
+                                route.namePerfil === "Historico side"
                               ) {
                                 return route.views.map((view, index) => {
                                   if (!view.redirect) {

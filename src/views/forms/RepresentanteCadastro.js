@@ -208,7 +208,7 @@ export default function RepresentanteCadastro() {
         >
           <Header>
             {" "}
-            <h4 className="modalHeader">Representante</h4>
+            <h4 className="modalHeader">Colaborador</h4>
           </Header>
 
           <ReactTable

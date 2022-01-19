@@ -54,7 +54,7 @@ export const Content = styled.div`
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   background-color: white;
   border-radius: 2px;
-  overflow-y: scroll;
+  overflow-y: auto;
   th {
     font-weight: 1;
   }

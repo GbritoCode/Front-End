@@ -251,37 +251,46 @@ export function* parcelaCadastro({ payload }) {
 }
 export function* updateParcela({ payload }) {
   try {
-    const {
-      id,
-      OportunidadeId,
-      parcela,
-      vlrParcela,
-      dtEmissao,
-      dtVencimento,
-      notaFiscal,
-      pedidoCliente,
-      situacao,
-      dtLiquidacao,
-      vlrPago,
-      saldo
-    } = payload;
+    const { id } = payload;
 
-    const recurso = {
-      OportunidadeId,
-      parcela,
-      vlrParcela,
-      dtEmissao,
-      dtVencimento,
-      notaFiscal,
-      pedidoCliente,
-      situacao,
-      dtLiquidacao,
-      vlrPago,
-      saldo
-    };
-
-    const response = yield call(api.put, `parcela/${id}`, recurso);
+    const response = yield call(api.put, `parcela/${id}`, payload);
     // history.push(`/tabelas/oportunidade/parcela/${OportunidadeId}`);
+    history.goBack();
+    toast.success("Parcela atualizada com Sucesso");
+    yield put(UpdateSuccess(response.data));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+//---------
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
+export function* faturaParcela({ payload }) {
+  try {
+    const { id } = payload;
+
+    const response = yield call(api.put, `parcela_fatura/${id}`, payload);
+    history.goBack();
+    toast.success("Parcela atualizada com Sucesso");
+    yield put(UpdateSuccess(response.data));
+  } catch (err) {
+    toast.error(err.response.data.error);
+    yield put(signFailure());
+  }
+}
+
+//---------
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+
+export function* pagamentoParcela({ payload }) {
+  try {
+    const { id } = payload;
+
+    const response = yield call(api.put, `parcela_pgmto/${id}`, payload);
     history.goBack();
     toast.success("Parcela atualizada com Sucesso");
     yield put(UpdateSuccess(response.data));
@@ -382,22 +391,7 @@ export function* updateHora({ payload }) {
 
 export function* despesaCadastro({ payload }) {
   try {
-    const {
-      OportunidadeId,
-      ColabId,
-      dataDespesa,
-      tipoDespesa,
-      valorDespesa,
-      desc
-    } = payload;
-    yield call(api.post, "despesas", {
-      OportunidadeId,
-      ColabId,
-      dataDespesa,
-      tipoDespesa,
-      valorDespesa,
-      desc
-    });
+    yield call(api.post, "despesas", payload);
     history.go(0);
   } catch (err) {
     toast.error(err.response.data.error);
@@ -443,6 +437,8 @@ export default all([
   takeLatest("@update/RECURSO_REQUEST", updateRecurso),
   takeLatest("@cadastro/PARCELA_REQUEST", parcelaCadastro),
   takeLatest("@update/PARCELA_REQUEST", updateParcela),
+  takeLatest("@update/PARCELA_FATURA", faturaParcela),
+  takeLatest("@update/PARCELA_PGMTO", pagamentoParcela),
   takeLatest("@cadastro/HORA_REQUEST", horaCadastro),
   takeLatest("@update/HORA_REQUEST", updateHora),
   takeLatest("@cadastro/DESPESA_REQUEST", despesaCadastro),

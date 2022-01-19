@@ -71,6 +71,8 @@ class ParametrosTable extends Component {
         return "Parcial";
       case 4:
         return "Liquidada";
+      case 5:
+        return "Renegociada";
       default:
     }
   };

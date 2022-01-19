@@ -221,8 +221,10 @@ export default function RecursoCadastro() {
     }
 
     if (valid && filled) {
-      var custoPrevdb = values.custoPrev.value.replace(/[.,]+/g, "");
-      var colabVlrHrdb = values.colabVlrHr.value.replace(/[.,]+/g, "");
+      var custoPrevdb =
+        parseInt(values.custoPrev.value.replace(/[.,]+/g, ""), 10) / 100;
+      var colabVlrHrdb =
+        parseInt(values.colabVlrHr.value.replace(/[.,]+/g, ""), 10) / 100;
       dispatch(
         recursoReqest(
           values.OportunidadeId.value,
@@ -253,7 +255,9 @@ export default function RecursoCadastro() {
   return (
     <>
       {isLoading ? (
-        <><div className='content' /></>
+        <>
+          <div className="content" />
+        </>
       ) : (
         <>
           <div className="rna-container">

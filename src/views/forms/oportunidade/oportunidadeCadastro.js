@@ -36,7 +36,6 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
-import { Link } from "react-router-dom";
 import { isAfter, isBefore, isToday, parseISO } from "date-fns";
 import { normalizeCnpj, pt_brDateToEUADate } from "~/normalize";
 import { store } from "~/store";
@@ -44,6 +43,7 @@ import { oportRequest } from "~/store/modules/oportunidades/actions";
 import api from "~/services/api";
 import Modal from "~/components/Modal/modalLarge";
 import { Footer, Header } from "~/components/Modal/modalStyles";
+import history from "~/services/history";
 
 export default function CadastroOport() {
   // --------- colocando no modo claro do template
@@ -752,27 +752,28 @@ export default function CadastroOport() {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Link to="/tabelas/oportunidade/oport">
-                    <Button
+                  <Button
+                    style={{
+                      paddingLeft: 32,
+                      paddingRight: 33
+                    }}
+                    onClick={() => {
+                      history.goBack();
+                    }}
+                    color="secundary"
+                    size="small"
+                    className="form"
+                  >
+                    <i
+                      className="tim-icons icon-double-left"
                       style={{
-                        paddingLeft: 32,
-                        paddingRight: 33
+                        paddingBottom: 4,
+                        paddingRight: 1
                       }}
-                      color="secundary"
-                      size="small"
-                      className="form"
-                    >
-                      <i
-                        className="tim-icons icon-double-left"
-                        style={{
-                          paddingBottom: 4,
-                          paddingRight: 1
-                        }}
-                        size="large"
-                      />{" "}
-                      Voltar
-                    </Button>
-                  </Link>
+                      size="large"
+                    />{" "}
+                    Voltar
+                  </Button>
                   <Button
                     style={{
                       paddingLeft: 29,

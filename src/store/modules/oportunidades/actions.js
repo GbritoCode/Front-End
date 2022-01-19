@@ -232,37 +232,62 @@ export function parcelaReqest(
     }
   };
 }
+// {
+//   id: int,
+//   OportunidadeId: int,
+//   parcela: int,
+//   vlrParcela: int,
+//   dtEmissao: date,
+//   dtVencimento: date,
+//   notaFiscal: str,
+//   pedidoCliente: str,
+//   situacao: int,
+//   dtLiquidacao: date,
+//   vlrPago: int,
+//   saldo: int
+// }
 
-export function parcelaUpdate(
-  id,
-  OportunidadeId,
-  parcela,
-  vlrParcela,
-  dtEmissao,
-  dtVencimento,
-  notaFiscal,
-  pedidoCliente,
-  situacao,
-  dtLiquidacao,
-  vlrPago,
-  saldo
-) {
+export function parcelaUpdate(data) {
   return {
     type: "@update/PARCELA_REQUEST",
-    payload: {
-      id,
-      OportunidadeId,
-      parcela,
-      vlrParcela,
-      dtEmissao,
-      dtVencimento,
-      notaFiscal,
-      pedidoCliente,
-      situacao,
-      dtLiquidacao,
-      vlrPago,
-      saldo
-    }
+    payload: data
+  };
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+// {
+//   id: int,
+//   OportunidadeId: int,
+//   parcela: int,
+//   vlrParcela: int,
+//   dtEmissao: date,
+//   dtVencimento: date,
+//   notaFiscal: str,
+//   pedidoCliente: str,
+//   situacao: int,
+//   dtLiquidacao: date,
+//   vlrPago: int,
+//   saldo: int
+//   idColab: int,
+//   idCliente: int,
+//   idRecDesp: int,
+//   idEmpresa: int
+// }
+export function faturaParcela(data) {
+  return {
+    type: "@update/PARCELA_FATURA",
+    payload: data
+  };
+}
+
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+
+export function pagamentoParcela(data) {
+  return {
+    type: "@update/PARCELA_PGMTO",
+    payload: data
   };
 }
 
@@ -342,24 +367,19 @@ export function horaUpdate(
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 
-export function despesaRequest(
-  OportunidadeId,
-  ColabId,
-  dataDespesa,
-  tipoDespesa,
-  valorDespesa,
-  desc
-) {
+// {
+//   OportunidadeId: int,
+//   ColabId: int,
+//   RecDespId: int,
+//   dataDespesa: dateonly,
+//   tipoDespesa: int,
+//   valorDespesa: float,
+//   desc: str
+// }
+export function despesaRequest(data) {
   return {
     type: "@cadastro/DESPESA_REQUEST",
-    payload: {
-      OportunidadeId,
-      ColabId,
-      dataDespesa,
-      tipoDespesa,
-      valorDespesa,
-      desc
-    }
+    payload: data
   };
 }
 

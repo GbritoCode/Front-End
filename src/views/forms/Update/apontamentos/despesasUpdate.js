@@ -46,6 +46,7 @@ export default function DespesaUpdate() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [data1, setData1] = useState({});
+  const [data3, setData3] = useState([]);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   var options = {};
   const notifyElment = useRef(null);
@@ -53,22 +54,19 @@ export default function DespesaUpdate() {
     notifyElment.current.notificationAlert(options);
   }
 
-  const optionalSchema = {
-    desc: { value: "", error: "", message: "" }
-  };
   const stateSchema = {
     OportunidadeId: { value: "", error: "", message: "" },
     ColabId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
     dataDespesa: {
       value: `${year}-${month}-${date}`,
       error: "",
       message: ""
     },
-    tipoDespesa: { value: "", error: "", message: "" },
-    valorDespesa: { value: "", error: "", message: "" }
+    valorDespesa: { value: "", error: "", message: "" },
+    desc: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
-  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     const idColab = store.getState().auth.user.Colab.id;
@@ -78,21 +76,21 @@ export default function DespesaUpdate() {
         `/oportunidade/${response.data.OportunidadeId}`
       );
       const response2 = await api.get(`/colab/?idColab=${idColab}`);
+      const response3 = await api.get(`/rec_desp/?apont=true`);
       setData1(response1.data);
+      setData3(response3.data);
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response1.data.id },
         ColabId: { value: response2.data.id },
         dataDespesa: { value: response.data.dataDespesa },
-        tipoDespesa: { value: response.data.tipoDespesa },
+        RecDespId: { value: response.data.RecDespId },
         valorDespesa: {
           value: normalizeCurrency(JSON.stringify(response.data.valorDespesa))
-        }
+        },
+        desc: { value: response.data.desc, optional: true }
       }));
-      setOptional(prevState => ({
-        ...prevState,
-        desc: { value: response.data.desc }
-      }));
+
       setIsLoading(false);
     }
     loadData();
@@ -134,9 +132,9 @@ export default function DespesaUpdate() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -178,15 +176,15 @@ export default function DespesaUpdate() {
     if (valid && filled) {
       var valorDespesadb = values.valorDespesa.value.replace(/[.,]+/g, "");
       dispatch(
-        despesaUpdate(
+        despesaUpdate({
           id,
-          values.OportunidadeId.value,
-          values.ColabId.value,
-          values.dataDespesa.value,
-          values.tipoDespesa.value,
-          valorDespesadb,
-          optional.desc.value
-        )
+          OportunidadeId: values.OportunidadeId.value,
+          ColabId: values.ColabId.value,
+          RecDespId: values.RecDespId.value,
+          dataDespesa: values.dataDespesa.value,
+          valorDespesa: valorDespesadb,
+          desc: values.desc.value
+        })
       );
     } else {
       options = {
@@ -249,32 +247,32 @@ export default function DespesaUpdate() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Tipo da Despesa</Label>
+                          <Label>Tipo de Despesa</Label>
                           <FormGroup
-                            className={`has-label ${values.tipoDespesa.error}`}
+                            className={`has-label ${values.RecDespId.error}`}
                           >
                             <Input
-                              name="tipoDespesa"
+                              name="RecDespId"
                               type="select"
-                              onChange={event => {
-                                handleChange(event, "tipoDespesa", "text");
-                              }}
-                              value={values.tipoDespesa.value}
+                              onChange={event =>
+                                handleChange(event, "RecDespId", "text")
+                              }
+                              value={values.RecDespId.value}
                             >
+                              {" "}
                               <option disabled value="">
                                 {" "}
-                                Selecione o tipo da despesa{" "}
+                                Selecione a despesa
                               </option>
-                              <option value={1}>Alimentação</option>
-                              <option value={2}>Deslocamento</option>
-                              <option value={3}>Hospedagem</option>
-                              <option value={4}>Passagem</option>
-                              <option value={5}>Pedágio</option>
-                              <option value={6}>Estacionamento</option>
+                              {data3.map(recDesp => (
+                                <option value={recDesp.id}>
+                                  {recDesp.id} - {recDesp.desc}
+                                </option>
+                              ))}
                             </Input>
-                            {values.tipoDespesa.error === "has-danger" ? (
+                            {values.RecDespId.error === "has-danger" ? (
                               <Label className="error">
-                                {values.tipoDespesa.message}
+                                {values.RecDespId.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -299,22 +297,22 @@ export default function DespesaUpdate() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4">
+                        <Col md="12">
                           <Label>Comentário</Label>
                           <FormGroup
-                            className={`has-label ${optional.desc.error}`}
+                            className={`has-label ${values.desc.error}`}
                           >
                             <Input
                               name="desc"
-                              type="text"
+                              type="textarea"
                               onChange={event =>
                                 handleChange(event, "desc", "optional")
                               }
-                              value={optional.desc.value}
+                              value={values.desc.value}
                             />
-                            {optional.desc.error === "has-danger" ? (
+                            {values.desc.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.desc.message}
+                                {values.desc.message}
                               </Label>
                             ) : null}
                           </FormGroup>

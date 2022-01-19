@@ -184,6 +184,11 @@ import ComercialFUPsTotalTable from "~/views/tables/comercial/followUpsTotalTabl
 import ComercialEmpresasFimTable from "~/views/tables/comercial/empresasFinalizadasTable";
 import ComercialFUPsColorTable from "~/views/tables/comercial/followUpsColorTable";
 import ForgotPass from "~/views/login/forgoPass";
+import MovimentoCaixaCadastro from "~/views/forms/comercial/movimentoCaixaCadastro";
+import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
+import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
+import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
+import DashboardCliente from "~/pages/dashboard/dashboardCliente";
 
 const routes = [
   {
@@ -217,6 +222,24 @@ const routes = [
         namePerfil: "Comercial Dash",
         mini: "COM",
         component: DashboardComercial,
+        profile: 10,
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardFinanceira",
+        name: "Financeira",
+        namePerfil: "Financeira Dash",
+        mini: "FIN",
+        component: FinanceiraDashboard,
+        profile: 10,
+        layout: "/admin"
+      },
+      {
+        path: "/dashboardCliente",
+        name: "Cliente",
+        namePerfil: "Cliente Dash",
+        mini: "FIN",
+        component: DashboardCliente,
         profile: 10,
         layout: "/admin"
       }
@@ -335,6 +358,15 @@ const routes = [
         component: PeriodTokenTable,
         layout: "/admin",
         profile: 10
+      },
+      {
+        path: `/tabelas/comercial/movCaixa`,
+        name: "Movimento Caixa",
+        namePerfil: "Movimento Caixa tab",
+        mini: "MVC",
+        component: MovimentoCaixaTable,
+        layout: "/admin",
+        profile: 10
       }
     ]
   },
@@ -351,6 +383,14 @@ const routes = [
         namePerfil: "Prospecção",
         mini: "PRP",
         component: ProspeccaoTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/oportunidade/oport",
+        name: "Oportunidades",
+        namePerfil: "Oportunidades Tab",
+        mini: "OPT",
+        component: OportTable,
         layout: "/admin"
       }
     ]
@@ -640,28 +680,39 @@ const routes = [
   },
   {
     collapse: true,
-    name: "Oportunidades",
-    namePerfil: "Oportunidades side",
-    icon: "tim-icons icon-pin",
-    state: "OportunidadeCollapse",
-    profile: 2,
+    name: "Histórico",
+    namePerfil: "Historico side",
+    icon: "tim-icons icon-notes",
+    state: "HistoricoCollapse",
+    profile: 1,
     views: [
       {
-        path: "/tabelas/oportunidade/oport",
-        name: "Oportunidades",
-        namePerfil: "Oportunidades Tab",
-        mini: "OPT",
-        component: OportTable,
-        layout: "/admin"
-      },
-      {
         path: "/tabelas/oportunidade/finOport",
-        name: "Finalizadas",
+        name: "Oportunidades",
         namePerfil: "Finalizadas Tab",
         mini: "OPF",
         component: OportFinTable,
         layout: "/admin"
       },
+      {
+        path: "/tabelas/parcela/liquidadas",
+        name: "Parcelas",
+        namePerfil: "ParcelasLiqui Tab",
+        mini: "OPF",
+        component: ParcelaLiquidadaTable,
+        layout: "/admin"
+      }
+    ]
+  },
+  {
+    collapse: true,
+    name: "Oportunidades",
+    namePerfil: "Oportunidades side",
+    icon: "tim-icons icon-pin",
+    state: "OportunidadeCollapse",
+    profile: 2,
+    redirect: true,
+    views: [
       {
         path: "/tabelas/oportunidade/cotacao/:id",
         name: "Cotacao",
@@ -693,7 +744,7 @@ const routes = [
         path: "/tabelas/parcela/pendentes",
         name: "Parcelas Pendente",
         namePerfil: "Parcelas Pendente Tab",
-        mini: "rec",
+        mini: "PPD",
         component: ParcelaPendentesTable,
         layout: "/admin",
         redirect: true
@@ -702,7 +753,7 @@ const routes = [
         path: "/tabelas/parcela/abertas",
         name: "Parcelas Abertas",
         namePerfil: "Parcelas Abertas Tab",
-        mini: "rec",
+        mini: "PAB",
         component: ParcelaAbertaTable,
         layout: "/admin",
         redirect: true
@@ -711,8 +762,17 @@ const routes = [
         path: "/tabelas/parcela/atrasadas",
         name: "Parcelas Atrasadas",
         namePerfil: "Parcelas Atrasadas Tab",
-        mini: "rec",
+        mini: "PAT",
         component: ParcelaAtrasadaTable,
+        layout: "/admin",
+        redirect: true
+      },
+      {
+        path: "/tabelas/parcela/liquidadas",
+        name: "Parcelas Liquidadas",
+        namePerfil: "Parcelas Liquidadas Tab",
+        mini: "PLQ",
+        component: ParcelaLiquidadaTable,
         layout: "/admin",
         redirect: true
       },
@@ -1282,6 +1342,14 @@ const routes = [
         namePerfil: "Cadastro de Periodo Cad",
         mini: "RF",
         component: CadastroPeriodo,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/comercial/movCaixa",
+        name: "Cadastro de Movimento Caixa",
+        namePerfil: "Cadastro de MOvimento Caixa",
+        mini: "MVC",
+        component: MovimentoCaixaCadastro,
         layout: "/admin"
       }
       // astros Fim---------------------------------------------------------------------------------------------------------------------

@@ -44,6 +44,7 @@ function ParametrosUpdatee() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [data1, setData1] = useState([]);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     IRPJ: { value: "", error: "", message: "" },
@@ -58,14 +59,20 @@ function ParametrosUpdatee() {
     vlrBsHr: { value: "", error: "", message: "" },
     vlrBsDesp: { value: "", error: "", message: "" },
     adiantaPgmto: { value: "", error: "", message: "" },
-    percAdiantaPgmto: { value: "", error: "", message: "" }
+    percAdiantaPgmto: { value: "", error: "", message: "" },
+    compFlag: { value: "", error: "", message: "" },
+    compHrs: { value: 0, error: "", message: "" },
+    pgmtoVenc: { value: "", error: "", message: "" },
+    RecDespCompHrs: { value: "", error: "", message: "", optional: true },
+    color: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
 
   useEffect(() => {
     async function loadData() {
       const response = await api.get(`/parametros/1`);
-
+      const response1 = await api.get(`/rec_desp/?desp=true`);
+      setData1(response1.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.EmpresaId },
@@ -103,24 +110,49 @@ function ParametrosUpdatee() {
           value: normalizeCurrency(JSON.stringify(response.data.vlrBsDesp))
         },
         adiantaPgmto: { value: response.data.adiantaPgmto },
-        percAdiantaPgmto: { value: response.data.percAdiantaPgmto }
+        percAdiantaPgmto: { value: response.data.percAdiantaPgmto },
+        compHrs: { value: response.data.compHrs },
+        compFlag: { value: response.data.compFlag ? "true" : "false" },
+        pgmtoVenc: { value: response.data.pgmtoVenc },
+        RecDespCompHrs: {
+          value: response.data.RecDespCompHrs || "",
+          optional: true
+        }
       }));
 
       setIsLoading(false);
     }
     loadData();
   }, [id]);
-  const checkAdianta = () => {
-    if (values.adiantaPgmto.value === "Sim") {
-      return true;
-    }
-  };
 
-  const checkNAdianta = () => {
-    if (values.adiantaPgmto.value === "Não") {
-      return true;
-    }
-  };
+  console.log(!!values.compFlag.value);
+  // const compHrsChange = value => {
+  //   if (value === true) {
+  //     setValues(prevState => ({
+  //       ...prevState,
+  //       CentroCustoId: { value: 1 },
+  //       lancFlag: { value: false }
+  //     }));
+  //     document.getElementsByName("CentroCustoId")[0].disabled = true;
+  //     document.getElementById("lancFlagFalse").checked = true;
+  //     document.getElementById("lancFlagTrue").checked = false;
+  //     for (let i = 0; i < document.getElementsByName("lancFlag").length; i++) {
+  //       document.getElementsByName("lancFlag")[i].disabled = true;
+  //     }
+  //   } else if (value === false) {
+  //     setValues(prevState => ({
+  //       ...prevState,
+  //       CentroCustoId: { value: "" },
+  //       lancFlag: { value: "" }
+  //     }));
+  //     document.getElementsByName("CentroCustoId")[0].disabled = false;
+  //     document.getElementById("lancFlagTrue").checked = false;
+  //     document.getElementById("lancFlagFalse").checked = false;
+  //     for (let i = 0; i < document.getElementsByName("lancFlag").length; i++) {
+  //       document.getElementsByName("lancFlag")[i].disabled = false;
+  //     }
+  //   }
+  // };
 
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
@@ -157,6 +189,12 @@ function ParametrosUpdatee() {
           [name]: { value: normalizeCurrency(target) }
         }));
         break;
+      case "optional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target, optional: true }
+        }));
+        break;
       case "text":
         setValues(prevState => ({
           ...prevState,
@@ -187,15 +225,17 @@ function ParametrosUpdatee() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (aux[j][1].optional !== true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
@@ -213,23 +253,28 @@ function ParametrosUpdatee() {
       var IRRFProLabordb = values.IRRFProLabor.value.replace(/[^\d]+/g, "");
 
       dispatch(
-        ParametrosUpdate(
-          1,
-          values.empresaId.value,
-          IRPJdb,
-          CSLLdb,
-          COFINSdb,
-          PISSdb,
-          INSSdb,
-          ISSdb,
-          PSProLabordb,
-          IRRFProLabordb,
-          vlrMinHrdb,
-          vlrBsHrdb,
-          vlrBsDespdb,
-          values.adiantaPgmto.value,
-          values.percAdiantaPgmto.value
-        )
+        ParametrosUpdate({
+          id: 1,
+          EmpresaId: values.empresaId.value,
+          IRPJ: IRPJdb,
+          CSLL: CSLLdb,
+          COFINS: COFINSdb,
+          PIS: PISSdb,
+          INSS: INSSdb,
+          ISS: ISSdb,
+          PSProLabor: PSProLabordb,
+          IRRFProLabor: IRRFProLabordb,
+          vlrMinHr: vlrMinHrdb,
+          vlrBsHr: vlrBsHrdb,
+          vlrBsDesp: vlrBsDespdb,
+          adiantaPgmto: values.adiantaPgmto.value,
+          percAdiantaPgmto: values.percAdiantaPgmto.value,
+          compHrs: values.compHrs.value,
+          compFlag: values.compFlag.value === "true",
+          pgmtoVenc: values.pgmtoVenc.value,
+          RecDespCompHrs: values.RecDespCompHrs.value,
+          color: values.color.value
+        })
       );
     } else {
       options = {
@@ -504,6 +549,126 @@ function ParametrosUpdatee() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
+                          {" "}
+                          <Label>Vencimento do Pagamento</Label>
+                          <FormGroup
+                            className={`has-label ${values.pgmtoVenc.error}`}
+                          >
+                            <Input
+                              name="pgmtoVenc"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "pgmtoVenc", "number")
+                              }
+                              value={values.pgmtoVenc.value}
+                            />
+                            {values.pgmtoVenc.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.pgmtoVenc.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Horas Complementares</Label>
+                          <FormGroup
+                            check
+                            className={`has-label ${values.compFlag.error}`}
+                            // onChangeCapture={e => compHrsChange(e.target.value)}
+                          >
+                            <Label check>
+                              <Input
+                                checked={values.compFlag.value === "true"}
+                                name="compFlag"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "compFlag", "text")
+                                }
+                                value="true"
+                              />
+                              Sim
+                            </Label>
+                            <Label check>
+                              <Input
+                                checked={values.compFlag.value === "false"}
+                                name="compFlag"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "compFlag", "text")
+                                }
+                                value={false}
+                              />
+                              Não
+                            </Label>
+                            {values.compFlag.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.compFlag.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Total Horas Mensal</Label>
+                          <FormGroup
+                            className={`has-label ${values.compHrs.error}`}
+                          >
+                            <Input
+                              name="compHrs"
+                              type="numeric"
+                              onChange={event =>
+                                handleChange(event, "compHrs", "number")
+                              }
+                              value={values.compHrs.value}
+                            />
+                            {values.compHrs.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.compHrs.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          <Label>Tipo de Despesa</Label>
+                          <FormGroup
+                            className={`has-label ${values.RecDespCompHrs.error}`}
+                          >
+                            <Input
+                              disabled={values.compFlag.value === ""}
+                              name="RecDespCompHrs"
+                              type="select"
+                              onChange={event =>
+                                handleChange(
+                                  event,
+                                  "RecDespCompHrs",
+                                  "optional"
+                                )
+                              }
+                              value={values.RecDespCompHrs.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a despesa{" "}
+                              </option>
+                              {data1.map(recDesp => (
+                                <option value={recDesp.id}>
+                                  {recDesp.id} - {recDesp.desc}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.RecDespCompHrs.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.RecDespCompHrs.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>{" "}
+                      </Row>
+                      <Row>
+                        <Col md="4">
                           <Label>Adianta Pagamemto</Label>
                           <FormGroup
                             check
@@ -511,7 +676,7 @@ function ParametrosUpdatee() {
                           >
                             <Label check>
                               <Input
-                                checked={checkAdianta(values)}
+                                checked={values.adiantaPgmto.value === "Sim"}
                                 name="adiantaPgmto"
                                 type="radio"
                                 onChange={event =>
@@ -523,7 +688,7 @@ function ParametrosUpdatee() {
                             </Label>
                             <Label check>
                               <Input
-                                checked={checkNAdianta(values)}
+                                checked={values.adiantaPgmto.value === "Não"}
                                 name="adiantaPgmto"
                                 type="radio"
                                 onChange={event =>
@@ -540,8 +705,6 @@ function ParametrosUpdatee() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                      </Row>
-                      <Row>
                         <Col md="4">
                           {" "}
                           <Label>Percentual do Adiantamento</Label>
@@ -563,6 +726,33 @@ function ParametrosUpdatee() {
                             {values.percAdiantaPgmto.error === "has-danger" ? (
                               <Label className="error">
                                 {values.percAdiantaPgmto.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                        <Col md="4">
+                          {" "}
+                          <Label>Cores</Label>
+                          <FormGroup
+                            className={`has-label ${values.color.error}`}
+                          >
+                            <Input
+                              name="color"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "color", "optional")
+                              }
+                              value={values.color.value}
+                            >
+                              <option value="primary">Rosa</option>
+                              <option value="blue">Azul</option>
+                              <option value="orange">Laranja</option>
+                              <option value="green">Verde</option>
+                              <option value="red">Vermelho</option>
+                            </Input>
+                            {values.color.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.color.message}
                               </Label>
                             ) : null}
                           </FormGroup>

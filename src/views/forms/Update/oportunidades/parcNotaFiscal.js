@@ -30,10 +30,14 @@ import {
   Col
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { GetApp } from "@material-ui/icons";
-import { parcelaUpdate } from "~/store/modules/oportunidades/actions";
+import { isBefore, parseISO } from "date-fns";
+import {
+  faturaParcela,
+  parcelaUpdate
+} from "~/store/modules/oportunidades/actions";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
 import history from "~/services/history";
@@ -49,6 +53,7 @@ import {
   FileMetaData,
   RemoveFileIcon
 } from "../../../../components/Styles/uploadAreaStyles";
+import { store } from "~/store";
 /* eslint-disable eqeqeq */
 export default function ParcelaUpdate() {
   // --------- colocando no modo claro do template
@@ -65,9 +70,9 @@ export default function ParcelaUpdate() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [disabledField, setDisabledField] = useState();
+  const [dtVenc, setDtVenc] = useState();
   const [data, setData] = useState();
   const [data1, setData1] = useState();
-  const [data3, setData3] = useState({});
   const [tagsinput, settagsinput] = useState([]);
 
   const [string, setString] = useState("");
@@ -86,11 +91,15 @@ export default function ParcelaUpdate() {
       message: ""
     },
     notaFiscal: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" }
+    email: { value: "", error: "", message: "" },
+    idColab: { value: "", error: "", message: "" },
+    idCliente: { value: "", error: "", message: "" },
+    idRecDesp: { value: "", error: "", message: "" },
+    idEmpresa: { value: "", error: "", message: "" }
   };
   const optionalSchema = {
     pedidoCliente: { value: "Não informado", error: "", message: "" },
-    situacao: { value: "", error: "", message: "" },
+    situacao: { value: 1, error: "", message: "" },
     dtLiquidacao: { value: "", error: "", message: "" },
     vlrPago: { value: "", error: "", message: "" },
     saldo: { value: "", error: "", message: "" }
@@ -100,9 +109,6 @@ export default function ParcelaUpdate() {
   const [files, setFile] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-
-  const query = new URLSearchParams(useLocation().search);
-  const fromDash = query.get("fromDash");
 
   const downloadFile = async fileId => {
     const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${fileId}/?table=parcelas`;
@@ -114,6 +120,7 @@ export default function ParcelaUpdate() {
   };
 
   useEffect(() => {
+    const { id: idColab } = store.getState().auth.user.Colab;
     async function loadData() {
       const response = await api.get(`/parcela/aux/${id}`);
       const response1 = await api.get(
@@ -128,6 +135,15 @@ export default function ParcelaUpdate() {
       const response4 = await api.get(
         `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
       );
+      await api
+        .get(`/parcela_ped/${response.data.OportunidadeId}`)
+        .then(result => {
+          setOptional(prevState => ({
+            ...prevState,
+            pedidoCliente: { value: result.data.parc.pedidoCliente }
+          }));
+        })
+        .catch(err => console.log("sem ped"));
 
       if (response.data.situacao > 1) {
         const response5 = await api.get(
@@ -135,17 +151,23 @@ export default function ParcelaUpdate() {
         );
         setFilePreview(response5.data);
         setFile(response5.data);
+        setOptional(prevState => ({
+          ...prevState,
+          pedidoCliente: { value: response.data.pedidoCliente }
+        }));
       }
       setDisabledField(response.data.situacao > 1);
       setData(response.data);
       setData1(response1.data);
-      setData3(response3.data);
       const today = new Date();
       const [date, month, year] = today.toLocaleDateString("pt-BR").split("/");
       const [dateVenc, monthVenc, yearVenc] = new Date()
-        .addDays(data3.diasPrazo)
+        .addDays(response3.data.diasPrazo)
         .toLocaleDateString("pt-BR")
         .split("/");
+      if (isBefore(parseISO(response.data.dtVencimento), today)) {
+        setDtVenc({ venc: true, dt: response.data.dtVencimento });
+      }
       setValues(prevState => ({
         ...prevState,
         OportunidadeId: { value: response.data.OportunidadeId },
@@ -161,19 +183,25 @@ export default function ParcelaUpdate() {
           value: response.data.dtEmissao || `${year}-${month}-${date}`
         },
         notaFiscal: { value: response.data.notaFiscal },
-        email: { value: response4.data.email }
+        email: { value: response4.data.email },
+        idColab: { value: idColab },
+        idCliente: { value: response1.data.ClienteId },
+        idRecDesp: { value: response1.data.RecDespId },
+        idEmpresa: { value: response1.data.EmpresaId }
       }));
 
       setOptional(prevState => ({
         ...prevState,
-        pedidoCliente: { value: response.data.pedidoCliente },
         situacao: { value: response.data.situacao },
         dtLiquidacao: { value: response.data.dtLiquidacao },
         vlrPago: {
           value: normalizeCurrency(JSON.stringify(response.data.vlrPago))
         },
-        saldo: { value: normalizeCurrency(JSON.stringify(response.data.saldo)) }
+        saldo: {
+          value: normalizeCurrency(JSON.stringify(response.data.saldo))
+        }
       }));
+
       if (normalizeCurrency(JSON.stringify(response.data.saldo)) === "0,00") {
         setOptional(prevState => ({
           ...prevState,
@@ -183,7 +211,7 @@ export default function ParcelaUpdate() {
       setIsLoading(false);
     }
     loadData();
-  }, [data3.diasPrazo, id]);
+  }, [id]);
 
   var options = {};
   const notifyElment = useRef(null);
@@ -340,29 +368,54 @@ export default function ParcelaUpdate() {
       var vlrParceladb = values.vlrParcela.value.replace(/[^\d]+/g, "");
       var vlrPagodb = optional.vlrPago.value.replace(/[^\d]+/g, "");
       var saldodb = optional.saldo.value.replace(/[^\d]+/g, "");
-      const status = !!fromDash;
 
       const formData = new FormData();
       for (const file of files) {
         formData.append("file", file);
       }
-      dispatch(
-        parcelaUpdate(
-          id,
-          values.OportunidadeId.value,
-          values.parcela.value,
-          vlrParceladb,
-          values.dtEmissao.value,
-          values.dtVencimento.value,
-          values.notaFiscal.value,
-          optional.pedidoCliente.value,
-          2,
-          optional.dtLiquidacao.value,
-          vlrPagodb,
-          saldodb,
-          status
-        )
-      );
+      if (optional.situacao.value === 1) {
+        dispatch(
+          faturaParcela({
+            id,
+            OpotunidadeId: values.OportunidadeId.value,
+            parcela: values.parcela.value,
+            vlrParcela: vlrParceladb,
+            dtEmissao: values.dtEmissao.value,
+            dtVencimento: values.dtVencimento.value,
+            notaFiscal: values.notaFiscal.value,
+            pedidoCliente: optional.pedidoCliente.value,
+            situacao: 2,
+            dtLiquidacao: optional.dtLiquidacao.value,
+            vlrPago: vlrPagodb,
+            saldo: saldodb,
+            idColab: values.idColab.value,
+            idCliente: values.idCliente.value,
+            idRecDesp: values.idRecDesp.value,
+            idEmpresa: values.idEmpresa.value
+          })
+        );
+      } else {
+        let sit = 2;
+        if (dtVenc && dtVenc.dt !== values.dtVencimento.values) {
+          sit = 5;
+        }
+        dispatch(
+          parcelaUpdate({
+            id,
+            OpotunidadeId: values.OportunidadeId.value,
+            parcela: values.parcela.value,
+            vlrParcela: vlrParceladb,
+            dtEmissao: values.dtEmissao.value,
+            dtVencimento: values.dtVencimento.value,
+            notaFiscal: values.notaFiscal.value,
+            pedidoCliente: optional.pedidoCliente.value,
+            situacao: sit,
+            dtLiquidacao: optional.dtLiquidacao.value,
+            vlrPago: vlrPagodb,
+            saldo: saldodb
+          })
+        );
+      }
 
       const delay = ms => new Promise(res => setTimeout(res, ms));
       await delay(1500);
@@ -391,6 +444,7 @@ export default function ParcelaUpdate() {
       notify();
     }
   };
+  console.log(dtVenc);
   return (
     <>
       {isLoading ? (

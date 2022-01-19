@@ -33,9 +33,9 @@ import {
   Row,
   Col
 } from "reactstrap";
-
 import { Link } from "react-router-dom";
-import { AttachMoney, Schedule } from "@material-ui/icons";
+import { AttachFileOutlined, AttachMoney, Schedule } from "@material-ui/icons";
+
 import { store } from "~/store";
 
 // core components
@@ -44,7 +44,7 @@ import api from "~/services/api";
 import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
 import history from "~/services/history";
 
-class GestorDashboard extends React.Component {
+class AdminDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -277,7 +277,7 @@ class GestorDashboard extends React.Component {
         vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data),
         isLoading: false,
         chartHrsData: resultPeriodo.data.map(d => {
-          return d.totalHrs / 60;
+          return Math.trunc(d.totalHrs / 60);
         }),
         chartDespData: resultPeriodo.data.map(d => {
           return d.totalDesp / 100;
@@ -400,7 +400,7 @@ class GestorDashboard extends React.Component {
                         <Col xs="5">
                           <div className="info-icon text-center icon-warning">
                             <Schedule
-                              style={{ marginTop: 7 }}
+                              style={{ marginTop: 7, color: "white" }}
                               fontSize="large"
                             />
                           </div>
@@ -421,7 +421,7 @@ class GestorDashboard extends React.Component {
                     <CardFooter>
                       <hr />
                       <div className="stats">
-                        <Link to={`tabelas/apontamentos/horas/${id}`}>
+                        <Link to={`tabelas/apontamentos/horas/${id}/`}>
                           <i className="tim-icons icon-refresh-01" /> Ver horas
                         </Link>
                       </div>
@@ -434,8 +434,8 @@ class GestorDashboard extends React.Component {
                       <Row>
                         <Col xs="5">
                           <div className="info-icon text-center icon-primary">
-                            <AttachMoney
-                              style={{ marginTop: 7 }}
+                            <AttachFileOutlined
+                              style={{ marginTop: 7, color: "white" }}
                               fontSize="large"
                             />
                           </div>
@@ -458,7 +458,7 @@ class GestorDashboard extends React.Component {
                     <CardFooter>
                       <hr />
                       <div className="stats">
-                        <Link to={`tabelas/apontamentos/despesas/${id}`}>
+                        <Link to={`tabelas/apontamentos/despesas/${id}/`}>
                           <i className="tim-icons icon-sound-wave" /> Ver
                           despesas
                         </Link>
@@ -471,8 +471,11 @@ class GestorDashboard extends React.Component {
                     <CardBody>
                       <Row>
                         <Col xs="5">
-                          <div className="info-icon text-center icon-success">
-                            <i className="tim-icons icon-single-02" />
+                          <div className="info-icon text-center icon-info">
+                            <AttachMoney
+                              style={{ marginTop: 7, color: "white" }}
+                              fontSize="large"
+                            />{" "}
                           </div>
                         </Col>
                         <Col xs="7">
@@ -506,4 +509,4 @@ class GestorDashboard extends React.Component {
     );
   }
 }
-export default GestorDashboard;
+export default AdminDashboard;

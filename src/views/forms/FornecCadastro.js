@@ -46,6 +46,7 @@ export default function FornecCadastro() {
   const jsonpAdapter = require("axios-jsonp");
   const dispatch = useDispatch();
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const stateSchema = {
@@ -53,6 +54,7 @@ export default function FornecCadastro() {
     cnpj: { value: "", error: "", message: "" },
     nome: { value: "", error: "", message: "" },
     CondPgmtoId: { value: "", error: "", message: "" },
+    RecDespId: { value: "", error: "", message: "" },
     nomeConta: { value: "", error: "", message: "" },
     fone: { value: "", error: "", message: "" },
     cep: { value: "", error: "", message: "" },
@@ -63,14 +65,11 @@ export default function FornecCadastro() {
     uf: { value: "", error: "", message: "" },
     banco: { value: "", error: "", message: "" },
     agencia: { value: "", error: "", message: "" },
-    conta: { value: "", error: "", message: "" }
+    conta: { value: "", error: "", message: "" },
+    complemento: { value: "", error: "", message: "", optional: true }
   };
 
-  const optionalSchema = {
-    complemento: { value: "", error: "", message: "" }
-  };
   const [values, setValues] = useState(stateSchema);
-  const [optional, setOptional] = useState(optionalSchema);
 
   useEffect(() => {
     const { empresa } = store.getState().auth;
@@ -78,7 +77,9 @@ export default function FornecCadastro() {
       setIsLoading(true);
       const response = await api.get(`/empresa/${empresa}`);
       const response1 = await api.get(`/condPgmto`);
+      const response2 = await api.get(`/rec_desp/?desp=true`);
       setData1(response1.data);
+      setData2(response2.data);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response.data.id }
@@ -189,9 +190,9 @@ export default function FornecCadastro() {
         }));
         break;
       case "optional":
-        setOptional(prevState => ({
+        setValues(prevState => ({
           ...prevState,
-          [name]: { value: target }
+          [name]: { value: target, optional: true }
         }));
         break;
       case "text":
@@ -218,53 +219,45 @@ export default function FornecCadastro() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional === true) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
-    for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
-      }
-    }
+
     if (valid && filled) {
       var cnpjdb = values.cnpj.value.replace(/[^\d]+/g, "");
       var fonedb = values.fone.value.replace(/[^\d]+/g, "");
       const first = false;
       dispatch(
-        fornecRequest(
-          cnpjdb,
-          values.empresaId.value,
-          values.nome.value,
-          values.CondPgmtoId.value,
-          values.nomeConta.value,
-          fonedb,
-          values.cep.value,
-          values.rua.value,
-          values.numero.value,
-          optional.complemento.value,
-          values.bairro.value,
-          values.cidade.value,
-          values.uf.value,
-          values.banco.value,
-          values.agencia.value,
-          values.conta.value,
+        fornecRequest({
+          CNPJ: cnpjdb,
+          EmpresaId: values.empresaId.value,
+          nome: values.nome.value,
+          RecDespId: values.RecDespId.value,
+          CondPgmtoId: values.CondPgmtoId.value,
+          nomeConta: values.nomeConta.value,
+          fone: fonedb,
+          cep: values.cep.value,
+          rua: values.rua.value,
+          numero: values.numero.value,
+          complemento: values.complemento.value,
+          bairro: values.bairro.value,
+          cidade: values.cidade.value,
+          uf: values.uf.value,
+          banco: values.banco.value,
+          agencia: values.agencia.value,
+          conta: values.conta.value,
           first
-        )
+        })
       );
     } else {
       options = {
@@ -469,7 +462,7 @@ export default function FornecCadastro() {
                         <Col md="8">
                           <Label>Complemento</Label>
                           <FormGroup
-                            className={`has-label ${optional.complemento.error}`}
+                            className={`has-label ${values.complemento.error}`}
                           >
                             <Input
                               name="complemento"
@@ -477,11 +470,11 @@ export default function FornecCadastro() {
                               onChange={event =>
                                 handleChange(event, "complemento", "optional")
                               }
-                              value={optional.complemento.value}
+                              value={values.complemento.value}
                             />
-                            {optional.complemento.error === "has-danger" ? (
+                            {values.complemento.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.complemento.message}
+                                {values.complemento.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -709,7 +702,37 @@ export default function FornecCadastro() {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="4"> </Col>
+                        <Col md="4">
+                          <Label>Tipo de Despesa</Label>
+                          <FormGroup
+                            className={`has-label ${values.RecDespId.error}`}
+                          >
+                            <Input
+                              name="RecDespId"
+                              type="select"
+                              onChange={event =>
+                                handleChange(event, "RecDespId", "text")
+                              }
+                              value={values.RecDespId.value}
+                            >
+                              {" "}
+                              <option disabled value="">
+                                {" "}
+                                Selecione a despesa{" "}
+                              </option>
+                              {data2.map(recDesp => (
+                                <option value={recDesp.id}>
+                                  {recDesp.id} - {recDesp.desc}
+                                </option>
+                              ))}
+                            </Input>
+                            {values.RecDespId.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.RecDespId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>{" "}
                         <Col md="4"> </Col>
                       </Row>
                       <Link to="/tabelas/general/fornec">

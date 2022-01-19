@@ -50,6 +50,7 @@ export default function RecDespCadastro() {
     desc: { value: "", error: "", message: "" },
     recDesp: { value: "", error: "", message: "" },
     tipoItem: { value: "", error: "", message: "" },
+    lancFlag: { value: "", error: "", message: "" },
     ContaContabilId: { value: "", error: "", message: "" },
     CentroCustoId: { value: "", error: "", message: "" }
   };
@@ -82,16 +83,28 @@ export default function RecDespCadastro() {
     if (value === "Rec") {
       setValues(prevState => ({
         ...prevState,
-        CentroCustoId: { value: 1 }
+        CentroCustoId: { value: 1 },
+        lancFlag: { value: false }
       }));
       document.getElementsByName("CentroCustoId")[0].disabled = true;
+      document.getElementById("lancFlagFalse").checked = true;
+      document.getElementById("lancFlagTrue").checked = false;
+      for (let i = 0; i < document.getElementsByName("lancFlag").length; i++) {
+        document.getElementsByName("lancFlag")[i].disabled = true;
+      }
     }
     if (value === "Desp") {
       setValues(prevState => ({
         ...prevState,
-        CentroCustoId: { value: radioAux || "" }
+        CentroCustoId: { value: radioAux || "" },
+        lancFlag: { value: "" }
       }));
       document.getElementsByName("CentroCustoId")[0].disabled = false;
+      document.getElementById("lancFlagTrue").checked = false;
+      document.getElementById("lancFlagFalse").checked = false;
+      for (let i = 0; i < document.getElementsByName("lancFlag").length; i++) {
+        document.getElementsByName("lancFlag")[i].disabled = false;
+      }
     }
   };
 
@@ -153,14 +166,15 @@ export default function RecDespCadastro() {
 
     if (valid && filled && validateCentCusto) {
       dispatch(
-        recDespRequest(
-          values.empresaId.value,
-          values.desc.value,
-          values.recDesp.value,
-          values.tipoItem.value,
-          values.ContaContabilId.value,
-          values.CentroCustoId.value
-        )
+        recDespRequest({
+          EmpresaId: values.empresaId.value,
+          desc: values.desc.value,
+          recDesp: values.recDesp.value,
+          tipoItem: values.tipoItem.value,
+          lancFlag: values.lancFlag.value,
+          ContaContabilId: values.ContaContabilId.value,
+          CentroCustoId: values.CentroCustoId.value
+        })
       );
     } else {
       options = {
@@ -330,6 +344,44 @@ export default function RecDespCadastro() {
                         {values.recDesp.error === "has-danger" ? (
                           <Label className="error">
                             {values.recDesp.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <Label>Apontamento Despesas</Label>
+                      <FormGroup
+                        check
+                        className={`has-label ${values.lancFlag.error}`}
+                        onChangeCapture={e => recDespChange(e.target.value)}
+                      >
+                        <Label check>
+                          <Input
+                            id="lancFlagTrue"
+                            name="lancFlag"
+                            type="radio"
+                            onChange={event => {
+                              handleChange(event, "lancFlag", "text");
+                            }}
+                            value
+                          />
+                          Sim
+                        </Label>
+                        <Label check>
+                          <Input
+                            id="lancFlagFalse"
+                            name="lancFlag"
+                            type="radio"
+                            onChange={event =>
+                              handleChange(event, "lancFlag", "text")
+                            }
+                            value={false}
+                          />
+                          Não
+                        </Label>
+                        {values.lancFlag.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.lancFlag.message}
                           </Label>
                         ) : null}
                       </FormGroup>

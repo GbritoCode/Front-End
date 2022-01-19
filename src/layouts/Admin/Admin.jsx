@@ -31,12 +31,14 @@ import logo from "~/assets/img/tovoLogo.png";
 import logoMini from "~/assets/img/raposa2.png";
 import FooterSigned from "~/components/Footer/FooterSigned";
 
+import { store } from "~/store";
+
 var ps;
 class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeColor: "blue",
+      activeColor: "primary",
       opacity: 0,
       sidebarOpened: false
     };
@@ -53,6 +55,8 @@ class Admin extends React.Component {
       }
     }
     window.addEventListener("scroll", this.showNavbarButton);
+    const { color } = store.getState().auth;
+    this.setState({ activeColor: color });
   }
 
   componentDidUpdate(e) {
