@@ -33,7 +33,7 @@ import {
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
 import { Link } from "react-router-dom";
-import { normalizeFone, normalizeCpf } from "~/normalize";
+import { normalizeFone, normalizeCpf, normalizeCurrency } from "~/normalize";
 import { store } from "~/store";
 import { colabRequest } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
@@ -60,7 +60,9 @@ export default function ColabCadastro() {
     cel: { value: "", error: "", message: "" },
     PerfilUser: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" }
+    email: { value: "", error: "", message: "" },
+    recebeFixo: { value: false, error: "", message: "" },
+    vlrFixo: { value: "", error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -132,6 +134,25 @@ export default function ColabCadastro() {
     }
   };
 
+  const recebeFixoChange = value => {
+    if (value === "Yes") {
+      setValues(prevState => ({
+        ...prevState,
+        recebeFixo: { value: true },
+        vlrFixo: { value: "0", optional: true }
+      }));
+      document.getElementById("vlrFixo").disabled = false;
+    }
+    if (value === "No") {
+      setValues(prevState => ({
+        ...prevState,
+        recebeFixo: { value: false },
+        vlrFixo: { value: "", optional: true }
+      }));
+      document.getElementById("vlrFixo").disabled = true;
+    }
+  };
+
   const verifyNumber = value => {
     var numberRex = new RegExp("^[0-9]+$");
     if (numberRex.test(value)) {
@@ -192,7 +213,19 @@ export default function ColabCadastro() {
           cpf: { value: normalizeCpf(target) }
         }));
         break;
+      case "currencyOptional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: normalizeCurrency(target) }
+        }));
+        break;
 
+      case "optional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target, optional: true }
+        }));
+        break;
       case "text":
         setValues(prevState => ({
           ...prevState,
@@ -217,38 +250,43 @@ export default function ColabCadastro() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
       var celdb = values.cel.value.replace(/[^\d]+/g, "");
+      var vlrFixoDb =
+        parseInt(values.vlrFixo.value.replace(/[.,]+/g, ""), 10) / 100;
       const first = false;
 
       dispatch(
-        colabRequest(
-          cpfdb,
-          values.fornecId.value,
-          values.empresaId.value,
-          values.nome.value,
-          values.dtAdmiss.value,
-          celdb,
-          values.PerfilUser.value,
-          values.skype.value,
-          values.email.value,
-          string,
+        colabRequest({
+          CPF: cpfdb,
+          FornecId: values.fornecId.value,
+          EmpresaId: values.empresaId.value,
+          nome: values.nome.value,
+          dtAdmiss: values.dtAdmiss.value,
+          cel: celdb,
+          PerfilId: values.PerfilUser.value,
+          skype: values.skype.value,
+          email: values.email.value,
+          espec: string,
           first,
-          values.PerfilUser.value
-        )
+          recebeFixo: values.recebeFixo.value,
+          vlrFixo: values.vlrFixo.value === "" ? null : vlrFixoDb
+        })
       );
     } else {
       options = {
@@ -464,9 +502,71 @@ export default function ColabCadastro() {
                         ) : null}
                       </FormGroup>
                     </Col>
+                    <Col md="4">
+                      {" "}
+                      <Label>Recebe Fixo</Label>
+                      <FormGroup
+                        check
+                        className={`has-label ${values.recebeFixo.error}`}
+                        onChangeCapture={e => recebeFixoChange(e.target.value)}
+                      >
+                        <Label check>
+                          <Input
+                            name="recebeFixo"
+                            id="recebeFixoYes"
+                            type="radio"
+                            onChange={event => {
+                              handleChange(event, "recebeFixo", "text");
+                            }}
+                            value="Yes"
+                          />
+                          Sim
+                        </Label>
+                        <Label check>
+                          <Input
+                            defaultChecked
+                            name="recebeFixo"
+                            id="recebeFixoNo"
+                            type="radio"
+                            onChange={event =>
+                              handleChange(event, "recebeFixo", "text")
+                            }
+                            value="No"
+                          />
+                          Não
+                        </Label>
+                        {values.recebeFixo.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.recebeFixo.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
                   </Row>
                   <Row>
-                    <Col md="6">
+                    <Col md="4">
+                      <Label>Salário Fixo</Label>
+                      <FormGroup
+                        className={`has-label ${values.vlrFixo.error}`}
+                      >
+                        <Input
+                          disabled
+                          name="vlrFixo"
+                          id="vlrFixo"
+                          type="text"
+                          onChange={event =>
+                            handleChange(event, "vlrFixo", "currencyOptional")
+                          }
+                          value={values.vlrFixo.value}
+                        />
+                        {values.vlrFixo.error === "has-danger" ? (
+                          <Label className="error">
+                            {values.vlrFixo.message}
+                          </Label>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                    <Col md="8">
                       {" "}
                       <Label>Especialidade</Label>
                       <FormGroup claclassName="has-label">
@@ -480,6 +580,7 @@ export default function ColabCadastro() {
                       </FormGroup>
                     </Col>
                   </Row>
+
                   <Button
                     style={{
                       paddingLeft: 29,

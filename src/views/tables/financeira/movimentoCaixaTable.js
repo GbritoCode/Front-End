@@ -81,7 +81,8 @@ export default function MovimentoCaixaTable() {
     vlrSingle: 0,
     hidden: true,
     multiple: false,
-    ColabId: 0
+    ColabId: 0,
+    saldo: 0
   };
   const [values, setValues] = useState(stateSchema);
 
@@ -112,7 +113,43 @@ export default function MovimentoCaixaTable() {
         break;
     }
   };
+  const checkSituacao = recDesp => {
+    switch (recDesp) {
+      case "Desp":
+        console.log(recDesp);
+        return (
+          <>
+            <div
+              className="arrowDown"
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: "7.5px solid transparent",
+                borderRight: "7.5px solid transparent",
+                borderTop: "7.5px solid red",
+                marginLeft: "40%"
+              }}
+            />
+          </>
+        );
+      case "Rec":
+        return (
+          <div
+            className="arrowUp"
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: "7.5px solid transparent",
+              borderRight: "7.5px solid transparent",
+              borderBottom: "7.5px solid green",
+              marginLeft: "40%"
+            }}
+          />
+        );
 
+      default:
+    }
+  };
   useEffect(() => {
     const { id } = store.getState().auth.user.Colab;
     setValues(prevState => ({
@@ -120,17 +157,21 @@ export default function MovimentoCaixaTable() {
       ColabId: id
     }));
     const loadData = async () => {
-      const response = await api.get("/movCaixa");
+      const response = await api.get("/movCaixa/table_aberto");
       const responseMapped = response.data.map((mov, key) => {
         return {
           idd: key,
           id: mov.id,
           RecDespDesc: mov.RecDesp.desc,
-          recDespDB: mov.RecDesp.recDesp,
+          recDesp: checkSituacao(mov.RecDesp.recDesp),
           valor: normalizeCurrencyDb(mov.valor),
           valorDB: mov.valor,
           saldo: mov.saldo,
-          colabPgmto: mov.ColabPgmt ? mov.ColabPgmt.nome : "--",
+          colabPgmto: mov.ColabPgmt
+            ? mov.ColabPgmt.nome
+            : mov.Parcela
+            ? mov.Parcela.Oportunidade.cod
+            : "--",
           ColabCreate: mov.ColabCreated.nome,
           ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
           Fornec: mov.Fornec ? mov.Fornec.nomeConta : "--",
@@ -142,17 +183,6 @@ export default function MovimentoCaixaTable() {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
-              {/* use this button to add a like kind of action */}
-              {/* use this button to add a edit kind of action */}
-              {/* <Link to={`/cliente_update/${mov.id}/false`}>
-                <Button
-                  color="default"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                >
-                  <i className="tim-icons icon-pencil" />
-                </Button>
-              </Link> */}
               <Button
                 disabled={mov.status >= 3}
                 color="default"
@@ -164,6 +194,7 @@ export default function MovimentoCaixaTable() {
                     ...prevState,
                     hidden: false,
                     vlrSingle: normalizeCurrencyDb(mov.valor),
+                    saldo: normalizeCurrencyDb(mov.saldo),
                     multiple: false,
                     movs: [],
                     mov: {
@@ -226,7 +257,6 @@ export default function MovimentoCaixaTable() {
     loadData();
   }, [modalMini]);
 
-  console.log(values);
   return (
     <>
       <div className="content">
@@ -277,10 +307,9 @@ export default function MovimentoCaixaTable() {
               id="vlrPagarSingle"
               name="vlrPagarSingle"
               type="text"
-              value={values.vlrSingle}
+              value={values.saldo}
               onChange={e => {
                 var { value } = e.target;
-                console.log("mov", value);
                 setValues(prevState => ({
                   ...prevState,
                   vlrSingle: normalizeCurrencyInput(value),
@@ -324,6 +353,7 @@ export default function MovimentoCaixaTable() {
                       mov: values.mov,
                       dtLiqui: values.dtLiqui,
                       ColabId: values.ColabId,
+                      saldo: values.saldo,
                       vlrSingle:
                         parseInt(values.vlrSingle.replace(/[^\d]+/g, ""), 10) /
                         100,
@@ -680,12 +710,16 @@ export default function MovimentoCaixaTable() {
                     accessor: "Solicitante"
                   },
                   {
-                    Header: "colab",
+                    Header: "Relacionamento",
                     accessor: "colabPgmto"
                   },
                   {
                     Header: "Desc",
                     accessor: "RecDespDesc"
+                  },
+                  {
+                    Header: "Rec/Desp",
+                    accessor: "recDesp"
                   },
                   {
                     Header: "Valor",

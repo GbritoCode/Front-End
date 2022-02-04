@@ -102,7 +102,7 @@ export default function DashboardGerencial() {
         );
         setChartRecebData(
           resultPeriodoGerencial.data.map(d => {
-            return d.totalReceb / 100;
+            return d.totalReceb;
           })
         );
         setIsLoading(false);
@@ -355,7 +355,7 @@ export default function DashboardGerencial() {
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
-                    <Table style={{ maxHeight: "2rem" }} responsive>
+                    <Table style={{ maxHeight: "1rem" }} responsive>
                       <thead className="text-primary">
                         <tr>
                           <th>Código</th>
@@ -366,13 +366,12 @@ export default function DashboardGerencial() {
                       </thead>
                       <tbody>
                         {tableData.map(oport => {
-                          console.log(1);
                           return (
                             <>
                               <tr>
                                 <td>{oport.cod}</td>
                                 <td>{oport.desc}</td>
-                                <td>{oport.Cliente.nomeAbv}</td>
+                                <td>{oport.Cliente.sigla}</td>
                                 <td className="text-center">
                                   <div className="progress-container progress-sm">
                                     <Progress multi>

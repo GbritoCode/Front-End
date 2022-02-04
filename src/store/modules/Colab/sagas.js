@@ -14,58 +14,23 @@ import { store } from "~/store";
 let result;
 export function* colabCadastro({ payload }) {
   try {
-    const {
-      CPF,
-      FornecId,
-      EmpresaId,
-      nome,
-      dtAdmiss,
-      cel,
-      PerfilId,
-      skype,
-      email,
-      espec,
-      first,
-      PerfilUser
-    } = payload;
+    const { CPF, nome, email, first, PerfilId } = payload;
 
     if (!first) {
       result = yield call(api.post, "users", {
         nome,
         email,
         senha: "Aidera2020",
-        profile: PerfilUser,
+        profile: PerfilId,
         CPF
       });
-      yield call(api.post, "colab", {
-        CPF,
-        FornecId,
-        EmpresaId,
-        nome,
-        dtAdmiss,
-        cel,
-        PerfilId,
-        skype,
-        email,
-        espec,
-        UserId: result.data.id
-      });
+      payload.UserId = result.data.id;
+      yield call(api.post, "colab", payload);
     }
     if (first) {
       const { id } = store.getState().auth.user;
-      yield call(api.post, "colab", {
-        CPF,
-        FornecId,
-        EmpresaId,
-        nome,
-        dtAdmiss,
-        cel,
-        PerfilId,
-        skype,
-        email,
-        espec,
-        UserId: id
-      });
+      payload.UserId = id;
+      yield call(api.post, "colab", { payload });
 
       sessionStorage.clear();
       const user = yield call(api.get, `users/${id}`);
@@ -89,32 +54,7 @@ export function* colabCadastro({ payload }) {
 
 export function* updateColab({ payload }) {
   try {
-    const {
-      id,
-      CPF,
-      FornecId,
-      UserId,
-      PerfilId,
-      nome,
-      dtAdmiss,
-      cel,
-      skype,
-      email,
-      espec
-    } = payload;
-
-    const Colab = {
-      CPF,
-      FornecId,
-      UserId,
-      PerfilId,
-      nome,
-      dtAdmiss,
-      cel,
-      skype,
-      email,
-      espec
-    };
+    const { id, CPF, UserId, nome, email } = payload;
 
     yield call(api.put, `users/${UserId}`, {
       nome,
@@ -123,7 +63,7 @@ export function* updateColab({ payload }) {
       ColabId: id
     });
 
-    const response = yield call(api.put, `colab/${id}`, Colab);
+    const response = yield call(api.put, `colab/${id}`, payload);
     history.push("/tabelas/colab");
     toast.success("cliente atualizado");
     yield put(ClienteUpdateSuccess(response.data));

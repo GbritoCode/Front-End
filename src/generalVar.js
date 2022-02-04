@@ -106,15 +106,15 @@ export const labelsDashFinanc = {
 };
 
 export const monthsGlobal = [
-  { full: "Janeiro", abv: "Jan", number: 1 },
-  { full: "Fevereiro", abv: "Fev", number: 2 },
-  { full: "Março", abv: "Mar", number: 3 },
-  { full: "Abril", abv: "Abr", number: 4 },
-  { full: "Maio", abv: "Mai", number: 5 },
-  { full: "Junho", abv: "Jun", number: 6 },
-  { full: "Julho", abv: "Jul", number: 7 },
-  { full: "Agosto", abv: "Ago", number: 8 },
-  { full: "Setembro", abv: "Set", number: 9 },
+  { full: "Janeiro", abv: "Jan", number: "01" },
+  { full: "Fevereiro", abv: "Fev", number: "02" },
+  { full: "Março", abv: "Mar", number: "03" },
+  { full: "Abril", abv: "Abr", number: "04" },
+  { full: "Maio", abv: "Mai", number: "05" },
+  { full: "Junho", abv: "Jun", number: "06" },
+  { full: "Julho", abv: "Jul", number: "07" },
+  { full: "Agosto", abv: "Ago", number: "08" },
+  { full: "Setembro", abv: "Set", number: "09" },
   { full: "Outubro", abv: "Out", number: 10 },
   { full: "Novembro", abv: "Nov", number: 11 },
   { full: "Dezembro", abv: "Dez", number: 12 }

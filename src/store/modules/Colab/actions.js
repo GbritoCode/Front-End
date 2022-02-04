@@ -18,67 +18,17 @@ export function ClienteUpdateSuccess(profile) {
   };
 }
 
-export function colabRequest(
-  CPF,
-  FornecId,
-  EmpresaId,
-  nome,
-  dtAdmiss,
-  cel,
-  PerfilId,
-  skype,
-  email,
-  espec,
-  first,
-  PerfilUser
-) {
+export function colabRequest(data) {
   return {
     type: "@cadastro/CADASTRO_COLAB_REQUEST",
-    payload: {
-      CPF,
-      FornecId,
-      EmpresaId,
-      nome,
-      dtAdmiss,
-      cel,
-      PerfilId,
-      skype,
-      email,
-      espec,
-      first,
-      PerfilUser
-    }
+    payload: data
   };
 }
 
-export function ColabUpdate(
-  id,
-  CPF,
-  FornecId,
-  PerfilId,
-  UserId,
-  nome,
-  dtAdmiss,
-  cel,
-  skype,
-  email,
-  espec
-) {
+export function ColabUpdate(data) {
   return {
     type: "@update/COLAB_REQUEST",
-    payload: {
-      id,
-      CPF,
-      FornecId,
-      PerfilId,
-      UserId,
-      nome,
-      dtAdmiss,
-      cel,
-      skype,
-      email,
-      espec
-    }
+    payload: data
   };
 }
 
