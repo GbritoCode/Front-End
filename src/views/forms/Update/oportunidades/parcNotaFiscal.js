@@ -66,7 +66,7 @@ export default function ParcelaUpdate() {
     date.setDate(date.getDate() + days);
     return date;
   };
-
+  var filesError = "";
   const dispatch = useDispatch();
   const { id } = useParams();
   const [disabledField, setDisabledField] = useState();
@@ -342,24 +342,35 @@ export default function ParcelaUpdate() {
     evt.preventDefault();
     var aux = Object.entries(values);
     const tamanho = aux.length;
+    var valid;
+    var filled;
 
     for (let i = 0; i < tamanho; i++) {
       if (!(aux[i][1].error === "has-danger")) {
-        var valid = true;
+        valid = true;
       } else {
         valid = false;
         break;
       }
     }
+
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
+      if (aux[j][1].value !== "" && aux[j][1].value !== null) {
+        filled = true;
       } else {
         filled = false;
         setValues(prevState => ({
           ...prevState,
           [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
         }));
+        break;
+      }
+      if (Object.keys(filesAux).length === 0) {
+        filled = false;
+        filesError = "has-danger";
+      } else {
+        filled = true;
+        filesError = "";
         break;
       }
     }
@@ -444,7 +455,6 @@ export default function ParcelaUpdate() {
       notify();
     }
   };
-  console.log(dtVenc);
   return (
     <>
       {isLoading ? (
@@ -635,54 +645,83 @@ export default function ParcelaUpdate() {
                       </Row>
                       <Row>
                         <Col md="12">
-                          <FileUploadContainer>
-                            <UploadFileBtn
-                              type="button"
-                              onClick={handleUploadBtnClick}
-                            >
-                              <i className="fas fa-file-upload" />
-                              <span>
-                                Arraste e solte ou selecione um arquivo{" "}
-                              </span>{" "}
-                            </UploadFileBtn>
-                            <FormField
-                              type="file"
-                              ref={fileInputField}
-                              onChange={handleNewFileUpload}
-                              title=""
-                              value=""
-                            />
-                          </FileUploadContainer>
-                          <FilePreviewContainer>
-                            <PreviewList>
-                              {data.situacao <= 1
-                                ? Object.keys(filesAux).map(
-                                    (fileName, index) => {
-                                      const file = filesAux[fileName];
-                                      const isImageFile =
-                                        file.type.split("/")[0] === "image";
+                          <FormGroup>
+                            <FileUploadContainer>
+                              <UploadFileBtn
+                                type="button"
+                                onClick={handleUploadBtnClick}
+                              >
+                                <i className="fas fa-file-upload" />
+                                <span>
+                                  Arraste e solte ou selecione um arquivo{" "}
+                                </span>{" "}
+                              </UploadFileBtn>
+                              <FormField
+                                type="file"
+                                ref={fileInputField}
+                                onChange={handleNewFileUpload}
+                                title=""
+                                value=""
+                              />
+                            </FileUploadContainer>
+                            <FilePreviewContainer>
+                              <PreviewList>
+                                {data.situacao <= 1
+                                  ? Object.keys(filesAux).map(
+                                      (fileName, index) => {
+                                        const file = filesAux[fileName];
+                                        const isImageFile =
+                                          file.type.split("/")[0] === "image";
+                                        return (
+                                          <PreviewContainer key={fileName}>
+                                            <div>
+                                              {isImageFile && (
+                                                <ImagePreview
+                                                  src={URL.createObjectURL(
+                                                    file
+                                                  )}
+                                                  alt={`file preview ${index}`}
+                                                />
+                                              )}
+                                              <FileMetaData
+                                                isImageFile={isImageFile}
+                                              >
+                                                <span>{file.name}</span>
+                                                <aside>
+                                                  <span>
+                                                    {convertBytesToKB(
+                                                      file.size
+                                                    )}{" "}
+                                                    kb
+                                                  </span>{" "}
+                                                  <RemoveFileIcon
+                                                    className="fas fa-trash-alt"
+                                                    onClick={() =>
+                                                      removeFile(fileName)
+                                                    }
+                                                  />
+                                                </aside>
+                                              </FileMetaData>
+                                            </div>
+                                          </PreviewContainer>
+                                        );
+                                      }
+                                    )
+                                  : filePreview.map(file => {
                                       return (
-                                        <PreviewContainer key={fileName}>
+                                        <PreviewContainer key={file.nome}>
                                           <div>
-                                            {isImageFile && (
-                                              <ImagePreview
-                                                src={URL.createObjectURL(file)}
-                                                alt={`file preview ${index}`}
-                                              />
-                                            )}
-                                            <FileMetaData
-                                              isImageFile={isImageFile}
-                                            >
-                                              <span>{file.name}</span>
+                                            <FileMetaData isImageFile={false}>
+                                              <span>{file.nome}</span>
                                               <aside>
                                                 <span>
                                                   {convertBytesToKB(file.size)}{" "}
                                                   kb
                                                 </span>{" "}
-                                                <RemoveFileIcon
-                                                  className="fas fa-trash-alt"
+                                                <GetApp
+                                                  className="downloadIconPrev"
                                                   onClick={() =>
-                                                    removeFile(fileName)
+                                                    downloadFile(file.id)
                                                   }
                                                 />
                                               </aside>
@@ -690,32 +729,15 @@ export default function ParcelaUpdate() {
                                           </div>
                                         </PreviewContainer>
                                       );
-                                    }
-                                  )
-                                : filePreview.map(file => {
-                                    return (
-                                      <PreviewContainer key={file.nome}>
-                                        <div>
-                                          <FileMetaData isImageFile={false}>
-                                            <span>{file.nome}</span>
-                                            <aside>
-                                              <span>
-                                                {convertBytesToKB(file.size)} kb
-                                              </span>{" "}
-                                              <GetApp
-                                                className="downloadIconPrev"
-                                                onClick={() =>
-                                                  downloadFile(file.id)
-                                                }
-                                              />
-                                            </aside>
-                                          </FileMetaData>
-                                        </div>
-                                      </PreviewContainer>
-                                    );
-                                  })}
-                            </PreviewList>
-                          </FilePreviewContainer>
+                                    })}
+                              </PreviewList>
+                            </FilePreviewContainer>
+                            {filesError === "has-danger" ? (
+                              <Label className="error">
+                                Selecione ao menos um arquivo
+                              </Label>
+                            ) : null}
+                          </FormGroup>
                         </Col>
                       </Row>
                       <Row>

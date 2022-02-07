@@ -41,7 +41,7 @@ import { store } from "~/store";
 // core components
 // import { chart_1_2_3_options } from "~/variables/charts";
 import api from "~/services/api";
-import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
+import { normalizeCurrency } from "~/normalize";
 import history from "~/services/history";
 import { bigChartsAdmin } from "~/components/charts/bigChart";
 
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         setMes(month);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
+        setVlrHrs(normalizeCurrency(vlrHrsDb.data * 10 + desps.data));
         setChartHrsData(
           resultPeriodo.data.map(d => {
             return Math.trunc(d.totalHrs / 60);
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
         );
         setChartRecebData(
           resultPeriodo.data.map(d => {
-            return d.totalReceb / 100;
+            return d.totalReceb;
           })
         );
       }

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /*!
 
 =========================================================
@@ -65,12 +66,19 @@ export default function FinanceiraDashboard() {
   // const dispatch = useDispatch();
 
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
-  const lastDayMonth = getDaysInMonth(new Date(year, month, date));
+  var lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
 
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  console.log(lastDayMonth);
   const [label, setLabel] = useState(
-    lastDayMonth === 30 ? labelsDashFinanc.month30 : labelsDashFinanc.month31
+    lastDayMonth === 30
+      ? labelsDashFinanc.month30
+      : lastDayMonth === 28
+      ? labelsDashFinanc.month28
+      : lastDayMonth === 29
+      ? labelsDashFinanc.month29
+      : labelsDashFinanc.month31
   );
   const [data3, setData3] = useState([]);
   const [miniChartData, setMiniChartData] = useState();
@@ -149,6 +157,15 @@ export default function FinanceiraDashboard() {
           case "geral":
             if (lastDay === 31) {
               setLabel(labelsDashFinanc.month31);
+              return;
+            }
+            if (lastDay === 28) {
+              setLabel(labelsDashFinanc.month28);
+              return;
+            }
+            if (lastDay === 29) {
+              setLabel(labelsDashFinanc.month29);
+              return;
             }
             setLabel(labelsDashFinanc.month30);
             break;
@@ -158,6 +175,14 @@ export default function FinanceiraDashboard() {
           case "2q":
             if (lastDay === 31) {
               setLabel(labelsDashFinanc.month2Q31);
+            }
+            if (lastDay === 28) {
+              setLabel(labelsDashFinanc.month2Q28);
+              return;
+            }
+            if (lastDay === 29) {
+              setLabel(labelsDashFinanc.month2Q29);
+              return;
             }
             setLabel(labelsDashFinanc.month2Q30);
             break;
@@ -283,6 +308,9 @@ export default function FinanceiraDashboard() {
                     value={dataForGraph.mes}
                     onChangeCapture={e => {
                       const { value } = e.target;
+                      lastDayMonth = getDaysInMonth(
+                        new Date(year, value - 1, date)
+                      );
                       createLabels(
                         "mensal",
                         dataForGraph.particao,

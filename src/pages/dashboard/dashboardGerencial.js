@@ -48,7 +48,7 @@ import { store } from "~/store";
 
 // core components
 import api from "~/services/api";
-import { normalizeCalcCurrency, normalizeCurrency } from "~/normalize";
+import { normalizeCurrency } from "~/normalize";
 import { bigChartsAdmin } from "~/components/charts/bigChart";
 import { barCharts } from "./chartsOptions";
 
@@ -89,7 +89,7 @@ export default function DashboardGerencial() {
         setTableData(gerencialDash.data.oportsForTable);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
+        setVlrHrs(normalizeCurrency(vlrHrsDb.data * 10 + desps.data));
         setChartHrsData(
           resultPeriodoGerencial.data.map(d => {
             return Math.trunc(d.totalHrs / 60);
