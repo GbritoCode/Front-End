@@ -274,7 +274,7 @@ class AdminDashboard extends React.Component {
         mes: month,
         horas: hrs.data,
         vlrDesps: normalizeCurrency(desps.data),
-        vlrHrs: normalizeCalcCurrency(vlrHrs.data + desps.data),
+        vlrHrs: normalizeCurrency(vlrHrs.data * 10 + desps.data),
         isLoading: false,
         chartHrsData: resultPeriodo.data.map(d => {
           return Math.trunc(d.totalHrs / 60);
@@ -283,7 +283,7 @@ class AdminDashboard extends React.Component {
           return d.totalDesp / 100;
         }),
         chartRecebData: resultPeriodo.data.map(d => {
-          return d.totalReceb / 100;
+          return d.totalReceb;
         })
       });
     }

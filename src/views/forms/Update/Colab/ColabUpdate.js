@@ -36,7 +36,7 @@ import NotificationAlert from "react-notification-alert";
 import classNames from "classnames";
 import Tooltip from "@material-ui/core/Tooltip";
 import EventNoteIcon from "@material-ui/icons/EventNote";
-import { normalizeCpf, normalizeFone } from "~/normalize";
+import { normalizeCpf, normalizeCurrency, normalizeFone } from "~/normalize";
 import { ColabUpdate } from "~/store/modules/Colab/actions";
 import api from "~/services/api";
 import TagsInput from "~/components/Tags/TagsInput";
@@ -65,12 +65,10 @@ function ColabUpdatee() {
     dtAdmiss: { value: "", error: "", message: "" },
     cel: { value: "", error: "", message: "" },
     skype: { value: "", error: "", message: "" },
-    email: { value: "", error: "", message: "" }
+    email: { value: "", error: "", message: "" },
+    recebeFixo: { value: false, error: "", message: "" },
+    vlrFixo: { value: "", error: "", message: "", optional: true }
   };
-  const optionalSchema = {
-    aniver: { value: "", error: "", message: "" }
-  };
-  const [optional, setOptional] = useState(optionalSchema);
 
   const [values, setValues] = useState(stateSchema);
 
@@ -99,12 +97,15 @@ function ColabUpdatee() {
         dtAdmiss: { value: response.data.dtAdmiss },
         cel: { value: response.data.cel },
         skype: { value: response.data.skype },
-        email: { value: response.data.email }
+        aniver: { value: response.data.aniver, optional: true },
+        email: { value: response.data.email },
+        recebeFixo: { value: response.data.recebeFixo },
+        vlrFixo: {
+          value: response.data.vlrFixo === null ? "" : response.data.vlrFixo,
+          optional: true
+        }
       }));
-      setOptional(prevState => ({
-        ...prevState,
-        aniver: { value: response.data.aniver }
-      }));
+
       setIsLoading(false);
     }
     loadData();
@@ -215,6 +216,19 @@ function ColabUpdatee() {
           cpf: { value: normalizeCpf(target) }
         }));
         break;
+      case "currencyOptional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: normalizeCurrency(target) }
+        }));
+        break;
+
+      case "optional":
+        setValues(prevState => ({
+          ...prevState,
+          [name]: { value: target, optional: true }
+        }));
+        break;
       case "text":
         setValues(prevState => ({
           ...prevState,
@@ -222,6 +236,25 @@ function ColabUpdatee() {
         }));
         break;
       default:
+    }
+  };
+
+  const recebeFixoChange = value => {
+    if (value === "Yes") {
+      setValues(prevState => ({
+        ...prevState,
+        recebeFixo: { value: true },
+        vlrFixo: { value: "0", optional: true }
+      }));
+      document.getElementById("vlrFixo").disabled = false;
+    }
+    if (value === "No") {
+      setValues(prevState => ({
+        ...prevState,
+        recebeFixo: { value: false },
+        vlrFixo: { value: "", optional: true }
+      }));
+      document.getElementById("vlrFixo").disabled = true;
     }
   };
   var options = {};
@@ -244,34 +277,42 @@ function ColabUpdatee() {
       }
     }
     for (let j = 0; j < tamanho; j++) {
-      if (aux[j][1].value !== "") {
-        var filled = true;
-      } else {
-        filled = false;
-        setValues(prevState => ({
-          ...prevState,
-          [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
-        }));
-        break;
+      if (!aux[j][1].optional) {
+        if (aux[j][1].value !== "") {
+          var filled = true;
+        } else {
+          filled = false;
+          setValues(prevState => ({
+            ...prevState,
+            [aux[j][0]]: { error: "has-danger", message: "Campo obrigatório" }
+          }));
+          break;
+        }
       }
     }
 
     if (valid && filled) {
       var cpfdb = values.cpf.value.replace(/[^\d]+/g, "");
+      var vlrFixoDb =
+        values.vlrFixo.value === ""
+          ? ""
+          : parseInt(values.vlrFixo.value.replace(/[.,]+/g, ""), 10) / 100;
       dispatch(
-        ColabUpdate(
+        ColabUpdate({
           id,
-          cpfdb,
-          values.fornecId.value,
-          values.PerfilId.value,
-          values.UserId.value,
-          values.nome.value,
-          values.dtAdmiss.value,
-          values.cel.value,
-          values.skype.value,
-          values.email.value,
-          string
-        )
+          CPF: cpfdb,
+          FornecId: values.fornecId.value,
+          PerfilId: values.PerfilId.value,
+          UserId: values.UserId.value,
+          nome: values.nome.value,
+          dtAdmiss: values.dtAdmiss.value,
+          cel: values.cel.value,
+          skype: values.skype.value,
+          email: values.email.value,
+          espec: string,
+          recebeFixo: values.recebeFixo.value,
+          vlrFixo: values.vlrFixo.value === "" ? null : vlrFixoDb
+        })
       );
     } else {
       options = {
@@ -533,20 +574,96 @@ function ColabUpdatee() {
                           {" "}
                           <Label>Aniversário</Label>
                           <FormGroup
-                            className={`has-label ${optional.aniver.error}`}
+                            className={`has-label ${values.aniver.error}`}
                           >
                             <Input
                               disabled
                               name="aniver"
                               type="date"
                               onChange={event =>
-                                handleChange(event, "aniver", "text")
+                                handleChange(event, "aniver", "optional")
                               }
-                              value={optional.aniver.value}
+                              value={values.aniver.value}
                             />
-                            {optional.aniver.error === "has-danger" ? (
+                            {values.aniver.error === "has-danger" ? (
                               <Label className="error">
-                                {optional.aniver.message}
+                                {values.aniver.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          {" "}
+                          <Label>Recebe Fixo</Label>
+                          <FormGroup
+                            check
+                            className={`has-label ${values.recebeFixo.error}`}
+                            onChangeCapture={e =>
+                              recebeFixoChange(e.target.value)
+                            }
+                          >
+                            <Label check>
+                              <Input
+                                defaultChecked={
+                                  values.recebeFixo.value === true
+                                }
+                                name="recebeFixo"
+                                id="recebeFixoYes"
+                                type="radio"
+                                onChange={event => {
+                                  handleChange(event, "recebeFixo", "text");
+                                }}
+                                value="Yes"
+                              />
+                              Sim
+                            </Label>
+                            <Label check>
+                              <Input
+                                defaultChecked={
+                                  values.recebeFixo.value === false
+                                }
+                                name="recebeFixo"
+                                id="recebeFixoNo"
+                                type="radio"
+                                onChange={event =>
+                                  handleChange(event, "recebeFixo", "text")
+                                }
+                                value="No"
+                              />
+                              Não
+                            </Label>
+                            {values.recebeFixo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.recebeFixo.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+
+                        <Col md="4">
+                          <Label>Salário Fixo</Label>
+                          <FormGroup
+                            className={`has-label ${values.vlrFixo.error}`}
+                          >
+                            <Input
+                              disabled={values.recebeFixo.value === false}
+                              name="vlrFixo"
+                              id="vlrFixo"
+                              type="text"
+                              onChange={event =>
+                                handleChange(
+                                  event,
+                                  "vlrFixo",
+                                  "currencyOptional"
+                                )
+                              }
+                              value={values.vlrFixo.value}
+                            />
+                            {values.vlrFixo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.vlrFixo.message}
                               </Label>
                             ) : null}
                           </FormGroup>

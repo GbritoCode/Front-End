@@ -189,6 +189,7 @@ import MovimentoCaixaTable from "~/views/tables/financeira/movimentoCaixaTable";
 import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
 import DashboardCliente from "~/pages/dashboard/dashboardCliente";
+import MovimentoCaixaLiquidTable from "~/views/tables/financeira/movimentoCaixaLiquidTable";
 
 const routes = [
   {
@@ -700,6 +701,14 @@ const routes = [
         namePerfil: "ParcelasLiqui Tab",
         mini: "OPF",
         component: ParcelaLiquidadaTable,
+        layout: "/admin"
+      },
+      {
+        path: "/tabelas/historico/movCaixa",
+        name: "Movimento Caixa",
+        namePerfil: "MovCaixaLiqui Tab",
+        mini: "MCL",
+        component: MovimentoCaixaLiquidTable,
         layout: "/admin"
       }
     ]
