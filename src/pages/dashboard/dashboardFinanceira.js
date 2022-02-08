@@ -57,7 +57,11 @@ import api from "~/services/api";
 import { bigChartLines, barCharts } from "./chartsOptions";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
-import { normalizeCurrency, normalizeCurrencyDb } from "~/normalize";
+import {
+  normalizeCalcCurrency,
+  normalizeCurrency,
+  normalizeCurrencyDb
+} from "~/normalize";
 import { labelsDashFinanc, monthsGlobal } from "~/generalVar";
 // import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
@@ -606,7 +610,7 @@ export default function FinanceiraDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? normalizeCurrencyDb(miniChartData.somaDesp)
+                              ? normalizeCalcCurrency(miniChartData.somaDesp)
                               : normalizeCurrencyDb(0)}
                           </CardTitle>
                         </div>
@@ -655,7 +659,7 @@ export default function FinanceiraDashboard() {
                           </p>
                           <CardTitle tag="h3">
                             {miniChartData
-                              ? normalizeCurrencyDb(miniChartData.somaSaldo)
+                              ? normalizeCalcCurrency(miniChartData.somaSaldo)
                               : normalizeCurrencyDb(0)}
                           </CardTitle>
                         </div>
