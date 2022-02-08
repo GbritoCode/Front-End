@@ -833,7 +833,7 @@ export default function MovimentoCaixaCadastro() {
                           name="desc"
                           type="textarea"
                           onChange={event =>
-                            handleChange(event, "optional", "text")
+                            handleChange(event, "desc", "optional")
                           }
                           value={values.desc.value}
                         />
