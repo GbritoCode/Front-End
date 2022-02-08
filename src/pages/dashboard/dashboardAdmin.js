@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         setMes(month);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCurrency(vlrHrsDb.data * 10 + desps.data));
+        setVlrHrs(normalizeCurrency(vlrHrsDb.data * 100 + desps.data));
         setChartHrsData(
           resultPeriodo.data.map(d => {
             return Math.trunc(d.totalHrs / 60);
