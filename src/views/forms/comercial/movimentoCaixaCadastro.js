@@ -245,6 +245,7 @@ export default function MovimentoCaixaCadastro() {
           ClienteId:
             values.ClienteId.value === "" ? null : values.ClienteId.value,
           valor: fieldFornecCli === "Fornec" ? vlrDb * -1 : vlrDb,
+          saldo: vlrDb,
           dtVenc: values.dtVenc.value,
           status: values.status.value,
           ColabId: idColab,
