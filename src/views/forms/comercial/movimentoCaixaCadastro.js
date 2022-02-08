@@ -829,7 +829,6 @@ export default function MovimentoCaixaCadastro() {
                       <Label>Descrição</Label>
                       <FormGroup className={`has-label ${values.desc.error}`}>
                         <Input
-                          disabled
                           name="desc"
                           type="textarea"
                           onChange={event =>
