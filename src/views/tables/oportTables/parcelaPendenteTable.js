@@ -25,7 +25,6 @@ import {
 } from "reactstrap";
 import { Close, Message } from "@material-ui/icons";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 
 import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
@@ -194,18 +193,17 @@ class ParcelaPendentesTable extends Component {
               <CardHeader>
                 <CardTitle tag="h4">
                   Parcelas Pendentes
-                  <Link to="/dashboardGerencial">
-                    <Tooltip title="Voltar">
-                      <Button
-                        style={{
-                          float: "right"
-                        }}
-                        className={classNames("btn-icon btn-link like")}
-                      >
-                        <span className="material-icons">logout</span>{" "}
-                      </Button>
-                    </Tooltip>
-                  </Link>
+                  <Tooltip title="Voltar">
+                    <Button
+                      onClick={() => history.goBack()}
+                      style={{
+                        float: "right"
+                      }}
+                      className={classNames("btn-icon btn-link like")}
+                    >
+                      <span className="material-icons">logout</span>{" "}
+                    </Button>
+                  </Tooltip>
                 </CardTitle>
               </CardHeader>
               <CardBody>
