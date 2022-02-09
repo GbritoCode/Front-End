@@ -54,7 +54,7 @@ function PeriodTokenTable() {
   useEffect(() => {
     async function loadData() {
       const response = await api.get("/colab");
-      const response1 = await api.get("/fechamentoPeriodo");
+      const response1 = await api.get("/fechamentoPeriodo/?libera=true");
       setData1(response1.data);
       setAltering(prevState => ({
         ...prevState,

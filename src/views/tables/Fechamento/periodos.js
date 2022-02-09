@@ -63,7 +63,7 @@ class PeriodosTable extends Component {
   };
 
   loadData = async () => {
-    const response = await api.get("/fechamentoPeriodo");
+    const response = await api.get("/fechamentoPeriodo/?aberto=true");
     this.setState({
       data: response.data.map((periodo, key) => {
         return {
