@@ -18,21 +18,8 @@ import React, { useEffect, useState } from "react";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Col,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  NavLink,
-  DropdownItem
-} from "reactstrap";
-import { PostAdd } from "@material-ui/icons";
-import { Link } from "react-router-dom";
-import AddIcon from "@material-ui/icons/Add";
+import { Card, CardBody, CardHeader, CardTitle, Col } from "reactstrap";
+
 import api from "~/services/api";
 import { normalizeCurrencyDb, normalizeDate } from "~/normalize";
 import { sortDates } from "~/sortingMethodReactTable";
