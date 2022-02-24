@@ -307,6 +307,20 @@ export const bigChartLines = {
     };
   },
   options: {
+    plugins: {
+      autocolors: false,
+      annotation: {
+        annotations: {
+          line1: {
+            type: "line",
+            yMin: 0,
+            yMax: 0,
+            borderColor: "rgb(255, 99, 132)",
+            borderWidth: 2
+          }
+        }
+      }
+    },
     maintainAspectRatio: false,
     legend: {
       display: false
