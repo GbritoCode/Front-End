@@ -9978,6 +9978,11 @@ react-bootstrap-wizard@^0.0.9:
   resolved "https://registry.yarnpkg.com/react-bootstrap-wizard/-/react-bootstrap-wizard-0.0.9.tgz#548a8de045fa8c3709e015e5035ae7f4484b60dc"
   integrity sha512-AQNJzihrSs4wZKFp8qc9A5ZJssLF/c5y4iAyxWUQHQojdnsQ4oLsMEoJiWJsuDz1rxLwSB8ScyZsJ1NLSUiU1w==
 
+react-chartjs-2@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.0.1.tgz#38ed1d5b6e2f789408450c981e9e8e1d78b2e015"
+  integrity sha512-q8bgWzKoFvBvD7YcjT/hXG8jt55TaMAuJ1dmI3tKFJ7CijUWYz4pIfOhkTI6PBTwqu/pmeWsClBRd/7HiWzN1g==
+
 react-csv@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-2.0.3.tgz#f5d17a3c71107d9bcbe580049350200debdc042a"
