@@ -89,7 +89,7 @@ export default function DashboardGerencial() {
         setTableData(gerencialDash.data.oportsForTable);
         setHoras(hrs.data);
         setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCurrency(vlrHrsDb.data * 10 + desps.data));
+        setVlrHrs(normalizeCurrency(vlrHrsDb.data * 100 + desps.data));
         setChartHrsData(
           resultPeriodoGerencial.data.map(d => {
             return Math.trunc(d.totalHrs / 60);

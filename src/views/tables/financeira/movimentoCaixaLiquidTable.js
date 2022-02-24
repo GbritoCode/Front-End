@@ -130,39 +130,7 @@ export default function MovimentoCaixaLiquidTable() {
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>
-              <CardTitle tag="h4">
-                Movimento Caixa Liquidado
-                <UncontrolledDropdown style={{ float: "right" }}>
-                  <DropdownToggle
-                    style={{ paddingLeft: "0px" }}
-                    caret
-                    color="default"
-                    data-toggle="dropdown"
-                    nav
-                    onClick={e => e.preventDefault()}
-                  >
-                    <PostAdd />
-                    <div className="photo" />
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-navbar" right tag="ul">
-                    <NavLink tag="li">
-                      <Link to="/cadastro/comercial/movCaixa">
-                        {" "}
-                        <DropdownItem
-                          style={{ paddingLeft: "3%" }}
-                          className="nav-item"
-                        >
-                          <AddIcon
-                            style={{ float: "left", marginRight: "3%" }}
-                            fontSize="small"
-                          />
-                          <p style={{ paddingTop: "2%" }}>Novo</p>
-                        </DropdownItem>
-                      </Link>
-                    </NavLink>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </CardTitle>
+              <CardTitle tag="h4">Movimento Caixa Liquidado</CardTitle>
             </CardHeader>
             <CardBody>
               <ReactTable
