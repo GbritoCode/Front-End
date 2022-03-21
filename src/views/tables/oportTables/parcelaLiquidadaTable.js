@@ -20,16 +20,13 @@ import {
   CardTitle,
   Col,
   Button,
-  Modal,
-  ModalBody,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   NavLink,
   DropdownItem
 } from "reactstrap";
-import { Close, Message, PostAdd } from "@material-ui/icons";
-import { toast } from "react-toastify";
+import { PostAdd } from "@material-ui/icons";
 
 import { Tooltip } from "@material-ui/core";
 import ReactExport from "react-export-excel";
@@ -51,10 +48,6 @@ class ParcelaLiquidadaTable extends Component {
     document.body.classList.add("white-content");
     this.loadData();
   }
-
-  toggleModalMini = () => {
-    this.setState({ modalMini: !this.state.modalMini });
-  };
 
   delay = ms => new Promise(res => setTimeout(res, ms));
 
@@ -101,35 +94,16 @@ class ParcelaLiquidadaTable extends Component {
           // we've added some custom button actions
           <div className="actions-right">
             {/* use this button to add a edit kind of action */}
-            <Tooltip title="Nota Fiscal">
-              <Button
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-                onClick={() => {
-                  history.push(
-                    `/update/oportunidade/parcNota/${parcela.id}/?fromDash=true`
-                  );
-                }}
-              >
-                <i className="tim-icons icon-paper" />
-              </Button>
-            </Tooltip>
-            <Tooltip title="Liquidar">
-              <Button
-                disabled={parcela.situacao < 2}
-                color="default"
-                size="sm"
-                className={classNames("btn-icon btn-link like")}
-                onClick={() => {
-                  history.push(
-                    `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
-                  );
-                }}
-              >
-                <i className="tim-icons icon-coins" />
-              </Button>
-            </Tooltip>
+            <Button
+              color="default"
+              size="sm"
+              className={classNames("btn-icon btn-link like")}
+              onClick={() => {
+                history.push(`/update/oportunidade/parc/${parcela.id}`);
+              }}
+            >
+              <i className="tim-icons icon-zoom-split" />
+            </Button>
           </div>
         )
       };
@@ -195,60 +169,6 @@ class ParcelaLiquidadaTable extends Component {
     return (
       <>
         <div className="content">
-          <Modal
-            modalClassName="modal-mini "
-            isOpen={this.state.modalMini}
-            toggle={this.toggleModalMini}
-          >
-            <div className="modal-header justify-content-center">
-              <button
-                aria-hidden
-                className="close"
-                data-dismiss="modal"
-                type="button"
-                color="primary"
-                onClick={this.toggleModalMini}
-              >
-                <Close />
-              </button>
-              <div>
-                <Message fontSize="large" />
-              </div>
-            </div>
-            <ModalBody className="text-center">
-              <p>Deseja deletar o registro?</p>
-            </ModalBody>
-            <div className="modal-footer">
-              <Button
-                style={{ color: "#000" }}
-                className="btn-neutral"
-                type="button"
-                onClick={this.toggleModalMini}
-              >
-                Não
-              </Button>
-              <Button
-                style={{ color: "#7E7E7E" }}
-                className="btn-neutral"
-                type="button"
-                onClick={async () => {
-                  await api
-                    .delete(`parcela/${this.state.excluding}`)
-                    .then(result => {
-                      toast.success(result.data);
-                      this.reloadData();
-                      this.setState({ excluding: undefined });
-                    })
-                    .catch(err => {
-                      toast.error(err.response.data.error);
-                    });
-                  this.toggleModalMini();
-                }}
-              >
-                Sim
-              </Button>
-            </div>
-          </Modal>
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
