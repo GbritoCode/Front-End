@@ -218,7 +218,8 @@ export default function MovimentoCaixaTable() {
                       id: mov.id,
                       saldo: mov.saldo,
                       recDesp: mov.RecDesp.recDesp,
-                      total: mov.valor
+                      total: mov.valor,
+                      ParcelaId: mov.Parcela.id
                     }
                   }));
                 }}

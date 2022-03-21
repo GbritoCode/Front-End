@@ -47,7 +47,6 @@ export default function ParcelaUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [disabledField, setDisabledField] = useState();
   const [data, setData] = useState();
   const [data1, setData1] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +93,7 @@ export default function ParcelaUpdate() {
       const response1 = await api.get(
         `/oportunidade/${response.data.OportunidadeId}`
       );
-      setDisabledField(response1.data.fase >= 5 && response.data.situacao >= 4);
+
       setData(response.data);
       setData1(response1.data);
       setValues(prevState => ({
@@ -501,7 +500,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.dtLiquidacao.error}`}
                           >
                             <Input
-                              disabled={disabledField}
+                              disabled
                               name="dtLiquidacao"
                               type="date"
                               onChange={event => {
@@ -522,7 +521,7 @@ export default function ParcelaUpdate() {
                             className={`has-label ${optional.vlrPago.error}`}
                           >
                             <Input
-                              disabled={disabledField}
+                              disabled
                               name="vlrPago"
                               type="text"
                               onChange={event => {
@@ -563,29 +562,6 @@ export default function ParcelaUpdate() {
                         </Col>
                       </Row>
 
-                      {disabledField ? (
-                        <></>
-                      ) : (
-                        <Button
-                          style={{
-                            paddingLeft: 29,
-                            paddingRight: 30
-                          }}
-                          className="form"
-                          color="info"
-                          type="submit"
-                        >
-                          Enviar{" "}
-                          <i
-                            className="tim-icons icon-send"
-                            style={{
-                              paddingBottom: 4,
-                              paddingLeft: 3
-                            }}
-                            size="large"
-                          />
-                        </Button>
-                      )}
                       <Button
                         style={{
                           paddingLeft: 32,
