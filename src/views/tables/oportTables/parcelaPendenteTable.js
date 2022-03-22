@@ -32,11 +32,7 @@ import { toast } from "react-toastify";
 import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
 import history from "~/services/history";
-import {
-  normalizeCurrency,
-  normalizeCurrencyDb,
-  normalizeCurrencyInput
-} from "~/normalize";
+import { normalizeCurrency, normalizeCurrencyInput } from "~/normalize";
 
 export default function ParcelaPendentesTable() {
   document.body.classList.add("white-content");
@@ -79,26 +75,26 @@ export default function ParcelaPendentesTable() {
 
   useEffect(() => {
     const loadData = async () => {
-      const response = await api.get(`/parcela/?listAll=true&tipo=atrasadas`);
-
+      const response = await api.get(`/parcela/?listAll=true&tipo=pendentes`);
       setData(
         response.data.map((parcela, key) => {
           return {
             id: key,
             idd: parcela.id,
             OportunidadeId: parcela.OportunidadeId,
-            Cliente: parcela.Oportunidade.Cliente.nomeAbv,
-            "Código Oportunidade": parcela.Oportunidade.cod,
+            OportunidadeCod: parcela.Oportunidade.cod,
             Oportunidade: parcela.Oportunidade.desc,
-            dtEmissao: parcela.dtEmissao,
+            Cliente: parcela.Oportunidade.Cliente.nomeAbv,
             parcela: parcela.parcela,
             vlrParcela: normalizeCurrency(parcela.vlrParcela),
-            notaFiscal: parcela.notaFiscal,
+            dtEmissao: parcela.dtEmissao,
             dtVencimento: parcela.dtVencimento,
-            vlrPago: normalizeCurrency(parcela.vlrPago),
-            saldo: normalizeCurrency(parcela.saldo),
+            notaFiscal: parcela.notaFiscal,
             pedidoCliente: parcela.pedidoCliente,
             situacao: checkSituacao(parcela.situacao),
+            vlrPago: normalizeCurrency(parcela.vlrPago),
+            saldo: normalizeCurrency(parcela.saldo),
+            createdAt: parcela.createdAt,
             actions: (
               // we've added some custom button actions
               <div className="actions-right">
@@ -115,39 +111,6 @@ export default function ParcelaPendentesTable() {
                     }}
                   >
                     <i className="tim-icons icon-paper" />
-                  </Button>
-                </Tooltip>
-                <Tooltip title="Liquidar">
-                  <Button
-                    disabled={parcela.situacao < 2}
-                    color="default"
-                    size="sm"
-                    className={classNames("btn-icon btn-link like")}
-                    onClick={() => {
-                      setModalDtLiqui(true);
-                      setValues(prevState => ({
-                        ...prevState,
-                        hidden: false,
-                        vlrSingle: normalizeCurrencyDb(
-                          parcela.MovimentoCaixa.saldo
-                        ),
-                        saldo: normalizeCurrencyDb(
-                          parcela.MovimentoCaixa.saldo
-                        ),
-                        movs: [],
-                        error: "",
-                        message: "",
-                        mov: {
-                          id: parcela.MovimentoCaixa.id,
-                          saldo: parcela.MovimentoCaixa.saldo,
-                          recDesp: parcela.MovimentoCaixa.RecDesp.recDesp,
-                          total: parcela.MovimentoCaixa.valor,
-                          ParcelaId: parcela.id
-                        }
-                      }));
-                    }}
-                  >
-                    <i className="tim-icons icon-coins" />
                   </Button>
                 </Tooltip>
                 <Button
