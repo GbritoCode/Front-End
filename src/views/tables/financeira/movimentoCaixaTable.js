@@ -219,7 +219,7 @@ export default function MovimentoCaixaTable() {
                       saldo: mov.saldo,
                       recDesp: mov.RecDesp.recDesp,
                       total: mov.valor,
-                      ParcelaId: mov.Parcela.id
+                      ParcelaId: mov.ParcelaId
                     }
                   }));
                 }}
