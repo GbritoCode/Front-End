@@ -32,7 +32,11 @@ import { toast } from "react-toastify";
 import { Tooltip } from "@material-ui/core";
 import api from "~/services/api";
 import history from "~/services/history";
-import { normalizeCurrency, normalizeCurrencyInput } from "~/normalize";
+import {
+  normalizeCurrency,
+  normalizeCurrencyDb,
+  normalizeCurrencyInput
+} from "~/normalize";
 
 export default function ParcelaAbertaTable() {
   // --------- colocando no modo claro do template
@@ -120,14 +124,42 @@ export default function ParcelaAbertaTable() {
                     size="sm"
                     className={classNames("btn-icon btn-link like")}
                     onClick={() => {
-                      history.push(
-                        `/update/oportunidade/parc/${parcela.id}/?fromDash=true`
-                      );
+                      setModalDtLiqui(true);
+                      setValues(prevState => ({
+                        ...prevState,
+                        hidden: false,
+                        vlrSingle: normalizeCurrencyDb(
+                          parcela.MovimentoCaixa.saldo
+                        ),
+                        saldo: normalizeCurrencyDb(
+                          parcela.MovimentoCaixa.saldo
+                        ),
+                        movs: [],
+                        error: "",
+                        message: "",
+                        mov: {
+                          id: parcela.MovimentoCaixa.id,
+                          saldo: parcela.MovimentoCaixa.saldo,
+                          recDesp: parcela.MovimentoCaixa.RecDesp.recDesp,
+                          total: parcela.MovimentoCaixa.valor,
+                          ParcelaId: parcela.id
+                        }
+                      }));
                     }}
                   >
                     <i className="tim-icons icon-coins" />
                   </Button>
                 </Tooltip>
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                  onClick={() => {
+                    history.push(`/update/oportunidade/parc/${parcela.id}`);
+                  }}
+                >
+                  <i className="tim-icons icon-zoom-split" />
+                </Button>
               </div>
             )
           };

@@ -623,7 +623,7 @@ export default function ComercialDashboard() {
                     type="date"
                     id="dataInic"
                     defaultValue={dataForTable.inicDate}
-                    onChangeCapture={e => {
+                    onBlur={e => {
                       handleFilterChange(
                         document.getElementById("camp").value
                           ? document.getElementById("camp").value
@@ -641,7 +641,7 @@ export default function ComercialDashboard() {
                     type="date"
                     id="dataFim"
                     defaultValue={dataForTable.endDate}
-                    onChangeCapture={e => {
+                    onBlur={e => {
                       handleFilterChange(
                         document.getElementById("camp").value
                           ? document.getElementById("camp").value
