@@ -32,7 +32,8 @@ import {
   Row,
   Col,
   InputGroup,
-  InputGroupAddon
+  InputGroupAddon,
+  CustomInput
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import NotificationAlert from "react-notification-alert";
@@ -70,7 +71,9 @@ export default function MovimentoCaixaCadastro() {
     valor: { value: "", error: "", message: "" },
     dtVenc: { value: "", error: "", message: "" },
     status: { value: 1, error: "", message: "" },
-    desc: { value: "", error: "", message: "", optional: true }
+    desc: { value: "", error: "", message: "", optional: true },
+    referencia: { value: "", error: "", message: "", optional: true },
+    liquida: { value: false, error: "", message: "" }
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -206,6 +209,13 @@ export default function MovimentoCaixaCadastro() {
     }
   };
 
+  const handleSwitchChange = checked => {
+    setValues(prevState => ({
+      ...prevState,
+      liquida: { value: checked }
+    }));
+  };
+
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -249,7 +259,9 @@ export default function MovimentoCaixaCadastro() {
           dtVenc: values.dtVenc.value,
           status: values.status.value,
           ColabId: idColab,
-          desc: values.desc.value
+          desc: values.desc.value,
+          referencia: values.referencia.value,
+          liquida: values.liquida.value
         })
       );
     } else {
@@ -795,33 +807,37 @@ export default function MovimentoCaixaCadastro() {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label>Situação</Label>
+                          <Label>Referência</Label>
                           <FormGroup
-                            className={`has-label ${values.status.error}`}
+                            className={`has-label ${values.referencia.error}`}
                           >
                             <Input
-                              disabled
-                              name="status"
-                              type="select"
+                              name="referencia"
+                              type="text"
                               onChange={event =>
-                                handleChange(event, "status", "text")
+                                handleChange(event, "referencia", "optional")
                               }
-                              value={values.status.value}
-                            >
-                              <option disabled value="">
-                                {" "}
-                                Selecione a situação{" "}
-                              </option>
-                              <option value="1">Aberto</option>
-                              <option value="2">Parcial</option>
-                              <option value="3">Liquidado</option>
-                            </Input>
-                            {values.status.error === "has-danger" ? (
+                              value={values.referencia.value}
+                            />
+                            {values.referencia.error === "has-danger" ? (
                               <Label className="error">
-                                {values.status.message}
+                                {values.referencia.message}
                               </Label>
                             ) : null}
                           </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col
+                          md="4"
+                          style={{ paddingTop: 10, marginBottom: 10 }}
+                        >
+                          <CustomInput
+                            id="autoLiquidar"
+                            type="switch"
+                            label="Liquidar automaticamente"
+                            onChange={e => handleSwitchChange(e.target.checked)}
+                          />
                         </Col>
                       </Row>
                       <Row>

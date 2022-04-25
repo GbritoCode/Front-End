@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /*!
 
 =========================================================
@@ -94,6 +95,8 @@ export default function MovimentoCaixaLiquidTable() {
             ? mov.ColabPgmt.nome
             : mov.Parcela
             ? mov.Parcela.Oportunidade.cod
+            : mov.referencia
+            ? mov.referencia
             : "--",
           ColabCreate: mov.ColabCreated.nome,
           ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
@@ -163,12 +166,12 @@ export default function MovimentoCaixaLiquidTable() {
                   {
                     Header: "data Liquidação",
                     accessor: "dtLiqui",
-                    sortMethod: sortDates()
+                    sortMethod: sortDates
                   },
                   {
                     Header: "Data Vencimento",
                     accessor: "dtVenc",
-                    sortMethod: sortDates()
+                    sortMethod: sortDates
                   }
                 ]}
                 defaultPageSize={10}

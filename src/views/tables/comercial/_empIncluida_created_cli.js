@@ -284,6 +284,7 @@ function EmpresasIncluidasCreatedCli() {
               </Row>
               <Footer />
             </Modal>
+
             <Col xs={12} md={12}>
               <Card>
                 <CardHeader>
@@ -390,7 +391,7 @@ function EmpresasIncluidasCreatedCli() {
                         Header: "Data",
                         accessor: "data",
                         // minWidth: 100,
-                        sortMethod: sortDates()
+                        sortMethod: sortDates
                       },
                       {
                         Header: "Ações",

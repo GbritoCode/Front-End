@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /*!
 
 =========================================================
@@ -35,7 +36,8 @@ import {
   DropdownItem,
   Label,
   Input,
-  FormGroup
+  FormGroup,
+  Row
 } from "reactstrap";
 import {
   Check,
@@ -55,7 +57,7 @@ import {
   normalizeCurrencyDb,
   normalizeDate
 } from "~/normalize";
-import { sortDates } from "~/sortingMethodReactTable";
+import { sortDates, sortValues_MovCaixa } from "~/sortingMethodReactTable";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import ModalLarge from "~/components/Modal/modalLarge";
 import history from "~/services/history";
@@ -71,6 +73,7 @@ export default function MovimentoCaixaTable() {
   const [modalDtLiqui, setModalDtLiqui] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDetail, setIsOpenDetail] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [defaultFilteredData, setDefaultFilteredData] = useState([]);
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
@@ -87,6 +90,21 @@ export default function MovimentoCaixaTable() {
     error: "",
     message: ""
   };
+
+  const detailSchema = {
+    recDespDesc: { value: "" },
+    recDesp: { value: "" },
+    colabCreate: { value: "" },
+    solicitante: { value: "" },
+    valor: { value: "" },
+    saldo: { value: "" },
+    dtVenc: { value: "" },
+    status: { value: "" },
+    desc: { value: "" },
+    relacionamento: { value: "" }
+  };
+
+  const [detailsValues, setDetailsValues] = useState(detailSchema);
   const [values, setValues] = useState(stateSchema);
 
   let reactTable = useRef(null);
@@ -186,6 +204,8 @@ export default function MovimentoCaixaTable() {
             ? mov.ColabPgmt.nome
             : mov.Parcela
             ? mov.Parcela.Oportunidade.cod
+            : mov.referencia
+            ? mov.referencia
             : "--",
           ColabCreate: mov.ColabCreated.nome,
           ColabLiqui: mov.ColabLiquid ? mov.ColabLiquid.nome : "--",
@@ -198,6 +218,38 @@ export default function MovimentoCaixaTable() {
           actions: (
             // we've added some custom button actions
             <div className="actions-right">
+              <Tooltip title="Visualizar">
+                <Button
+                  color="default"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                  onClick={() => {
+                    setIsOpenDetail(true);
+                    setDetailsValues({
+                      recDespDesc: mov.RecDesp.desc,
+                      recDesp: mov.RecDesp.recDesp,
+                      colabCreate: mov.ColabCreated.nome,
+                      solicitante: mov.Cliente
+                        ? mov.Cliente.rzSoc
+                        : mov.Fornec.nome,
+                      valor: normalizeCurrencyDb(mov.valor),
+                      saldo: normalizeCurrencyDb(mov.saldo),
+                      dtVenc: normalizeDate(mov.dtVenc),
+                      status: checkStatus(mov.status),
+                      desc: mov.desc ? mov.desc : "--",
+                      referencia: mov.ColabPgmt
+                        ? mov.ColabPgmt.nome
+                        : mov.Parcela
+                        ? mov.Parcela.Oportunidade.cod
+                        : mov.referencia
+                        ? mov.referencia
+                        : "--"
+                    });
+                  }}
+                >
+                  <i className="tim-icons icon-zoom-split" />
+                </Button>
+              </Tooltip>
               <Button
                 disabled={mov.status >= 3}
                 color="default"
@@ -274,7 +326,9 @@ export default function MovimentoCaixaTable() {
     };
     loadData();
   }, [modalMini]);
-  console.log(values);
+
+  console.log(checkSituacao("Desp", 120).props);
+
   return (
     <>
       <div className="content">
@@ -330,7 +384,6 @@ export default function MovimentoCaixaTable() {
                 onChange={e => {
                   var { value } = e.target;
                   if (typeof parseInt(value, 10) === "number") {
-                    console.log("ok");
                     if (
                       parseInt(value.replace(/[^\d]+/g, ""), 10) / 100 >
                       parseInt(values.saldo.replace(/[^\d]+/g, ""), 10) / 100
@@ -585,12 +638,12 @@ export default function MovimentoCaixaTable() {
               {
                 Header: "data Liquidação",
                 accessor: "dtLiqui",
-                sortMethod: sortDates()
+                sortMethod: sortDates
               },
               {
                 Header: "Data Vencimento",
                 accessor: "dtVenc",
-                sortMethod: sortDates()
+                sortMethod: sortDates
               }
             ]}
             defaultPageSize={6}
@@ -662,6 +715,163 @@ export default function MovimentoCaixaTable() {
             </Button>
           </div>
         </Modal>
+
+        {/* ---------------------------------
+            ---------------------------------
+            ---------------------------------
+            ---------------------------------
+            --------------------------------- */}
+
+        <ModalLarge
+          onClose={() => {
+            setIsOpenDetail(!isOpenDetail);
+          }}
+          open={isOpenDetail}
+        >
+          <Header>
+            {" "}
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => {
+                  setIsOpenDetail(false);
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Close fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <h4 className="modalHeader">Movimento Detalhes</h4>
+          </Header>
+          <Row>
+            <Col sm="4">
+              <Label>Colaborador Criação</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  value={detailsValues.colabCreate}
+                  name="colabCreate"
+                  type="text"
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Solicitante</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="solicitante"
+                  type="text"
+                  value={detailsValues.solicitante}
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Referência</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="referencia"
+                  type="text"
+                  value={detailsValues.referencia}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="4">
+              <Label>Receita/Despesa</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="recDesp"
+                  type="text"
+                  value={detailsValues.recDesp}
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Descrição Receita/Despesa</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="recDespDesc"
+                  type="text"
+                  value={detailsValues.recDespDesc}
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Situação</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="status"
+                  type="text"
+                  value={detailsValues.status}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="4">
+              <Label>Valor</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="valor"
+                  type="text"
+                  value={detailsValues.valor}
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Saldo</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="saldo"
+                  type="text"
+                  value={detailsValues.saldo}
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="4">
+              <Label>Data Vencimento</Label>
+              <FormGroup className="has-label ">
+                <Input
+                  disabled
+                  name="dtVenc"
+                  type="text"
+                  value={detailsValues.dtVenc}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="12">
+              <Label>Descrição</Label>
+              <FormGroup className="has-label">
+                <Input
+                  disabled
+                  name="desc"
+                  type="textarea"
+                  value={detailsValues.desc}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Footer />
+        </ModalLarge>
+
+        {/* ---------------------------------
+            ---------------------------------
+            ---------------------------------
+            ---------------------------------
+            --------------------------------- */}
+
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>
@@ -763,17 +973,18 @@ export default function MovimentoCaixaTable() {
                   {
                     Header: "Valor",
                     accessor: "valor",
-                    maxWidth: 125
+                    maxWidth: 125,
+                    sortMethod: sortValues_MovCaixa
                   },
                   {
                     Header: "data Liquidação",
                     accessor: "dtLiqui",
-                    sortMethod: sortDates()
+                    sortMethod: sortDates
                   },
                   {
                     Header: "Data Vencimento",
                     accessor: "dtVenc",
-                    sortMethod: sortDates()
+                    sortMethod: sortDates
                   },
                   {
                     Header: "Situação",
