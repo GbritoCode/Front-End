@@ -376,7 +376,7 @@ function EmpresasIncluidasCliCamp() {
                         Header: "Data",
                         accessor: "data",
                         // minWidth: 100,
-                        sortMethod: sortDates()
+                        sortMethod: sortDates
                       },
                       {
                         Header: "Ações",

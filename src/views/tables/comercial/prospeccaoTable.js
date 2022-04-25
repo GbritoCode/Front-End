@@ -697,7 +697,7 @@ function ProspeccaoTable() {
                       {
                         Header: "Retorno",
                         accessor: "retorno",
-                        sortMethod: sortDates()
+                        sortMethod: sortDates
                       },
                       {
                         Header: "Dias",

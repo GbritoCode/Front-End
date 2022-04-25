@@ -648,7 +648,7 @@ function ComercialFUPsTotalTable() {
                       {
                         Header: "Próximo Contato",
                         accessor: "dataProxContato",
-                        sortMethod: sortDates()
+                        sortMethod: sortDates
                       },
                       {
                         Header: "Ações",
