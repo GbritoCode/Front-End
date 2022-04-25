@@ -73,8 +73,7 @@ export default function MovimentoCaixaCadastro() {
     status: { value: 1, error: "", message: "" },
     desc: { value: "", error: "", message: "", optional: true },
     referencia: { value: "", error: "", message: "", optional: true },
-    liquida: { value: false, error: "", message: "" },
-    dtLiqui: { value: "", error: "", message: "", optional: true }
+    liquida: { value: false, error: "", message: "" }
   };
 
   const [values, setValues] = useState(stateSchema);
@@ -262,8 +261,7 @@ export default function MovimentoCaixaCadastro() {
           ColabId: idColab,
           desc: values.desc.value,
           referencia: values.referencia.value,
-          liquida: values.liquida.value,
-          dtLiquidacao: values.dtLiqui.value
+          liquida: values.liquida.value
         })
       );
     } else {
@@ -835,32 +833,11 @@ export default function MovimentoCaixaCadastro() {
                           style={{ paddingTop: 10, marginBottom: 10 }}
                         >
                           <CustomInput
-                            id="selectAllOpt"
+                            id="autoLiquidar"
                             type="switch"
-                            label="Selecionar todos"
+                            label="Liquidar automaticamente"
                             onChange={e => handleSwitchChange(e.target.checked)}
                           />
-                        </Col>
-
-                        <Col hidden={!values.liquida.value} md="4">
-                          <Label>Data Liquidação</Label>
-                          <FormGroup
-                            className={`has-label ${values.dtLiqui.error}`}
-                          >
-                            <Input
-                              name="dtLiqui"
-                              type="date"
-                              onChange={event =>
-                                handleChange(event, "dtLiqui", "optional")
-                              }
-                              value={values.dtLiqui.value}
-                            />
-                            {values.dtLiqui.error === "has-danger" ? (
-                              <Label className="error">
-                                {values.dtLiqui.message}
-                              </Label>
-                            ) : null}
-                          </FormGroup>
                         </Col>
                       </Row>
                       <Row>
