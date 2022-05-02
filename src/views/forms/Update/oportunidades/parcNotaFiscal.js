@@ -105,7 +105,7 @@ export default function ParcelaUpdate() {
     saldo: { value: "", error: "", message: "" }
   };
   const [filesAux, setFileAux] = useState({});
-  const [filePreview, setFilePreview] = useState([]);
+  const [filePreview, setFilePreview] = useState({});
   const [files, setFile] = useState([]);
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
@@ -365,7 +365,10 @@ export default function ParcelaUpdate() {
         }));
         break;
       }
-      if (Object.keys(filesAux).length === 0) {
+      if (
+        Object.keys(filesAux).length === 0 &&
+        Object.keys(filePreview).length === 0
+      ) {
         filled = false;
         filesError = "has-danger";
       } else {
