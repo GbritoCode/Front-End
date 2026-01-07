@@ -6,11 +6,10 @@ import api from "~/services/api";
 
 import { signFailure, ClienteUpdateSuccess } from "./actions";
 
-let result;
 export function* extUserCadastro({ payload }) {
   try {
     console.log(payload);
-    result = yield call(api.post, "users", {
+    yield call(api.post, "users", {
       ...payload,
       senha: "Aidera2020",
       profile: payload.PerfilId

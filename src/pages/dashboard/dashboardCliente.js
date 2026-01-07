@@ -101,7 +101,7 @@ export default function DashboardCliente() {
   });
 
   const loadData = useCallback(async () => {
-    const { actualClientId, month,year } = filterForm;
+    const { actualClientId, month, year } = filterForm;
 
     if (store.getState().auth.user.Colab) {
       const clienteDash = await api.get(`clienteDash/?cliId=${actualClientId}`);
@@ -186,6 +186,7 @@ export default function DashboardCliente() {
   };
 
   const checkColor = percentHrs => {
+    console.log(!!todaysDate);
     if (percentHrs < 90) {
       return null;
     }

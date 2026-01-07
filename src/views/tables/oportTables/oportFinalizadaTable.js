@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
@@ -27,9 +27,7 @@ import {
   Col,
   Button,
   Modal,
-  ModalBody,
-  Input,
-  Label
+  ModalBody
 } from "reactstrap";
 
 import { Link, useHistory } from "react-router-dom";

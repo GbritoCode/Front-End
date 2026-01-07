@@ -84,6 +84,7 @@ export default function ExtUserCadastro() {
 
   const notifyElment = useRef(null);
   function notify() {
+    console.log(!!filteredData);
     notifyElment.current.notificationAlert(options);
   }
 
