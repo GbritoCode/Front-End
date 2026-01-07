@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
@@ -66,6 +66,7 @@ function OportFinTable() {
       default:
     }
   };
+
   useEffect(() => {
     async function loadData() {
       const response = await api.get("/oportunidade/?finalizadas=true");
@@ -105,7 +106,27 @@ function OportFinTable() {
                       </Button>
                     </Link>
                   </Tooltip>
-
+                  <Tooltip
+                    hidden={oport.fase !== 6}
+                    title="Reativar Oportunidade"
+                  >
+                    <Button
+                      color="default"
+                      size="sm"
+                      className={classNames("btn-icon btn-link like")}
+                      onClick={() => {
+                        setAltering({
+                          altering: oport.id,
+                          status: "reativar",
+                          fase: 4,
+                          textHidden: true
+                        });
+                        setModalMini(!modalMini);
+                      }}
+                    >
+                      <i className="tim-icons icon-refresh-01" />
+                    </Button>
+                  </Tooltip>
                   {/* use this button to remove the data row */}
                 </div>
               </>
@@ -146,21 +167,6 @@ function OportFinTable() {
           </div>
           <ModalBody className="text-center">
             <p> Deseja {altering.status} essa oportunidade ? </p>
-            <Label hidden={altering.textHidden} style={{ float: "left" }}>
-              Motivo
-            </Label>
-            <Input
-              hidden={altering.textHidden}
-              name="motivo"
-              type="textarea"
-              onChange={e => {
-                var { value } = e.target;
-                setAltering(prevState => ({
-                  ...prevState,
-                  motivo: value
-                }));
-              }}
-            />
           </ModalBody>
           <div className="modal-footer">
             <Button
@@ -176,48 +182,14 @@ function OportFinTable() {
               className="btn-neutral"
               type="button"
               onClick={() => {
-                if (altering.fase === 5) {
-                  if (altering.motivo) {
-                    api
-                      .put(`oportunidade/${altering.altering}`, {
-                        fase: altering.fase,
-                        motivo: altering.motivo
-                      })
-                      .then(() => toggleModalMini());
-                    switch (altering.fase) {
-                      case 4:
-                        history.push(
-                          `/cadastro/oportunidade/parcela/${altering.altering}`
-                        );
-                        break;
-                      case 5 || 4:
-                        history.go(0);
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-                } else {
-                  api
-                    .put(`oportunidade/${altering.altering}`, {
-                      fase: altering.fase
-                    })
-                    .then(() => {
-                      toggleModalMini();
-                    });
-                  switch (altering.fase) {
-                    case 4:
-                      history.push(
-                        `/cadastro/oportunidade/parcela/${altering.altering}`
-                      );
-                      break;
-                    case 5 || 4:
-                      history.go(0);
-                      break;
-                    default:
-                      break;
-                  }
-                }
+                api
+                  .put(`oportunidade/${altering.altering}`, {
+                    fase: altering.fase
+                  })
+                  .then(() => {
+                    toggleModalMini();
+                    history.push(`/tabelas/oportunidade/oport`);
+                  });
               }}
             >
               Sim

@@ -190,6 +190,9 @@ import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
 import DashboardCliente from "~/pages/dashboard/dashboardCliente";
 import MovimentoCaixaLiquidTable from "~/views/tables/financeira/movimentoCaixaLiquidTable";
+import extUserTable from "~/views/tables/ExtUser/ExtUserTable";
+import ExtUserCadastro from "~/views/forms/extUser/extUserCadastro";
+import ExtUserUpdate from "~/views/forms/Update/extUser/extUserUpdate";
 
 const routes = [
   {
@@ -620,6 +623,15 @@ const routes = [
         namePerfil: "Segmento Tab",
         mini: "SEG",
         component: SegmentoTable,
+        layout: "/admin",
+        profile: 10
+      },
+      {
+        path: "/tabelas/general/ext-user",
+        name: "Usuários",
+        namePerfil: "users Tab",
+        mini: "USR",
+        component: extUserTable,
         layout: "/admin",
         profile: 10
       }
@@ -1359,6 +1371,22 @@ const routes = [
         namePerfil: "Cadastro de MOvimento Caixa",
         mini: "MVC",
         component: MovimentoCaixaCadastro,
+        layout: "/admin"
+      },
+      {
+        path: "/cadastro/ext-user",
+        name: "Cadastro de Usuário Externo",
+        namePerfil: "Cadastro de Usuário Externo",
+        mini: "USR",
+        component: ExtUserCadastro,
+        layout: "/admin"
+      },
+      {
+        path: "/update/ext-user/:id",
+        name: "Editar Usuário Externo",
+        namePerfil: "Editar Usuário Externo",
+        mini: "USR",
+        component: ExtUserUpdate,
         layout: "/admin"
       }
       // astros Fim---------------------------------------------------------------------------------------------------------------------

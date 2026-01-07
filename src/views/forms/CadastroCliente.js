@@ -46,6 +46,7 @@ import { ClienteRequest } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
 import Modal from "~/components/Modal/modalLarge";
 import { Header, Footer } from "~/components/Modal/modalStyles";
+import TagsInput from "~/components/Tags/TagsInput";
 
 /* eslint-disable eqeqeq */
 export default function CadastroCliente() {
@@ -54,6 +55,8 @@ export default function CadastroCliente() {
   const jsonpAdapter = require("axios-jsonp");
   document.body.classList.add("white-content");
   const dispatch = useDispatch();
+  const [emailsCot, setEmailsCot] = useState([]);
+  const [emailsParc, setEmailsParc] = useState([]);
   const [isOpenCamp, setIsOpenCamp] = useState(false);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState([]);
@@ -426,6 +429,43 @@ export default function CadastroCliente() {
       default:
     }
   };
+  const verifyEmail = email => {
+    var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (emailRex.test(email)) {
+      return true;
+    }
+    return false;
+  };
+
+  const notifyInvalidEmail = () => {
+    options = {
+      place: "tr",
+      message: (
+        <div>
+          <div>Digite um email válido</div>
+        </div>
+      ),
+      type: "danger",
+      icon: "tim-icons icon-alert-circle-exc",
+      autoDismiss: 7
+    };
+    notify();
+  };
+
+  const handleTagsinputCot = value => {
+    if (verifyEmail(value[value.length - 1])) {
+      setEmailsCot(value);
+    } else {
+      notifyInvalidEmail();
+    }
+  };
+  const handleTagsinputParc = value => {
+    if (verifyEmail(value[value.length - 1])) {
+      setEmailsParc(value);
+    } else {
+      notifyInvalidEmail();
+    }
+  };
 
   const handleSubmit = evt => {
     evt.preventDefault();
@@ -477,7 +517,9 @@ export default function CadastroCliente() {
           setor: values.setor.value,
           qtdFuncionarios: values.qtdFuncionarios.value,
           sigla: values.sigla.value,
-          CampanhaIds: values.CampanhaIds.array
+          CampanhaIds: values.CampanhaIds.array,
+          emailsCot: emailsCot.join(";"),
+          emailsParc: emailsParc.join(";")
         })
       );
     } else {
@@ -716,6 +758,73 @@ export default function CadastroCliente() {
               </FormGroup>
             </Col>
           </Row>
+          <Footer />
+        </Modal>
+
+        <Modal
+          onClose={() => {
+            setIsOpenInfo(!isOpenInfo);
+          }}
+          open={isOpenInfo}
+        >
+          <Header>
+            <Tooltip title="Fechar">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => {
+                  setIsOpenInfo(false);
+                }}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Close fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <Tooltip title="Ok">
+              <Button
+                style={{
+                  float: "right"
+                }}
+                onClick={() => setIsOpenInfo(false)}
+                className={classNames("btn-icon btn-link like")}
+              >
+                <Check fontSize="large" />
+              </Button>
+            </Tooltip>{" "}
+            <h3 style={{ marginBottom: 0 }}>Cópias de Email Padrão</h3>
+          </Header>
+          <Row>
+            <Col md="12">
+              <Label style={{ display: "block" }}>Cotação</Label>
+              <TagsInput
+                // disabled
+                onChange={handleTagsinputCot}
+                tagProps={{
+                  className: "react-tagsinput-tag "
+                }}
+                value={emailsCot}
+                inputProps={{
+                  placeholder: "Email"
+                }}
+              />
+            </Col>
+            <Col md="12">
+              <Label style={{ display: "block" }}>Faturamento de Parcela</Label>
+              <TagsInput
+                // disabled
+                onChange={handleTagsinputParc}
+                tagProps={{
+                  className: "react-tagsinput-tag "
+                }}
+                value={emailsParc}
+                inputProps={{
+                  placeholder: "Email"
+                }}
+              />
+            </Col>
+          </Row>
+
           <Footer />
         </Modal>
 

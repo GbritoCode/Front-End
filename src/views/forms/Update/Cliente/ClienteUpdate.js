@@ -58,6 +58,7 @@ import { ClienteUpdate } from "~/store/modules/Cliente/actions";
 import api from "~/services/api";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
+import TagsInput from "~/components/Tags/TagsInput";
 
 /* eslint-disable eqeqeq */
 function ClienteUpdatee() {
@@ -66,6 +67,9 @@ function ClienteUpdatee() {
   const dispatch = useDispatch();
   const { id, prospect } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [emailsCot, setEmailsCot] = useState([]);
+  const [emailsParc, setEmailsParc] = useState([]);
+  const [isOpenEmail, setIsOpenEmail] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [data1, setData1] = useState({});
@@ -136,6 +140,8 @@ function ClienteUpdatee() {
           };
         })
       );
+      setEmailsCot(response.data.emailsCot.split(","));
+      setEmailsParc(response.data.emailsParc.split(","));
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response3.data.id },
@@ -412,6 +418,45 @@ function ClienteUpdatee() {
         break;
     }
   }
+
+  const verifyEmail = email => {
+    var emailRex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (emailRex.test(email)) {
+      return true;
+    }
+    return false;
+  };
+
+  const notifyInvalidEmail = () => {
+    options = {
+      place: "tr",
+      message: (
+        <div>
+          <div>Digite um email válido</div>
+        </div>
+      ),
+      type: "danger",
+      icon: "tim-icons icon-alert-circle-exc",
+      autoDismiss: 7
+    };
+    notify();
+  };
+
+  const handleTagsinputCot = value => {
+    if (verifyEmail(value[value.length - 1])) {
+      setEmailsCot(value);
+    } else {
+      notifyInvalidEmail();
+    }
+  };
+  const handleTagsinputParc = value => {
+    if (verifyEmail(value[value.length - 1])) {
+      setEmailsParc(value);
+    } else {
+      notifyInvalidEmail();
+    }
+  };
+
   const handleSubmit = evt => {
     evt.preventDefault();
     var aux = Object.entries(values);
@@ -461,7 +506,9 @@ function ClienteUpdatee() {
           ramo: values.ramo.value,
           setor: values.setor.value,
           qtdFuncionarios: values.qtdFuncionarios.value,
-          sigla: values.sigla.value
+          sigla: values.sigla.value,
+          emailsCot: emailsCot.join(","),
+          emailsParc: emailsParc.join(",")
         })
       );
     } else {
@@ -692,6 +739,75 @@ function ClienteUpdatee() {
               <Footer />
             </Modal>
 
+            <Modal
+              onClose={() => {
+                setIsOpenEmail(!isOpenEmail);
+              }}
+              open={isOpenEmail}
+            >
+              <Header>
+                <Tooltip title="Fechar">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => {
+                      setIsOpenEmail(false);
+                    }}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Close fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <Tooltip title="Ok">
+                  <Button
+                    style={{
+                      float: "right"
+                    }}
+                    onClick={() => setIsOpenEmail(false)}
+                    className={classNames("btn-icon btn-link like")}
+                  >
+                    <Check fontSize="large" />
+                  </Button>
+                </Tooltip>{" "}
+                <h3 style={{ marginBottom: 0 }}>Cópias Padrão Emails</h3>
+              </Header>
+              <Row>
+                <Col md="12">
+                  <Label style={{ display: "block" }}>Cotação</Label>
+                  <TagsInput
+                    // disabled
+                    onChange={handleTagsinputCot}
+                    tagProps={{
+                      className: "react-tagsinput-tag "
+                    }}
+                    value={emailsCot}
+                    inputProps={{
+                      placeholder: "Email"
+                    }}
+                  />
+                </Col>
+                <Col md="12">
+                  <Label style={{ display: "block" }}>
+                    Faturamento de Parcela
+                  </Label>
+                  <TagsInput
+                    // disabled
+                    onChange={handleTagsinputParc}
+                    tagProps={{
+                      className: "react-tagsinput-tag "
+                    }}
+                    value={emailsParc}
+                    inputProps={{
+                      placeholder: "Email"
+                    }}
+                  />
+                </Col>
+              </Row>
+
+              <Footer />
+            </Modal>
+
             <Row>
               <Col md="12">
                 <Card>
@@ -781,6 +897,21 @@ function ClienteUpdatee() {
                                 fontSize="small"
                               />
                               <p style={{ paddingTop: "2%" }}>Informações</p>
+                            </DropdownItem>
+                          </NavLink>
+                          <NavLink
+                            onClick={() => setIsOpenEmail(true)}
+                            tag="li"
+                          >
+                            <DropdownItem
+                              style={{ paddingLeft: "3%" }}
+                              className="nav-item"
+                            >
+                              <InfoOutlined
+                                style={{ float: "left", marginRight: "3%" }}
+                                fontSize="small"
+                              />
+                              <p style={{ paddingTop: "2%" }}>Cópias Emails</p>
                             </DropdownItem>
                           </NavLink>
                         </DropdownMenu>

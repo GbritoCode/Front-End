@@ -46,10 +46,10 @@ function CotacaoUpdate() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [data, setData] = useState();
-  const [data1, setData1] = useState({ nome: undefined });
-  const [data2, setData2] = useState([]);
-  const [data3, setData3] = useState();
+  const [cotacaoData, setCotacaoData] = useState();
+  const [empresaData, setEmpresaData] = useState({ nome: undefined });
+  const [oportData, setOportData] = useState([]);
+  const [cliRecDespData, setCliRecDespData] = useState();
   const [disabledField, setDisabledField] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
@@ -74,49 +74,59 @@ function CotacaoUpdate() {
   const imposto = 14 / 100;
   useEffect(() => {
     async function loadData() {
-      const response = await api.get(`/cotacao/aux/${id}`);
-      setData(response.data);
+      const cotacaoResponse = await api.get(`/cotacao/aux/${id}`);
+      setCotacaoData(cotacaoResponse.data);
 
-      if (response.data === null) {
+      if (cotacaoResponse.data === null) {
         setIsLoading(false);
       } else {
-        const response1 = await api.get(`/empresa/${response.data.EmpresaId}`);
-        const response2 = await api.get(
-          `/oportunidade/${response.data.OportunidadeId}`
+        const empresaResponse = await api.get(
+          `/empresa/${cotacaoResponse.data.EmpresaId}`
         );
-        setData1(response1.data);
-        setData2(response2.data);
-        setDisabledField(response2.data.fase >= 5);
+        const oportResponse = await api.get(
+          `/oportunidade/${cotacaoResponse.data.OportunidadeId}`
+        );
+        setEmpresaData(empresaResponse.data);
+        setOportData(oportResponse.data);
+        setDisabledField(oportResponse.data.fase >= 5);
         setValues(prevState => ({
           ...prevState,
-          empresaId: { value: response.data.EmpresaId },
-          OportunidadeId: { value: response.data.OportunidadeId },
-          probVend: { value: response.data.probVend },
-          tipoCobranca: { value: response.data.tipoCobranca },
-          hrsPrevst: { value: response.data.hrsPrevst },
+          empresaId: { value: cotacaoResponse.data.EmpresaId },
+          OportunidadeId: { value: cotacaoResponse.data.OportunidadeId },
+          probVend: { value: cotacaoResponse.data.probVend },
+          tipoCobranca: { value: cotacaoResponse.data.tipoCobranca },
+          hrsPrevst: { value: cotacaoResponse.data.hrsPrevst },
           vlrProp: {
-            value: normalizeCalcCurrency(JSON.stringify(response.data.vlrProp))
+            value: normalizeCalcCurrency(
+              JSON.stringify(cotacaoResponse.data.vlrProp)
+            )
           },
           vlrDesc: {
-            value: normalizeCurrency(JSON.stringify(response.data.vlrDesc))
+            value: normalizeCurrency(
+              JSON.stringify(cotacaoResponse.data.vlrDesc)
+            )
           },
           vlrLiq: {
-            value: normalizeCalcCurrency(JSON.stringify(response.data.vlrLiq))
+            value: normalizeCalcCurrency(
+              JSON.stringify(cotacaoResponse.data.vlrLiq)
+            )
           },
           recLiq: {
-            value: normalizeCalcCurrency(JSON.stringify(response.data.recLiq))
+            value: normalizeCalcCurrency(
+              JSON.stringify(cotacaoResponse.data.recLiq)
+            )
           },
           prevLucro: {
             value: normalizeCalcCurrency(
-              JSON.stringify(response.data.prevLucro)
+              JSON.stringify(cotacaoResponse.data.prevLucro)
             )
           },
-          numParcelas: { value: response.data.numParcelas },
-          motivo: { value: response.data.motivo }
+          numParcelas: { value: cotacaoResponse.data.numParcelas },
+          motivo: { value: cotacaoResponse.data.motivo }
         }));
         setOptional(prevState => ({
           ...prevState,
-          desc: { value: response.data.desc }
+          desc: { value: cotacaoResponse.data.desc }
         }));
         setIsLoading(false);
       }
@@ -124,7 +134,7 @@ function CotacaoUpdate() {
     loadData();
   }, [id]);
   const downloadFile = async () => {
-    for (const file of data.CotacaoFiles) {
+    for (const file of cotacaoData.CotacaoFiles) {
       const url = `${process.env.REACT_APP_API_URL}/download/oport/download/${file.id}/?table=cotacao`;
       const link = document.createElement("a");
       link.href = url;
@@ -139,9 +149,9 @@ function CotacaoUpdate() {
 
   function getCliData(cobranca) {
     api
-      .get(`/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}`)
+      .get(`/cliente/rec_desp/${empresaData.ClienteId}/?cobranca=${cobranca}`)
       .then(result => {
-        setData3(result.data);
+        setCliRecDespData(result.data);
       });
   }
 
@@ -171,7 +181,7 @@ function CotacaoUpdate() {
 
   const descontoChange = descont => {
     const value = descont.replace(/[.,]+/g, "");
-    const vHr = data2.valorRec;
+    const vHr = oportData.valorRec;
     var prop = document.getElementsByName("hrsPrevst")[0].value * vHr;
     const hr = document.getElementsByName("hrsPrevst")[0].value;
     const vLiq = prop - value;
@@ -337,9 +347,9 @@ function CotacaoUpdate() {
 
                     <h3 style={{ marginBottom: 0 }}>Cotação</h3>
                     <p style={{ fontSize: 11 }}>
-                      {data2.cod} | {data2.desc}
+                      {oportData.cod} | {oportData.desc}
                     </p>
-                    <p style={{ fontSize: 11 }}>{data2.Cliente.nomeAbv}</p>
+                    <p style={{ fontSize: 11 }}>{oportData.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -422,7 +432,8 @@ function CotacaoUpdate() {
                                   vlrProp: {
                                     value: normalizeCurrency(
                                       JSON.stringify(
-                                        event.target.value * data3.valorRec
+                                        event.target.value *
+                                          cliRecDespData.valorRec
                                       )
                                     )
                                   }
@@ -638,7 +649,9 @@ function CotacaoUpdate() {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Link to={`/tabelas/oportunidade/cotacao/${data2.id}`}>
+                      <Link
+                        to={`/tabelas/oportunidade/cotacao/${oportData.id}`}
+                      >
                         <Button
                           style={{
                             paddingLeft: 32,
@@ -659,7 +672,7 @@ function CotacaoUpdate() {
                           Voltar
                         </Button>
                       </Link>
-                      {data2.fase >= 5 ? (
+                      {oportData.fase >= 5 ? (
                         <></>
                       ) : (
                         <Button

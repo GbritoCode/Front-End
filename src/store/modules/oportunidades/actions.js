@@ -47,7 +47,8 @@ export function oportUpdate(
   fase,
   cod,
   desc,
-  narrativa
+  narrativa,
+  percentComplete
 ) {
   return {
     type: "@update/OPORT_REQUEST",
@@ -65,7 +66,8 @@ export function oportUpdate(
       fase,
       cod,
       desc,
-      narrativa
+      narrativa,
+      percentComplete
     }
   };
 }

@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
@@ -35,7 +35,8 @@ import {
   Col,
   Progress,
   Table,
-  Input
+  Input,
+  Label
 } from "reactstrap";
 
 import { Link } from "react-router-dom";
@@ -58,20 +59,29 @@ import { bigChartsAdmin } from "~/components/charts/bigChart";
 import { barCharts } from "./chartsOptions";
 import { Footer, Header } from "~/components/Modal/modalStyles";
 import Modal from "~/components/Modal/modalLarge";
+import { monthsGlobal, baseYearGlobal } from "~/generalVar";
 
 export default function DashboardCliente() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
+  const [todaysDate, todaysMonth, todaysYear] = new Date()
+    .toLocaleDateString("pt-BR")
+    .split("/");
 
-  const today = new Date();
-  const [isOpen, setIsOpen] = useState(false);
+  const [clientName, setClientName] = useState("");
+  const [mainClient] = useState(store.getState().auth.user.mainClient);
+  const [allowedClients] = useState(store.getState().auth.user.allowedClients);
+  const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [bigChartData, setbigChartData] = useState("hrs");
   const [chartHrsData, setChartHrsData] = useState(null);
   const [chartDespData, setChartDespData] = useState(null);
   const [chartRecebData, setChartRecebData] = useState(null);
   const [horas, setHoras] = useState(null);
-  const [mes] = useState(today.toLocaleString("default", { month: "long" }));
+  const [actualDateLong, setActualDateLongs] = useState({
+    month: monthsGlobal[todaysMonth - 1].full,
+    year: todaysYear
+  });
   const [vlrDesps, setVlrDesps] = useState(null);
   const [vlrHrs, setVlrHrs] = useState(null);
   const [graphData, setGraphData] = useState({
@@ -83,48 +93,106 @@ export default function DashboardCliente() {
   const [tableData, setTableData] = useState([]);
   const [clienteData, setClienteData] = useState([]);
 
+  const [filterForm, setFilterForm] = useState({
+    actualClientId: mainClient,
+    yearsFilter: [],
+    year: todaysYear,
+    month: todaysMonth
+  });
+
+  const loadData = useCallback(async () => {
+    const { actualClientId, month,year } = filterForm;
+
+    if (store.getState().auth.user.Colab) {
+      const clienteDash = await api.get(`clienteDash/?cliId=${actualClientId}`);
+      const hrs = await api.get(
+        `horas/dash/cliente/pacote/${actualClientId}/${month}/${year}`
+      );
+      const desps = await api.get(
+        `despesas/dash/cliente/${actualClientId}/${month}/${year}`
+      );
+      const vlrHrsDb = await api.get(
+        `cliente/dash/vlr-horas/${actualClientId}/${month}/${year}`
+      );
+      const resultPeriodoGerencial = await api.get(`resultPeriodoGerencial`);
+
+      setHoras(hrs.data);
+      setVlrDesps(normalizeCurrency(desps.data));
+      setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data.debt + desps.data));
+      setChartHrsData(
+        resultPeriodoGerencial.data.map(d => {
+          return Math.trunc(d.totalHrs / 60);
+        })
+      );
+      setChartDespData(
+        resultPeriodoGerencial.data.map(d => {
+          return d.totalDesp / 100;
+        })
+      );
+      setChartRecebData(
+        resultPeriodoGerencial.data.map(d => {
+          return d.totalReceb / 100;
+        })
+      );
+      setGraphData(prevState => ({
+        ...prevState,
+        oportsGraph: clienteDash.data.oportsGraph
+      }));
+      setTableData(clienteDash.data.oportsForTable);
+      setClientName(clienteDash.data.clientName);
+      setIsLoading(false);
+
+      setActualDateLongs({
+        month: monthsGlobal[filterForm.month - 1].full,
+        year: filterForm.year
+      });
+    }
+  }, [filterForm]);
+
   useEffect(() => {
-    const loadData = async () => {
-      if (store.getState().auth.user.Colab) {
-        const clienteDash = await api.get("clienteDash");
-        const hrs = await api.get(`horas/?total=${true}&tipo=gerencial`);
-        const desps = await api.get(`despesas/?total=${true}&tipo=gerencial`);
-        const vlrHrsDb = await api.get(`colab/?vlrHrMes=true&tipo=gerencial`);
-        const resultPeriodoGerencial = await api.get(`resultPeriodoGerencial`);
+    loadData(filterForm.actualClientId);
+  }, [filterForm, loadData]);
 
-        setClienteData(clienteDash.data.cli);
-        setHoras(hrs.data);
-        setVlrDesps(normalizeCurrency(desps.data));
-        setVlrHrs(normalizeCalcCurrency(vlrHrsDb.data + desps.data));
-        setChartHrsData(
-          resultPeriodoGerencial.data.map(d => {
-            return Math.trunc(d.totalHrs / 60);
-          })
-        );
-        setChartDespData(
-          resultPeriodoGerencial.data.map(d => {
-            return d.totalDesp / 100;
-          })
-        );
-        setChartRecebData(
-          resultPeriodoGerencial.data.map(d => {
-            return d.totalReceb / 100;
-          })
-        );
-        setIsLoading(false);
+  useEffect(() => {
+    const firstLoad = async () => {
+      const yearsFilter = [];
+      for (let i = 0; i <= todaysYear - baseYearGlobal; i++) {
+        yearsFilter.push(baseYearGlobal + i);
       }
+      const clienteDash = await api.get(`clienteDash/`);
+
+      setFilterForm(prevState => ({
+        ...prevState,
+        yearsFilter
+      }));
+      setClienteData(
+        clienteDash.data.cli.filter(el => {
+          return allowedClients.includes(`${el.id}`);
+        })
+      );
     };
+    firstLoad();
+    loadData(mainClient);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowedClients, mainClient, todaysYear]);
 
-    loadData();
-  }, []);
-
-  const handleFilterChange = async cliId => {
-    const clienteDash = await api.get(`clienteDash/?cliId=${cliId}`);
-    setGraphData(prevState => ({
+  const handleFilterChange = async (event, field) => {
+    event.persist();
+    setFilterForm(prevState => ({
       ...prevState,
-      oportsGraph: clienteDash.data.oportsGraph
+      [field]: event.target.value
     }));
-    setTableData(clienteDash.data.oportsForTable);
+    console.log(filterForm);
+  };
+
+  const checkColor = percentHrs => {
+    if (percentHrs < 90) {
+      return null;
+    }
+    if (percentHrs <= 100) {
+      return "yellow";
+    }
+    return "red";
   };
 
   return (
@@ -175,12 +243,14 @@ export default function DashboardCliente() {
 
               <Row>
                 <Col sm="4">
+                  <Label>Cliente</Label>
                   <Input
                     type="select"
                     id="camp"
-                    onChangeCapture={e => {
-                      handleFilterChange(e.target.value);
-                    }}
+                    onChangeCapture={event =>
+                      handleFilterChange(event, "actualClientId")
+                    }
+                    value={filterForm.actualClientId}
                   >
                     <option disabled value="">
                       {" "}
@@ -189,6 +259,40 @@ export default function DashboardCliente() {
                     {clienteData.map((cli, index) => (
                       <option key={index} value={cli.id}>
                         {cli.nomeAbv} - {cli.rzSoc}
+                      </option>
+                    ))}
+                  </Input>
+                </Col>
+                <Col id="mesCol" sm="4">
+                  <Label>Mes</Label>
+                  <Input
+                    type="select"
+                    id="mes"
+                    value={filterForm.month}
+                    onChangeCapture={event =>
+                      handleFilterChange(event, "month")
+                    }
+                  >
+                    {monthsGlobal.map((monthGlobal, idx) => {
+                      return (
+                        <option key={idx} value={monthGlobal.numberParsed}>
+                          {monthGlobal.full}{" "}
+                        </option>
+                      );
+                    })}
+                  </Input>
+                </Col>
+                <Col id="anoCol" sm="4">
+                  <Label>Ano</Label>
+                  <Input
+                    type="select"
+                    id="ano"
+                    value={filterForm.year}
+                    onChangeCapture={event => handleFilterChange(event, "year")}
+                  >
+                    {filterForm.yearsFilter.map((el, idx) => (
+                      <option key={idx} value={el}>
+                        {el}{" "}
                       </option>
                     ))}
                   </Input>
@@ -218,7 +322,8 @@ export default function DashboardCliente() {
                     </Tooltip>
 
                     <CardTitle style={{ marginBottom: 0 }} tag="h3">
-                      Cliente
+                      {clientName} - {actualDateLong.month} -{" "}
+                      {actualDateLong.year}
                     </CardTitle>
                   </Col>
                 </Row>
@@ -367,7 +472,7 @@ export default function DashboardCliente() {
                             style={{ textTransform: "capitalize" }}
                             className="card-category"
                           >
-                            horas {mes}
+                            horas pacote {actualDateLong.month}
                           </p>
                           <CardTitle tag="h3">{horas}</CardTitle>
                         </div>
@@ -400,7 +505,7 @@ export default function DashboardCliente() {
                             style={{ textTransform: "capitalize" }}
                             className="card-category"
                           >
-                            despesas {mes}
+                            despesas {actualDateLong.month}
                           </p>
                           <CardTitle tag="h3">{vlrDesps}</CardTitle>
                         </div>
@@ -434,7 +539,7 @@ export default function DashboardCliente() {
                             className="card-category"
                           >
                             {" "}
-                            a Pagar {mes}
+                            a Pagar {actualDateLong.month}
                           </p>
                           <CardTitle tag="h3">{vlrHrs}</CardTitle>
                         </div>
@@ -454,7 +559,7 @@ export default function DashboardCliente() {
                 <Card>
                   <CardHeader>
                     <CardTitle style={{ color: "#ba54f5" }} tag="h3">
-                      Painel
+                      Projetos em Andamento
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
@@ -464,12 +569,11 @@ export default function DashboardCliente() {
                           <th>Código</th>
                           <th>Descrição</th>
                           <th>Cliente</th>
-                          <th>Horas</th>
+                          <th>% Conclusão Atual</th>
                         </tr>
                       </thead>
                       <tbody>
                         {tableData.map(oport => {
-                          console.log(1);
                           return (
                             <>
                               <tr>
@@ -480,12 +584,15 @@ export default function DashboardCliente() {
                                   <div className="progress-container progress-sm">
                                     <Progress multi>
                                       <span className="progress-value">
-                                        {oport.percentHrs}%
+                                        {oport.percentComplete}%
                                       </span>
                                       <Progress
                                         bar
                                         max="100"
-                                        value={oport.percentHrs}
+                                        value={oport.percentComplete}
+                                        color={checkColor(
+                                          oport.percentComplete
+                                        )}
                                       />
                                     </Progress>
                                   </div>

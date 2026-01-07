@@ -54,6 +54,9 @@ class ParametrosTable extends Component {
   loadClients = async () => {
     const { id } = this.props.match.params;
     const response = await api.get(`/cotacao/${id}`);
+    if (!response.data.length) {
+      return;
+    }
     this.setState({ hiddenButton: response.data[0].Oportunidade.fase >= 5 });
     this.setState({
       data: response.data.map((cotacao, key) => {

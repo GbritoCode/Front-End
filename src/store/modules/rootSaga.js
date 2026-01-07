@@ -8,6 +8,7 @@ import colab from "./Colab/sagas";
 import oport from "./oportunidades/sagas";
 import field from "./keepingFields/sagas";
 import comercial from "./comercial/sagas";
+import ExtUser from "./ExtUser/sagas";
 
 export default function* rootSaga() {
   return yield all([
@@ -18,6 +19,7 @@ export default function* rootSaga() {
     cliente,
     oport,
     field,
-    comercial
+    comercial,
+    ExtUser
   ]);
 }

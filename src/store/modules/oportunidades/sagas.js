@@ -33,7 +33,8 @@ export function* updateOport({ payload }) {
       fase,
       cod,
       desc,
-      narrativa
+      narrativa,
+      percentComplete
     } = payload;
 
     const Oport = {
@@ -49,7 +50,8 @@ export function* updateOport({ payload }) {
       fase,
       cod,
       desc,
-      narrativa
+      narrativa,
+      percentComplete
     };
 
     const response = yield call(api.put, `oportunidade/${id}`, Oport);
