@@ -18,17 +18,61 @@
 import React, { useEffect, useState } from "react";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
+import { getDaysInMonth } from "date-fns";
+import { CSVLink } from "react-csv";
 
-import { Card, CardBody, CardHeader, CardTitle, Col } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Button,
+  Modal,
+  ModalBody,
+  Input,
+  Label,
+  FormGroup,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  DropdownItem
+} from "reactstrap";
+import { Close, FilterList, Message, PostAdd } from "@material-ui/icons";
 
 import api from "~/services/api";
 import { normalizeCurrencyDb, normalizeDate } from "~/normalize";
 import { sortDates } from "~/sortingMethodReactTable";
+import iconCsv from "~/assets/img/iconExcel.png";
 
 export default function MovimentoCaixaLiquidTable() {
   document.body.classList.add("white-content");
 
   const [data, setData] = useState([]);
+  const [csvData, setCsvData] = useState([]);
+  const [modalFilter, setModalFilter] = useState(false);
+
+  // Initialize date range to current month
+  const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
+  const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
+  const [initialDate, setInitialDate] = useState(`${year}-${month}-01`);
+  const [finalDate, setFinalDate] = useState(`${year}-${month}-${lastDayMonth}`);
+
+  const toggleModalFilter = () => {
+    setModalFilter(!modalFilter);
+  };
+
+  const csvHeaders = [
+    { label: "Empresa", key: "Solicitante" },
+    { label: "Relacionamento", key: "colabPgmto" },
+    { label: "Descrição", key: "RecDespDesc" },
+    { label: "Tipo", key: "recDespType" },
+    { label: "Valor", key: "valor" },
+    { label: "Data Liquidação", key: "dtLiqui" },
+    { label: "Data Vencimento", key: "dtVenc" },
+    { label: "Situação", key: "status" }
+  ];
 
   const checkStatus = sit => {
     switch (sit) {
@@ -38,6 +82,8 @@ export default function MovimentoCaixaLiquidTable() {
         return "Parcial";
       case 3:
         return "Liquidado";
+      case 4:
+        return "Estornado";
       default:
         break;
     }
@@ -82,12 +128,23 @@ export default function MovimentoCaixaLiquidTable() {
   useEffect(() => {
     const loadData = async () => {
       const response = await api.get("/movCaixa/table_liquid");
-      const responseMapped = response.data.map((mov, key) => {
+
+      // Filter by date range (using dtLiqui - liquidation date)
+      const filteredByDate = response.data.filter(mov => {
+        if (!mov.dtLiqui) return false;
+        const movDate = new Date(mov.dtLiqui);
+        const startDate = new Date(initialDate);
+        const endDate = new Date(finalDate);
+        return movDate >= startDate && movDate <= endDate;
+      });
+
+      const responseMapped = filteredByDate.map((mov, key) => {
         return {
           idd: key,
           id: mov.id,
           RecDespDesc: mov.RecDesp.desc,
           recDesp: checkSituacao(mov.RecDesp.recDesp),
+          recDespType: mov.RecDesp.recDesp === "Rec" ? "Receita" : "Despesa",
           valor: normalizeCurrencyDb(mov.valor),
           valorDB: mov.valor,
           saldo: mov.saldo,
@@ -110,17 +167,130 @@ export default function MovimentoCaixaLiquidTable() {
       });
 
       setData(responseMapped);
+
+      // Prepare CSV data (without JSX elements)
+      const csvExportData = responseMapped.map(mov => ({
+        Solicitante: mov.Solicitante,
+        colabPgmto: mov.colabPgmto,
+        RecDespDesc: mov.RecDespDesc,
+        recDespType: mov.recDespType,
+        valor: mov.valor,
+        dtLiqui: mov.dtLiqui,
+        dtVenc: mov.dtVenc,
+        status: mov.status
+      }));
+      setCsvData(csvExportData);
     };
     loadData();
-  }, []);
+  }, [initialDate, finalDate]);
 
   return (
     <>
       <div className="content">
+        {/* Date Filter Modal */}
+        <Modal
+          modalClassName="modal-mini"
+          isOpen={modalFilter}
+          toggle={toggleModalFilter}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalFilter}
+            >
+              <Close />
+            </button>
+            <div>
+              <Message fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <FormGroup inline>
+              <Label>Data Inicial</Label>
+              <Input
+                name="initialDate"
+                type="date"
+                value={initialDate}
+                onChange={e => setInitialDate(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup inline>
+              <Label>Data Final</Label>
+              <Input
+                name="finalDate"
+                type="date"
+                value={finalDate}
+                onChange={e => setFinalDate(e.target.value)}
+              />
+            </FormGroup>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalFilter}
+            >
+              Fechar
+            </Button>
+          </div>
+        </Modal>
+
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>
-              <CardTitle tag="h4">Movimento Caixa Liquidado</CardTitle>
+              <CardTitle tag="h4">
+                Movimento Caixa Liquidado
+                <UncontrolledDropdown style={{ float: "right" }}>
+                  <DropdownToggle
+                    style={{ paddingLeft: "0px" }}
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    nav
+                    onClick={e => e.preventDefault()}
+                  >
+                    <PostAdd />
+                    <div className="photo" />
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-navbar" right tag="ul">
+                    <NavLink tag="li" onClick={toggleModalFilter}>
+                      <DropdownItem
+                        style={{ paddingLeft: "3%" }}
+                        className="nav-item"
+                      >
+                        <FilterList
+                          style={{ float: "left", marginRight: "3%" }}
+                          fontSize="small"
+                        />
+                        <p style={{ paddingTop: "2%" }}>Filtrar por Data</p>
+                      </DropdownItem>
+                    </NavLink>
+                    <NavLink tag="li">
+                      <CSVLink
+                        data={csvData}
+                        headers={csvHeaders}
+                        filename={`MovimentoCaixa_${initialDate}_${finalDate}.csv`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <DropdownItem
+                          style={{ paddingLeft: "3%" }}
+                          className="nav-item"
+                        >
+                          <div style={{ float: "left", marginRight: "3%" }}>
+                            <img alt="Exportar para CSV" src={iconCsv} />
+                          </div>
+                          <p style={{ paddingTop: "2%" }}>Exportar CSV</p>
+                        </DropdownItem>
+                      </CSVLink>
+                    </NavLink>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </CardTitle>
             </CardHeader>
             <CardBody>
               <ReactTable
@@ -172,6 +342,11 @@ export default function MovimentoCaixaLiquidTable() {
                     Header: "Data Vencimento",
                     accessor: "dtVenc",
                     sortMethod: sortDates
+                  },
+                  {
+                    Header: "Situação",
+                    accessor: "status",
+                    maxWidth: 100
                   }
                 ]}
                 defaultPageSize={10}
