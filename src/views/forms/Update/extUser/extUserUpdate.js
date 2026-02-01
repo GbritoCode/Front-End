@@ -364,6 +364,7 @@ export default function ExtUserCadastro() {
             setIsOpen(false);
           }}
           open={isOpen}
+          modalName="ClientListModal"
         >
           <Header>
             {" "}
