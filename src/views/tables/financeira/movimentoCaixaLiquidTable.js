@@ -188,19 +188,21 @@ export default function MovimentoCaixaLiquidTable() {
           status: checkStatus(mov.status),
           actions: (
             <div className="actions-right">
-              <Tooltip title="Estornar">
-                <Button
-                  disabled={mov.status !== 3}
-                  color="warning"
-                  size="sm"
-                  className={classNames("btn-icon btn-link like")}
-                  onClick={() => {
-                    setEstornando(mov.id);
-                    setModalEstorno(true);
-                  }}
-                >
-                  <Undo fontSize="small" />
-                </Button>
+              <Tooltip title={mov.RecDesp.tipoItem?.toLowerCase() === "estorno" ? "Não é possível estornar um estorno" : "Estornar"}>
+                <span>
+                  <Button
+                    disabled={mov.status !== 3 || mov.RecDesp.tipoItem?.toLowerCase() === "estorno"}
+                    color="warning"
+                    size="sm"
+                    className={classNames("btn-icon btn-link like")}
+                    onClick={() => {
+                      setEstornando(mov.id);
+                      setModalEstorno(true);
+                    }}
+                  >
+                    <Undo fontSize="small" />
+                  </Button>
+                </span>
               </Tooltip>
             </div>
           )
