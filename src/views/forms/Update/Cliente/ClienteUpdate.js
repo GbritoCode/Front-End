@@ -47,6 +47,7 @@ import {
   Check,
   Close,
   Contacts,
+  EmailOutlined,
   FormatListBulleted,
   InfoOutlined,
   PostAdd
@@ -140,8 +141,8 @@ function ClienteUpdatee() {
           };
         })
       );
-      setEmailsCot(response.data.emailsCot.split(","));
-      setEmailsParc(response.data.emailsParc.split(","));
+      setEmailsCot(response.data.emailsCot?.split(",") || []);
+      setEmailsParc(response.data.emailsParc?.split(",") || []);
       setValues(prevState => ({
         ...prevState,
         empresaId: { value: response3.data.id },
@@ -907,7 +908,7 @@ function ClienteUpdatee() {
                               style={{ paddingLeft: "3%" }}
                               className="nav-item"
                             >
-                              <InfoOutlined
+                              <EmailOutlined
                                 style={{ float: "left", marginRight: "3%" }}
                                 fontSize="small"
                               />

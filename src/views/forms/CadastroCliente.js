@@ -39,7 +39,7 @@ import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import ReactTable from "react-table-v6";
 import { Tooltip } from "@material-ui/core";
-import { Check, Close, InfoOutlined } from "@material-ui/icons";
+import { Check, Close, EmailOutlined } from "@material-ui/icons";
 import { normalizeCnpj, normalizeFone } from "~/normalize";
 import { store } from "~/store";
 import { ClienteRequest } from "~/store/modules/Cliente/actions";
@@ -840,7 +840,7 @@ export default function CadastroCliente() {
                     onClick={() => setIsOpenInfo(true)}
                     className={classNames("btn-icon btn-link like")}
                   >
-                    <InfoOutlined />
+                    <EmailOutlined />
                   </Button>
                 </Tooltip>
                 <CardTitle tag="h4">{checkProsp(prospect, "title")}</CardTitle>
