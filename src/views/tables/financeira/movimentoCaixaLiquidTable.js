@@ -16,10 +16,11 @@
 
 */
 import React, { useEffect, useState } from "react";
+import classNames from "classnames";
 // react component for creating dynamic tables
 import ReactTable from "react-table-v6";
 import { getDaysInMonth } from "date-fns";
-import { CSVLink } from "react-csv";
+import ReactExport from "react-export-excel";
 
 import {
   Card,
@@ -39,19 +40,35 @@ import {
   NavLink,
   DropdownItem
 } from "reactstrap";
-import { Close, FilterList, Message, PostAdd } from "@material-ui/icons";
+import { Close, FilterList, Message, PostAdd, Undo } from "@material-ui/icons";
+import { Tooltip } from "@material-ui/core";
+import { toast } from "react-toastify";
 
 import api from "~/services/api";
 import { normalizeCurrencyDb, normalizeDate } from "~/normalize";
 import { sortDates } from "~/sortingMethodReactTable";
-import iconCsv from "~/assets/img/iconExcel.png";
+import iconExcel from "~/assets/img/iconExcel.png";
+import history from "~/services/history";
+import { store } from "~/store";
+
+const { ExcelFile } = ReactExport;
+const { ExcelSheet } = ReactExport.ExcelFile;
+const { ExcelColumn } = ReactExport.ExcelFile;
 
 export default function MovimentoCaixaLiquidTable() {
   document.body.classList.add("white-content");
 
   const [data, setData] = useState([]);
-  const [csvData, setCsvData] = useState([]);
+  const [excelData, setExcelData] = useState([]);
   const [modalFilter, setModalFilter] = useState(false);
+  const [modalEstorno, setModalEstorno] = useState(false);
+  const [estornando, setEstornando] = useState(null);
+
+  const { id: ColabId } = store.getState().auth.user.Colab;
+
+  const toggleModalEstorno = () => {
+    setModalEstorno(!modalEstorno);
+  };
 
   // Initialize date range to current month
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
@@ -79,17 +96,6 @@ export default function MovimentoCaixaLiquidTable() {
     setFinalDate(pendingFinalDate);
     setModalFilter(false);
   };
-
-  const csvHeaders = [
-    { label: "Empresa", key: "Solicitante" },
-    { label: "Relacionamento", key: "colabPgmto" },
-    { label: "Descrição", key: "RecDespDesc" },
-    { label: "Tipo", key: "recDespType" },
-    { label: "Valor", key: "valor" },
-    { label: "Data Liquidação", key: "dtLiqui" },
-    { label: "Data Vencimento", key: "dtVenc" },
-    { label: "Situação", key: "status" }
-  ];
 
   const checkStatus = sit => {
     switch (sit) {
@@ -179,24 +185,42 @@ export default function MovimentoCaixaLiquidTable() {
           Solicitante: mov.Cliente ? mov.Cliente.nomeAbv : mov.Fornec.nomeConta,
           dtVenc: normalizeDate(mov.dtVenc),
           dtLiqui: mov.dtLiqui ? normalizeDate(mov.dtLiqui) : "--",
-          status: checkStatus(mov.status)
+          status: checkStatus(mov.status),
+          actions: (
+            <div className="actions-right">
+              <Tooltip title="Estornar">
+                <Button
+                  disabled={mov.status !== 3}
+                  color="warning"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                  onClick={() => {
+                    setEstornando(mov.id);
+                    setModalEstorno(true);
+                  }}
+                >
+                  <Undo fontSize="small" />
+                </Button>
+              </Tooltip>
+            </div>
+          )
         };
       });
 
       setData(responseMapped);
 
-      // Prepare CSV data (without JSX elements)
-      const csvExportData = responseMapped.map(mov => ({
-        Solicitante: mov.Solicitante,
-        colabPgmto: mov.colabPgmto,
-        RecDespDesc: mov.RecDespDesc,
-        recDespType: mov.recDespType,
-        valor: mov.valor,
-        dtLiqui: mov.dtLiqui,
-        dtVenc: mov.dtVenc,
-        status: mov.status
+      // Prepare Excel data (without JSX elements)
+      const excelExportData = responseMapped.map(mov => ({
+        Empresa: mov.Solicitante,
+        Relacionamento: mov.colabPgmto,
+        Descricao: mov.RecDespDesc,
+        Tipo: mov.recDespType,
+        Valor: mov.valor,
+        DataLiquidacao: mov.dtLiqui,
+        DataVencimento: mov.dtVenc,
+        Situacao: mov.status
       }));
-      setCsvData(csvExportData);
+      setExcelData(excelExportData);
     };
     loadData();
   }, [initialDate, finalDate]);
@@ -265,6 +289,66 @@ export default function MovimentoCaixaLiquidTable() {
           </div>
         </Modal>
 
+        {/* Estorno Modal */}
+        <Modal
+          modalClassName="modal-mini"
+          isOpen={modalEstorno}
+          toggle={toggleModalEstorno}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalEstorno}
+            >
+              <Close />
+            </button>
+            <div>
+              <Undo fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <p>Deseja estornar este movimento?</p>
+            <p style={{ fontSize: "12px", color: "#666" }}>
+              Será criado um novo movimento inverso e automaticamente liquidado.
+            </p>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalEstorno}
+            >
+              Não
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={async () => {
+                await api
+                  .put(`movCaixa/estornoLiquid/${estornando}`, {
+                    ColabId
+                  })
+                  .then(result => {
+                    toast.success(result.data.message);
+                    history.go(0);
+                  })
+                  .catch(err => {
+                    toast.error(err.response.data.error);
+                  });
+                toggleModalEstorno();
+              }}
+            >
+              Sim
+            </Button>
+          </div>
+        </Modal>
+
         <Col xs={12} md={12}>
           <Card>
             <CardHeader>
@@ -295,24 +379,33 @@ export default function MovimentoCaixaLiquidTable() {
                         <p style={{ paddingTop: "2%" }}>Filtrar por Data</p>
                       </DropdownItem>
                     </NavLink>
-                    <NavLink tag="li">
-                      <CSVLink
-                        data={csvData}
-                        headers={csvHeaders}
-                        filename={`MovimentoCaixa_${initialDate}_${finalDate}.csv`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <DropdownItem
-                          style={{ paddingLeft: "3%" }}
-                          className="nav-item"
-                        >
-                          <div style={{ float: "left", marginRight: "3%" }}>
-                            <img alt="Exportar para CSV" src={iconCsv} />
-                          </div>
-                          <p style={{ paddingTop: "2%" }}>Exportar CSV</p>
-                        </DropdownItem>
-                      </CSVLink>
-                    </NavLink>
+                    <ExcelFile
+                      element={
+                        <NavLink tag="li">
+                          <DropdownItem
+                            style={{ paddingLeft: "3%" }}
+                            className="nav-item"
+                          >
+                            <div style={{ float: "left", marginRight: "3%" }}>
+                              <img alt="Exportar para Excel" src={iconExcel} />
+                            </div>
+                            <p style={{ paddingTop: "2%" }}>Exportar Excel</p>
+                          </DropdownItem>
+                        </NavLink>
+                      }
+                      filename={`MovimentoCaixa_${initialDate}_${finalDate}`}
+                    >
+                      <ExcelSheet data={excelData} name="Movimento Caixa">
+                        <ExcelColumn label="Empresa" value="Empresa" />
+                        <ExcelColumn label="Relacionamento" value="Relacionamento" />
+                        <ExcelColumn label="Descrição" value="Descricao" />
+                        <ExcelColumn label="Tipo" value="Tipo" />
+                        <ExcelColumn label="Valor" value="Valor" />
+                        <ExcelColumn label="Data Liquidação" value="DataLiquidacao" />
+                        <ExcelColumn label="Data Vencimento" value="DataVencimento" />
+                        <ExcelColumn label="Situação" value="Situacao" />
+                      </ExcelSheet>
+                    </ExcelFile>
                   </DropdownMenu>
                 </UncontrolledDropdown>
               </CardTitle>
@@ -372,6 +465,13 @@ export default function MovimentoCaixaLiquidTable() {
                     Header: "Situação",
                     accessor: "status",
                     maxWidth: 100
+                  },
+                  {
+                    Header: "Ações",
+                    accessor: "actions",
+                    sortable: false,
+                    filterable: false,
+                    maxWidth: 80
                   }
                 ]}
                 defaultPageSize={10}
