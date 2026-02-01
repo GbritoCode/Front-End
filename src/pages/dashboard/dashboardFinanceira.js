@@ -62,7 +62,7 @@ import {
   normalizeCurrency,
   normalizeCurrencyDb
 } from "~/normalize";
-import { labelsDashFinanc, monthsGlobal } from "~/generalVar";
+import { labelsDashFinanc, monthsGlobal, baseYearGlobal } from "~/generalVar";
 // import { comercialDashFilterFields } from "~/store/modules/keepingFields/actions";
 
 export default function FinanceiraDashboard() {
@@ -112,8 +112,17 @@ export default function FinanceiraDashboard() {
     particao: "Geral"
   });
 
+  const [yearsFilter, setYearsFilter] = useState([]);
+
   useEffect(() => {
     const loadData = async () => {
+      // Generate years filter
+      const years = [];
+      for (let i = 0; i <= year - baseYearGlobal; i++) {
+        years.push(baseYearGlobal + i);
+      }
+      setYearsFilter(years);
+
       const response3 = await api.get(
         `/financeiraDash_mensal/?mes=${month}&part=geral`
       );
@@ -135,7 +144,7 @@ export default function FinanceiraDashboard() {
     };
     loadData();
     setIsLoading(false);
-  }, [month]);
+  }, [month, year]);
 
   const handleFilterChange = async (visao, mes, ano, part) => {
     if (visao === "anual") {
@@ -373,18 +382,11 @@ export default function FinanceiraDashboard() {
                       }));
                     }}
                   >
-                    <option key={2020} value={2020}>
-                      2020
-                    </option>
-                    <option key={2021} value={2021}>
-                      2021
-                    </option>
-                    <option key={2022} value={2022}>
-                      2022
-                    </option>
-                    <option key={2023} value={2023}>
-                      2023
-                    </option>
+                    {yearsFilter.map((el, idx) => (
+                      <option key={idx} value={el}>
+                        {el}
+                      </option>
+                    ))}
                   </Input>
                 </Col>
                 <Col sm="4">
