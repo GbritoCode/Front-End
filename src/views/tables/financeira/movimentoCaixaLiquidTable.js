@@ -56,11 +56,28 @@ export default function MovimentoCaixaLiquidTable() {
   // Initialize date range to current month
   const [date, month, year] = new Date().toLocaleDateString("pt-BR").split("/");
   const lastDayMonth = getDaysInMonth(new Date(year, month - 1, date));
+
+  // Applied filter dates (used for actual filtering)
   const [initialDate, setInitialDate] = useState(`${year}-${month}-01`);
   const [finalDate, setFinalDate] = useState(`${year}-${month}-${lastDayMonth}`);
 
+  // Pending filter dates (used in modal inputs)
+  const [pendingInitialDate, setPendingInitialDate] = useState(`${year}-${month}-01`);
+  const [pendingFinalDate, setPendingFinalDate] = useState(`${year}-${month}-${lastDayMonth}`);
+
   const toggleModalFilter = () => {
+    // Reset pending dates to current applied dates when opening modal
+    if (!modalFilter) {
+      setPendingInitialDate(initialDate);
+      setPendingFinalDate(finalDate);
+    }
     setModalFilter(!modalFilter);
+  };
+
+  const handleFilter = () => {
+    setInitialDate(pendingInitialDate);
+    setFinalDate(pendingFinalDate);
+    setModalFilter(false);
   };
 
   const csvHeaders = [
@@ -214,8 +231,8 @@ export default function MovimentoCaixaLiquidTable() {
               <Input
                 name="initialDate"
                 type="date"
-                value={initialDate}
-                onChange={e => setInitialDate(e.target.value)}
+                value={pendingInitialDate}
+                onChange={e => setPendingInitialDate(e.target.value)}
               />
             </FormGroup>
             <FormGroup inline>
@@ -223,8 +240,8 @@ export default function MovimentoCaixaLiquidTable() {
               <Input
                 name="finalDate"
                 type="date"
-                value={finalDate}
-                onChange={e => setFinalDate(e.target.value)}
+                value={pendingFinalDate}
+                onChange={e => setPendingFinalDate(e.target.value)}
               />
             </FormGroup>
           </ModalBody>
@@ -235,7 +252,15 @@ export default function MovimentoCaixaLiquidTable() {
               type="button"
               onClick={toggleModalFilter}
             >
-              Fechar
+              Cancelar
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={handleFilter}
+            >
+              Filtrar
             </Button>
           </div>
         </Modal>
