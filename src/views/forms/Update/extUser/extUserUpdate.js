@@ -87,10 +87,7 @@ export default function ExtUserCadastro() {
         PerfilUser: { value: userResponse.data.Colab.PerfilId },
         email: { value: userResponse.data.email },
         mainClient: {
-          value:
-            clientListReq.data.find(
-              el => el.id === Number(userResponse.data.mainClient)
-            )?.nomeAbv || ""
+          value: userResponse.data.mainClient || ""
         }
       });
 
@@ -272,7 +269,7 @@ export default function ExtUserCadastro() {
           PerfilId: values.PerfilUser.value,
           email: values.email.value,
           allowedClients: selectedCli.map(el => el.id).join(";"),
-          mainClient: selectedCli.find(el => el.mainClient).id,
+          mainClient: values.mainClient.value,
           UserId: actualUser.id,
           ColabId: actualUser.Colab.id
         })
@@ -309,47 +306,48 @@ export default function ExtUserCadastro() {
     const clientIndex = selectedCli.findIndex(el => el.id === clickedClient.id);
 
     if (clientIndex > -1) {
-      if (!clickedClient.mainClient) {
-        setClientsList(
-          state.data.map(el => ({
-            ...el,
-            mainClient: el.id === clickedClient.id
-          }))
-        );
-        setSelectedCli(prevState => {
-          return prevState.map(el => ({
-            ...el,
-            mainClient: el.id === clickedClient.id
-          }));
-        });
-        setValues(prevState => {
-          return {
-            ...prevState,
-            mainClient: { value: clickedClient.nomeAbv, error: "", message: "" }
-          };
-        });
-        return;
+      // Remove client from selection
+      const newSelectedCli = selectedCli.filter(el => el.id !== clickedClient.id);
+      setSelectedCli(newSelectedCli);
+
+      // If removed client was mainClient, set first remaining as mainClient
+      if (newSelectedCli.length > 0) {
+        const newMainClient = newSelectedCli[0];
+        setSelectedCli(newSelectedCli.map(el => ({
+          ...el,
+          mainClient: el.id === newMainClient.id
+        })));
+        setValues(prevState => ({
+          ...prevState,
+          mainClient: { value: newMainClient.id, error: "", message: "" }
+        }));
+      } else {
+        setValues(prevState => ({
+          ...prevState,
+          mainClient: { value: "", error: "", message: "" }
+        }));
       }
 
-      setSelectedCli(prevState => {
-        return prevState.filter(el => el.id !== clickedClient.id);
-      });
       setClientsList(
         state.data.map(el => ({
           ...el,
           mainClient: false
         }))
       );
-      setValues(prevState => {
-        return {
-          ...prevState,
-          mainClient: { value: "", error: "", message: "" }
-        };
-      });
     } else {
-      setSelectedCli(prevState => {
-        return [...prevState, clickedClient];
-      });
+      // Add client to selection
+      const isFirstClient = selectedCli.length === 0;
+      const newClient = { ...clickedClient, mainClient: isFirstClient };
+
+      setSelectedCli(prevState => [...prevState, newClient]);
+
+      // If first client, set as mainClient
+      if (isFirstClient) {
+        setValues(prevState => ({
+          ...prevState,
+          mainClient: { value: clickedClient.id, error: "", message: "" }
+        }));
+      }
     }
   };
 
@@ -595,12 +593,33 @@ export default function ExtUserCadastro() {
                       >
                         <Input
                           name="mainClient"
-                          type="text"
-                          onChange={event =>
-                            handleChange(event, "mainClient", "text")
-                          }
+                          type="select"
+                          onChange={event => {
+                            const selectedId = event.target.value;
+                            setValues(prevState => ({
+                              ...prevState,
+                              mainClient: { value: selectedId, error: "", message: "" }
+                            }));
+                            setSelectedCli(prevState =>
+                              prevState.map(el => ({
+                                ...el,
+                                mainClient: el.id === Number(selectedId)
+                              }))
+                            );
+                          }}
                           value={values.mainClient.value}
-                        />
+                          disabled={selectedCli.length === 0}
+                        >
+                          {selectedCli.length === 0 ? (
+                            <option value="">Selecione clientes primeiro</option>
+                          ) : (
+                            selectedCli.map(client => (
+                              <option key={client.id} value={client.id}>
+                                {client.nomeAbv}
+                              </option>
+                            ))
+                          )}
+                        </Input>
                         {values.mainClient.error === "has-danger" ? (
                           <Label className="error">
                             {values.mainClient.message}
