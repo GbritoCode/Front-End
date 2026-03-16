@@ -135,7 +135,7 @@ export default function FinanceiraDashboard() {
     };
     loadData();
     setIsLoading(false);
-  }, [month]);
+  }, [month, year]);
 
   const handleFilterChange = async (visao, mes, ano, part) => {
     if (visao === "anual") {
