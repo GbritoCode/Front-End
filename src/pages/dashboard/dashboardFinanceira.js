@@ -115,7 +115,7 @@ export default function FinanceiraDashboard() {
   useEffect(() => {
     const loadData = async () => {
       const response3 = await api.get(
-        `/financeiraDash_mensal/?mes=${month}&part=geral`
+        `/financeiraDash_mensal/?mes=${month}&part=geral&ano=${year}`
       );
       setData3(response3.data);
       setMiniChartData(response3.data);
@@ -146,7 +146,7 @@ export default function FinanceiraDashboard() {
       setMiniChartData(response3.data);
     } else if (visao === "mensal") {
       const response3 = await api.get(
-        `/financeiraDash_mensal/?mes=${mes}&part=${part}`
+        `/financeiraDash_mensal/?mes=${mes}&part=${part}&ano=${dataForGraph.ano}`
       );
       setData3(response3.data);
       setMiniChartData(response3.data);

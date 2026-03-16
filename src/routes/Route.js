@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { useIdleTimer } from "react-idle-timer";
-// import { Close, Message } from "@material-ui/icons";
 import { Button, Modal, ModalBody } from "reactstrap";
 import { Close, Message } from "@material-ui/icons";
 import AuthLayout from "~/layouts/Auth/Auth.jsx";
@@ -9,17 +8,16 @@ import AdminLayout from "~/layouts/Admin/Admin.jsx";
 
 import { store } from "~/store";
 import history from "~/services/history";
-// import history from "~/services/history";
+
+const IDLE_STORAGE_KEY = "_idleStart";
 
 function useInterval(callback, delay) {
   const savedCallback = useRef();
 
-  // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
 
-  // Set up the interval.
   useEffect(() => {
     function tick() {
       savedCallback.current();
@@ -43,6 +41,25 @@ export default function RouteWrapper({
   const [minutes, setMinutes] = useState(15);
   const [seconds, setSeconds] = useState(0);
 
+  // Restore idle warning state after navigation (component remounts on route change).
+  // Without this, the modal and countdown reset every time the user navigates.
+  useEffect(() => {
+    if (!isPrivate) return;
+    const idleTimestamp = sessionStorage.getItem(IDLE_STORAGE_KEY);
+    if (!idleTimestamp) return;
+    const elapsed = (Date.now() - parseInt(idleTimestamp, 10)) / 1000;
+    const totalWarningSeconds = 15 * 60;
+    if (elapsed >= totalWarningSeconds) {
+      sessionStorage.clear();
+      history.go(0);
+    } else {
+      const remaining = totalWarningSeconds - elapsed;
+      setMinutes(Math.floor(remaining / 60));
+      setSeconds(Math.floor(remaining % 60));
+      setModalMini(true);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useInterval(
     () => {
       if (seconds > 0) {
@@ -51,7 +68,7 @@ export default function RouteWrapper({
         if (minutes === 0) {
           sessionStorage.clear();
           history.go(0);
-        } else if (minutes > 0) {
+        } else {
           setMinutes(minutes - 1);
           setSeconds(59);
         }
@@ -60,23 +77,48 @@ export default function RouteWrapper({
     modalMini ? 1000 : null
   );
 
-  const handleOnIdle = event => {
+  const dismissModal = () => {
+    sessionStorage.removeItem(IDLE_STORAGE_KEY);
+    setModalMini(false);
+    setMinutes(15);
+    setSeconds(0);
+  };
+
+  const handleOnIdle = () => {
     if (isPrivate) {
-      console.log("user is idle", event);
+      sessionStorage.setItem(IDLE_STORAGE_KEY, String(Date.now()));
       setModalMini(true);
     }
   };
 
-  const handleOnActive = event => {
-    console.log("user is active", event);
-    console.log("time remaining", getRemainingTime());
+  // When the user becomes active while the modal is open, dismiss it.
+  // Without this, the countdown keeps running even if the user is back.
+  const handleOnActive = () => {
+    if (isPrivate) {
+      dismissModal();
+    }
   };
 
-  const { getRemainingTime } = useIdleTimer({
+  useIdleTimer({
     timeout: 1000 * 60 * 15,
     onIdle: handleOnIdle,
     onActive: handleOnActive,
-    debounce: 500
+    debounce: 500,
+    // Only track real user input within this tab. Excluding visibilitychange
+    // and focus means switching to another tab or program does NOT reset the
+    // timer — 15 min without touching this app = disconnect.
+    events: [
+      "mousemove",
+      "keydown",
+      "wheel",
+      "DOMMouseScroll",
+      "mousewheel",
+      "mousedown",
+      "touchstart",
+      "touchmove",
+      "MSPointerDown",
+      "MSPointerMove",
+    ],
   });
 
   if (
@@ -108,9 +150,6 @@ export default function RouteWrapper({
 
   const Layout = signed ? AdminLayout : AuthLayout;
 
-  const toggleModalMini = () => {
-    setModalMini(!modalMini);
-  };
   return (
     <>
       <Switch>
@@ -123,13 +162,9 @@ export default function RouteWrapper({
         />
       </Switch>
       <Modal
-        modalClassName="modal-mini "
+        modalClassName="modal-mini"
         isOpen={modalMini}
-        toggle={() => {
-          toggleModalMini();
-          setSeconds(0);
-          setMinutes(15);
-        }}
+        toggle={dismissModal}
       >
         <div className="modal-header justify-content-center">
           <button
@@ -138,11 +173,7 @@ export default function RouteWrapper({
             data-dismiss="modal"
             type="button"
             color="primary"
-            onClick={() => {
-              toggleModalMini();
-              setSeconds(0);
-              setMinutes(15);
-            }}
+            onClick={dismissModal}
           >
             <Close />
           </button>
@@ -162,11 +193,7 @@ export default function RouteWrapper({
             style={{ color: "#000" }}
             className="btn-neutral"
             type="button"
-            onClick={() => {
-              toggleModalMini();
-              setSeconds(0);
-              setMinutes(15);
-            }}
+            onClick={dismissModal}
           >
             Cancelar
           </Button>
@@ -176,7 +203,6 @@ export default function RouteWrapper({
             className="btn-neutral"
             type="button"
             onClick={() => {
-              toggleModalMini();
               sessionStorage.clear();
               history.go(0);
             }}
