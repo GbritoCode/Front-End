@@ -14,7 +14,7 @@ import { store } from "~/store";
 let result;
 export function* colabCadastro({ payload }) {
   try {
-    const { CPF, nome, email, first, PerfilId } = payload;
+    const { CPF, nome, email, first, PerfilId, isColab } = payload;
 
     if (!first) {
       result = yield call(api.post, "users", {
@@ -22,7 +22,8 @@ export function* colabCadastro({ payload }) {
         email,
         senha: "Aidera2020",
         profile: PerfilId,
-        CPF
+        CPF,
+        isColab
       });
       payload.UserId = result.data.id;
       yield call(api.post, "colab", payload);

@@ -285,7 +285,8 @@ export default function ColabCadastro() {
           espec: string,
           first,
           recebeFixo: values.recebeFixo.value,
-          vlrFixo: values.vlrFixo.value === "" ? null : vlrFixoDb
+          vlrFixo: values.vlrFixo.value === "" ? null : vlrFixoDb,
+          isColab: true
         })
       );
     } else {
