@@ -36,7 +36,7 @@ import { recursoReqest } from "~/store/modules/oportunidades/actions";
 import { store } from "~/store";
 import { normalizeCurrency, normalizeCalcCurrency } from "~/normalize";
 import api from "~/services/api";
-
+//
 export default function RecursoCadastro() {
   // --------- colocando no modo claro do template
   document.body.classList.add("white-content");
