@@ -57,15 +57,15 @@ export default function UpdateOport() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [disabledField, setDisabledField] = useState();
-  const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState([]);
-  const [data3, setData3] = useState([]);
-  const [data4, setData4] = useState([]);
-  const [data5, setData5] = useState([]);
-  const [data6, setData6] = useState([]);
-  const [data7, setData7] = useState([]);
-  const [data8, setData8] = useState({});
-  const [data9, setData9] = useState([]);
+  const [colabData, setColabData] = useState([]);
+  const [clienteData, setClienteData] = useState([]);
+  const [cliContData, setCliContData] = useState([]);
+  const [undNegData, setUndNegData] = useState([]);
+  const [recDespData, setRecDespData] = useState([]);
+  const [segmentoData, setSegmentoData] = useState([]);
+  const [representanteData, setRepresentanteData] = useState([]);
+  const [oportData, setOportData] = useState({});
+  const [campanhaData, setCampanhaData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
@@ -81,34 +81,38 @@ export default function UpdateOport() {
     fase: { value: 1, error: "", message: "" },
     cod: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" },
-    narrativa: { value: "", error: "", message: "", optional: true }
+    narrativa: { value: "", error: "", message: "", optional: true },
+    motivo: { value: "", error: "", message: "", optional: true },
+    percentComplete: { value: 0, error: "", message: "", optional: true }
   };
   const [values, setValues] = useState(stateSchema);
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const response2 = await api.get(`/cliente/`);
-      const response4 = await api.get(`/und_neg/`);
-      const response5 = await api.get(`/rec_desp/`);
-      const response6 = await api.get(`/segmento/`);
-      const response7 = await api.get(`/representante/`);
-      const response8 = await api.get(`/oportunidade/${id}`);
-      const response1 = await api.get(`/colab/${response8.data.ColabId}`);
-      const response3 = await api.get(
-        `/cliente/cont/${response8.data.ClienteId}`
+      const clienteResponse = await api.get(`/cliente/`);
+      const undNegResponse = await api.get(`/und_neg/`);
+      const recDespResponse = await api.get(`/rec_desp/`);
+      const segmentoResponse = await api.get(`/segmento/`);
+      const representanteResponse = await api.get(`/representante/`);
+      const oportResponse = await api.get(`/oportunidade/${id}`);
+      const colabResponse = await api.get(
+        `/colab/${oportResponse.data.ColabId}`
       );
-      setDisabledField(response8.data.fase >= 5);
-      setData1(response1.data);
-      setData2(response2.data);
-      setData3(response3.data);
-      setData4(response4.data);
-      setData5(response5.data);
-      setData6(response6.data);
-      setData7(response7.data);
-      setData8(response8.data);
-      setData9(
-        response2.data
-          .find(arr => arr.id === response8.data.ClienteId)
+      const cliContResponse = await api.get(
+        `/cliente/cont/${oportResponse.data.ClienteId}`
+      );
+      setDisabledField(oportResponse.data.fase >= 5);
+      setColabData(colabResponse.data);
+      setClienteData(clienteResponse.data);
+      setCliContData(cliContResponse.data);
+      setUndNegData(undNegResponse.data);
+      setRecDespData(recDespResponse.data);
+      setSegmentoData(segmentoResponse.data);
+      setRepresentanteData(representanteResponse.data);
+      setOportData(oportResponse.data);
+      setCampanhaData(
+        clienteResponse.data
+          .find(arr => arr.id === oportResponse.data.ClienteId)
           .Campanhas.filter(
             arr =>
               (isAfter(
@@ -121,20 +125,24 @@ export default function UpdateOport() {
       );
       setValues(prevState => ({
         ...prevState,
-        empresaId: { value: response8.data.empresaId },
-        ColabId: { value: response8.data.ColabId },
-        data: { value: response8.data.data },
-        fase: { value: response8.data.fase },
-        ClienteId: { value: response8.data.ClienteId },
-        CampanhaId: { value: response8.data.CampanhaId },
-        contato: { value: response8.data.contato },
-        cod: { value: response8.data.cod },
-        UndNegId: { value: response8.data.UndNegId },
-        RecDespId: { value: response8.data.RecDespId },
-        segmetId: { value: response8.data.segmetId },
-        RepresentanteId: { value: response8.data.RepresentanteId },
-        desc: { value: response8.data.desc },
-        narrativa: { value: response8.data.narrativa, optional: true }
+        empresaId: { value: oportResponse.data.empresaId },
+        ColabId: { value: oportResponse.data.ColabId },
+        data: { value: oportResponse.data.data },
+        fase: { value: oportResponse.data.fase },
+        ClienteId: { value: oportResponse.data.ClienteId },
+        CampanhaId: { value: oportResponse.data.CampanhaId },
+        contato: { value: oportResponse.data.contato },
+        cod: { value: oportResponse.data.cod },
+        UndNegId: { value: oportResponse.data.UndNegId },
+        RecDespId: { value: oportResponse.data.RecDespId },
+        segmetId: { value: oportResponse.data.segmetId },
+        RepresentanteId: { value: oportResponse.data.RepresentanteId },
+        desc: { value: oportResponse.data.desc },
+        narrativa: { value: oportResponse.data.narrativa, optional: true },
+        percentComplete: {
+          value: oportResponse.data.percentComplete
+        },
+        motivo: { value: oportResponse.data.motivo, optional: true }
       }));
 
       setIsLoading(false);
@@ -165,7 +173,7 @@ export default function UpdateOport() {
   };
   function getContato(cliente) {
     api.get(`/cliente/cont/${cliente}`).then(result => {
-      setData3(result.data);
+      cliContData(result.data);
     });
     api.get(`/cliente/${cliente}`).then(result => {
       setValues(prevState => ({
@@ -269,7 +277,8 @@ export default function UpdateOport() {
           values.fase.value,
           values.cod.value,
           values.desc.value,
-          values.narrativa.value
+          values.narrativa.value,
+          values.percentComplete.value
         )
       );
     } else {
@@ -430,7 +439,7 @@ export default function UpdateOport() {
                                 {" "}
                                 Selecione o cliente{" "}
                               </option>
-                              {data2.map(ClienteId => (
+                              {clienteData.map(ClienteId => (
                                 <option value={ClienteId.id}>
                                   {" "}
                                   {ClienteId.nomeAbv} -{" "}
@@ -457,7 +466,7 @@ export default function UpdateOport() {
                               onChange={event =>
                                 handleChange(event, "ColabId", "text")
                               }
-                              defaultValue={data1.nome}
+                              defaultValue={colabData.nome}
                             />
                             {values.ColabId.error === "has-danger" ? (
                               <Label className="error">
@@ -508,7 +517,7 @@ export default function UpdateOport() {
                                 {" "}
                                 Selecione o contato{" "}
                               </option>
-                              {data3.map(contato => (
+                              {cliContData.map(contato => (
                                 <option value={contato.id}>
                                   {" "}
                                   {contato.nome} - {contato.email}{" "}
@@ -541,7 +550,7 @@ export default function UpdateOport() {
                                 {" "}
                                 Selecione o representante{" "}
                               </option>
-                              {data7.map(RepresentanteId => (
+                              {representanteData.map(RepresentanteId => (
                                 <option value={RepresentanteId.id}>
                                   {" "}
                                   {RepresentanteId.id} - {RepresentanteId.nome}{" "}
@@ -570,7 +579,7 @@ export default function UpdateOport() {
                             >
                               {" "}
                               <option value=""> Selecione a Campanha </option>
-                              {data9.map(camp => (
+                              {campanhaData.map(camp => (
                                 <option value={camp.id}>
                                   {" "}
                                   {camp.cod} - {camp.desc}{" "}
@@ -605,7 +614,7 @@ export default function UpdateOport() {
                                 {" "}
                                 Selecione a unidade de negócio{" "}
                               </option>
-                              {data4.map(UndNegId => (
+                              {undNegData.map(UndNegId => (
                                 <option value={UndNegId.id}>
                                   {" "}
                                   {UndNegId.id} - {UndNegId.descUndNeg}{" "}
@@ -638,7 +647,7 @@ export default function UpdateOport() {
                                 {" "}
                                 Selecione o tipo de receita{" "}
                               </option>
-                              {data5.map(RecDespId => (
+                              {recDespData.map(RecDespId => (
                                 <option value={RecDespId.id}>
                                   {" "}
                                   {RecDespId.id} - {RecDespId.desc}{" "}
@@ -671,7 +680,7 @@ export default function UpdateOport() {
                                 {" "}
                                 Selecione o segmento{" "}
                               </option>
-                              {data6.map(segmetId => (
+                              {segmentoData.map(segmetId => (
                                 <option value={segmetId.id}>
                                   {" "}
                                   {segmetId.id} - {segmetId.descSegmt}{" "}
@@ -681,6 +690,29 @@ export default function UpdateOport() {
                             {values.segmetId.error === "has-danger" ? (
                               <Label className="error">
                                 {values.segmetId.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="4">
+                          <Label>Porcentagem de conclusão</Label>
+                          <FormGroup
+                            className={`has-label ${values.percentComplete.error}`}
+                          >
+                            <Input
+                              name="percentComplete"
+                              disabled={disabledField}
+                              type="text"
+                              onChange={event =>
+                                handleChange(event, "percentComplete", "number")
+                              }
+                              value={values.percentComplete.value}
+                            />{" "}
+                            {values.percentComplete.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.percentComplete.message}
                               </Label>
                             ) : null}
                           </FormGroup>
@@ -753,9 +785,32 @@ export default function UpdateOport() {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <Row hidden={oportData.fase !== 5}>
+                        <Col>
+                          <Label>Motivo de cancelamento</Label>
+                          <FormGroup
+                            className={`has-label ${values.motivo.error}`}
+                          >
+                            <Input
+                              disabled={disabledField}
+                              name="motivo"
+                              type="textarea"
+                              onChange={event =>
+                                handleChange(event, "motivo", "optional")
+                              }
+                              value={values.motivo.value}
+                            />{" "}
+                            {values.motivo.error === "has-danger" ? (
+                              <Label className="error">
+                                {values.motivo.message}
+                              </Label>
+                            ) : null}
+                          </FormGroup>
+                        </Col>
+                      </Row>
                       <Link
                         to={
-                          data8.fase < 5
+                          oportData.fase < 5
                             ? "/tabelas/oportunidade/oport"
                             : "/tabelas/oportunidade/finOport"
                         }
@@ -780,7 +835,7 @@ export default function UpdateOport() {
                           Voltar
                         </Button>
                       </Link>
-                      {data8.fase >= 5 ? (
+                      {oportData.fase >= 5 ? (
                         <></>
                       ) : (
                         <Button

@@ -45,7 +45,8 @@ import {
   DoneAll,
   Message,
   PostAdd,
-  Receipt
+  Receipt,
+  Undo
 } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
@@ -71,6 +72,8 @@ export default function MovimentoCaixaTable() {
   const [excluding, setExcluding] = useState([]);
   const [modalMini, setModalMini] = useState(false);
   const [modalDtLiqui, setModalDtLiqui] = useState(false);
+  const [modalEstorno, setModalEstorno] = useState(false);
+  const [estornando, setEstornando] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
@@ -115,6 +118,9 @@ export default function MovimentoCaixaTable() {
   const toggleModalDtLiqui = () => {
     setModalDtLiqui(!modalDtLiqui);
   };
+  const toggleModalEstorno = () => {
+    setModalEstorno(!modalEstorno);
+  };
 
   const delay = ms => new Promise(res => setTimeout(res, ms));
 
@@ -130,6 +136,8 @@ export default function MovimentoCaixaTable() {
         return "Parcial";
       case 3:
         return "Liquidado";
+      case 4:
+        return "Estornado";
       default:
         break;
     }
@@ -278,6 +286,20 @@ export default function MovimentoCaixaTable() {
               >
                 <i className="tim-icons icon-coins" />
               </Button>
+              <Tooltip title="Estornar">
+                <Button
+                  disabled={mov.status !== 1}
+                  color="warning"
+                  size="sm"
+                  className={classNames("btn-icon btn-link like")}
+                  onClick={() => {
+                    setEstornando(mov.id);
+                    setModalEstorno(true);
+                  }}
+                >
+                  <Undo fontSize="small" />
+                </Button>
+              </Tooltip>
               {/* use this button to remove the data row */}
               <Button
                 onClick={() => {
@@ -716,6 +738,62 @@ export default function MovimentoCaixaTable() {
           </div>
         </Modal>
 
+        <Modal
+          modalClassName="modal-mini "
+          isOpen={modalEstorno}
+          toggle={toggleModalEstorno}
+        >
+          <div className="modal-header justify-content-center">
+            <button
+              aria-hidden
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              color="primary"
+              onClick={toggleModalEstorno}
+            >
+              <Close />
+            </button>
+            <div>
+              <Undo fontSize="large" />
+            </div>
+          </div>
+          <ModalBody className="text-center">
+            <p>Deseja estornar este movimento?</p>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              style={{ color: "#000" }}
+              className="btn-neutral"
+              type="button"
+              onClick={toggleModalEstorno}
+            >
+              Não
+            </Button>
+            <Button
+              style={{ color: "#7E7E7E" }}
+              className="btn-neutral"
+              type="button"
+              onClick={async () => {
+                await api
+                  .put(`movCaixa/estorno/${estornando}`, {
+                    ColabId: values.ColabId
+                  })
+                  .then(result => {
+                    toast.success(result.data.message);
+                    history.go(0);
+                  })
+                  .catch(err => {
+                    toast.error(err.response.data.error);
+                  });
+                toggleModalEstorno();
+              }}
+            >
+              Sim
+            </Button>
+          </div>
+        </Modal>
+
         {/* ---------------------------------
             ---------------------------------
             ---------------------------------
@@ -996,7 +1074,7 @@ export default function MovimentoCaixaTable() {
                     accessor: "actions",
                     sortable: false,
                     filterable: false,
-                    maxWidth: 80
+                    maxWidth: 120
                   }
                 ]}
                 defaultPageSize={10}

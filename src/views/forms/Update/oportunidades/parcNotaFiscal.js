@@ -75,8 +75,6 @@ export default function ParcelaUpdate() {
   const [data1, setData1] = useState();
   const [tagsinput, settagsinput] = useState([]);
 
-  const [string, setString] = useState("");
-
   const [isLoading, setIsLoading] = useState(true);
 
   // const dtVenc = today
@@ -156,6 +154,8 @@ export default function ParcelaUpdate() {
           pedidoCliente: { value: response.data.pedidoCliente }
         }));
       }
+      settagsinput(response1.data.Cliente.emailsParc.split(","));
+
       setDisabledField(response.data.situacao > 1);
       setData(response.data);
       setData1(response1.data);
@@ -276,8 +276,13 @@ export default function ParcelaUpdate() {
       }
       return false;
     };
+
+    if (!value.length) {
+      settagsinput([]);
+      return;
+    }
+
     if (verifyEmail(value[value.length - 1])) {
-      setString(`${value}`);
       settagsinput(value);
     } else {
       options = {
@@ -439,7 +444,11 @@ export default function ParcelaUpdate() {
         );
       } else {
         await api.post(
-          `/files/oport/cotacao/?id=${data.id}&oportId=${data1.id}&tipo=parcela&situacao=fatura&table=parcela&Cc=${string}`,
+          `/files/oport/cotacao/?id=${data.id}&oportId=${
+            data1.id
+          }&tipo=parcela&situacao=fatura&table=parcela&Cc=${tagsinput.join(
+            ","
+          )}`,
           formData
         );
       }

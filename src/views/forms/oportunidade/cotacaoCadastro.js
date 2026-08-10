@@ -55,15 +55,15 @@ export default function CotacaoCadastro(props) {
   const fileInputField = useRef(null);
 
   const { id, rev } = useParams();
+  const [isPackageOport, setIsPackageOport] = useState(false);
   const [tagsinput, settagsinput] = useState([]);
-  const [string, setString] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [auxState, setAuxState] = useState(false);
   const [disabledVlrProp, setDisabledVlrProp] = useState();
-  const [data1, setData1] = useState({});
-  const [data2, setData2] = useState({});
-  const [data3, setData3] = useState({});
-  const [data4, setData4] = useState({});
+  const [oportData, setOportData] = useState({});
+  const [cliRecDespData, setCliRecDespData] = useState({});
+  const [parametrosData, setParametrosData] = useState({});
+  const [cotacaoData, setCotacaoData] = useState({});
   const stateSchema = {
     empresaId: { value: "", error: "", message: "" },
     OportunidadeId: { value: "", error: "", message: "" },
@@ -76,75 +76,85 @@ export default function CotacaoCadastro(props) {
     recLiq: { value: "", error: "", message: "" },
     prevLucro: { value: "", error: "", message: "" },
     numParcelas: { value: "", error: "", message: "" },
-    motivo: { value: rev === "true" ? "2" : "1", error: "", message: "" },
-    email: { value: "", error: "", message: "" }
+    motivo: { value: rev === "true" ? "2" : "1", error: "", message: "" }
   };
   const optionalSchema = {
+    email: { value: "", error: "", message: "" },
     desc: { value: "", error: "", message: "" }
   };
   const [files, setFile] = useState([]);
   const [filesAux, setFileAux] = useState({});
   const [values, setValues] = useState(stateSchema);
   const [optional, setOptional] = useState(optionalSchema);
-  console.log(values.motivo);
+
   useEffect(() => {
     const { empresa } = store.getState().auth;
     async function loadData() {
-      const response2 = await api.get(`/cotacao/${id}/?one=true`);
-      if (response2.data === null || response2.data.length === 0) {
+      const cotacaoResponse = await api.get(`/cotacao/${id}/?one=true`);
+      if (cotacaoResponse.data === null || cotacaoResponse.data.length === 0) {
         const response = await api.get(`/empresa/${empresa}`);
-        const response1 = await api.get(`/oportunidade/${id}`);
-        const response3 = await api.get(`/parametros/?one=true`);
-        const response5 = await api.get(
-          `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
+        const oportResponse = await api.get(`/oportunidade/${id}`);
+        const parametrosResponse = await api.get(`/parametros/?one=true`);
+        const cliContResponse = await api.get(
+          `/cliente/cont/${oportResponse.data.contato}/${oportResponse.data.contato}`
         );
-        setData1(response1.data);
-        setData3(response3.data);
+        setIsPackageOport(
+          oportResponse.data.RecDespId ===
+            Number(process.env.REACT_APP_PACKAGE_RECIPE_ID)
+        );
+        settagsinput(oportResponse.data.Cliente.emailsCot.split(","));
+        setOportData(oportResponse.data);
+        setParametrosData(parametrosResponse.data);
         setValues(prevState => ({
           ...prevState,
           empresaId: { value: response.data.id },
-          OportunidadeId: { value: response1.data.id },
-          email: { value: response5.data.email }
+          OportunidadeId: { value: oportResponse.data.id },
+          email: { value: cliContResponse.data.email }
         }));
         setAuxState(true);
       } else {
-        const response1 = await api.get(`/oportunidade/${id}`);
-        const response3 = await api.get(`/parametros/?one=true`);
+        const oportResponse = await api.get(`/oportunidade/${id}`);
+        const parametrosResponse = await api.get(`/parametros/?one=true`);
         const response5 = await api.get(
-          `/cliente/cont/${response1.data.contato}/${response1.data.contato}`
+          `/cliente/cont/${oportResponse.data.contato}/${oportResponse.data.contato}`
         );
-        setData1(response1.data);
-        setData3(response3.data);
-        setData4(response2.data);
-        setData4(prevState => ({ ...prevState }));
+        setIsPackageOport(
+          oportResponse.data.RecDespId ===
+            Number(process.env.REACT_APP_PACKAGE_RECIPE_ID)
+        );
+        settagsinput(oportResponse.data.Cliente.emailsCot.split(";"));
+        setOportData(oportResponse.data);
+        setParametrosData(parametrosResponse.data);
+        setCotacaoData(cotacaoResponse.data);
+        setCotacaoData(prevState => ({ ...prevState }));
         setValues(prevState => ({
           ...prevState,
-          empresaId: { value: response2.data[0].EmpresaId },
-          OportunidadeId: { value: response2.data[0].OportunidadeId },
-          probVend: { value: response2.data[0].probVend },
-          tipoCobranca: { value: response2.data[0].tipoCobranca },
-          hrsPrevst: { value: response2.data[0].hrsPrevst },
+          empresaId: { value: cotacaoResponse.data[0].EmpresaId },
+          OportunidadeId: { value: cotacaoResponse.data[0].OportunidadeId },
+          probVend: { value: cotacaoResponse.data[0].probVend },
+          tipoCobranca: { value: cotacaoResponse.data[0].tipoCobranca },
+          hrsPrevst: { value: cotacaoResponse.data[0].hrsPrevst },
           vlrProp: {
-            value: normalizeCalcCurrency(response2.data[0].vlrProp)
+            value: normalizeCalcCurrency(cotacaoResponse.data[0].vlrProp)
           },
           vlrDesc: {
-            value: normalizeCurrency(response2.data[0].vlrDesc)
+            value: normalizeCurrency(cotacaoResponse.data[0].vlrDesc)
           },
           vlrLiq: {
-            value: normalizeCalcCurrency(response2.data[0].vlrLiq)
+            value: normalizeCalcCurrency(cotacaoResponse.data[0].vlrLiq)
           },
           recLiq: {
-            value: normalizeCalcCurrency(response2.data[0].recLiq)
+            value: normalizeCalcCurrency(cotacaoResponse.data[0].recLiq)
           },
           prevLucro: {
-            value: normalizeCalcCurrency(response2.data[0].prevLucro)
+            value: normalizeCalcCurrency(cotacaoResponse.data[0].prevLucro)
           },
-          numParcelas: { value: response2.data[0].numParcelas },
+          numParcelas: { value: cotacaoResponse.data[0].numParcelas },
           email: { value: response5.data.email }
         }));
         setOptional(prevState => ({
           ...prevState,
-          desc: { value: response2.data[0].desc }
+          desc: { value: cotacaoResponse.data[0].desc }
         }));
       }
       setIsLoading(false);
@@ -204,7 +214,7 @@ export default function CotacaoCadastro(props) {
       setDisabledVlrProp(true);
       api
         .get(
-          `/cliente/rec_desp/${data1.ClienteId}/?cobranca=${cobranca}&idRecDesp=${data1.RecDespId}`
+          `/cliente/rec_desp/${oportData.ClienteId}/?cobranca=${cobranca}&idRecDesp=${oportData.RecDespId}`
         )
         .then(result => {
           if (result.data === null) {
@@ -230,7 +240,7 @@ export default function CotacaoCadastro(props) {
               prevLucro: { value: "" }
             }));
           } else {
-            setData2(result.data);
+            setCliRecDespData(result.data);
           }
         });
     } else {
@@ -239,7 +249,7 @@ export default function CotacaoCadastro(props) {
   }
 
   if (!isLoading && !auxState) {
-    getCliData(data4[0].tipoCobranca);
+    getCliData(cotacaoData[0].tipoCobranca);
     setAuxState(true);
   }
 
@@ -296,12 +306,12 @@ export default function CotacaoCadastro(props) {
   const descontoChange = descont => {
     if (document.getElementsByName("tipoCobranca")[0].value === "2") {
       const imposto =
-        (data3.IRPJ +
-          data3.CSLL +
-          data3.COFINS +
-          data3.PIS +
-          data3.INSS +
-          data3.ISS) /
+        (parametrosData.IRPJ +
+          parametrosData.CSLL +
+          parametrosData.COFINS +
+          parametrosData.PIS +
+          parametrosData.INSS +
+          parametrosData.ISS) /
         10000;
 
       const value = descont.replace(/[.,]+/g, "");
@@ -315,7 +325,10 @@ export default function CotacaoCadastro(props) {
         (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
         100
       ).toFixed(2);
-      const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
+      const lucro = (
+        parseFloat(rLiq) -
+        (hr * parametrosData.vlrBsHr) / 100
+      ).toFixed(2);
 
       setValues(prevState => ({
         ...prevState,
@@ -334,21 +347,21 @@ export default function CotacaoCadastro(props) {
     if (
       !(
         document.getElementsByName("tipoCobranca")[0].value === "2" &&
-        data2.valorRec
+        cliRecDespData.valorRec
       )
     ) {
       const imposto =
-        (data3.IRPJ +
-          data3.CSLL +
-          data3.COFINS +
-          data3.PIS +
-          data3.INSS +
-          data3.ISS) /
+        (parametrosData.IRPJ +
+          parametrosData.CSLL +
+          parametrosData.COFINS +
+          parametrosData.PIS +
+          parametrosData.INSS +
+          parametrosData.ISS) /
         10000;
 
       const value = descont.replace(/[.,]+/g, "");
 
-      const vHr = data2.valorRec;
+      const vHr = cliRecDespData.valorRec;
       const hr = document.getElementsByName("hrsPrevst")[0].value;
       const prop = hr * vHr;
       const vLiq = prop - value;
@@ -356,7 +369,10 @@ export default function CotacaoCadastro(props) {
         (vLiq - parseFloat(parseFloat(vLiq)) * imposto) /
         100
       ).toFixed(2);
-      const lucro = (parseFloat(rLiq) - (hr * data3.vlrBsHr) / 100).toFixed(2);
+      const lucro = (
+        parseFloat(rLiq) -
+        (hr * parametrosData.vlrBsHr) / 100
+      ).toFixed(2);
 
       setValues(prevState => ({
         ...prevState,
@@ -381,8 +397,13 @@ export default function CotacaoCadastro(props) {
       }
       return false;
     };
+
+    if (!value.length) {
+      settagsinput([]);
+      return;
+    }
+
     if (verifyEmail(value[value.length - 1])) {
-      setString(`${value}`);
       settagsinput(value);
     } else {
       options = {
@@ -452,7 +473,8 @@ export default function CotacaoCadastro(props) {
         prevLucro: prevLucrodb,
         numParcelas: values.numParcelas.value,
         motivo: values.motivo.value,
-        desc: optional.desc.value
+        desc: optional.desc.value,
+        isPackageOport
       };
       formData.append("body", JSON.stringify(dataToSend));
       // dispatch(
@@ -482,7 +504,9 @@ export default function CotacaoCadastro(props) {
       if (values.motivo.value === "1") {
         await api
           .post(
-            `/cotacao/?tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${string}`,
+            `/cotacao/?tipo=cotacao&situacao=orcamento&table=cotacao&Cc=${tagsinput.join(
+              ","
+            )}`,
             formData
           )
           .then(() => {
@@ -494,7 +518,9 @@ export default function CotacaoCadastro(props) {
       } else {
         await api
           .post(
-            `/cotacao/?tipo=cotacao&situacao=revisao&table=cotacao&Cc=${string}`,
+            `/cotacao/?tipo=cotacao&situacao=revisao&table=cotacao&Cc=${tagsinput.join(
+              ","
+            )}`,
             formData
           )
           .then(() => {
@@ -537,9 +563,9 @@ export default function CotacaoCadastro(props) {
                   <CardHeader>
                     <h3 style={{ marginBottom: 0 }}>Cotação</h3>
                     <p style={{ fontSize: 11 }}>
-                      {data1.cod} | {data1.desc}
+                      {oportData.cod} | {oportData.desc}
                     </p>
-                    <p style={{ fontSize: 11 }}>{data1.Cliente.nomeAbv}</p>
+                    <p style={{ fontSize: 11 }}>{oportData.Cliente.nomeAbv}</p>
                   </CardHeader>
                   <CardBody>
                     <Form onSubmit={handleSubmit}>
@@ -626,7 +652,8 @@ export default function CotacaoCadastro(props) {
                                     vlrProp: {
                                       value: normalizeCalcCurrency(
                                         JSON.stringify(
-                                          event.target.value * data2.valorRec
+                                          event.target.value *
+                                            cliRecDespData.valorRec
                                         )
                                       )
                                     }
@@ -839,75 +866,85 @@ export default function CotacaoCadastro(props) {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Row>
-                        <Col md="12">
-                          <FileUploadContainer>
-                            <UploadFileBtn
-                              type="button"
-                              onClick={handleUploadBtnClick}
-                            >
-                              <i className="fas fa-file-upload" />
-                              <span>
-                                Arraste e solte ou selecione um arquivo{" "}
-                              </span>
-                            </UploadFileBtn>
-                            <FormField
-                              type="file"
-                              ref={fileInputField}
-                              onChange={handleNewFileUpload}
-                              title=""
-                              value=""
+                      <div hidden={isPackageOport}>
+                        <Row>
+                          <Col md="12">
+                            <FileUploadContainer>
+                              <UploadFileBtn
+                                type="button"
+                                onClick={handleUploadBtnClick}
+                              >
+                                <i className="fas fa-file-upload" />
+                                <span>
+                                  Arraste e solte ou selecione um arquivo{" "}
+                                </span>
+                              </UploadFileBtn>
+                              <FormField
+                                type="file"
+                                ref={fileInputField}
+                                onChange={handleNewFileUpload}
+                                title=""
+                                value=""
+                              />
+                            </FileUploadContainer>
+                            <FilePreviewContainer>
+                              <PreviewList>
+                                {Object.keys(filesAux).map(
+                                  (fileName, index) => {
+                                    const file = filesAux[fileName];
+                                    const isImageFile =
+                                      file.type.split("/")[0] === "image";
+                                    return (
+                                      <PreviewContainer key={fileName}>
+                                        <div>
+                                          {isImageFile && (
+                                            <ImagePreview
+                                              src={URL.createObjectURL(file)}
+                                              alt={`file preview ${index}`}
+                                            />
+                                          )}
+                                          <FileMetaData
+                                            isImageFile={isImageFile}
+                                          >
+                                            <span>{file.name}</span>
+                                            <aside>
+                                              {convertBytesToKB(file.size)} kb
+                                              <RemoveFileIcon
+                                                className="fas fa-trash-alt"
+                                                onClick={() =>
+                                                  removeFile(fileName)
+                                                }
+                                              />
+                                            </aside>
+                                          </FileMetaData>
+                                        </div>
+                                      </PreviewContainer>
+                                    );
+                                  }
+                                )}
+                              </PreviewList>
+                            </FilePreviewContainer>
+                          </Col>
+                        </Row>{" "}
+                        <Row>
+                          <Col md="4">
+                            <Label>Email Principal</Label>
+                            <Input disabled value={values.email.value} />
+                          </Col>
+                          <Col md="8">
+                            <Label style={{ display: "block" }}>
+                              Bcc Email
+                            </Label>
+                            <TagsInput
+                              onChange={handleTagsinput}
+                              tagProps={{
+                                className: "react-tagsinput-tag "
+                              }}
+                              value={tagsinput}
                             />
-                          </FileUploadContainer>
-                          <FilePreviewContainer>
-                            <PreviewList>
-                              {Object.keys(filesAux).map((fileName, index) => {
-                                const file = filesAux[fileName];
-                                const isImageFile =
-                                  file.type.split("/")[0] === "image";
-                                return (
-                                  <PreviewContainer key={fileName}>
-                                    <div>
-                                      {isImageFile && (
-                                        <ImagePreview
-                                          src={URL.createObjectURL(file)}
-                                          alt={`file preview ${index}`}
-                                        />
-                                      )}
-                                      <FileMetaData isImageFile={isImageFile}>
-                                        <span>{file.name}</span>
-                                        <aside>
-                                          {convertBytesToKB(file.size)} kb
-                                          <RemoveFileIcon
-                                            className="fas fa-trash-alt"
-                                            onClick={() => removeFile(fileName)}
-                                          />
-                                        </aside>
-                                      </FileMetaData>
-                                    </div>
-                                  </PreviewContainer>
-                                );
-                              })}
-                            </PreviewList>
-                          </FilePreviewContainer>
-                        </Col>
-                      </Row>{" "}
-                      <Row>
-                        <Col md="4">
-                          <Label>Email Principal</Label>
-                          <Input disabled value={values.email.value} />
-                        </Col>
-                        <Col md="8">
-                          <Label style={{ display: "block" }}>Bcc Email</Label>
-                          <TagsInput
-                            onChange={handleTagsinput}
-                            tagProps={{
-                              className: "react-tagsinput-tag "
-                            }}
-                            value={tagsinput}
-                          />
-                        </Col>
-                      </Row>
+                          </Col>
+                        </Row>
+                      </div>
                       <Link to="/tabelas/oportunidade/oport">
                         <Button
                           style={{

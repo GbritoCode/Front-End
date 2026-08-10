@@ -156,6 +156,9 @@ import FinanceiraDashboard from "~/pages/dashboard/dashboardFinanceira";
 import ParcelaLiquidadaTable from "~/views/tables/oportTables/parcelaLiquidadaTable";
 import DashboardCliente from "~/pages/dashboard/dashboardCliente";
 import MovimentoCaixaLiquidTable from "~/views/tables/financeira/movimentoCaixaLiquidTable";
+import ExtUserCadastro from "~/views/forms/extUser/extUserCadastro";
+import ExtUserUpdate from "~/views/forms/Update/extUser/extUserUpdate";
+import extUserTable from "~/views/tables/ExtUser/ExtUserTable";
 
 export default function Routes() {
   return (
@@ -728,6 +731,19 @@ export default function Routes() {
         component={MovimentoCaixaCadastro}
         isPrivate
       />
+      {/* EXTUSER */}
+      <Route
+        path="/cadastro/ext-user"
+        component={ExtUserCadastro}
+        isPrivate
+      />{" "}
+      <Route path="/update/ext-user/:id" component={ExtUserUpdate} isPrivate />
+      <Route
+        path="/tabelas/general/ext-user"
+        component={extUserTable}
+        isPrivate
+      />
+      {/** EXTUSER FIM */}
       {/* //---------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
       {//-----------cadastros Linha 89/linha 155------------------------------------------------------------------------------------------------------------------------------------}
