@@ -509,7 +509,15 @@ export default function CotacaoCadastro(props) {
             )}`,
             formData
           )
-          .then(() => {
+          .then(response => {
+            if (response.data.emailSent === false) {
+              toast.error(
+                response.data.emailError ||
+                  "Cotação salva, mas o e-mail não pôde ser enviado."
+              );
+            } else {
+              toast.success("Cotação salva e e-mail enviado com sucesso.");
+            }
             history.push("/tabelas/oportunidade/oport");
           })
           .catch(err => {
@@ -523,7 +531,15 @@ export default function CotacaoCadastro(props) {
             )}`,
             formData
           )
-          .then(() => {
+          .then(response => {
+            if (response.data.emailSent === false) {
+              toast.error(
+                response.data.emailError ||
+                  "Cotação salva, mas o e-mail não pôde ser enviado."
+              );
+            } else {
+              toast.success("Cotação salva e e-mail enviado com sucesso.");
+            }
             history.push("/tabelas/oportunidade/oport");
           })
           .catch(err => {

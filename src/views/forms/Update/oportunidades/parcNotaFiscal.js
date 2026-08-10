@@ -32,6 +32,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import { toast } from "react-toastify";
 import { GetApp } from "@material-ui/icons";
 import { isBefore, parseISO } from "date-fns";
 import {
@@ -438,18 +439,34 @@ export default function ParcelaUpdate() {
 
       const delay = ms => new Promise(res => setTimeout(res, ms));
       await delay(1500);
-      if (data.situacao > 1) {
-        await api.post(
-          `/emailResend/oport/cotacao/?id=${data.id}&tipo=parcela&situacao=fatura`
-        );
-      } else {
-        await api.post(
-          `/files/oport/cotacao/?id=${data.id}&oportId=${
-            data1.id
-          }&tipo=parcela&situacao=fatura&table=parcela&Cc=${tagsinput.join(
-            ","
-          )}`,
-          formData
+      try {
+        let response;
+        if (data.situacao > 1) {
+          response = await api.post(
+            `/emailResend/oport/cotacao/?id=${data.id}&tipo=parcela&situacao=fatura`
+          );
+        } else {
+          response = await api.post(
+            `/files/oport/cotacao/?id=${data.id}&oportId=${
+              data1.id
+            }&tipo=parcela&situacao=fatura&table=parcela&Cc=${tagsinput.join(
+              ","
+            )}`,
+            formData
+          );
+        }
+        if (response.data.emailSent === false) {
+          toast.error(
+            response.data.emailError ||
+              "Parcela salva, mas o e-mail não pôde ser enviado."
+          );
+        } else {
+          toast.success("Parcela salva e e-mail enviado com sucesso.");
+        }
+      } catch (err) {
+        toast.error(
+          (err.response && err.response.data && err.response.data.error) ||
+            "Erro ao enviar o e-mail de faturamento."
         );
       }
     } else {
