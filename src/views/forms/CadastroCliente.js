@@ -453,15 +453,25 @@ export default function CadastroCliente() {
   };
 
   const handleTagsinputCot = value => {
-    if (verifyEmail(value[value.length - 1])) {
+    if (value.length < emailsCot.length) {
       setEmailsCot(value);
+      return;
+    }
+    const newEmail = (value[value.length - 1] || "").trim();
+    if (verifyEmail(newEmail)) {
+      setEmailsCot([...value.slice(0, -1), newEmail]);
     } else {
       notifyInvalidEmail();
     }
   };
   const handleTagsinputParc = value => {
-    if (verifyEmail(value[value.length - 1])) {
+    if (value.length < emailsParc.length) {
       setEmailsParc(value);
+      return;
+    }
+    const newEmail = (value[value.length - 1] || "").trim();
+    if (verifyEmail(newEmail)) {
+      setEmailsParc([...value.slice(0, -1), newEmail]);
     } else {
       notifyInvalidEmail();
     }
